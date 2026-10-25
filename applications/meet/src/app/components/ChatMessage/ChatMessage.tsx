@@ -27,15 +27,21 @@ import {
     selectLocalParticipantIdentity,
     selectParticipantName,
 } from '@proton/meet/store/slices/participants/participantsSlice';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
+import { splitMessageIntoMentionSegments } from '@proton/meet/utils/mentions/mentionToken';
+import { isMobile } from '@proton/shared/lib/helpers/browser';
+import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';
 
 import { CHAT_MESSAGE_MAX_LENGTH } from '../../constants';
 import { useParticipantDisplayColors } from '../../hooks/useParticipantDisplayColors';
 import { useStableCallback } from '../../hooks/useStableCallback';
 import { getParticipantInitials } from '../../utils/getParticipantInitials';
+import { getLumoEmojiPickerOptions } from '../../utils/lumoEmojis/lumoEmojiPicker';
 import { trimMessage } from '../../utils/trim-message';
 import type { MentionInputHandle } from '../MentionInput/MentionInput';
 import { MentionInput } from '../MentionInput/MentionInput';
+import { useMobileEmojiPickerStyle } from './useMobileEmojiPickerPosition';
 
 import './ChatMessage.scss';
 import emojiPickerStyles from './EmojiPicker.raw.scss';
@@ -49,18 +55,19 @@ const EmojiPicker = ({
     perLine,
 }: {
     autoFocus: boolean;
-    onEmojiSelect: (emoji: { native: string }) => void;
+    onEmojiSelect: (text: string) => void;
     set: string;
     skinTonePosition: string;
     previewPosition: string;
     perLine: number;
 }) => {
     const ref = useRef<HTMLDivElement>(null);
+    const isLumoEmojisEnabled = useFlag('MeetChatLumoEmojis');
 
     useEffect(() => {
         const picker = new Picker({
+            ...getLumoEmojiPickerOptions(onEmojiSelect, isLumoEmojisEnabled),
             autoFocus,
-            onEmojiSelect,
             set,
             skinTonePosition,
             previewPosition,
@@ -73,7 +80,7 @@ const EmojiPicker = ({
         const style = document.createElement('style');
         style.textContent = emojiPickerStyles;
         picker.shadowRoot?.appendChild(style);
-    }, [autoFocus, onEmojiSelect, perLine, previewPosition, set, skinTonePosition]);
+    }, [autoFocus, isLumoEmojisEnabled, onEmojiSelect, perLine, previewPosition, set, skinTonePosition]);
 
     return <div ref={ref} />;
 };
@@ -127,6 +134,9 @@ const VARIANT_CONFIG: Record<ChatMessageVariant, { minHeight: number; maxHeight:
 
 const CHAT_MESSAGE_COUNTER_THRESHOLD = CHAT_MESSAGE_MAX_LENGTH * 0.9;
 
+const EMOJI_PICKER_OFFSET = 8;
+const EMOJI_PICKER_VIEWPORT_MARGIN = 8;
+
 // The live region stays mounted while the count is hidden: content that arrives together with its
 // region is not announced, so it has to already exist by the time the count first appears.
 const CharacterCount = ({ length }: { length: number }) => (
@@ -168,16 +178,26 @@ export const ChatMessage = ({
     const dispatch = useMeetDispatch();
     const { createNotification } = useNotifications();
 
-    const { floating, position } = usePopper({
+    const isMobileDevice = isMobile();
+
+    const { floating: desktopEmojiPopperFloating, position: desktopEmojiPopperPosition } = usePopper({
         reference: {
             mode: 'element',
             value: emojiAnchorRef.current,
         },
-        isOpen: emojiPickerOpen,
+        isOpen: emojiPickerOpen && !isMobileDevice,
         originalPlacement: 'top-end',
         availablePlacements: ['top-end', 'top', 'bottom-end', 'bottom'],
-        offset: 8,
+        offset: EMOJI_PICKER_OFFSET,
     });
+
+    const mobileEmojiPopperStyle = useMobileEmojiPickerStyle(
+        emojiAnchorRef,
+        emojiPopperRef,
+        emojiPickerOpen && isMobileDevice,
+        EMOJI_PICKER_OFFSET,
+        EMOJI_PICKER_VIEWPORT_MARGIN
+    );
 
     // The picker is portaled outside the side-bar's focus trap, so it needs its own trap to become
     // the active one — otherwise the side-bar trap steals focus back and defeats `autoFocus`.
@@ -187,7 +207,7 @@ export const ChatMessage = ({
         enableInitialFocus: false,
     });
 
-    const setEmojiPopperRef = useCombinedRefs<HTMLDivElement>(emojiPopperRef, floating);
+    const setEmojiPopperRef = useCombinedRefs<HTMLDivElement>(emojiPopperRef, desktopEmojiPopperFloating);
 
     // Thread replies persist their draft on the root message; the main composer uses the shared draft.
     const persistThreadDraft = isThread && rootMessageId !== undefined;
@@ -238,6 +258,10 @@ export const ChatMessage = ({
 
         const result = await onMessageSend(messageToSend);
 
+        if (result && splitMessageIntoMentionSegments(messageToSend).some(({ type }) => type === 'mention')) {
+            sendMeetActionsEvent(TelemetryMeetActionsEvents.chat_mention_used);
+        }
+
         if (!result && currentMessage.current === '') {
             composerRef.current?.setValue(messageToSend);
         }
@@ -257,8 +281,18 @@ export const ChatMessage = ({
         });
     });
 
-    const handleEmojiSelect = useStableCallback((emoji: { native: string }) => {
-        composerRef.current?.insertText(emoji.native);
+    const handleEmojiSelect = useStableCallback((text: string) => {
+        if (currentMessage.current.length + text.length > CHAT_MESSAGE_MAX_LENGTH) {
+            createNotification({
+                key: 'chat-emoji-too-long',
+                type: 'error',
+                text: c('Error').t`The emoji could not be added because the message is at its character limit`,
+            });
+            setEmojiPickerOpen(false);
+            return;
+        }
+
+        composerRef.current?.insertText(text);
         setEmojiPickerOpen(false);
         composerRef.current?.focus();
     });
@@ -366,7 +400,7 @@ export const ChatMessage = ({
             className="fixed w-fit-content h-fit-content z-up"
             divRef={setEmojiPopperRef}
             isOpen={emojiPickerOpen}
-            style={position}
+            style={isMobileDevice ? mobileEmojiPopperStyle : desktopEmojiPopperPosition}
             role="dialog"
             aria-label={c('Label').t`Emoji picker`}
             {...emojiFocusTrapProps}

@@ -5,7 +5,7 @@ import { c } from 'ttag';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import {
     removeCalendar,
     removeHolidaysCalendar,
@@ -21,7 +21,7 @@ import {
     getProbablyActiveCalendars,
 } from '@proton/shared/lib/calendar/calendar';
 import { getCalendarsSettingsPath } from '@proton/shared/lib/calendar/settingsRoutes';
-import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
 import noop from '@proton/utils/noop';
 
 import Alert from '../../../components/alert/Alert';

@@ -1,12 +1,12 @@
 import { useNotifications } from '@proton/app-context/useNotifications'
-import type { RecentDocumentsItemValue } from '@proton/docs-core/lib/Services/recent-documents'
-import { generateNodeUid, getDrive } from '@proton/drive'
+import type { RecentDocumentsItemValue } from '@proton/docs-core/Services/recent-documents'
+import { generateNodeUid, getDrive } from '@proton/drive/sdk'
 import { mimeTypeToProtonDocumentType } from '@proton/shared/lib/helpers/mimetype'
-import type { DriveEvent, NodeEntity, ProtonDriveClient } from '@proton/drive'
+import type { DriveEvent, NodeEntity, ProtonDriveClient } from '@proton/drive/sdk'
 import { useCallback, useState } from 'react'
 import { c } from 'ttag'
 import { nodeToTrashedDocumentItem } from './create-document-items'
-import { traceError, SentryRealtimeInitiatives } from '@proton/shared/lib/helpers/sentry'
+import { traceErrorSDK } from '@proton/docs-core/DriveSDK/traceErrorSDK'
 import type { SDKEventListener } from '~/drive-sdk/event-subscriber'
 
 export function useTrashed(drive: ProtonDriveClient) {
@@ -31,12 +31,7 @@ export function useTrashed(drive: ProtonDriveClient) {
         if (error?.name === 'AbortError') {
           return
         }
-        traceError(error, {
-          tags: {
-            initiative: SentryRealtimeInitiatives.SDK_SWITCH,
-            feature: 'DocsLoadRecentsWithDriveSDK',
-          },
-        })
+        traceErrorSDK(error, 'DocsLoadRecentsWithDriveSDK')
         createNotification({
           type: 'error',
           text: c('Error').t`Some trashed documents could not be loaded`,

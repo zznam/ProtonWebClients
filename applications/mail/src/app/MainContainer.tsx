@@ -2,6 +2,8 @@ import type { FunctionComponent } from 'react';
 import { useEffect, useRef } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { logger } from '@protontech/logger';
+
 import EasySwitchStoreInitializer from '@proton/activation/src/logic/EasySwitchStoreInitializer';
 import EasySwitchStoreProvider from '@proton/activation/src/logic/StoreProvider';
 import { useConfig } from '@proton/app-context/useConfig';
@@ -16,9 +18,8 @@ import useApiStatus from '@proton/components/hooks/useApiStatus';
 import { useInboxDesktopEventLoopRefresh } from '@proton/components/hooks/useInboxDesktopEventLoopRefresh';
 import { useInboxDesktopMetrics } from '@proton/components/hooks/useInboxDesktopMetrics';
 import useOnline from '@proton/components/hooks/useOnline';
-import { usePreventWasmLoading } from '@proton/components/hooks/usePreventWasmLoading.ts';
+import { usePreventWasmLoading } from '@proton/components/hooks/usePreventWasmLoading';
 import AssistantProvider from '@proton/llm/lib/providers/AssistantProvider';
-import { logger } from '@proton/logger';
 import { EventNotifierLoopType } from '@proton/shared/lib/eventNotifier/interface';
 
 import { ROUTE_MAIN } from './constants';

@@ -3,25 +3,26 @@ import { type ReactNode, useCallback } from 'react';
 import type { PublicKeyReference, SessionKey } from '@protontech/crypto';
 
 import { useGetAddressKeys } from '@proton/account/addressKeys/hooks';
-import { useAuthentication } from '@proton/components';
+import useAuthentication from '@proton/components/hooks/useAuthentication';
 import type { SHARE_MEMBER_PERMISSIONS } from '@proton/shared/lib/drive/permissions';
-import type { DecryptedAddressKey } from '@proton/shared/lib/interfaces';
+import type { DecryptedAddressKey } from '@proton/shared/lib/interfaces/Key';
 
 import { useMoveToFolderModal } from '../components/modals/MoveToFolderModal/MoveToFolderModal';
-import { useDefaultShare } from '../store';
 import useDriveCrypto from '../store/_crypto/useDriveCrypto';
 import type { DocumentType } from '../store/_documents/useOpenDocument';
 import useLink from '../store/_links/useLink';
+import useShare from '../store/_shares/useShare';
 import type { PathItem } from '../store/_views/useLinkPath';
-import { useAbortSignal } from '../store/_views/utils';
+import useAbortSignal from '../store/_views/utils/useAbortSignal';
 import type { CacheConfig } from './CacheConfig';
-import type { NodeMeta } from './NodeMeta';
-import type { DocumentNodeMeta } from './_documents';
-import { useDocuments } from './_documents';
+import type { LegacyNodeMeta, NodeMeta } from './NodeMeta';
+import type { DocumentNodeMeta } from './_documents/interface';
+import { useDocuments } from './_documents/useDocuments';
 import type { DecryptedNode } from './_nodes/interface';
 import useNode from './_nodes/useNode';
 import useNodes from './_nodes/useNodes';
-import { useMyFiles, useResolveShareId } from './_shares';
+import { useMyFiles } from './_shares/useMyFiles';
+import { useResolveShareId } from './_shares/useResolveShare';
 
 export interface DriveCompat {
     /**
@@ -63,11 +64,6 @@ export interface DriveCompat {
      */
     getDocumentKeys: (meta: NodeMeta) => Promise<SessionKey>;
 
-    /**
-     * Renames a document node.
-     */
-    renameDocument: (meta: NodeMeta, newName: string) => Promise<void>;
-
     trashDocument: (meta: NodeMeta, parentLinkId: string) => Promise<void>;
     restoreDocument: (meta: NodeMeta, parentLinkId: string) => Promise<void>;
     deleteDocumentPermanently: (meta: NodeMeta, parentLinkId: string) => Promise<void>;
@@ -99,7 +95,7 @@ export interface DriveCompat {
 
     getKeysForLocalStorageEncryption: () => CacheConfig | undefined;
 
-    getPrimaryAddressKeys: () => Promise<{ keys: DecryptedAddressKey[]; address: string } | undefined>;
+    getMemberAddressKeys: (meta: NodeMeta) => Promise<{ keys: DecryptedAddressKey[]; address: string } | undefined>;
 }
 
 export const useDriveCompat = (): DriveCompat => {
@@ -120,7 +116,6 @@ export const useDriveCompat = (): DriveCompat => {
     const {
         createDocumentNode,
         getDocumentKeys,
-        renameDocument,
         trashDocument,
         restoreDocument,
         deleteDocumentPermanently,
@@ -134,15 +129,14 @@ export const useDriveCompat = (): DriveCompat => {
     const { getVerificationKey } = useDriveCrypto();
 
     const [moveToFolderModal, showMoveToFolderModal] = useMoveToFolderModal();
-    const { getDefaultShare, getDefaultShareAddressEmail } = useDefaultShare();
+    const { getShareCreatorKeys } = useShare();
 
-    const getPrimaryAddressKeys = async () => {
-        const share = await getDefaultShare();
+    // Uses the user's member address of the context share, which differs from default share for shared-with-me nodes
+    const getMemberAddressKeys = async ({ shareId }: LegacyNodeMeta) => {
+        const { address } = await getShareCreatorKeys(abortSignal, shareId);
+        const keys = await getAddressKeys(address.ID);
 
-        const email = await getDefaultShareAddressEmail();
-        const keys = await getAddressKeys(share.addressId);
-
-        return { keys, address: email };
+        return { keys, address: address.Email };
     };
 
     const openMoveToFolderModal = async (props: { linkId: string; volumeId: string }) => {
@@ -160,8 +154,6 @@ export const useDriveCompat = (): DriveCompat => {
     };
 
     return {
-        getVerificationKey,
-
         // No feature parity in Drive SDK - has to be done in Realtime SDK
         createDocumentNode: withResolveShareId(createDocumentNode),
 
@@ -173,8 +165,9 @@ export const useDriveCompat = (): DriveCompat => {
         getMyFilesNodeMeta,
         findAvailableNodeName: withResolveShareId(findAvailableNodeName),
         getDocumentKeys: withResolveShareId(getDocumentKeys),
-        getPrimaryAddressKeys,
+        getMemberAddressKeys: withResolveShareId(getMemberAddressKeys),
         getKeysForLocalStorageEncryption,
+        getVerificationKey,
         // DocumentViewer calls DocLoader calls LoadDocument calls GetNodePermissions calls this
         getNodePermissions: withResolveShareId(getNodePermissions),
         // Used only in RecentDocumentsService - remove after rollout of DocsLoadRecentsWithDriveSDK
@@ -185,8 +178,6 @@ export const useDriveCompat = (): DriveCompat => {
         trashDocument: withResolveShareId(trashDocument),
         restoreDocument: withResolveShareId(restoreDocument),
         deleteDocumentPermanently: withResolveShareId(deleteDocumentPermanently),
-        // DocsRenameWithDriveSDK
-        renameDocument: withResolveShareId(renameDocument),
         // DocsMoveModalDriveSDK
         openMoveToFolderModal,
 

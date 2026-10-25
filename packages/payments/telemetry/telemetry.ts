@@ -25,6 +25,7 @@ import {
     reportAddMeet,
     reportAddPass,
     reportBillingCountryChange,
+    reportGuardShown,
     reportInitialization,
     reportPayment,
     reportSubscriptionEstimationChange,
@@ -33,6 +34,7 @@ import {
 import {
     reportAudienceChange,
     reportChangeStep,
+    reportCheckoutCondensedAddonsExperimentSeen,
     reportClosedByUser,
     reportPlanDescriptionInteraction,
     reportVpn2024AddonsExperimentSeen,
@@ -62,6 +64,8 @@ export const checkoutTelemetry = {
     reportPayment,
     /** Report that the subscription modal opened from an upsell surface. Call once per modal open. */
     reportUpsellModalOpen,
+    /** Report that the guard banner was shown */
+    reportGuardShown,
     /** Report a successful save in the "Edit billing address" modal */
     reportBillingAddressEditSuccess,
 
@@ -80,5 +84,7 @@ export const checkoutTelemetry = {
         reportChangeStep,
         /** Report first exposure to the VPN 2024 addons experiment variant */
         reportVpn2024AddonsExperimentSeen,
+        /** Report first exposure to the condensed add-ons checkout experiment variant (eligible users only) */
+        reportCheckoutCondensedAddonsExperimentSeen,
     },
 };

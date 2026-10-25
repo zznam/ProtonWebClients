@@ -1,3 +1,15 @@
+### Version 1.43.0
+
+- New onboarding after sign-up (gradual rollout)
+- Support unlocking the extension with biometrics on Windows and Firefox using the desktop app
+- Support importing folders from LastPass, KeePass, NordPass, Keeper, RoboForm and Proton Pass (gradual rollout)
+- Fix update prompt appearing after an unchanged autofill
+- Fix pinned items not opening when outside the selected vault or folder
+
+### Version 1.42.0
+
+- Support importing folders from Bitwarden (gradual rollout)
+
 ### Version 1.41.1
 
 - Fix items not appearing when selecting a vault after updating to 1.41.0

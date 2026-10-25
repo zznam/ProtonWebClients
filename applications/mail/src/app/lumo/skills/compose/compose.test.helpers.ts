@@ -1,9 +1,12 @@
+import { ToolInputError } from '@proton/llm/lib/lumoAgent/contracts/errors';
+import type { ToolDefinition } from '@proton/llm/lib/lumoAgent/contracts/types';
 import { createReferenceRegistry } from '@proton/llm/lib/lumoAgent/engine/referenceRegistry';
 import type { MESSAGE_ACTIONS } from '@proton/mail-renderer/constants';
 import type { MessageState, PartialMessageState } from '@proton/mail/store/messages/messagesTypes';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import type { Recipient } from '@proton/shared/lib/interfaces';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
 import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts/Contact';
+import type { Message } from '@proton/shared/lib/interfaces/mail/Message';
 
 import type { RecipientType } from '../../../models/address';
 import type { DraftChangeability, MailToolDeps } from '../../toolModule';
@@ -27,21 +30,40 @@ export const decryptedParent = (id: string): MessageState =>
         messageDocument: { initialized: true, document: window.document.createElement('div') },
     }) as unknown as MessageState;
 
+/** What `checkParams` threw; the engine only turns a ToolInputError into an error for the model. */
+export const checkParamsRejection = <Params>(definition: ToolDefinition<Params>, params: Record<string, any>) => {
+    let thrown: unknown;
+    try {
+        definition.checkParams!(params as Params);
+    } catch (error) {
+        thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(ToolInputError);
+    return (thrown as ToolInputError).message;
+};
+
 interface HarnessOptions {
     messages?: Record<string, MessageState>;
+    conversations?: Record<string, { Messages: Message[] }>;
+    onLoadConversation?: (id: string) => void;
     /** What each composer answers when asked what it will take; one not named here reads as closed. */
     changeability?: Record<string, DraftChangeability>;
     onInitializeMessage?: (id: string) => void;
     /** The composer id `composeDraft` adds to the store, as `onCompose` does; null for a refused compose. */
     opensComposer?: string | null;
+    /** The folder the user is on; the Inbox unless the case says otherwise. */
+    labelID?: string;
 }
 
 /** `composer-0` starts open, so a test that expects a newly opened composer fails if it names that one. */
 export const composeHarness = ({
     messages = {},
+    conversations = {},
+    onLoadConversation,
     changeability = {},
     onInitializeMessage,
     opensComposer = 'composer-1',
+    labelID = MAILBOX_LABEL_IDS.INBOX,
 }: HarnessOptions = {}) => {
     const composed: { action: MESSAGE_ACTIONS; referenceMessage: PartialMessageState; bodyBeforeQuote?: string }[] = [];
     const written: { composerID: string; body: string }[] = [];
@@ -53,10 +75,14 @@ export const composeHarness = ({
             getState: () => ({
                 composers: { composers },
                 messages,
-                elements: { elements: {}, params: { labelID: MAILBOX_LABEL_IDS.INBOX } },
+                conversations,
+                elements: { elements: {}, params: { labelID } },
             }),
         },
         getContactEmails: () => [ADA],
+        loadConversation: async (id: string) => {
+            onLoadConversation?.(id);
+        },
         initializeMessage: async (id: string) => {
             onInitializeMessage?.(id);
         },

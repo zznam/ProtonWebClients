@@ -3,11 +3,11 @@ import { useLocation } from 'react-router';
 
 import { c } from 'ttag';
 
-import { useUserSettings } from '@proton/account';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { DENSITY } from '@proton/shared/lib/constants';
-import type { Label } from '@proton/shared/lib/interfaces';
-import { CHECKLIST_DISPLAY_TYPE } from '@proton/shared/lib/interfaces';
+import { CHECKLIST_DISPLAY_TYPE } from '@proton/shared/lib/interfaces/Checklist';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 import { CUSTOM_VIEWS, CUSTOM_VIEWS_LABELS } from '@proton/shared/lib/mail/constants';
 import { VIEW_MODE } from '@proton/shared/lib/mail/mailSettings';
 

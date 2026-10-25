@@ -2,7 +2,7 @@ import type { History } from 'history';
 
 import type { updateAddressThunk } from '@proton/account/addresses/updateAddress';
 import type { ThemeContextInterface } from '@proton/components/containers/themes/ThemeProvider';
-import type { ESStatusBooleans } from '@proton/encrypted-search/models';
+import type { ESStatusBooleans } from '@proton/encrypted-search/models/interfaces';
 import type { ToolDefinition, ToolHandler } from '@proton/llm/lib/lumoAgent/contracts/types';
 import type { CardRenderer } from '@proton/llm/lib/lumoAgent/ui/types';
 import type { MESSAGE_ACTIONS } from '@proton/mail-renderer/constants';
@@ -14,17 +14,15 @@ import type {
 import type { PartialMessageState } from '@proton/mail/store/messages/messagesTypes';
 import type { updateAutoresponder } from '@proton/shared/lib/api/mailSettings';
 import type { DENSITY } from '@proton/shared/lib/constants';
-import type {
-    Address,
-    Folder,
-    Label,
-    MailSettings,
-    Recipient,
-    UserModel,
-    UserSettings,
-} from '@proton/shared/lib/interfaces';
+import type { Address, Recipient } from '@proton/shared/lib/interfaces/Address';
+import type { Folder } from '@proton/shared/lib/interfaces/Folder';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import type { ContactEmail, ContactMetadata } from '@proton/shared/lib/interfaces/contacts/Contact';
 import type { VCardContact } from '@proton/shared/lib/interfaces/contacts/VCard';
+import type { Message } from '@proton/shared/lib/interfaces/mail/Message';
 import type { VIEW_LAYOUT, VIEW_MODE } from '@proton/shared/lib/mail/mailSettings';
 import type { ThemeInformation } from '@proton/shared/lib/themes/themes';
 import type { CreateFilter, Filter } from '@proton/sieve/filterModel';
@@ -39,6 +37,7 @@ import type {
 import type { MarkAsParams } from '../hooks/actions/markAs/useMarkAs';
 import type { SnoozeProps } from '../hooks/actions/useSnooze';
 import type { RecipientType } from '../models/address';
+import type { Conversation } from '../models/conversation';
 import type { markAll as markAllAction } from '../store/elements/elementsActions';
 import type { MailStore } from '../store/store';
 
@@ -105,6 +104,9 @@ export interface MailToolDeps {
     validateSieve: (sieve: string) => Promise<void>;
     getESStatus: () => ESStatusBooleans;
     loadConversation: (conversationID: string) => Promise<unknown>;
+    /** Straight from the API, so a rejection keeps the error code that tells a deleted email from a failed request. */
+    fetchConversation: (conversationID: string) => Promise<Conversation>;
+    fetchMessage: (messageID: string) => Promise<Message>;
     initializeMessage: (messageID: string, labelID: string) => Promise<void>;
     /** Opens a composer with its body already written — never sends; the user always does that. */
     composeDraft: (params: {

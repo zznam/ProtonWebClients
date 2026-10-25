@@ -8,7 +8,7 @@ import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useConfig } from '@proton/app-context/useConfig';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { PASSWORD_WRONG_ERROR, type TwoFactorCredentials, getInfo } from '@proton/shared/lib/api/auth';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { AccessType } from '@proton/shared/lib/authentication/accessType';
@@ -16,7 +16,7 @@ import type { InfoAuthedResponse } from '@proton/shared/lib/authentication/inter
 import { getAccessTypeFromMask } from '@proton/shared/lib/authentication/sessionAccessType';
 import type { TwoFactorAuthTypes } from '@proton/shared/lib/authentication/twoFactor';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { Unwrap } from '@proton/shared/lib/interfaces';
+import type { Unwrap } from '@proton/shared/lib/interfaces/utils';
 import { type Credentials, srpAuth } from '@proton/shared/lib/srp';
 import noop from '@proton/utils/noop';
 
@@ -26,7 +26,7 @@ import Modal from '../../components/modalTwo/Modal';
 import ModalContent from '../../components/modalTwo/ModalContent';
 import ModalFooter from '../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../components/modalTwo/ModalHeader';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import PasswordInputTwo from '../../components/v2/input/PasswordInput';
 import useFormErrors from '../../components/v2/useFormErrors';
 import useErrorHandler from '../../hooks/useErrorHandler';

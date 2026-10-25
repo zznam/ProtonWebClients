@@ -6,7 +6,8 @@ import { Button } from '@proton/atoms/Button/Button';
 import { getSimplePriceString } from '@proton/components/components/price/helper';
 import Alert3ds from '@proton/components/containers/payments/Alert3ds';
 import PaymentWrapper from '@proton/components/containers/payments/PaymentWrapper';
-import { ProtonPlanCustomizer, getHasPlanCustomizer } from '@proton/components/containers/payments/planCustomizer';
+import { ProtonPlanCustomizer } from '@proton/components/containers/payments/planCustomizer/ProtonPlanCustomizer';
+import { getHasPlanCustomizer } from '@proton/components/containers/payments/planCustomizer/helpers';
 import { IcArrowLeft } from '@proton/icons/icons/IcArrowLeft';
 import { IcShield } from '@proton/icons/icons/IcShield';
 import { usePaymentFacade } from '@proton/payments-ui/client-extensions/usePaymentFacade';
@@ -18,10 +19,10 @@ import { ADDON_PREFIXES, PAYMENT_METHOD_TYPES, PLANS } from '@proton/payments/co
 import { getPlanFromPlanIDs } from '@proton/payments/core/plan/helpers';
 import { tracePaymentError } from '@proton/payments/sentry/capture';
 import { APPS, PASS_APP_NAME } from '@proton/shared/lib/constants';
-import { Audience } from '@proton/shared/lib/interfaces';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
 
 import { useSignup } from '../../../context/SignupContext';
-import { Layout } from '../components/Layout/Layout';
+import { Layout } from '../components/Layout';
 import { passPlus } from '../plans';
 
 type Props = {

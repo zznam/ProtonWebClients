@@ -5,11 +5,11 @@ import { c } from 'ttag';
 
 import { useOrganization } from '@proton/account/organization/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
-import { useModalState, useModalStateWithData } from '@proton/components';
+import useModalState, { useModalStateWithData } from '@proton/components/components/modalTwo/useModalState';
 import { hasVisionary } from '@proton/payments/core/subscription/helpers';
 import { DEFAULT_MAX_SUB_WALLETS, DEFAULT_MAX_WALLETS } from '@proton/wallet/constants/wallet';
-import { useUserWalletSettings } from '@proton/wallet/store/hooks';
-import type { IWasmApiWalletData } from '@proton/wallet/types';
+import { useUserWalletSettings } from '@proton/wallet/store/hooks/useUserWalletSettings';
+import type { IWasmApiWalletData } from '@proton/wallet/types/wasm';
 
 import type { ModalData } from '.';
 import { WalletSetupModalContext, WalletSetupModalKind } from '.';

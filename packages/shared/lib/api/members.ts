@@ -1,5 +1,9 @@
 import { MINUTE } from '../constants';
-import type { Address, Api, Member, SignedKeyList, UserOrganization } from '../interfaces';
+import type { Address } from '../interfaces/Address';
+import type { Api } from '../interfaces/Api';
+import type { Member } from '../interfaces/Member';
+import type { UserOrganization } from '../interfaces/Organization';
+import type { SignedKeyList } from '../interfaces/SignedKeyList';
 import type { OrganizationKeyActivation, OrganizationKeyInvitation } from '../keys/organizationKeyDto';
 import type { UnprivatizeMemberPayload } from '../keys/unprivatizationDto';
 import queryPages from './helpers/queryPages';
@@ -90,6 +94,18 @@ export const getMember = (memberID: string) => ({
 export const getSelfMember = () => ({
     method: 'get',
     url: 'core/v4/members/me',
+});
+
+/**
+ * Demotes the given members that are flagged with RequiresOrgKeyDemotion, except the requesting admin. Runs
+ * asynchronously. Accepts up to 1,000 member IDs.
+ */
+export const scheduleOrgKeyDemotions = (memberIDs: string[]) => ({
+    method: 'post',
+    url: 'core/v4/members/org-key-demotions',
+    data: {
+        MemberIDs: memberIDs,
+    },
 });
 
 export const getAllUserOrganizations = (api: Api) => {

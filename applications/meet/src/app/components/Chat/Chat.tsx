@@ -3,10 +3,11 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
+import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { IcMagnifier } from '@proton/icons/icons/IcMagnifier';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import { markChatMessagesAsSeen } from '@proton/meet/store/slices/chatAndReactionsSlice';
-import { selectRoomName } from '@proton/meet/store/slices/meetingInfo';
+import { selectMeetingName } from '@proton/meet/store/slices/currentMeeting';
 import { selectLocalParticipantIdentity } from '@proton/meet/store/slices/participants/participantsSlice';
 import {
     MeetingSideBars,
@@ -25,7 +26,7 @@ import { SideBar } from '../../atoms/SideBar/SideBar';
 import { useChatMessage } from '../../hooks/bridges/useChatMessage';
 import { useChatMessageListNavigation } from '../../hooks/useChatMessageListNavigation';
 import { useMeetingRoomUpdates } from '../../hooks/useMeetingRoomUpdates';
-import { useMentionPlainText } from '../../hooks/useMentionPlainText';
+import { useMessagePlainText } from '../../hooks/useMessagePlainText';
 import { useScrollChatToMessage } from '../../hooks/useScrollChatToMessage';
 import { ChatItem } from '../ChatItem/ChatItem';
 import { ChatThread } from '../ChatItem/ChatThread';
@@ -45,10 +46,10 @@ export const Chat = () => {
     const [newMessageCount, setNewMessageCount] = useState(0);
     const [newMentionCount, setNewMentionCount] = useState(0);
 
-    // Whether a thread root is pinned at the top; drives the opaque header (see below).
-    const [hasStuckThread, setHasStuckThread] = useState(false);
+    // Root message id of the thread pinned at the top, if any; drives the opaque header (see below).
+    const [stuckThreadId, setStuckThreadId] = useState<string | null>(null);
 
-    const roomName = useMeetSelector(selectRoomName);
+    const meetingName = useMeetSelector(selectMeetingName);
 
     const isChatThreadsEnabled = useFlag('MeetChatThreads');
     const isMentionsEnabled = useFlag('MeetChatMentions');
@@ -56,6 +57,9 @@ export const Chat = () => {
     const sideBarState = useMeetSelector(selectSideBarState);
 
     const isChatOpen = sideBarState[MeetingSideBars.Chat];
+
+    const { viewportWidth } = useActiveBreakpoint();
+    const isSmallScreen = viewportWidth['<=small'];
 
     const focusedMessageId = useMeetSelector(selectChatFocusedMessageId);
 
@@ -88,6 +92,16 @@ export const Chat = () => {
         resetNewMessages();
     };
 
+    const sendRootMessage = (message: string) => {
+        const el = scrollRef.current;
+        if (el) {
+            el.scrollTop = el.scrollHeight;
+        }
+        wasAtBottomRef.current = true;
+        resetNewMessages();
+        return sendMessage(message);
+    };
+
     // A root is pinned when it rests at the pin line (below the header) with its thread still below.
     const updateStuckThreadState = useCallback(() => {
         const container = scrollRef.current;
@@ -97,7 +111,7 @@ export const Chat = () => {
 
         const stickyHeaders = container.querySelectorAll<HTMLElement>('.chat-thread-header--sticky');
         if (stickyHeaders.length === 0) {
-            setHasStuckThread(false);
+            setStuckThreadId(null);
             return;
         }
 
@@ -105,15 +119,12 @@ export const Chat = () => {
         const headerHeight = parseFloat(getComputedStyle(container).getPropertyValue('--side-bar-header-height')) || 0;
         const pinLine = containerTop + headerHeight;
 
-        let stuck = false;
-        stickyHeaders.forEach((header) => {
+        const stuckHeader = Array.from(stickyHeaders).find((header) => {
             const rect = header.getBoundingClientRect();
-            if (rect.top <= pinLine + 1 && rect.bottom > pinLine) {
-                stuck = true;
-            }
+            return rect.top <= pinLine + 1 && rect.bottom > pinLine;
         });
 
-        setHasStuckThread(stuck);
+        setStuckThreadId(stuckHeader?.dataset.threadRootId ?? null);
     }, []);
 
     const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
@@ -197,7 +208,7 @@ export const Chat = () => {
 
     const lowerCaseSearchExpression = searchExpression.toLowerCase();
 
-    const toMentionPlainText = useMentionPlainText();
+    const toMessagePlainText = useMessagePlainText();
 
     const filteredMeetingRoomUpdates =
         !isSearchOn || !searchExpression
@@ -205,7 +216,7 @@ export const Chat = () => {
             : meetingRoomUpdates.filter((item) => {
                   const message = (item as MeetChatMessage)?.message;
 
-                  return !!message && toMentionPlainText(message).toLowerCase().includes(lowerCaseSearchExpression);
+                  return !!message && toMessagePlainText(message).toLowerCase().includes(lowerCaseSearchExpression);
               });
 
     // Group thread replies under their root message. A reply carries the thread `topicId` (which
@@ -275,7 +286,7 @@ export const Chat = () => {
             absoluteHeader={true}
             isScrolled={isScrolled}
             paddingClassName="py-4"
-            paddingHeaderClassName={hasStuckThread ? 'chat-panel-header' : ''}
+            paddingHeaderClassName={stuckThreadId !== null ? 'chat-panel-header' : ''}
             header={
                 <div className="flex items-center">
                     {!isSearchOn && (
@@ -322,8 +333,10 @@ export const Chat = () => {
                             style={{ '--w-custom': '3rem', '--h-custom': '3rem' }}
                         />
                         <div className="text-center color-disabled">
-                            {c('Info')
-                                .t`This is an end to end encrypted chat with ephemeral messages, which disappear at the end of the call.`}
+                            {isSmallScreen
+                                ? c('Info').t`End to end encrypted chat`
+                                : c('Info')
+                                      .t`This is an end to end encrypted chat with ephemeral messages, which disappear at the end of the call.`}
                         </div>
                     </div>
                 )}
@@ -350,7 +363,7 @@ export const Chat = () => {
                     {isSearchOn || !isChatThreadsEnabled
                         ? filteredMeetingRoomUpdates.map((item) => (
                               <li key={`${item.identity}-${item.timestamp}`}>
-                                  <ChatItem item={item} roomName={roomName} />
+                                  <ChatItem item={item} meetingName={meetingName} />
                               </li>
                           ))
                         : threadView.map(({ root, replies, isRootMissing }) => (
@@ -359,11 +372,12 @@ export const Chat = () => {
                                       <ChatThread
                                           rootMessage={root as MeetChatMessage}
                                           replies={replies}
-                                          roomName={roomName}
+                                          meetingName={meetingName}
                                           isRootMissing={isRootMissing}
+                                          isStuck={stuckThreadId === (root as MeetChatMessage).id}
                                       />
                                   ) : (
-                                      <ChatItem item={root} roomName={roomName} />
+                                      <ChatItem item={root} meetingName={meetingName} />
                                   )}
                               </li>
                           ))}
@@ -383,7 +397,7 @@ export const Chat = () => {
                         />
                     </div>
                 )}
-                <ChatMessage onMessageSend={sendMessage} />
+                <ChatMessage onMessageSend={sendRootMessage} />
             </div>
         </SideBar>
     );

@@ -1,9 +1,10 @@
 import { ProrationMode } from '@proton/payments/core/api/api';
 import { DEFAULT_TAX_BILLING_ADDRESS } from '@proton/payments/core/billing-address/billing-address';
-import { CYCLE, PAYMENT_METHOD_TYPES, PLANS } from '@proton/payments/core/constants';
+import { ADDON_NAMES, CYCLE, FREE_SUBSCRIPTION, PAYMENT_METHOD_TYPES, PLANS } from '@proton/payments/core/constants';
 import { VatReverseChargeNotSupportedError } from '@proton/payments/core/errors';
 import { SubscriptionMode } from '@proton/payments/core/subscription/constants';
 import { getIsPlanTransitionForbidden } from '@proton/payments/core/subscription/forbidden-plan-transition';
+import { GUARD_ERROR_CODES } from '@proton/payments/core/subscription/guard';
 import { isSubscriptionCheckForbiddenWithReason } from '@proton/payments/core/subscription/helpers';
 import type { SubscriptionEstimation } from '@proton/payments/core/subscription/interface';
 import { buildSubscription } from '@proton/payments/testing/buildSubscription';
@@ -145,6 +146,288 @@ describe('useSubscriptionCheck', () => {
             expect(deps.paymentsApi.checkSubscription).not.toHaveBeenCalled();
             expect(deps.setters.setCheckResult).toHaveBeenCalled();
             expect(deps.setters.setModel).toHaveBeenCalled();
+        });
+    });
+
+    describe('subscription guard validation', () => {
+        it('does not send ValidateGuards while browsing on plan selection', async () => {
+            const model = buildModel({ step: SUBSCRIPTION_STEPS.PLAN_SELECTION, planIDs: { [PLANS.VPN2024]: 1 } });
+            const deps = buildDeps({
+                model,
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' }),
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(model);
+
+            expect(deps.paymentsApi.checkSubscription).not.toHaveBeenCalled();
+        });
+
+        it('sends ValidateGuards when a paid subscriber changes selection at checkout', async () => {
+            const deps = buildDeps({
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' }),
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(buildCheckResult()),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(buildModel({ planIDs: { [PLANS.DRIVE]: 1 }, cycle: CYCLE.YEARLY }));
+
+            expect(deps.paymentsApi.checkSubscription).toHaveBeenCalledWith(
+                expect.objectContaining({ ValidateGuards: true }),
+                expect.any(Object)
+            );
+        });
+
+        it('sends ValidateGuards when a paid subscriber changes addon quantity on the same base plan', async () => {
+            const planIDsBefore = { [PLANS.MAIL_PRO]: 1, [ADDON_NAMES.MEMBER_MAIL_PRO]: 2 };
+            const planIDsAfter = { [PLANS.MAIL_PRO]: 1, [ADDON_NAMES.MEMBER_MAIL_PRO]: 3 };
+            const deps = buildDeps({
+                subscription: buildSubscription({
+                    planIDs: planIDsBefore,
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                }),
+                model: buildModel({
+                    planIDs: planIDsBefore,
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                }),
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(buildCheckResult()),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(
+                buildModel({
+                    planIDs: planIDsAfter,
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                })
+            );
+
+            expect(deps.paymentsApi.checkSubscription).toHaveBeenCalledWith(
+                expect.objectContaining({ ValidateGuards: true }),
+                expect.any(Object)
+            );
+        });
+
+        it('sends ValidateGuards: false for free subscribers', async () => {
+            const deps = buildDeps({
+                subscription: FREE_SUBSCRIPTION,
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(buildCheckResult()),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(buildModel({ planIDs: { [PLANS.MAIL]: 1 } }));
+
+            const payload = (deps.paymentsApi.checkSubscription as jest.Mock).mock.calls[0][0];
+            expect(payload.ValidateGuards).toBe(false);
+        });
+
+        it('sends ValidateGuards: false when the paid selection is unchanged', async () => {
+            const subscription = buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.MONTHLY, currency: 'EUR' });
+            const deps = buildDeps({
+                subscription,
+                model: buildModel({
+                    planIDs: { [PLANS.MAIL]: 1 },
+                    cycle: CYCLE.MONTHLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                }),
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(buildCheckResult()),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(
+                buildModel({
+                    planIDs: { [PLANS.MAIL]: 1 },
+                    cycle: CYCLE.MONTHLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                })
+            );
+
+            const payload = (deps.paymentsApi.checkSubscription as jest.Mock).mock.calls[0][0];
+            expect(payload.ValidateGuards).toBe(false);
+        });
+
+        it('sends ValidateGuards: false for passive checkout updates after the initial modification check', async () => {
+            const deps = buildDeps({
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' }),
+                model: buildModel({
+                    planIDs: { [PLANS.DRIVE]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    initialCheckComplete: true,
+                }),
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(buildCheckResult()),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(
+                buildModel({
+                    planIDs: { [PLANS.DRIVE]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    initialCheckComplete: true,
+                })
+            );
+
+            const payload = (deps.paymentsApi.checkSubscription as jest.Mock).mock.calls[0][0];
+            expect(payload.ValidateGuards).toBe(false);
+        });
+
+        it('returns guard refusals from the check response without stripping pricing', async () => {
+            const apiResult = buildCheckResult({
+                GuardResult: [{ Code: GUARD_ERROR_CODES.TOO_LITTLE_SPACE, Message: 'raw' }],
+                AmountDue: 499,
+            });
+            const deps = buildDeps({
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' }),
+                paymentsApi: { checkSubscription: jest.fn().mockResolvedValue(apiResult) } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(buildModel({ planIDs: { [PLANS.DRIVE]: 1 }, cycle: CYCLE.YEARLY }));
+
+            expect(deps.setters.setCheckResult).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    GuardResult: [{ Code: GUARD_ERROR_CODES.TOO_LITTLE_SPACE, Message: 'raw' }],
+                    AmountDue: 499,
+                })
+            );
+        });
+
+        it('clears stale guard refusals when re-validating a changed selection', async () => {
+            const guardErrors = [{ Code: GUARD_ERROR_CODES.TOO_LITTLE_SPACE, Message: 'raw' }];
+            const deps = buildDeps({
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' }),
+                model: buildModel({
+                    planIDs: { [PLANS.DRIVE]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                }),
+                checkResult: buildCheckResult({ GuardResult: guardErrors }),
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(buildCheckResult({ GuardResult: [] })),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(
+                buildModel({ planIDs: { [PLANS.VPN2024]: 1 }, cycle: CYCLE.YEARLY, initialCheckComplete: true })
+            );
+
+            expect(deps.setters.setCheckResult).toHaveBeenNthCalledWith(
+                1,
+                expect.objectContaining({ GuardResult: [] })
+            );
+        });
+
+        it('keeps the guard verdict on a passive re-check for the same selection', async () => {
+            const guardErrors = [{ Code: GUARD_ERROR_CODES.TOO_LITTLE_SPACE, Message: 'raw' }];
+            const refusedResult = buildCheckResult({
+                GuardResult: guardErrors,
+                requestData: { Plans: { [PLANS.DRIVE]: 1 }, Currency: 'EUR', Cycle: CYCLE.YEARLY },
+            });
+            const passiveResult = buildCheckResult({
+                GuardResult: [],
+                Currency: 'USD',
+                requestData: { Plans: { [PLANS.DRIVE]: 1 }, Currency: 'USD', Cycle: CYCLE.YEARLY },
+            });
+            const subscription = buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' });
+            const modelAfterRefusal = buildModel({
+                planIDs: { [PLANS.DRIVE]: 1 },
+                cycle: CYCLE.YEARLY,
+                currency: 'EUR',
+                initialCheckComplete: true,
+            });
+            const deps = buildDeps({
+                subscription,
+                model: modelAfterRefusal,
+                checkResult: refusedResult,
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(passiveResult),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(
+                buildModel({
+                    planIDs: { [PLANS.DRIVE]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    currency: 'USD',
+                    initialCheckComplete: true,
+                })
+            );
+
+            expect(deps.paymentsApi.checkSubscription).toHaveBeenCalledWith(
+                expect.objectContaining({ ValidateGuards: false }),
+                expect.any(Object)
+            );
+            expect(deps.setters.setCheckResult).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    GuardResult: guardErrors,
+                    Currency: 'USD',
+                })
+            );
+        });
+
+        it('clears a stale guard verdict when reverting to the current subscription', async () => {
+            const guardErrors = [{ Code: GUARD_ERROR_CODES.TOO_LITTLE_SPACE, Message: 'raw' }];
+            const refusedResult = buildCheckResult({
+                GuardResult: guardErrors,
+                requestData: { Plans: { [PLANS.DRIVE]: 1 }, Currency: 'EUR', Cycle: CYCLE.YEARLY },
+            });
+            const clearedResult = buildCheckResult({
+                GuardResult: [],
+                requestData: { Plans: { [PLANS.MAIL]: 1 }, Currency: 'EUR', Cycle: CYCLE.YEARLY },
+            });
+            const subscription = buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' });
+
+            const depsAfterRefusal = buildDeps({
+                subscription,
+                model: buildModel({
+                    planIDs: { [PLANS.DRIVE]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                }),
+                checkResult: refusedResult,
+                paymentsApi: {
+                    checkSubscription: jest.fn().mockResolvedValue(clearedResult),
+                } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(depsAfterRefusal));
+
+            await result.current.check(
+                buildModel({
+                    planIDs: { [PLANS.MAIL]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                })
+            );
+
+            expect(depsAfterRefusal.paymentsApi.checkSubscription).toHaveBeenCalledWith(
+                expect.objectContaining({ ValidateGuards: false }),
+                expect.any(Object)
+            );
+            expect(depsAfterRefusal.setters.setCheckResult).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    GuardResult: [],
+                })
+            );
         });
     });
 
@@ -428,6 +711,48 @@ describe('useSubscriptionCheck', () => {
                 (global as any).AbortController = OriginalAbortController;
             }
         });
+
+        it('only commits the latest selection when an older guarded response settles last', async () => {
+            const latestResultGuard = 'latest selection guard';
+            let rejectOlderCheck: (reason: unknown) => void = () => {};
+
+            const checkSubscription = jest
+                .fn()
+                .mockImplementationOnce(
+                    (_payload, { signal }: { signal: AbortSignal }) =>
+                        new Promise((_resolve, reject) => {
+                            rejectOlderCheck = reject;
+                            signal.addEventListener('abort', () =>
+                                reject(Object.assign(new Error('aborted'), { name: 'AbortError' }))
+                            );
+                        })
+                )
+                .mockResolvedValueOnce(buildCheckResult({ GuardResult: latestResultGuard as any }));
+
+            const deps = buildDeps({
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' }),
+                paymentsApi: { checkSubscription } as any,
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            const olderCheck = result.current.check(buildModel({ planIDs: { [PLANS.DRIVE]: 1 }, cycle: CYCLE.YEARLY }));
+            const latestCheck = result.current.check(
+                buildModel({ planIDs: { [PLANS.VPN2024]: 1 }, cycle: CYCLE.YEARLY })
+            );
+
+            await latestCheck;
+            rejectOlderCheck(Object.assign(new Error('older response arrives late'), { name: 'AbortError' }));
+            await olderCheck;
+
+            expect(deps.setters.setCheckResult).toHaveBeenCalledTimes(1);
+            expect(deps.setters.setCheckResult).toHaveBeenCalledWith(
+                expect.objectContaining({ GuardResult: latestResultGuard })
+            );
+            expect(deps.setters.setModel).toHaveBeenCalledTimes(1);
+            expect(deps.setters.setModel).toHaveBeenCalledWith(
+                expect.objectContaining({ planIDs: { [PLANS.VPN2024]: 1 } })
+            );
+        });
     });
 
     describe('normalizeModel', () => {
@@ -497,6 +822,13 @@ describe('useSubscriptionCheck', () => {
             jest.mocked(getIsPlanTransitionForbidden).mockReturnValueOnce({ type: 'visionary-downgrade' } as any);
 
             const deps = withoutPlanTransitionChecks({
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.MONTHLY, currency: 'EUR' }),
+                model: buildModel({
+                    planIDs: { [PLANS.MAIL]: 1 },
+                    cycle: CYCLE.MONTHLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                }),
                 callbacks: {
                     runAdditionalEstimations: jest.fn().mockResolvedValue(undefined),
                     shouldPassIsTrial: jest.fn().mockReturnValue(false),
@@ -507,12 +839,79 @@ describe('useSubscriptionCheck', () => {
             });
             const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
 
-            const returnVal = await result.current.check(buildModel());
+            const returnVal = await result.current.check(
+                buildModel({
+                    planIDs: { [PLANS.MAIL]: 1 },
+                    cycle: CYCLE.MONTHLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                })
+            );
 
             expect(returnVal).toBeUndefined();
             expect(deps.paymentsApi.checkSubscription).not.toHaveBeenCalled();
             expect(deps.setters.setCheckResult).not.toHaveBeenCalled();
             expect(deps.setters.setModel).not.toHaveBeenCalled();
+        });
+
+        it('keeps the guard verdict when visionary downgrade is cancelled', async () => {
+            const guardErrors = [{ Code: GUARD_ERROR_CODES.TOO_LITTLE_SPACE, Message: 'raw' }];
+            jest.mocked(getIsPlanTransitionForbidden).mockReturnValueOnce({ type: 'visionary-downgrade' } as any);
+
+            const deps = withoutPlanTransitionChecks({
+                subscription: buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' }),
+                model: buildModel({
+                    planIDs: { [PLANS.DRIVE]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                }),
+                checkResult: buildCheckResult({ GuardResult: guardErrors }),
+                callbacks: {
+                    runAdditionalEstimations: jest.fn().mockResolvedValue(undefined),
+                    shouldPassIsTrial: jest.fn().mockReturnValue(false),
+                    onPlusToPlusTransition: jest.fn(),
+                    onVisionaryDowngradeWarning: jest.fn().mockRejectedValue(new Error('cancelled')),
+                    onVisionaryDowngradeHide: jest.fn(),
+                },
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(
+                buildModel({ planIDs: { [PLANS.VPN2024]: 1 }, cycle: CYCLE.YEARLY, initialCheckComplete: true })
+            );
+
+            expect(deps.paymentsApi.checkSubscription).not.toHaveBeenCalled();
+            expect(deps.setters.setModel).not.toHaveBeenCalled();
+            expect(deps.setters.setCheckResult).not.toHaveBeenCalled();
+        });
+
+        it('sends ValidateGuards: false after plus-to-plus reverts to the current subscription', async () => {
+            jest.mocked(getIsPlanTransitionForbidden).mockReturnValueOnce({
+                type: 'plus-to-plus',
+                newPlanName: 'mail2022',
+            } as any);
+
+            const subscription = buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' });
+            const deps = withoutPlanTransitionChecks({
+                subscription,
+                model: buildModel({
+                    planIDs: { [PLANS.MAIL]: 1 },
+                    cycle: CYCLE.YEARLY,
+                    currency: 'EUR',
+                    initialCheckComplete: true,
+                }),
+            });
+            const { result } = componentsHookRenderer(() => useSubscriptionContainerInnerCheck(deps));
+
+            await result.current.check(
+                buildModel({ planIDs: { [PLANS.DRIVE]: 1 }, cycle: CYCLE.YEARLY, initialCheckComplete: true })
+            );
+
+            expect(deps.paymentsApi.checkSubscription).toHaveBeenCalledWith(
+                expect.objectContaining({ ValidateGuards: false, Plans: { [PLANS.MAIL]: 1 } }),
+                expect.any(Object)
+            );
         });
 
         it('skips getIsPlanTransitionForbidden when skipPlanTransitionChecks is true', async () => {

@@ -1,10 +1,10 @@
-import type { MethodsHook } from '@proton/payments-ui/react-extensions/index';
+import type { MethodsHook } from '@proton/payments-ui/react-extensions/useMethods';
 import { PLANS } from '@proton/payments/core/constants';
 import type { CouponConfigMetadata } from '@proton/payments/core/coupon-config/interface';
 import type { PlanIDs } from '@proton/payments/core/interface';
 import { isCurrencyRestrictedMethod } from '@proton/payments/core/payment-methods/currencyOverride';
 import { isLifetimePlanSelected } from '@proton/payments/core/plan/helpers';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 const currencyLockedPlans = [PLANS.PASS_BASIC];
 

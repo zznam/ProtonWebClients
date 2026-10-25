@@ -1,5 +1,6 @@
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { Button } from '@proton/atoms/Button/Button';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { Href } from '@proton/atoms/Href/Href';
@@ -28,7 +29,9 @@ import { getTrialInfoForSingleSubscription } from '@proton/payments/core/trials'
 import { isPaidSubscription } from '@proton/payments/core/type-guards';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS } from '@proton/shared/lib/constants';
-import type { Address, Organization, UserModel } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { MailFeatureFlag } from '@proton/unleash/Flags';
 import { useFlag } from '@proton/unleash/useFlag';
 import isTruthy from '@proton/utils/isTruthy';
@@ -158,6 +161,7 @@ export const CurrentPlanInfoSection = ({
     editBillingCycle = false,
 }: CurrentPlanInfoSectionProps) => {
     const [openSubscriptionModal] = useSubscriptionModal();
+    const [entitlementCatalog] = useEntitlementCatalog();
     const { isFree, canPay, isMember } = user;
     const telemetryFlow = useDashboardPaymentFlow(app);
     const goToSettings = useSettingsLink();
@@ -230,7 +234,8 @@ export const CurrentPlanInfoSection = ({
                 isPaidSubscription(subscription) &&
                 willTrialExpireInLessThan1Week(subscription) &&
                 subscriptionExpiresSoon) ||
-            (getTrialInfoForSingleSubscription(subscription).isFamilyTrial && !hasTrialPaymentMethods)
+            (getTrialInfoForSingleSubscription(entitlementCatalog, subscription).isFamilyTrial &&
+                !hasTrialPaymentMethods)
         ) {
             return (
                 <Button onClick={() => handleEditPayment(SUBSCRIPTION_STEPS.CHECKOUT)} data-testid="subscribe">

@@ -2,19 +2,19 @@ import { getAppHref } from '@proton/shared/lib/apps/helper'
 import { APPS, SSO_PATHS } from '@proton/shared/lib/constants'
 import { replaceUrl } from '@proton/shared/lib/helpers/browser'
 import { getUrlWithReturnUrl } from '@proton/shared/lib/helpers/url'
+import { stripLocalBasenameFromPathname } from '@proton/shared/lib/authentication/pathnameHelper'
 import { PLANS } from '@proton/payments/core/constants'
-import { Actions, countActionWithTelemetry, traceTelemetry } from '@proton/drive-store/utils/telemetry'
+import { Actions, countActionWithTelemetry, traceTelemetry } from './telemetry'
 import { getCurrentTab, getNewWindow } from '@proton/shared/lib/helpers/window'
 import { DOCS_SIGNIN, DOCS_SIGNUP } from '@proton/shared/lib/docs/urls'
-import {
-  RedirectionReason,
-  drivePublicRedirectionReasonKey,
-} from '@proton/drive-store/hooks/util/useRedirectToPublicPage'
-import { saveUrlPasswordForRedirection } from '@proton/drive-store/utils/url/password'
-import type { DocumentType, RedirectAction } from '@proton/docs-shared'
-import { useDocumentWindowAction } from '@proton/docs-shared/lib/Hooks/useOpenDocument'
+import { RedirectionReason, drivePublicRedirectionReasonKey } from '@proton/docs-shared/URL/publicRedirectionReason'
+import { saveUrlPasswordForRedirection } from '@proton/docs-shared/URL/saveUrlPasswordForRedirection'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { RedirectAction } from '@proton/docs-shared/DocumentAction'
+import { useDocumentWindowAction } from '@proton/docs-shared/Hooks/useOpenDocument'
 import type { PublicContextValue } from '../context'
-import type { EditorControllerInterface, PublicDocumentState } from '@proton/docs-core'
+import type { EditorControllerInterface } from '@proton/docs-core/EditorController/EditorController'
+import type { PublicDocumentState } from '@proton/docs-core/State/DocumentState'
 import { useCallback } from 'react'
 import type { ProtonDocumentType } from '@proton/shared/lib/helpers/mimetype'
 
@@ -37,7 +37,7 @@ export function redirectToAccountSwitcher(token: string, linkId: string | undefi
   // We need to pass by the private app to set latest active session, then be redirected to public page.
   // This will be done in MainContainer.tsx on page loading
   returnUrlSearchParams.append(drivePublicRedirectionReasonKey, RedirectionReason.ACCOUNT_SWITCH)
-  const returnUrl = `/?`.concat(returnUrlSearchParams.toString())
+  const returnUrl = getReturnUrl(returnUrlSearchParams)
   const urlWithReturnUrl = getUrlWithReturnUrl(accountSwitchUrl.toString(), {
     returnUrl: returnUrl,
     context: 'private',
@@ -81,7 +81,7 @@ export async function redirectToSignUp({
     returnUrlSearchParams.append('linkId', linkId)
   }
 
-  const returnUrl = `/?`.concat(returnUrlSearchParams.toString())
+  const returnUrl = getReturnUrl(returnUrlSearchParams)
   const urlWithReturnUrl = new URL(
     getUrlWithReturnUrl(DOCS_SIGNUP, {
       returnUrl: returnUrl,
@@ -126,7 +126,7 @@ export async function redirectToSignIn({
     returnUrlSearchParams.append('linkId', linkId)
   }
 
-  const returnUrl = `/?`.concat(returnUrlSearchParams.toString())
+  const returnUrl = getReturnUrl(returnUrlSearchParams)
   const urlWithReturnUrl = new URL(
     getUrlWithReturnUrl(DOCS_SIGNIN, {
       returnUrl: returnUrl,
@@ -141,6 +141,14 @@ export async function redirectToSignIn({
   saveUrlPasswordForRedirection(urlPassword)
 
   openUrl(urlWithReturnUrl.toString(), openInNewTab)
+}
+
+/**
+ * Keeps the document type segment, so the private app opens the right editor and sends the user back
+ * to a public URL that already names the document type.
+ */
+function getReturnUrl(searchParams: URLSearchParams) {
+  return `${stripLocalBasenameFromPathname(window.location.pathname)}?${searchParams.toString()}`
 }
 
 /**

@@ -122,9 +122,6 @@
       "Fit table to page width": [
         "Pas tabel in breedte van de pagina"
       ],
-      "Go to label": [
-        "Ga naar label"
-      ],
       "Indent": [
         "Inspringen"
       ],
@@ -136,6 +133,9 @@
       ],
       "Insert comment": [
         "Opmerking invoegen"
+      ],
+      "Insert emoji": [
+        "Emoji invoegen"
       ],
       "Insert image": [
         "Afbeelding invoegen"
@@ -197,9 +197,6 @@
       "Refresh the page": [
         "Pagina vernieuwen"
       ],
-      "Remove": [
-        "Verwijderen"
-      ],
       "Remove link": [
         "Link verwijderen"
       ],
@@ -227,9 +224,6 @@
       "Strike-through": [
         "Doorstreep"
       ],
-      "Submit": [
-        "Versturen"
-      ],
       "Subscript": [
         "Subscript"
       ],
@@ -247,143 +241,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "appeltjesgroen"
-      ],
-      "azureish white": [
-        "azuurwit"
-      ],
       "black": [
         "zwart"
-      ],
-      "blanched almond": [
-        "geblancheerde amandel"
-      ],
-      "blue-gray": [
-        "blauw-grijs"
-      ],
-      "caramel": [
-        "karamel"
       ],
       "carrot": [
         "wortel"
       ],
-      "cerise": [
-        "kers"
-      ],
-      "cinnabar": [
-        "cinnaber"
-      ],
-      "cobalt": [
-        "kobalt"
-      ],
-      "copper": [
-        "koper"
-      ],
-      "cyan-blue azure": [
-        "cyaanblauw azuur"
-      ],
-      "dandelion": [
-        "paardenbloem"
-      ],
-      "dark cerulean": [
-        "donker ceruleumblauw"
-      ],
-      "dark midnight blue": [
-        "donker middernachtblauw"
-      ],
-      "dim gray": [
-        "zacht grijs"
-      ],
-      "enzian": [
-        "gentiaan"
-      ],
-      "fern": [
-        "varen"
-      ],
-      "field drab": [
-        "veldgrijs"
-      ],
-      "forest": [
-        "bos"
-      ],
-      "gainsboro": [
-        "gainsboro"
-      ],
       "gray": [
         "grijs"
-      ],
-      "japanese laurel": [
-        "japanse laurier"
-      ],
-      "kiwi": [
-        "kiwi"
-      ],
-      "lemon yellow": [
-        "citroengeel"
-      ],
-      "light carmine pink": [
-        "licht karmijnroze"
-      ],
-      "light moss green": [
-        "licht mosgroen"
-      ],
-      "light red": [
-        "lichtrood"
-      ],
-      "maize": [
-        "maïs"
-      ],
-      "mughal green": [
-        "mogolgroen"
-      ],
-      "ocean": [
-        "oceaan"
       ],
       "olive": [
         "olijf"
       ],
-      "outer space": [
-        "ruimte"
-      ],
       "pacific": [
         "stille oceaan"
       ],
-      "palatinate blue": [
-        "paltsblauw"
-      ],
-      "pale cerulean": [
-        "mat ceruleumblauw"
-      ],
-      "pastel gray": [
-        "pastelgrijs"
-      ],
-      "persian plum": [
-        "perziche pruim"
-      ],
-      "persian red": [
-        "perzisch rood"
-      ],
-      "philippine gray": [
-        "filippijnsgrijs"
-      ],
-      "philippine silver": [
-        "filippijnszilver"
-      ],
-      "pickle": [
-        "augurk"
-      ],
-      "pine": [
-        "den"
-      ],
       "pink": [
         "roze"
-      ],
-      "pistachio": [
-        "pistache"
-      ],
-      "plum": [
-        "pruim"
       ],
       "purple": [
         "paars"
@@ -394,29 +268,8 @@
       "reef": [
         "rif"
       ],
-      "ruddy pink": [
-        "roodachtig roze"
-      ],
-      "sahara": [
-        "sahara"
-      ],
-      "satin sheen gold": [
-        "satijnglanzend goud"
-      ],
       "slateblue": [
         "leisteenblauw"
-      ],
-      "soil": [
-        "aarde"
-      ],
-      "strawberry": [
-        "aardbei"
-      ],
-      "vivid auburn": [
-        "helder kastanjebruin"
-      ],
-      "white": [
-        "wit"
       ]
     },
     "Confirm": {
@@ -433,17 +286,46 @@
       ],
       "Read or print final document": [
         "Einddocument lezen of afdrukken"
+      ]
+    },
+    "Emoji category": {
+      "Activities": [
+        "Activiteiten"
       ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "Gebruik de keuzelijst hierboven om over te schakelen en te beginnen met suggesties doen."
+      "Animals and nature": [
+        "Dieren en natuur"
+      ],
+      "Flags": [
+        "Vlaggen"
+      ],
+      "Food and drink": [
+        "Eten en drinken"
+      ],
+      "Objects": [
+        "Objecten"
+      ],
+      "Smileys and people": [
+        "Smiley's en mensen"
+      ],
+      "Symbols": [
+        "Symbolen"
+      ],
+      "Travel and places": [
+        "Reizen en plekken"
       ]
     },
     "Error": {
       "An error occurred while loading the document. To prevent document corruption, the editor has been locked. Please reload the page and try again. If the error persists, please open Version History from the menu options to attempt to restore your document to an earlier version.": [
         "Er is een fout opgetreden tijdens het laden van het document. Om corruptie te voorkomen is de tekstverwerker vergrendeld. Herlaad de pagina en probeer het opnieuw. Als de fout zich blijft voordoen, open dan Versiegeschiedenis in het menu om te proberen het document terug te zetten naar een eerdere versie."
       ],
+      "Could not load emoji. Close the picker and try again.": [
+        "Kan emoji niet laden. Sluit de kiezer en probeer het opnieuw."
+      ],
       "Failed to export document.": [
         "Exporteren van document mislukt."
+      ],
+      "Failed to import document due to unsupported file format.": [
+        "Kan het document niet importeren vanwege een niet-ondersteunde bestandsindeling."
       ],
       "Failed to import HTML due to unknown error.": [
         "Importeren van HTML mislukt door een onbekende fout."
@@ -465,9 +347,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "Dit rekenblad is incompatibel met de huidige clientversie. Probeer de client opnieuw te laden. Als de fout blijft optreden, neem dan contact op met de ondersteuning."
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "Probeerde Sheet gegevens te importeren in Lexical"
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "Kan het Word-document niet converteren. Is het met een wachtwoord beveiligd? Verwijder dan het wachtwoord en probeer het opnieuw."
@@ -544,11 +423,11 @@
       "Just now": [
         "Zojuist"
       ],
-      "Labels:": [
-        "Labels:"
-      ],
       "Loading": [
         "Laden"
+      ],
+      "Loading emoji…": [
+        "Emoji laden…"
       ],
       "NEW": [
         "NIEUW"
@@ -558,6 +437,9 @@
       ],
       "No comments": [
         "Geen reacties"
+      ],
+      "No emoji found": [
+        "Geen Emoji gevonden"
       ],
       "No title": [
         "Geen titel"
@@ -612,6 +494,9 @@
       "Clear formatting": [
         "Opmaak wissen"
       ],
+      "Comments": [
+        "Opmerkingen"
+      ],
       "Delete": [
         "Verwijderen"
       ],
@@ -641,6 +526,12 @@
       ],
       "Duplicate table row": [
         "Dubbele tabelrij"
+      ],
+      "Emoji": [
+        "Emoji"
+      ],
+      "Emoji suggestions": [
+        "Emojisuggesties"
       ],
       "Format": [
         "Formaat"
@@ -681,11 +572,20 @@
       "Page break": [
         "Pagina-einde"
       ],
+      "Recent": [
+        "Recent"
+      ],
       "Replace": [
         "Vervangen"
       ],
       "Replace link": [
         "Link vervangen"
+      ],
+      "Search emoji": [
+        "Zoek emoji"
+      ],
+      "Search results": [
+        "Zoekresultaten"
       ],
       "Text and highlight color": [
         "Tekst en markeer kleur"
@@ -846,7 +746,377 @@
         "Notitie"
       ]
     },
+    "sheets_2025:Spreadsheet cellFormatOptions": {
+      "Accounting": [
+        "Boekhouding"
+      ],
+      "Bottom": [
+        "Onderaan"
+      ],
+      "Center": [
+        "Centreer"
+      ],
+      "Clip": [
+        "Clip"
+      ],
+      "Currency": [
+        "Valuta"
+      ],
+      "Currency formats are used for general monetary values.": [
+        "Valutaformaten worden gebruikt voor algemene geldwaarden."
+      ],
+      "Custom": [
+        "Aangepast"
+      ],
+      "Date": [
+        "Datum"
+      ],
+      "Date formats display date and time serial numbers as date values.": [
+        "Datumnotaties geven datum- en tijdserienummers weer als datumwaarden."
+      ],
+      "Fraction": [
+        "Fractie"
+      ],
+      "General": [
+        "Algemeen"
+      ],
+      "General format cells have no specific number format.": [
+        "Cellen met een algemeen formaat hebben geen specifiek getalformaat."
+      ],
+      "Left": [
+        "Links"
+      ],
+      "Number": [
+        "Getal"
+      ],
+      "Number is used for general display of numbers.": [
+        "Getal wordt gebruikt voor de algemene weergave van getallen."
+      ],
+      "Overflow": [
+        "Overloop"
+      ],
+      "Percentage": [
+        "Percentage"
+      ],
+      "Right": [
+        "Rechts"
+      ],
+      "Scientific": [
+        "Wetenschappelijk"
+      ],
+      "Text": [
+        "Tekst"
+      ],
+      "Time": [
+        "Tijd"
+      ],
+      "Time formats display date and time serial numbers as date values.": [
+        "Tijdnotaties geven datum- en tijdserienummers weer als datumwaarden."
+      ],
+      "Top": [
+        "Bovenste"
+      ],
+      "Wrap": [
+        "Omsluiten"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartAggregates": {
+      "Average": [
+        "Gemiddelde"
+      ],
+      "Count": [
+        "Aantal"
+      ],
+      "Max": [
+        "Max"
+      ],
+      "Median": [
+        "Mediaan"
+      ],
+      "Min": [
+        "Min"
+      ],
+      "Sum": [
+        "Som"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartEditorDialog": {
+      "None": [
+        "Geen"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartTypes": {
+      "2D Pie": [
+        "2D Taart"
+      ],
+      "Clustered Column": [
+        "Gegroepeerde kolom"
+      ],
+      "Column": [
+        "Kolom"
+      ],
+      "Doughnut": [
+        "Ring"
+      ],
+      "Hierarchy": [
+        "Hiërarchie"
+      ],
+      "Line": [
+        "Lijn"
+      ],
+      "Pie": [
+        "Stuk"
+      ],
+      "Smooth line": [
+        "Vloeiende lijn"
+      ],
+      "Stacked column": [
+        "Gestapelde kolom"
+      ],
+      "Stacked line": [
+        "Gestapelde lijn"
+      ],
+      "Sunburst": [
+        "Zonnestraal"
+      ],
+      "Treemap": [
+        "Boomstructuur"
+      ]
+    },
+    "sheets_2025:Spreadsheet conditions": {
+      "Above average": [
+        "Boven gemiddeld"
+      ],
+      "April": [
+        "April"
+      ],
+      "August": [
+        "Augustus"
+      ],
+      "Below average": [
+        "Beneden gemiddeld"
+      ],
+      "Between": [
+        "Tussen"
+      ],
+      "Bottom N items": [
+        "Laatste N items"
+      ],
+      "Bottom N percent": [
+        "Laagste N procent"
+      ],
+      "Checkbox": [
+        "Checkbox"
+      ],
+      "Custom formula": [
+        "Aangepaste formule"
+      ],
+      "Date is after": [
+        "Datum is na"
+      ],
+      "Date is before": [
+        "Datum ligt voor"
+      ],
+      "Date is between": [
+        "Datum ligt tussen"
+      ],
+      "Date is equal to": [
+        "Datum is gelijk aan"
+      ],
+      "Date is not between": [
+        "Datum ligt niet tussen"
+      ],
+      "Date is not equal to": [
+        "Datum is niet gelijk aan"
+      ],
+      "Date is on or after": [
+        "Datum is op of na"
+      ],
+      "Date is on or before": [
+        "Datum is op of voor"
+      ],
+      "Date is valid": [
+        "Datum is geldig"
+      ],
+      "December": [
+        "December"
+      ],
+      "Dropdown": [
+        "Keuzemenu"
+      ],
+      "Dropdown (from a range)": [
+        "Vervolgkeuzelijst (uit een bereik)"
+      ],
+      "Equal to": [
+        "Gelijk aan"
+      ],
+      "Errors": [
+        "Fouten"
+      ],
+      "February": [
+        "Februari"
+      ],
+      "Greater than": [
+        "Groter dan"
+      ],
+      "Greater than or equal to": [
+        "Groter dan of gelijk aan"
+      ],
+      "Greater than or equal to previous": [
+        "Groter dan of gelijk aan de vorige"
+      ],
+      "Greater than previous": [
+        "Groter dan vorige"
+      ],
+      "Is empty": [
+        "Is leeg"
+      ],
+      "Is not empty": [
+        "Is niet leeg"
+      ],
+      "January": [
+        "Januari"
+      ],
+      "July": [
+        "Juli"
+      ],
+      "June": [
+        "Juni"
+      ],
+      "Last 7 days": [
+        "Afgelopen 7 dagen"
+      ],
+      "Last month": [
+        "Afgelopen maand"
+      ],
+      "Last quarter": [
+        "Laatste kwartaal"
+      ],
+      "Last week": [
+        "Laatste week"
+      ],
+      "Last year": [
+        "Afgelopen jaar"
+      ],
+      "Less than": [
+        "Kleiner dan"
+      ],
+      "Less than or equal to": [
+        "Kleiner dan of gelijk aan"
+      ],
+      "Less than or equal to previous": [
+        "Kleiner dan of gelijk aan vorige"
+      ],
+      "Less than previous": [
+        "Kleiner dan vorige"
+      ],
+      "March": [
+        "Maart"
+      ],
+      "May": [
+        "Mei"
+      ],
+      "Next month": [
+        "Volgende maand"
+      ],
+      "Next quarter": [
+        "Volgend kwartaal"
+      ],
+      "Next week": [
+        "Volgende week"
+      ],
+      "Next year": [
+        "Volgend jaar"
+      ],
+      "No errors": [
+        "Geen fouten"
+      ],
+      "Not between": [
+        "Niet tussen"
+      ],
+      "Not equal to": [
+        "Niet gelijk aan"
+      ],
+      "November": [
+        "November"
+      ],
+      "October": [
+        "Oktober"
+      ],
+      "Quarter 1": [
+        "Kwartaal 1"
+      ],
+      "Quarter 2": [
+        "Kwartaal 2"
+      ],
+      "Quarter 3": [
+        "Kwartaal 3"
+      ],
+      "Quarter 4": [
+        "Kwartaal 4"
+      ],
+      "September": [
+        "September"
+      ],
+      "Text contains": [
+        "Tekst bevat"
+      ],
+      "Text does not contain": [
+        "Tekst bevat geen"
+      ],
+      "Text ends with": [
+        "De tekst eindigt met"
+      ],
+      "Text is email": [
+        "Tekst is een e-mail"
+      ],
+      "Text is exactly": [
+        "Tekst is exact"
+      ],
+      "Text is not equal": [
+        "Tekst is niet gelijk"
+      ],
+      "Text is URL": [
+        "Tekst is URL"
+      ],
+      "Text starts with": [
+        "Tekst begint met"
+      ],
+      "This month": [
+        "Deze maand"
+      ],
+      "This quarter": [
+        "Dit kwartaal"
+      ],
+      "This week": [
+        "Deze week"
+      ],
+      "This year": [
+        "Dit jaar"
+      ],
+      "Today": [
+        "Vandaag"
+      ],
+      "Tomorrow": [
+        "Morgen"
+      ],
+      "Top N items": [
+        "Top N items"
+      ],
+      "Top N percent": [
+        "Hoogste N procent"
+      ],
+      "Year to date": [
+        "Dit jaar"
+      ],
+      "Yesterday": [
+        "Gisteren"
+      ]
+    },
     "sheets_2025:Spreadsheet context menu": {
+      "(Blanks)": [
+        "(Spaties)"
+      ],
       "AI Quick Edit": [
         "AI Snelle Bewerking"
       ],
@@ -1192,6 +1462,14 @@
         "Jaar"
       ]
     },
+    "sheets_2025:Spreadsheet customCurrencyFormatDialog": {
+      "Format": [
+        "Formatteer"
+      ],
+      "Symbol": [
+        "Symbool"
+      ]
+    },
     "sheets_2025:Spreadsheet delete sheet dialog": {
       "Are you sure you want to delete ${ sheetName }?": [
         "Weet u zeker dat u \"${ sheetName }\" wilt verwijderen?"
@@ -1218,6 +1496,11 @@
       ],
       "Your screen is too small to edit this spreadsheet. You’re in view-only mode. To make changes, please open this spreadsheet on a larger screen or expand your browser window.": [
         "Uw scherm is te klein om dit spreadsheet te bewerken. U bevindt zich in de alleen-lezenmodus. Om wijzigingen aan te brengen, opent u dit spreadsheet op een groter scherm of vergroot u uw browservenster."
+      ]
+    },
+    "sheets_2025:Spreadsheet editingDisabledButton": {
+      "Edit": [
+        "Bewerken"
       ]
     },
     "sheets_2025:Spreadsheet editor": {
@@ -1651,6 +1934,9 @@
       ]
     },
     "sheets_2025:Spreadsheet editor search dialog": {
+      "${ current } of ${ total }": [
+        "${ current } van ${ total }"
+      ],
       "Close": [
         "Sluiten"
       ],
@@ -1682,11 +1968,29 @@
       ]
     },
     "sheets_2025:Spreadsheet editor toolbar": {
+      "Apply border": [
+        "Rand toepassen"
+      ],
+      "Apply fill color": [
+        "Vulkleur toepassen"
+      ],
+      "Apply text color": [
+        "Tekstkleur toepassen"
+      ],
       "Bold": [
         "Dikgedrukt"
       ],
       "Border": [
         "Rand"
+      ],
+      "Choose border": [
+        "Kies rand"
+      ],
+      "Choose fill color": [
+        "Kies vulkleur"
+      ],
+      "Choose text color": [
+        "Kies tekstkleur"
       ],
       "Clear formatting": [
         "Opmaak wissen"
@@ -1704,7 +2008,7 @@
         "Standaard (${ defaultFont })"
       ],
       "Fill color": [
-        "Vulkleur"
+        "Opvulkleur"
       ],
       "Find": [
         "Zoeken"
@@ -1835,6 +2139,35 @@
         "Sorteren Z → A"
       ]
     },
+    "sheets_2025:Spreadsheet filterByCondition": {
+      "None": [
+        "Geen"
+      ]
+    },
+    "sheets_2025:Spreadsheet formatMenu": {
+      "Coming soon...": [
+        "Binnenkort beschikbaar..."
+      ]
+    },
+    "sheets_2025:Spreadsheet formulaBar": {
+      "Edit": [
+        "Bewerken"
+      ],
+      "Remove": [
+        "Verwijderen"
+      ],
+      "View": [
+        "Bekijken"
+      ]
+    },
+    "sheets_2025:Spreadsheet gridFooter": {
+      "Add": [
+        "Toevoegen"
+      ],
+      "more rows at the bottom": [
+        "Meer rijen onderaan"
+      ]
+    },
     "sheets_2025:Spreadsheet insert link dialog": {
       "Apply": [
         "Toepassen"
@@ -1870,23 +2203,23 @@
       "Cancel": [
         "Annuleren"
       ],
-      "column": [
-        "kolom"
-      ],
-      "column width": [
-        "kolombreedte"
-      ],
-      "Default": [
-        "Standaard"
+      "Default ${ size }": [
+        "Standaard (${ size }"
       ],
       "OK": [
         "OK"
       ],
-      "row": [
-        "rij"
+      "Resize column ${ title }": [
+        "Kolombreedte van ${ title } aanpassen"
       ],
-      "row height": [
-        "rijhoogte"
+      "Resize row ${ title }": [
+        "Rijhoogte van ${ title } aanpassen"
+      ],
+      "Specify column width (px)": [
+        "Kolombreedte opgeven (px)"
+      ],
+      "Specify row height (px)": [
+        "Specificeer rijhoogte (px)"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2061,6 +2394,18 @@
       ],
       "Series": [
         "Reeks"
+      ],
+      "Series ${ seriesNumber }": [
+        "Serie ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Aggregate": [
+        "Serie ${ seriesNumber } Aggregatie"
+      ],
+      "Series ${ seriesNumber } Name": [
+        "Serie ${ seriesNumber } Naam"
+      ],
+      "Series ${ seriesNumber } Range": [
+        "Serie ${ seriesNumber } Bereik"
       ],
       "Show data in hidden rows and columns": [
         "Gegevens weergeven in verborgen rijen en kolommen"
@@ -2326,15 +2671,32 @@
         "Tabeltitel"
       ]
     },
+    "sheets_2025:Spreadsheet viewMenu": {
+      "1 column": [
+        "1 kolom"
+      ],
+      "1 row": [
+        "1 rij"
+      ],
+      "2 columns": [
+        "2 kolommen"
+      ],
+      "2 rows": [
+        "2 rijen"
+      ],
+      "No columns": [
+        "Geen kolommen"
+      ],
+      "No rows": [
+        "Geen rijen"
+      ]
+    },
     "Title": {
       "Delete comment": [
         "Reactie verwijderen"
       ],
       "Delete thread": [
         "Gesprek verwijderen"
-      ],
-      "Explore the New Suggestion Mode": [
-        "Verken de nieuwe suggestiesmodus"
       ],
       "Language not supported": [
         "Taal wordt niet ondersteund"

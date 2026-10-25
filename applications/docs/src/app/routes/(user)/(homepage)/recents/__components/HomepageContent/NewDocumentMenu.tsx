@@ -1,18 +1,17 @@
-import Icon from '@proton/components/components/icon/Icon'
+import { IcBrandProtonDocs } from '@proton/icons/icons/IcBrandProtonDocs'
+import { IcBrandProtonSheets } from '@proton/icons/icons/IcBrandProtonSheets'
 import useAuthentication from '@proton/components/hooks/useAuthentication'
 import { TelemetryDocsHomepageEvents } from '@proton/shared/lib/api/telemetry'
 import { getAppHref } from '@proton/shared/lib/apps/helper'
 import { APPS } from '@proton/shared/lib/constants'
 import { Menu, MenuItem } from '@proton/docs-shared/components/ui/ui'
 import { c } from 'ttag'
-import { ICON_BY_TYPE, COLOR_BY_TYPE } from './shared'
+import { COLOR_BY_TYPE, REFRESH_AFTER_NEW_DOCUMENT } from './shared'
 import { useApplication } from '~/utils/application-context'
 import { useHomepageView } from '../../__utils/homepage-view'
 import { useIsSheetsEnabled } from '~/utils/flags'
 import clsx from '@proton/utils/clsx'
 import type * as Ariakit from '@ariakit/react'
-
-const REFRESH_AFTER_NEW_DOCUMENT = 10000 // ms
 
 interface Props extends Ariakit.MenuProps {}
 
@@ -26,8 +25,7 @@ export function NewDocumentMenu({ className, ...rest }: Props) {
       <MenuItem
         className="no-underline"
         leadingIconSlot={
-          <Icon
-            name={ICON_BY_TYPE.document}
+          <IcBrandProtonDocs
             size={5}
             className="shrink-0 text-[--icon-color]"
             style={{ '--icon-color': COLOR_BY_TYPE.document }}
@@ -46,8 +44,7 @@ export function NewDocumentMenu({ className, ...rest }: Props) {
         <MenuItem
           className="no-underline"
           leadingIconSlot={
-            <Icon
-              name={ICON_BY_TYPE.spreadsheet}
+            <IcBrandProtonSheets
               size={5}
               className="shrink-0 text-[--icon-color]"
               style={{ '--icon-color': COLOR_BY_TYPE.spreadsheet }}
@@ -55,6 +52,7 @@ export function NewDocumentMenu({ className, ...rest }: Props) {
           }
           // eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-has-content
           render={<a href={getAppHref('/sheet', APPS.PROTONDOCS, getLocalID())} target="_blank" />}
+          onClick={() => setTimeout(updateRecentDocuments, REFRESH_AFTER_NEW_DOCUMENT)}
         >
           {c('sheets_2025:Action').t`New spreadsheet`}
         </MenuItem>

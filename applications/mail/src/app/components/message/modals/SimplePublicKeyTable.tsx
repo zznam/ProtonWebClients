@@ -12,10 +12,10 @@ import TableHeader from '@proton/components/components/table/TableHeader';
 import TableHeaderCell from '@proton/components/components/table/TableHeaderCell';
 import TableRow from '@proton/components/components/table/TableRow';
 import KeyVersionBadge from '@proton/components/containers/keys/KeyVersionBadge';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { dateLocale } from '@proton/shared/lib/i18n';
-import type { ContactWithBePinnedPublicKey } from '@proton/shared/lib/interfaces/contacts';
-import { getFormattedAlgorithmName } from '@proton/shared/lib/keys';
+import type { ContactWithBePinnedPublicKey } from '@proton/shared/lib/interfaces/contacts/Contact';
+import { getFormattedAlgorithmName } from '@proton/shared/lib/keys/keyAlgorithm';
 
 interface Props {
     contact: ContactWithBePinnedPublicKey;

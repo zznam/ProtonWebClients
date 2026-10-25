@@ -4,8 +4,8 @@ import { DropdownSizeUnit } from '@proton/components/components/dropdown/utils'
 import { useEffect } from 'react'
 
 import { OpenButton } from './buttons/OpenButton'
-import type { RecentDocumentsItem } from '@proton/docs-core'
-import { rawPermissionToRole } from '@proton/docs-core'
+import type { RecentDocumentsItem } from '@proton/docs-core/Services/recent-documents'
+import { rawPermissionToRole } from '@proton/docs-core/Types/DocumentEntitlements'
 import type { ContextMenuProps } from '@proton/components/components/contextMenu/ContextMenu'
 import { OpenFolderButton } from './buttons/OpenFolderButton'
 import { ShareButton } from './buttons/ShareButton'
@@ -18,7 +18,7 @@ import { useHomepageView } from '../../../__utils/homepage-view'
 import { RestoreFromTrashButton } from './buttons/RestoreFromTrash'
 import { DeletePermanentlyButton } from './buttons/DeletePermanently'
 import { useLoadRecentsWithSdkEnabled, useTrashWithSDK } from '~/utils/flags'
-import { MemberRole } from '@proton/drive'
+import { MemberRole } from '@proton/drive/sdk'
 
 export type DocContextMenuProps = Omit<ContextMenuProps, 'children'> & {
   currentDocument: RecentDocumentsItem | undefined
@@ -30,7 +30,7 @@ export type DocContextMenuProps = Omit<ContextMenuProps, 'children'> & {
 
 export function DocContextMenu({ anchorRef, isOpen, position, open, close, currentDocument }: DocContextMenuProps) {
   const canShare = useCanShare(currentDocument)
-  const canTrash = useCanTrash(currentDocument)
+  const canTrash = useCanTrash()
 
   // NOTE: this effect was copied from packages/drive-store/components/sections/ContextMenu/ItemContextMenu.tsx
   // I'm not actually sure it's necessary here, but I'm leaving it in for now just in case.
@@ -97,7 +97,7 @@ export function DocContextMenu({ anchorRef, isOpen, position, open, close, curre
             <MoveButton currentDocument={currentDocument} close={close} />
             <OpenFolderButton currentDocument={currentDocument} close={close} />
             <RenameButton currentDocument={currentDocument} close={close} />
-            {canTrash ? (
+            {canTrash(currentDocument) ? (
               <>
                 {separator}
                 <MoveToTrashButton currentDocument={currentDocument} />
@@ -131,16 +131,11 @@ function useCanShare(currentDocument: RecentDocumentsItem | undefined) {
   return !currentDocument.isSharedWithMe
 }
 
-function useCanTrash(currentDocument: RecentDocumentsItem | undefined) {
+export function useCanTrash() {
   const trashWithSDK = useTrashWithSDK()
   const loadRecentsWithSdkEnabled = useLoadRecentsWithSdkEnabled()
+  const checkRole = trashWithSDK && loadRecentsWithSdkEnabled
 
-  if (!currentDocument) {
-    return false
-  }
-
-  if (trashWithSDK && loadRecentsWithSdkEnabled) {
-    return currentDocument.effectiveRole === MemberRole.Admin
-  }
-  return !currentDocument.isSharedWithMe
+  return (document: RecentDocumentsItem) =>
+    checkRole ? document.effectiveRole === MemberRole.Admin : !document.isSharedWithMe
 }

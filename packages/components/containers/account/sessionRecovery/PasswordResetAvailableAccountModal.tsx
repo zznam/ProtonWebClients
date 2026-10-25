@@ -12,7 +12,7 @@ import {
 import { useUser } from '@proton/account/user/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import observeApiError from '@proton/metrics/observeApiError';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
@@ -25,7 +25,7 @@ import ModalContent from '../../../components/modalTwo/ModalContent';
 import ModalFooter from '../../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../../components/modalTwo/ModalHeader';
 import PasswordWithPolicyInputs from '../../../components/passwordPolicy/PasswordWithPolicyInputs';
-import { usePasswordPolicyValidation } from '../../../components/passwordPolicy/index';
+import { usePasswordPolicyValidation } from '../../../components/passwordPolicy/usePasswordPolicyValidation';
 import useFormErrors from '../../../components/v2/useFormErrors';
 import useErrorHandler from '../../../hooks/useErrorHandler';
 import ConfirmSessionRecoveryCancellationModal from './ConfirmSessionRecoveryCancellationModal';

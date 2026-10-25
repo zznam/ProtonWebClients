@@ -3,15 +3,21 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { c } from 'ttag';
 
-import { useModalStateObject } from '@proton/components';
+import { useModalStateObject } from '@proton/components/components/modalTwo/useModalState';
 import { useFlag } from '@proton/unleash/useFlag';
 
+import { ASK_USER_QUESTIONS_TOOL_NAME } from '../../../../../features/client-tools/askUserQuestionsTool/askUserQuestionsTool';
 import { useChatLimitGate } from '../../../../../hooks/useChatLimitGate';
 import { useCopyNotification } from '../../../../../hooks/useCopyNotification';
 import type { HandleRegenerateMessage } from '../../../../../hooks/useLumoActions';
 import { useLumoFlags } from '../../../../../hooks/useLumoFlags';
 import type { SearchItem, ToolCallName } from '../../../../../lib/toolCall/types';
-import { getMessageBlocks, getMessageContent, messagesEqualForRendering } from '../../../../../messageHelpers';
+import {
+    findToolResultForCall,
+    getMessageBlocks,
+    getMessageContent,
+    messagesEqualForRendering,
+} from '../../../../../messageHelpers';
 import { useIsGuest } from '../../../../../providers/IsGuestProvider';
 import { useWebSearch } from '../../../../../providers/WebSearchProvider';
 import type { ContentBlock, Message, MessageUsage, RetryStrategy, SiblingInfo } from '../../../../../types';
@@ -29,7 +35,6 @@ import { ArtifactChip } from '../../../artifact/ArtifactChip';
 import { ArtifactChipLoading } from '../../../artifact/ArtifactChipLoading';
 import { useArtifactContext } from '../../../artifact/ArtifactContext';
 import { getToolCallNameFromBlock, isArtifactGenerationLoading } from '../../../artifact/artifactGenerationState';
-import { getArtifactVersionIndexForMessage } from '../../../artifact/artifactRegistry';
 import {
     CREATE_ARTIFACT_TOOL_NAME,
     extractCompleteArtifactsFromBlocks,
@@ -37,6 +42,7 @@ import {
 } from '../../../artifact/createArtifactTool';
 import type { ParsedArtifact } from '../../../artifact/parseArtifacts';
 import LumoCopyButton from '../actionToolbar/LumoCopyButton';
+import { AskUserQuestionsToolMessage } from '../askUserQuestions/AskUserQuestionsToolMessage';
 import { SourcesButton } from '../toolCall/SourcesBlock';
 import { extractSearchResults, parseToolCallBlock } from '../toolCall/toolCallUtils';
 import { SuggestedQuestions } from './SuggestedQuestions';
@@ -223,7 +229,7 @@ const AssistantMessageArtifactSection = ({
     messageId,
     showArtifactGenerationLoading,
 }: AssistantMessageArtifactSectionProps) => {
-    const { selectedId, openArtifact, registry, panelUserClosed, resetPanelUserClosed } = useArtifactContext();
+    const { resetPanelUserClosed } = useArtifactContext();
     const hasArtifacts = completeArtifacts.length > 0;
 
     const wasGeneratingRef = useRef(isGenerating);
@@ -235,34 +241,6 @@ const AssistantMessageArtifactSection = ({
             resetPanelUserClosed();
         }
     }, [isLastMessage, isGenerating, resetPanelUserClosed]);
-
-    const hasAutoOpenedRef = useRef(false);
-    useEffect(() => {
-        hasAutoOpenedRef.current = false;
-    }, [messageId]);
-
-    useEffect(() => {
-        if (!isLastMessage || completeArtifacts.length === 0 || !completeArtifacts[0] || hasAutoOpenedRef.current) {
-            return;
-        }
-
-        const artifact = completeArtifacts[0];
-        const versionIndex = getArtifactVersionIndexForMessage(registry, artifact.id, messageId);
-        if (versionIndex === null) {
-            return;
-        }
-
-        if (panelUserClosed) {
-            return;
-        }
-
-        if (selectedId !== null) {
-            return;
-        }
-
-        hasAutoOpenedRef.current = true;
-        openArtifact(artifact.id, versionIndex);
-    }, [isLastMessage, completeArtifacts, registry, messageId, panelUserClosed, selectedId, openArtifact]);
 
     if (!showArtifactGenerationLoading && !hasArtifacts) {
         return null;
@@ -350,25 +328,21 @@ const AssistantMessage = ({
             parentUserMessage,
         });
 
-    // Hide create_artifact tool_call/tool_result blocks from the generic tool-call timeline —
-    // ArtifactChip renders them instead, below.
+    // Question cards and artifact chips render these tools outside the generic tool-call timeline.
     const cleanedBlocks = useMemo(() => {
-        if (!isArtifactsViewFlagEnabled || !hasArtifacts) {
-            return blocks;
+        const hiddenBlocks = new Set<ContentBlock>();
+        for (const block of blocks) {
+            if (block.type !== 'tool_call') continue;
+
+            const name = getToolCallNameFromBlock(block);
+            const isArtifactTool = isArtifactsViewFlagEnabled && hasArtifacts && name === CREATE_ARTIFACT_TOOL_NAME;
+            if (name !== ASK_USER_QUESTIONS_TOOL_NAME && !isArtifactTool) continue;
+
+            hiddenBlocks.add(block);
+            const result = findToolResultForCall(blocks, block);
+            if (result) hiddenBlocks.add(result);
         }
-        const artifactCallIndices = new Set<number>();
-        blocks.forEach((block, idx) => {
-            const parsed = block.type === 'tool_call' ? (block.toolCall as { name?: string } | undefined) : undefined;
-            if (parsed?.name === CREATE_ARTIFACT_TOOL_NAME) {
-                artifactCallIndices.add(idx);
-            }
-        });
-        return blocks.filter((block, idx) => {
-            if (artifactCallIndices.has(idx)) {
-                return false;
-            }
-            return !(block.type === 'tool_result' && artifactCallIndices.has(idx - 1));
-        });
+        return blocks.filter((block) => !hiddenBlocks.has(block));
     }, [blocks, hasArtifacts, isArtifactsViewFlagEnabled]);
 
     // Extract search results for legacy sources button
@@ -466,6 +440,9 @@ const AssistantMessage = ({
                                                 messageContentContainerRef={markdownContainerRef}
                                                 reasoning={message.reasoning}
                                             />
+                                            {isLastMessage && !isGenerating && (
+                                                <AskUserQuestionsToolMessage blocks={blocks} />
+                                            )}
                                             {isArtifactsViewFlagEnabled && (
                                                 <AssistantMessageArtifactSection
                                                     completeArtifacts={completeArtifacts}

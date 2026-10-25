@@ -3,16 +3,14 @@ import { act } from '@testing-library/react-hooks';
 
 import { mockUseUserKeys } from '@proton/account/testing/vitest/mockUseUserKeys';
 import { mockUseNotifications } from '@proton/app-context/testing/vitest/mockUseNotifications';
-import { setupCryptoProxyForTesting } from '@proton/pass/lib/crypto/utils/testing';
-import type { DecryptedKey } from '@proton/shared/lib/interfaces';
-import {
-    mockUseApiWalletTransactionData,
-    mockUseContactEmails,
-    mockUseSaveVCardContact,
-    mockUseWalletApi,
-} from '@proton/wallet/tests/mocks';
-import { getUserKeys } from '@proton/wallet/tests/utils';
-import type { DecryptedTransactionData } from '@proton/wallet/types';
+import { setupCryptoProxyForTesting } from '@proton/pass/utils/tests/fixtures/crypto';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import { mockUseApiWalletTransactionData } from '@proton/wallet/tests/mocks/useApiWalletTransactionData';
+import { mockUseContactEmails } from '@proton/wallet/tests/mocks/useContactEmails';
+import { mockUseSaveVCardContact } from '@proton/wallet/tests/mocks/useSaveVCardContact';
+import { mockUseWalletApi } from '@proton/wallet/tests/mocks/useWalletApi';
+import { getUserKeys } from '@proton/wallet/tests/utils/keys';
+import type { DecryptedTransactionData } from '@proton/wallet/types/transactions';
 import { decryptPgp } from '@proton/wallet/utils/crypto';
 
 import { mockUseWalletDispatch } from '../../tests';

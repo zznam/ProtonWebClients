@@ -6,11 +6,14 @@ import { Banner } from '@proton/atoms/Banner/Banner';
 import { Button } from '@proton/atoms/Button/Button';
 import { Card } from '@proton/atoms/Card/Card';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
-import { FileInput, InputFieldTwo, Tabs, Toggle } from '@proton/components';
-import type { NodeEntity } from '@proton/drive';
+import FileInput from '@proton/components/components/input/FileInput';
+import { Tabs } from '@proton/components/components/tabs/Tabs';
+import Toggle from '@proton/components/components/toggle/Toggle';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import type { ExpectedTreeNode } from '@proton/drive/diagnostic';
 import ModalContentLoader from '@proton/drive/modals/modalUtils/ModalContentLoader';
 import { getNodeName } from '@proton/drive/modules/nodes';
+import type { NodeEntity } from '@proton/drive/sdk';
 import { IcExclamationTriangleFilled } from '@proton/icons/icons/IcExclamationTriangleFilled';
 
 import { withHoc } from '../modalUtils/withHoc';

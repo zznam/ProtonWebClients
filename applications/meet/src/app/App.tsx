@@ -4,6 +4,7 @@ import { Route, useHistory, useLocation } from 'react-router-dom';
 import ProtonApp from '@proton/components/containers/app/ProtonApp';
 import { useMeetSelector } from '@proton/meet/store/hooks';
 import { getIsGuestFromUrl, selectIsGuest } from '@proton/meet/store/slices/userSlice';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { isMac } from '@proton/shared/lib/helpers/browser';
 import { isElectronApp } from '@proton/shared/lib/helpers/desktop';
 import { isWasmSupported } from '@proton/shared/lib/helpers/isWasmSupported';
@@ -19,7 +20,7 @@ import { GuestContainer } from './containers/GuestContainer';
 import { ManageRecordingsContainer } from './containers/ManageRecordingsContainer/ManageRecordingsContainer';
 import { WrappedProtonMeetContainer } from './containers/ProtonMeetContainer/WrappedProtonMeetContainer';
 import { ProviderContainer } from './containers/ProviderContainer';
-import { getPublicToken } from './hooks/srp/usePublicToken';
+import { getUrlMeetingLinkName } from './hooks/srp/getUrlMeetingParams';
 import { useMeetFunnelTelemetry } from './hooks/useMeetFunnelTelemetry';
 import { useIsRecordingSupported } from './hooks/useMeetingRecorder/hooks/useIsRecordingSupported';
 
@@ -53,12 +54,12 @@ const landingPageRoute = '/start-free-meeting';
 const ComingSoonWrapper = ({ children }: { children: React.ReactNode }) => {
     const isJoin = window.location.pathname.includes('join'); // The /join path is both for instant meeting and joining a meeting
 
-    const token = getPublicToken();
+    const meetingLinkName = getUrlMeetingLinkName();
 
     const isEarlyAccess = useFlag('MeetEarlyAccess');
     const isEarlyAccessPublic = useFlag('MeetEarlyAccessPublic');
 
-    const isOnJoinMeetingPageAndHasAccess = isJoin && token && isEarlyAccessPublic; // We have the meeting link id token if we are joining a meeting
+    const isOnJoinMeetingPageAndHasAccess = isJoin && meetingLinkName && isEarlyAccessPublic;
 
     const shouldDisplayComingSoonPage = !isEarlyAccess && !isOnJoinMeetingPageAndHasAccess && !isElectronApp;
 
@@ -86,6 +87,7 @@ const RedirectWrapper = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         if (location.pathname.includes(landingPageRoute)) {
             if (isGuest) {
+                sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_started_instant, { source: 'deeplink' });
                 history.push({ pathname: '/join', state: { instantJoin: true } });
             } else {
                 history.push('/dashboard');

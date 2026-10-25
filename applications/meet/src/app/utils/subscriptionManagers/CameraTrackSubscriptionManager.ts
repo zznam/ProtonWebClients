@@ -1,7 +1,12 @@
+import { logger } from '@protontech/logger';
 import type { Room, TrackPublication } from 'livekit-client';
 import { ConnectionState, RemoteTrackPublication, Track, VideoQuality } from 'livekit-client';
 
+import { isDocumentVisible } from '@proton/shared/lib/helpers/dom';
 import { wait } from '@proton/shared/lib/helpers/promise';
+
+import { readInboundRtp } from '../e2eeRecovery/inboundRtpStats';
+import type { ReportError } from '../e2eeRecovery/types';
 
 export type RegisterCameraTrackFn = (
     publication: TrackPublication | undefined,
@@ -20,6 +25,10 @@ interface CacheEntry {
 
 const isHeld = (entry: CacheEntry) => entry.pinned || entry.spotlightPinned;
 
+// Stalls such as a missing E2EE key are not fixed by resubscribing, so stop after a few attempts
+// until the track decodes frames again.
+const MAX_FROZEN_TRACK_RESETS = 3;
+
 const removeValueInPlace = (arr: string[], value: string) => {
     const idx = arr.indexOf(value);
     if (idx !== -1) {
@@ -34,6 +43,10 @@ export class CameraTrackSubscriptionManager {
     private entriesByTrackSid = new Map<string, CacheEntry>();
     private pendingSubscriptionWorkTrackSids: string[] = [];
     private reconcileInterval: NodeJS.Timeout | null = null;
+    private allowResettingFrozenVideoTracks = false;
+    private lastFramesDecodedByTrackSid = new Map<string, number>();
+    private frozenTrackResetsByTrackSid = new Map<string, number>();
+    private isCheckingFrozenTracks = false;
     // Serializes all operations that touch LiveKit publications (subscribe/enable/quality/reset).
     private operationChain: Promise<void> = Promise.resolve();
 
@@ -42,18 +55,22 @@ export class CameraTrackSubscriptionManager {
     private participantQuality: VideoQuality | undefined;
     private spotlightParticipantIdentity: string | undefined;
     private videosPaused = false;
+    private trackSidsFailingToUpdate = new Set<string>();
+    private reportError?: ReportError;
 
-    constructor(capacity: number, room: Room) {
+    constructor(capacity: number, room: Room, reportError?: ReportError) {
         this.capacity = capacity;
         this.room = room;
+        this.reportError = reportError;
     }
 
     private runSerialized(op: () => Promise<void> | void) {
         this.operationChain = this.operationChain
             .then(() => Promise.resolve(op()))
             .catch((error) => {
-                // eslint-disable-next-line no-console
-                console.error('Error running serialized operation', error);
+                this.reportError?.('CameraTrackSubscriptionManager: serialized operation threw', {
+                    context: { error },
+                });
             });
         return this.operationChain;
     }
@@ -72,6 +89,11 @@ export class CameraTrackSubscriptionManager {
         this.participantQuality = participantQuality;
 
         void this.reconcileHeldEntries();
+    }
+
+    setAllowResettingFrozenVideoTracks(allowResettingFrozenVideoTracks: boolean) {
+        this.allowResettingFrozenVideoTracks = allowResettingFrozenVideoTracks;
+        this.lastFramesDecodedByTrackSid.clear();
     }
 
     setSpotlightParticipantIdentity(spotlightParticipantIdentity: string | undefined) {
@@ -197,8 +219,7 @@ export class CameraTrackSubscriptionManager {
                 try {
                     publication.setEnabled(false);
                 } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.error('Error disabling publication', error);
+                    logger.error('Error disabling publication', error);
                 }
             });
         }
@@ -252,6 +273,8 @@ export class CameraTrackSubscriptionManager {
             removeValueInPlace(this.pendingSubscriptionWorkTrackSids, trackSid);
         }
         this.entriesByTrackSid.delete(trackSid);
+        this.lastFramesDecodedByTrackSid.delete(trackSid);
+        this.frozenTrackResetsByTrackSid.delete(trackSid);
         removeValueInPlace(this.cacheOrderByRecencyTrackSids, trackSid);
     }
 
@@ -321,9 +344,20 @@ export class CameraTrackSubscriptionManager {
                 if (!shouldBeDisabled && desiredQuality !== undefined && publication.videoQuality !== desiredQuality) {
                     publication.setVideoQuality(desiredQuality);
                 }
+
+                if (this.trackSidsFailingToUpdate.delete(trackSid)) {
+                    logger.info('CameraTrackSubscriptionManager: publication recovered', {
+                        trackSid,
+                        participantIdentity,
+                    });
+                }
             } catch (error) {
-                // eslint-disable-next-line no-console
-                console.error(error);
+                if (!this.trackSidsFailingToUpdate.has(trackSid)) {
+                    this.trackSidsFailingToUpdate.add(trackSid);
+                    this.reportError?.('CameraTrackSubscriptionManager: failed to update publication', {
+                        context: { error, trackSid, participantIdentity },
+                    });
+                }
             }
         }
     }
@@ -371,8 +405,7 @@ export class CameraTrackSubscriptionManager {
                             publication.setSubscribed(false);
                         }
                     } catch (error) {
-                        // eslint-disable-next-line no-console
-                        console.error('Error disabling publication', publication.trackSid, error);
+                        logger.error('Error disabling publication', publication.trackSid, error);
                     }
                 }
             });
@@ -397,7 +430,78 @@ export class CameraTrackSubscriptionManager {
 
             void this.runSerialized(() => this.processSubscriptionQueue());
         }
+
+        if (this.allowResettingFrozenVideoTracks) {
+            void this.resetFrozenVideoTracks(pinnedCameraTrackPublications);
+        }
     };
+
+    /**
+     * Resets held tracks that should be playing but decoded no new frame since the previous reconcile tick,
+     * e.g. when the SFU never resumed forwarding or the decoder is stuck waiting for a keyframe.
+     */
+    private async resetFrozenVideoTracks(entries: CacheEntry[]) {
+        if (this.isCheckingFrozenTracks) {
+            return;
+        }
+
+        if (this.videosPaused || this.disableVideos || !isDocumentVisible()) {
+            this.lastFramesDecodedByTrackSid.clear();
+            return;
+        }
+
+        this.isCheckingFrozenTracks = true;
+        try {
+            const checkedEntries = entries.filter(
+                ({ publication, participantIdentity }) =>
+                    participantIdentity &&
+                    publication.isSubscribed &&
+                    publication.isEnabled &&
+                    !publication.isMuted &&
+                    publication.track?.streamState !== Track.StreamState.Paused &&
+                    !this.participantsWithDisabledVideos.includes(participantIdentity)
+            );
+            const checkedTrackSids = new Set(checkedEntries.map(({ publication }) => publication.trackSid));
+            for (const trackSid of this.lastFramesDecodedByTrackSid.keys()) {
+                if (!checkedTrackSids.has(trackSid)) {
+                    this.lastFramesDecodedByTrackSid.delete(trackSid);
+                }
+            }
+
+            const stats = await Promise.all(checkedEntries.map(({ publication }) => readInboundRtp(publication)));
+
+            checkedEntries.forEach(({ publication }, index) => {
+                const framesDecoded = stats[index]?.framesDecoded;
+                const trackSid = publication.trackSid;
+
+                if (typeof framesDecoded !== 'number') {
+                    this.lastFramesDecodedByTrackSid.delete(trackSid);
+                    return;
+                }
+
+                const previousFramesDecoded = this.lastFramesDecodedByTrackSid.get(trackSid);
+                if (previousFramesDecoded !== framesDecoded) {
+                    this.lastFramesDecodedByTrackSid.set(trackSid, framesDecoded);
+                    if (previousFramesDecoded !== undefined && framesDecoded > previousFramesDecoded) {
+                        this.frozenTrackResetsByTrackSid.delete(trackSid);
+                    }
+                    return;
+                }
+
+                const resets = this.frozenTrackResetsByTrackSid.get(trackSid) ?? 0;
+                if (resets >= MAX_FROZEN_TRACK_RESETS) {
+                    return;
+                }
+
+                this.frozenTrackResetsByTrackSid.set(trackSid, resets + 1);
+                this.lastFramesDecodedByTrackSid.delete(trackSid);
+                logger.warn('Resetting frozen camera track', trackSid);
+                void this.resetQueueManagedVideoTrack(publication);
+            });
+        } finally {
+            this.isCheckingFrozenTracks = false;
+        }
+    }
 
     setupReconcileLoop = () => {
         this.reconcileInterval = setInterval(() => {
@@ -430,8 +534,7 @@ export class CameraTrackSubscriptionManager {
                 try {
                     entry.publication.setEnabled(false);
                 } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.error('Error pausing video', entry.publication.trackSid, error);
+                    logger.error('Error pausing video', entry.publication.trackSid, error);
                 }
             }
         });
@@ -460,8 +563,7 @@ export class CameraTrackSubscriptionManager {
                 try {
                     entry.publication.setEnabled(true);
                 } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.error('Error resuming video', entry.publication.trackSid, error);
+                    logger.error('Error resuming video', entry.publication.trackSid, error);
                 }
             }
         });
@@ -479,6 +581,8 @@ export class CameraTrackSubscriptionManager {
         this.entriesByTrackSid.clear();
         this.cacheOrderByRecencyTrackSids = [];
         this.pendingSubscriptionWorkTrackSids = [];
+        this.lastFramesDecodedByTrackSid.clear();
+        this.frozenTrackResetsByTrackSid.clear();
         this.disableVideos = false;
         this.participantsWithDisabledVideos = [];
         this.participantQuality = undefined;
@@ -492,8 +596,7 @@ export class CameraTrackSubscriptionManager {
                     entry.publication.setEnabled(false);
                     entry.publication.setSubscribed(false);
                 } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.error('Error disabling publication', entry.publication.trackSid, error);
+                    logger.error('Error disabling publication', entry.publication.trackSid, error);
                 }
             }
         });

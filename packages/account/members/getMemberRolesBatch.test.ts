@@ -1,9 +1,10 @@
 import type { Action, ThunkDispatch } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { getTestStore } from '@proton/redux-shared-store/test';
 import { getMembersOrganizationRoles } from '@proton/shared/lib/api/organizationRoles';
-import type { EnhancedMember, RoleAssignment } from '@proton/shared/lib/interfaces';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
+import type { RoleAssignment } from '@proton/shared/lib/interfaces/OrganizationRole';
 
 import { type MembersState, getMemberRolesBatch, invalidateMemberRoles, membersReducer, selectMembers } from './index';
 
@@ -17,6 +18,8 @@ const getMember = (ID: string): EnhancedMember =>
         roleState: 'initial',
         UserOrganizationRoles: [],
         requiresOrgKeyPromotion: false,
+        requiresOrgKeyDemotion: false,
+        hasScheduledOrgKeyDemotion: false,
     }) as unknown as EnhancedMember;
 
 const getMembers = (count: number) => Array.from({ length: count }, (_, index) => getMember(`${index}`));
@@ -78,6 +81,8 @@ const resolveRoles = ({ leftOutMemberIDs = [] }: { leftOutMemberIDs?: string[] }
                 MemberID,
                 RoleAssignments: [roleAssignment],
                 RequiresOrgKeyPromotion: true,
+                RequiresOrgKeyDemotion: false,
+                HasScheduledOrgKeyDemotion: false,
             })),
         })
     );
@@ -109,6 +114,51 @@ describe('getMemberRolesBatch', () => {
                     member.UserOrganizationRoles.length === 1
             )
         ).toBe(true);
+    });
+
+    it('stores the org key demotion state', async () => {
+        const members = getMembers(3);
+        const api = jest.fn(() =>
+            Promise.resolve({
+                Members: [
+                    {
+                        MemberID: '0',
+                        RoleAssignments: [],
+                        RequiresOrgKeyPromotion: false,
+                        RequiresOrgKeyDemotion: false,
+                        HasScheduledOrgKeyDemotion: false,
+                    },
+                    {
+                        MemberID: '1',
+                        RoleAssignments: [],
+                        RequiresOrgKeyPromotion: false,
+                        RequiresOrgKeyDemotion: true,
+                        HasScheduledOrgKeyDemotion: true,
+                    },
+                    {
+                        MemberID: '2',
+                        RoleAssignments: [],
+                        RequiresOrgKeyPromotion: false,
+                        RequiresOrgKeyDemotion: true,
+                        HasScheduledOrgKeyDemotion: false,
+                    },
+                ],
+            })
+        );
+        const { dispatch, getMembersFromStore } = setup({ members, api });
+
+        await dispatch(getMemberRolesBatch({ members }));
+
+        expect(
+            getMembersFromStore().map(({ requiresOrgKeyDemotion, hasScheduledOrgKeyDemotion }) => ({
+                requiresOrgKeyDemotion,
+                hasScheduledOrgKeyDemotion,
+            }))
+        ).toEqual([
+            { requiresOrgKeyDemotion: false, hasScheduledOrgKeyDemotion: false },
+            { requiresOrgKeyDemotion: true, hasScheduledOrgKeyDemotion: true },
+            { requiresOrgKeyDemotion: true, hasScheduledOrgKeyDemotion: false },
+        ]);
     });
 
     it('rejects the members the api leaves out and keeps the rest of the chunk', async () => {

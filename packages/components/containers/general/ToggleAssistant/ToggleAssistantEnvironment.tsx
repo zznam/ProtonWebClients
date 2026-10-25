@@ -1,13 +1,13 @@
 import { c } from 'ttag';
 
-import { userSettingsActions } from '@proton/account';
+import { userSettingsActions } from '@proton/account/userSettings';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { updateAIAssistant } from '@proton/shared/lib/api/settings';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
-import { AI_ASSISTANT_ACCESS, type UserSettings } from '@proton/shared/lib/interfaces';
+import { AI_ASSISTANT_ACCESS, type UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 
 import RadioGroup from '../../../components/input/RadioGroup';
 import Info from '../../../components/link/Info';

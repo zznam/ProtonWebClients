@@ -12,9 +12,6 @@ import { Href } from '@proton/atoms/Href/Href';
 import Loader from '@proton/components/components/loader/Loader';
 import { useModalTwoStatic } from '@proton/components/components/modalTwo/useModalTwo';
 import withPermissionGuard from '@proton/components/components/orgPermissions/withPermissionGuard';
-import Table from '@proton/components/components/table/Table';
-import TableBody from '@proton/components/components/table/TableBody';
-import TableCell from '@proton/components/components/table/TableCell';
 import SettingsSectionWide from '@proton/components/containers/account/SettingsSectionWide';
 import EmptyViewContainer from '@proton/components/containers/app/EmptyViewContainer';
 import { PromotionBanner } from '@proton/components/containers/banner/PromotionBanner';
@@ -25,7 +22,8 @@ import { PLANS } from '@proton/payments/core/constants';
 import { getCountryOptions } from '@proton/payments/core/countries';
 import { MINUTE, SERVER_FEATURES, SORT_DIRECTION } from '@proton/shared/lib/constants';
 import { getNonEmptyErrorMessage } from '@proton/shared/lib/helpers/error';
-import { type Either, type Organization, left, right } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import { type Either, left, right } from '@proton/shared/lib/interfaces/either';
 import gatewaySvg from '@proton/styles/assets/img/illustrations/gateway.svg';
 import gatewaysEmptyStateAdminsSvg from '@proton/styles/assets/img/illustrations/gateways-empty-state-admins.svg';
 import gatewaysEmptyStateUsersSvg from '@proton/styles/assets/img/illustrations/gateways-empty-state-users.svg';
@@ -43,12 +41,13 @@ import {
 import { getLocationFromId } from '../../functions/gatewayHelpers';
 import { useGateways } from '../../hooks/useGateways';
 import type { Gateway, GatewayLocation, GatewayLogical, GatewayModel } from '../../types/Gateway';
-import { GatewayModal } from './GatewayModal';
 import { GatewayRenameModal } from './GatewayRenameModal';
-import { GatewayRow } from './GatewayRow';
 import { GatewayServersModal } from './GatewayServersModal';
 import { GatewayUsersModal } from './GatewayUsersModal';
 import { RemoveGatewayConfirmationModal } from './RemoveGatewayConfirmationModal';
+import { isLogicalDeleted } from './isLogicalDeleted';
+import { GatewayModal } from './tableview/GatewayModal';
+import { GatewaysTableView } from './tableview/GatewaysTableView';
 
 interface Props {
     organization?: Organization;
@@ -85,6 +84,7 @@ export const GatewaysSection = ({ organization, showCancelButton = true }: Props
     const [updatedLogicals, setUpdatedLogicals] = useState<Record<string, GatewayLogical>>({});
     const {
         hasGatewaysAccess,
+        planWithIpAddon,
         config: {
             Table: { IPv4, IPv6, Load, Deleted },
             ServerTable: serverTableConfig,
@@ -157,7 +157,7 @@ export const GatewaysSection = ({ organization, showCancelButton = true }: Props
     };
 
     const getCustomizeSubscriptionOpener =
-        (plan = organization.PlanName) =>
+        (plan = planWithIpAddon) =>
         () =>
             openSubscriptionModal({
                 step: SUBSCRIPTION_STEPS.CHECKOUT,
@@ -226,8 +226,6 @@ export const GatewaysSection = ({ organization, showCancelButton = true }: Props
         );
     }
 
-    const isDeleted = (logical: GatewayLogical): boolean => !logical.Visible && logical.Servers?.length > 0;
-
     const ipAddresses = organization?.MaxDedicatedIPs ?? 0;
 
     const deletedInCountries: Record<string, number> = {};
@@ -235,7 +233,7 @@ export const GatewaysSection = ({ organization, showCancelButton = true }: Props
         return (
             total +
             gateway.Logicals.reduce((sum, logical) => {
-                if (isDeleted(logical)) {
+                if (isLogicalDeleted(logical)) {
                     deletedInCountries[gateway.ExitCountry] = (deletedInCountries[gateway.ExitCountry] || 0) + 1;
 
                     return sum;
@@ -472,7 +470,6 @@ export const GatewaysSection = ({ organization, showCancelButton = true }: Props
             showIPv4: serverTableConfig.IPv4,
             showIPv6: serverTableConfig.IPv6,
             showLoad: serverTableConfig.Load,
-            isDeleted,
             onSubmitDone: async (deletedLogicalIds: readonly string[], addedQuantities: Record<string, number>) => {
                 const deletedServerCount = deletedLogicalIds.length;
                 const total = Object.entries(addedQuantities).reduce((total, [, quantity]) => total + quantity, 0);
@@ -673,66 +670,26 @@ export const GatewaysSection = ({ organization, showCancelButton = true }: Props
             )}
 
             {sortedList.length ? (
-                <>
-                    {canViewGateways && (
-                        <div className="mb-4">
-                            <GuardedCreateGatewayButton
-                                color="norm"
-                                disabled={!canAdd}
-                                onClick={addGateway}
-                                title={c('Title').t`Create a new Gateway`}
-                            >
-                                {c('Action').t`Create Gateway`}
-                            </GuardedCreateGatewayButton>
-                        </div>
-                    )}
-
-                    <Table className="my-2" responsive="cards">
-                        <thead>
-                            <tr>
-                                <TableCell key="name" type="header" className="w-1/5">{c('Header').t`Name`}</TableCell>
-                                <TableCell key="status" type="header" className="w-1/6">
-                                    {c('Header').t`Status`}
-                                </TableCell>
-                                <TableCell key="servers" type="header">{c('Header').t`Servers`}</TableCell>
-                                {canViewGateways && (
-                                    <>
-                                        <TableCell key="members" type="header" className="w-1/5">
-                                            {c('Header').t`Members`}
-                                        </TableCell>
-                                        <TableCell key="manage" type="header" className="w-1/10">
-                                            &nbsp;
-                                        </TableCell>
-                                    </>
-                                )}
-                            </tr>
-                        </thead>
-                        <TableBody colSpan={3 + (canViewGateways ? 2 : 0)}>
-                            {sortedList.map((gateway) => (
-                                <GatewayRow
-                                    countryOptions={countryOptions}
-                                    key={`gateway-${gateway.Name}`}
-                                    isAdmin={canViewGateways}
-                                    showDeleted={Deleted}
-                                    showIPv4={IPv4}
-                                    showIPv6={IPv6}
-                                    showLoad={Load}
-                                    gateway={gateway}
-                                    isDeleted={isDeleted}
-                                    users={users ?? []}
-                                    groups={groups ?? []}
-                                    provisioningDuration={provisioningDuration}
-                                    renameGateway={renameGateway}
-                                    editGatewayServers={editGatewayServers}
-                                    editGatewayUsers={editGatewayUsers}
-                                    deleteGateway={() => showRemoveGatewayConfirmationModal(gateway)}
-                                    deletingLogicals={deletingLogicals}
-                                    deletedLogicals={deletedLogicals}
-                                />
-                            ))}
-                        </TableBody>
-                    </Table>
-                </>
+                <GatewaysTableView
+                    gateways={sortedList}
+                    countryOptions={countryOptions}
+                    users={users ?? []}
+                    groups={groups ?? []}
+                    canViewGateways={canViewGateways}
+                    canAdd={canAdd}
+                    showDeleted={Deleted}
+                    showIPv4={IPv4}
+                    showIPv6={IPv6}
+                    showLoad={Load}
+                    provisioningDuration={provisioningDuration}
+                    deletingLogicals={deletingLogicals}
+                    deletedLogicals={deletedLogicals}
+                    renameGateway={renameGateway}
+                    editGatewayServers={editGatewayServers}
+                    editGatewayUsers={editGatewayUsers}
+                    deleteGateway={(gateway) => () => showRemoveGatewayConfirmationModal(gateway)}
+                    addGateway={addGateway}
+                />
             ) : (
                 <EmptyViewContainer
                     key="no-gateways-container"

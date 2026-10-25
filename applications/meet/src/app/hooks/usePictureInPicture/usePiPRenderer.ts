@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 
+import { logger } from '@protontech/logger';
 import type { Track as LiveKitTrack } from 'livekit-client';
 
 import { PIP_PREVIEW_ITEM_HEIGHT } from '../../constants';
@@ -20,8 +21,7 @@ export function usePiPRenderer() {
                 videoElement.parentNode.removeChild(videoElement);
             }
         } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Error cleaning up video element:', error);
+            logger.error('Error cleaning up video element:', error);
         }
     }, []);
 
@@ -82,8 +82,7 @@ export function usePiPRenderer() {
                         await videoElement.play();
                     }
                 } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.error('Failed to play video:', error);
+                    logger.error('Failed to play video:', error);
                 }
             };
 
@@ -170,6 +169,11 @@ export function usePiPRenderer() {
                     height: videoHeight,
                     mirror: shouldMirror,
                     isIncomingVideoDisabled,
+                    // Match ParticipantTile: crop landscape cameras, letterbox portrait cameras and screen shares
+                    fit:
+                        trackInfo.isScreenShare || videoElement.videoWidth < videoElement.videoHeight
+                            ? 'contain'
+                            : 'cover',
                 });
 
                 // Draw participant name below the video

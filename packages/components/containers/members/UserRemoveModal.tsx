@@ -5,11 +5,12 @@ import { c } from 'ttag';
 import { deleteMembers } from '@proton/account/members/actions';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { PLANS } from '@proton/payments/core/constants';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
-import type { Member, Organization } from '@proton/shared/lib/interfaces';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 import { getIsMemberInvited } from '@proton/shared/lib/keys/memberHelper';
 
 import type { ModalProps } from '../../components/modalTwo/Modal';

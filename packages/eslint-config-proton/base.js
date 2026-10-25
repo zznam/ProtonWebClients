@@ -1,10 +1,8 @@
 //@ts-check
-import { fixupPluginRules } from '@eslint/compat';
 import protontechEnforceUint8ArrayArraybuffer from '@protontech/eslint-plugin-enforce-uint8array-arraybuffer';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import compat from 'eslint-plugin-compat';
 import customRules from 'eslint-plugin-custom-rules';
-import importPlugin from 'eslint-plugin-import';
 import { createNodeResolver, importX } from 'eslint-plugin-import-x';
 import lodash from 'eslint-plugin-lodash';
 import monorepoCop from 'eslint-plugin-monorepo-cop';
@@ -13,9 +11,12 @@ import testingLibrary from 'eslint-plugin-testing-library';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import { configs, parser, plugin } from 'typescript-eslint';
 
+import { brandNameSelectors } from '@proton/oxlint-config/brandNames';
+import { namingConventionOptions } from '@proton/oxlint-config/namingConvention';
+
 import { createExtraneousDependenciesRule } from './extraneousDependencies.js';
-import { allExtensions, allGlobs, typeScriptExtensions, typescriptGlobs } from './globs.js';
-import { createRestrictedImportRule } from './restrictedImports.js';
+import { allExtensions, allGlobs, typescriptGlobs } from './globs.js';
+import { restrictedImportsPlugin } from './restrictedImports.js';
 
 export default defineConfig(
     {
@@ -23,9 +24,9 @@ export default defineConfig(
         plugins: {
             '@typescript-eslint': plugin,
             'custom-rules': customRules,
-            // import still uses deprecated `context` methods removed in ESLint 10
-            import: fixupPluginRules(importPlugin),
-            'import-x': importX,
+            proton: restrictedImportsPlugin,
+            // import-x registered under the `import` name so rule names stay `import/*`; its settings still use `import-x/*`
+            import: importX,
             // monorepo-cop is legacy typed, so we need to cast it to the correct type
             'monorepo-cop': /** @type {import('eslint').ESLint.Plugin} */ (/** @type {unknown} */ (monorepoCop)),
             'no-only-tests': noOnlyTests,
@@ -96,13 +97,7 @@ export default defineConfig(
 
             '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
 
-            '@typescript-eslint/naming-convention': [
-                'error',
-                { selector: 'variable', format: ['camelCase', 'PascalCase', 'UPPER_CASE'] },
-                { selector: 'function', format: ['camelCase', 'PascalCase'] },
-                { selector: 'typeLike', format: ['PascalCase', 'UPPER_CASE'] },
-                { selector: 'enum', format: ['PascalCase', 'UPPER_CASE'] },
-            ],
+            '@typescript-eslint/naming-convention': ['error', ...namingConventionOptions],
 
             'dot-notation': 'off',
             '@typescript-eslint/dot-notation': ['error', { allowKeywords: true }],
@@ -192,70 +187,7 @@ export default defineConfig(
             'no-param-reassign': 'off',
             'no-plusplus': 'off',
 
-            'no-restricted-syntax': [
-                'error',
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton\\b(?!\\s+(Account|Mail|Drive|Calendar|VPN|Verify|Sentinel))/i]',
-                    message: 'Use `BRAND_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton Account\\b/i]',
-                    message: 'Use `${BRAND_NAME} Account` instead to allow translation of `Account`.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton Mail\\b/i]',
-                    message: 'Use `MAIL_APP_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton Drive\\b/i]',
-                    message: 'Use `DRIVE_APP_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton Calendar\\b/i]',
-                    message: 'Use `CALENDAR_APP_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton VPN\\b/i]',
-                    message: 'Use `VPN_APP_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton Verify\\b/i]',
-                    message: 'Use `VERIFY_APP_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bDark Web Monitoring\\b/i]',
-                    message: 'Use `DARK_WEB_MONITORING_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bProton Sentinel\\b/i]',
-                    message: 'Use `PROTON_SENTINEL_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bLumo\\b/i]',
-                    message: 'Use `LUMO_SHORT_APP_NAME` instead to avoid possible translation.',
-                },
-                {
-                    // Case-sensitive on purpose: only the brand `iDEAL`, never the word `ideal`.
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\biDEAL\\b/]',
-                    message: 'Use `IDEAL_BRAND_NAME` instead to avoid possible translation.',
-                },
-                {
-                    selector:
-                        'TaggedTemplateExpression > TemplateLiteral > TemplateElement.quasis[value.raw=/\\bWero\\b/i]',
-                    message: 'Use `WERO_BRAND_NAME` instead to avoid possible translation.',
-                },
-            ],
+            'no-restricted-syntax': ['error', ...brandNameSelectors],
 
             'no-restricted-properties': [
                 'error',
@@ -291,9 +223,6 @@ export default defineConfig(
             'import/no-named-as-default-member': 'warn',
 
             /**
-             * Cycle detection comes from `eslint-plugin-import-x` because `eslint-plugin-import`'s
-             * `no-cycle` accounted for >90% of total rule time across the monorepo.
-             *
              * With `ignoreExternal: true`, import-x skips imports classified as "external" by
              * `isExternalModule`. That classification is broader than
              * `import-x/external-module-folders` alone: a resolved path is external when it is
@@ -306,7 +235,7 @@ export default defineConfig(
              * `node_modules`. npm dependencies resolve under the repo-root `node_modules/` and
              * are external for the same outside-package-folder reason.
              */
-            'import-x/no-cycle': ['error', { ignoreExternal: true }],
+            'import/no-cycle': ['error', { ignoreExternal: true }],
 
             /**
              * NOTE: We use `no-duplicate-imports` with `allowSeparateTypeImports: true`
@@ -334,20 +263,10 @@ export default defineConfig(
              */
             'no-duplicate-imports': ['warn', { allowSeparateTypeImports: true }],
 
-            'no-restricted-imports': createRestrictedImportRule(),
+            // Base restrictions only, clients add their own with `createRestrictedImportsConfig` (restrictedImports.js)
+            'proton/restricted-imports': 'error',
         },
         settings: {
-            'import/extensions': allExtensions,
-            'import/external-module-folders': ['node_modules', 'node_modules/@types'],
-            'import/parsers': {
-                '@typescript-eslint/parser': typeScriptExtensions,
-            },
-            'import/resolver': {
-                node: {
-                    extensions: allExtensions,
-                },
-                typescript: true,
-            },
             'import-x/extensions': allExtensions,
             'import-x/external-module-folders': ['node_modules', 'node_modules/@types'],
             'import-x/resolver-next': [
@@ -364,16 +283,18 @@ export default defineConfig(
             'import/named': 'off',
             'import/namespace': 'off',
             'import/default': 'off',
+            'import/export': 'off',
             'import/order': 'off',
             'import/no-named-as-default-member': 'off',
             'import/no-unresolved': 'off',
         },
     },
     {
-        name: 'tsx-restricted-imports',
-        files: ['**/*.tsx', '**/*.jsx'],
+        name: 'entitlement-checks',
+        files: typescriptGlobs,
         rules: {
-            'no-restricted-imports': createRestrictedImportRule({ tsx: true }),
+            'custom-rules/no-single-entitlement-condition': 'error',
+            'custom-rules/no-boolean-entitlement-composition': 'error',
         },
     },
     {

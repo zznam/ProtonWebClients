@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
-import { changeBillingAddress } from '@proton/account';
+import { changeBillingAddress } from '@proton/account/paymentStatus';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import type { FullBillingAddress } from '@proton/payments/core/billing-address/billing-address';
 import type { PaymentsApi } from '@proton/payments/core/interface';
@@ -17,8 +17,8 @@ jest.mock('../../../react-extensions/usePaymentsApi', () => ({
     usePaymentsApi: jest.fn(),
 }));
 
-jest.mock('@proton/account', () => ({
-    ...jest.requireActual('@proton/account'),
+jest.mock('@proton/account/paymentStatus', () => ({
+    ...jest.requireActual('@proton/account/paymentStatus'),
     changeBillingAddress: jest.fn((payload) => ({ type: 'changeBillingAddress', payload })),
 }));
 
@@ -62,7 +62,7 @@ function renderEditBillingAddressModal({
     const onResolve = jest.fn();
     const onReject = jest.fn();
 
-    renderWithProviders(
+    const createModal = () => (
         <EditBillingAddressModal
             open
             initialFullBillingAddress={initialFullBillingAddress}
@@ -74,10 +74,13 @@ function renderEditBillingAddressModal({
         />
     );
 
+    const { rerender } = renderWithProviders(createModal());
+
     return {
         updateFullBillingAddress,
         onResolve,
         onReject,
+        rerenderFromParent: () => rerender(createModal()),
     };
 }
 
@@ -161,5 +164,24 @@ describe('EditBillingAddressModal', () => {
             expect.objectContaining({ BillingAddress: expect.objectContaining({ ZipCode: null }) })
         );
         expect(changeBillingAddress).toHaveBeenCalledWith(expect.objectContaining({ ZipCode: null }));
+    });
+
+    it('keeps the state list open when the modal re-renders', () => {
+        const { rerenderFromParent } = renderEditBillingAddressModal({
+            initialFullBillingAddress: createInitialBillingAddress({
+                CountryCode: 'US',
+                State: 'CA',
+                ZipCode: '90001',
+            }),
+        });
+
+        const stateDropdown = screen.getByTestId('tax-state-dropdown');
+        fireEvent.click(stateDropdown);
+        expect(stateDropdown).toHaveAttribute('aria-expanded', 'true');
+
+        rerenderFromParent();
+
+        expect(screen.getByTestId('tax-state-dropdown')).toBe(stateDropdown);
+        expect(stateDropdown).toHaveAttribute('aria-expanded', 'true');
     });
 });

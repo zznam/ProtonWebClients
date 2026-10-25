@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } Android 版"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } for iOS"
-      ],
       "Accept": [
         "接受"
       ],
@@ -345,6 +339,12 @@
       ],
       "Done": [
         "完成"
+      ],
+      "Download for macOS": [
+        "下载 macOS 版"
+      ],
+      "Download for Windows": [
+        "下载 Windows 版"
       ],
       "Download this CSV template": [
         "下载CSV模板"
@@ -718,6 +718,12 @@
       "Show Less": [
         "收起"
       ],
+      "Show less": [
+        "显示更少"
+      ],
+      "Show more": [
+        "显示更多"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "使用${ BRAND_NAME }登录"
       ],
@@ -877,8 +883,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } 桌面应用"
+      "${ appName } Desktop application": [
+        "${ appName } 桌面应用"
       ]
     },
     "Button": {
@@ -1129,6 +1135,9 @@
       "Editing item failed": [
         "编辑项目失败"
       ],
+      "Email is not valid": [
+        "无效邮箱"
+      ],
       "Empty CSV file": [
         "空 CSV 文件"
       ],
@@ -1140,6 +1149,9 @@
       ],
       "Encrypted JSON not supported": [
         "不支持加密的 JSON"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "请输入您的用户名（不含 @example.com 域名）"
       ],
       "Error reporting problem": [
         "错误报告"
@@ -1330,6 +1342,9 @@
       "Incorrect backup password. Please try again.": [
         "备份密码不正确，请重试。"
       ],
+      "Incorrect password. Please try again.": [
+        "密码错误，请重试。"
+      ],
       "Incorrect second password. Please try again.": [
         "二级密码错误，请重试。"
       ],
@@ -1363,8 +1378,14 @@
       "Network error": [
         "网络错误"
       ],
+      "Not a valid number": [
+        "无效号码"
+      ],
       "Passphrase is incorrect": [
         "密码不正确"
+      ],
+      "Passwords do not match": [
+        "密码不匹配"
       ],
       "PIN codes do not match": [
         "两次输入的 PIN 码不一致"
@@ -1429,11 +1450,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME } 电脑版应处于登录状态！"
       ],
+      "The email addresses do not match": [
+        "邮箱地址不一致"
+      ],
       "The session has expired. Please sign in again.": [
         "登录状态已过期，请重新登录。"
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "删除安全链接时出现错误。请几分钟后再试。"
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "此项超过了 ${ maximumLength } 个字符的长度限制。"
+      ],
+      "This field is required": [
+        "此项必须填写"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "该字段至少需要 ${ minimumLength } 个字符。"
       ],
       "This invite is no longer available": [
         "此邀请已不可用"
@@ -1446,6 +1479,9 @@
       ],
       "Try reaching out to the link owner.": [
         "尝试联系链接所有者。"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "请使用英文字母、阿拉伯数字或 _ . - 符号"
       ],
       "Unable to generate an OTP code for this item": [
         "无法为该项目生成 OTP 代码"
@@ -1480,6 +1516,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "更新保险库 “${ payload.content.name }” 失败"
       ],
+      "Username must begin with a letter or digit": [
+        "用户名必须以字母或数字开头"
+      ],
+      "Username must end with a letter or digit": [
+        "用户名必须以字母或数字结尾"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "保险库 “${ payload.content.name }” 创建失败"
       ],
@@ -1503,6 +1545,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "解锁密码错误，请重试。"
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "恢复短语错误，请重试或使用其他恢复方法。"
       ],
       "Wrong second password": [
         "二级密码错误"
@@ -1730,6 +1775,9 @@
       "Access tokens, used together with ${ passCliLink }, allow you to automate CI/CD or give your AI agent scoped access to what it needs to run its job.": [
         "访问令牌与 ${ passCliLink } 配合使用，可让您自动化 CI/CD 流程，或为 AI 代理授予执行任务所需的作用域权限。"
       ],
+      "Add a payment method so your subscription continues when your trial ends.": [
+        "添加支付方式，以便在试用结束后您的订阅能够继续使用。"
+      ],
       "Add your custom email address to monitor:": [
         "添加您的自定义邮箱地址进行监测："
       ],
@@ -1856,9 +1904,6 @@
       "Can view this item.": [
         "可以查看此项目。"
       ],
-      "Change your password": [
-        "更改密码"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "正在检查 ${ compromised.progress.completed } / ${ compromised.progress.total } 个密码"
       ],
@@ -1945,9 +1990,6 @@
       ],
       "Editor": [
         "编辑者"
-      ],
-      "email": [
-        "邮箱"
       ],
       "Email address successfully deleted from monitoring": [
         "从监测中成功删除邮箱地址"
@@ -2042,11 +2084,11 @@
       "Fill in the CSV with your data": [
         "在 CSV 中填入您的数据"
       ],
-      "finance": [
-        "金融"
-      ],
       "Find \"OpenSSH Authentication Agent\", right-click Properties.": [
         "找到“OpenSSH 身份验证代理”，右键点击选择“属性”。"
+      ],
+      "Finish signing in in the browser window that just opened. ${ PASS_APP_NAME } will pick up automatically once you're done.": [
+        "请在刚刚打开的浏览器窗口中完成登录。完成后，${ PASS_APP_NAME } 将自动继续。"
       ],
       "Folder \"${ payload.folder.name }\" created": [
         "文件夹“${ payload.folder.name }”已创建"
@@ -2141,6 +2183,9 @@
       "invites you to access items in": [
         "邀请您访问其中的项目"
       ],
+      "iOS and Android Apps": [
+        "iOS 和 Android 应用"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "您似乎已登录到 ${ PASS_APP_NAME } 。如果您正在尝试使用不同的账户登录，请先从扩展中登出。"
       ],
@@ -2225,9 +2270,6 @@
       "Medium Priority": [
         "中等优先顺序"
       ],
-      "Monitor accounts": [
-        "监测账户"
-      ],
       "Monitoring settings successfully updated": [
         "监测设置已更新"
       ],
@@ -2244,7 +2286,7 @@
         "正在从 \"${ payload.content.name }\" 移动所有项目"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "将项目移动到另一个保险库会删除其安全链接。"
+        "将项目移至其他保险库会清除其安全链接！"
       ],
       "Moving items": [
         "正在移动"
@@ -2332,9 +2374,6 @@
       ],
       "Pass Plus trial": [
         "Pass Plus 试用"
-      ],
-      "password": [
-        "密码"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "密码锁已成功注册，该密码可用于解锁 ${ PASS_APP_NAME }"
@@ -2540,6 +2579,9 @@
       "Restoring trashed items...": [
         "正在还原回收站中的项目..."
       ],
+      "Scan to download": [
+        "扫描以下载"
+      ],
       "Secure links": [
         "安全链接"
       ],
@@ -2741,6 +2783,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "要查看您导入到数据，请点击浏览器工具栏中的 ${ PASS_APP_NAME } 图标。"
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "若要设置生物识别解锁，${ PASS_APP_NAME } 需要一项新的浏览器权限。"
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "若要设置生物识别解锁，${ PASS_APP_NAME } 需要一个新的浏览器权限。接受后，扩展程序将重新加载。请之后重新打开此页面。"
       ],
@@ -2800,9 +2845,6 @@
       ],
       "User's access successfully updated": [
         "用户访问权限成功更新"
-      ],
-      "username": [
-        "用户名"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "保险库 “${ payload.content.name }” 成功删除"
@@ -3006,6 +3048,9 @@
       "${ hours } hour": [
         "${ hours } 小时"
       ],
+      "${ length }/${ maxLength } characters": [
+        "${ length } / ${ maxLength } 个字符"
+      ],
       "${ minutes } minute": [
         "${ minutes } 分钟"
       ],
@@ -3104,6 +3149,9 @@
       ],
       "Account Type": [
         "账户类型"
+      ],
+      "Add a payment method": [
+        "添加支付方式"
       ],
       "Add a random prefix for this domain when creating a new alias.": [
         "创建新别名时，请为该域添加一个随机前缀。"
@@ -4903,6 +4951,9 @@
       "Contacts": [
         "通讯录"
       ],
+      "Continue in your browser": [
+        "在浏览器中继续"
+      ],
       "Create a vault": [
         "创建保险库"
       ],
@@ -5017,6 +5068,9 @@
       "Folder options": [
         "文件夹选项"
       ],
+      "Get mobile and desktop apps": [
+        "获取移动和桌面应用"
+      ],
       "Get Started": [
         "立即体验"
       ],
@@ -5052,6 +5106,9 @@
       ],
       "Item": [
         "项目"
+      ],
+      "Keep your subscription active": [
+        "保持订阅有效"
       ],
       "Last autofill": [
         "最后自动填充"
@@ -5408,8 +5465,14 @@
       "OTP secret or URI is invalid": [
         "动态密码或网址无效"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "密码必须至少包含 ${ MIN_PASSWORD_LENGTH } 个字符"
+      ],
       "Section name cannot be empty": [
         "分组名称不能为空"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "请缩短用户名（最长 ${ n } 个字符）"
       ],
       "URL already exists": [
         "网址已存在"
@@ -5429,6 +5492,18 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "需要 ${ BRAND_NAME } 密码"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "有 ${ count } 个文件夹已合并到其父文件夹中，因为已达到最大嵌套层级。"
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "有 ${ count } 个文件夹未导入，因为其父文件夹已达到子文件夹数量上限。其中的内容已导入到最近的可用文件夹中。"
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "有 ${ count } 个文件夹未导入，因为此保险库已达到文件夹数量上限。其中的内容已导入到最近的可用文件夹中。"
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "有 ${ failed } 个文件夹无法创建。其中的内容已导入到最近的可用文件夹中。"
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } 提供了强大的控制能力，但单个错误可能导致自动填充在欺诈或钓鱼网站上匹配并填充数据。"
@@ -5567,9 +5642,6 @@
       ],
       "Move to trash": [
         "移至回收站"
-      ],
-      "Name is required": [
-        "名称为必填项"
       ],
       "No items": [
         "没有项目"

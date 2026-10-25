@@ -4,21 +4,21 @@ import { Router } from 'react-router';
 import { render as originalRender } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { NotificationsContext } from '@proton/app-context/notifications/notificationsContext';
-import {
-    ApiProvider,
-    CacheProvider,
-    ConfigProvider,
-    EventManagerProvider,
-    ModalsChildren,
-    ModalsProvider,
-} from '@proton/components';
+import ApiProvider from '@proton/components/containers/api/ApiProvider';
+import { CacheProvider } from '@proton/components/containers/cache/Provider';
+import ConfigProvider from '@proton/components/containers/config/Provider';
+import EventManagerProvider from '@proton/components/containers/eventManager/EventManagerProvider';
+import ModalsChildren from '@proton/components/containers/modals/Children';
+import ModalsProvider from '@proton/components/containers/modals/Provider';
 import { getFeatureFlagsState } from '@proton/features/testing/features';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import createApi from '@proton/shared/lib/api/createApi';
 import { APPS } from '@proton/shared/lib/constants';
-import type { MailSettings, ProtonConfig, UserModel } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 
 import EasySwitchStoreProvider from '../logic/StoreProvider';
 import fakeCache from './fakeCache';
@@ -27,7 +27,7 @@ import { setupStore } from './protonStore';
 /**
  * Mocks
  */
-jest.mock('@proton/components/hooks/useEventManager.ts', () => {
+jest.mock('@proton/components/hooks/useEventManager', () => {
     const subscribe = jest.fn();
     const call = jest.fn();
     const stop = jest.fn();

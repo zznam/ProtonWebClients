@@ -5,13 +5,15 @@ import type {
     MessageRemoteImage,
     MessageState,
 } from '@proton/mail/store/messages/messagesTypes';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { DEFAULT_MAIL_SETTINGS } from '@proton/shared/lib/mail/mailSettings';
+import { isDraft } from '@proton/shared/lib/mail/messages';
 import { transformLinkify } from '@proton/shared/lib/mail/transformLinkify';
 import type { MessageUTMTracker } from '@proton/shared/lib/models/mailUtmTrackers';
 
 import { transformAnchors } from './transformAnchors';
 import { transformBase } from './transformBase';
+import { transformEmbeddedMarkers } from './transformEmbeddedMarkers';
 import { attachBase64, transformEscape } from './transformEscape';
 import { transformLinks } from './transformLinks';
 import { transformRawLinks } from './transformRawLinks';
@@ -61,6 +63,10 @@ export const prepareHtml = async (
 
     transformAnchors(document);
 
+    if (!isDraft(message.data)) {
+        transformEmbeddedMarkers(document);
+    }
+
     const { showEmbeddedImages, hasEmbeddedImages, embeddedImages } =
         await handleTransformAndLoadEmbeddedImages(document);
 
@@ -97,3 +103,10 @@ export const preparePlainText = async (
 
     return { plainText };
 };
+
+/**
+ * Plain text drafts are prepared without escaping because the composer edits the raw text.
+ * They must be escaped like received messages before being rendered as HTML.
+ */
+export const getPlainTextToRender = (plainText: string | undefined, isDraft: boolean) =>
+    isDraft ? transformLinkify({ content: plainText }) : plainText || '';

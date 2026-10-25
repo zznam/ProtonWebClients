@@ -1,0 +1,306 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`artifact event payloads matches the agreed payloads 1`] = `
+[
+  [
+    "lumo-composer-event",
+    {
+      "action": "disable",
+      "conversationHasArtifact": true,
+      "eventType": "artifact-creation",
+      "globalDefault": true,
+      "scope": "conversation",
+    },
+  ],
+  [
+    "lumo-composer-event",
+    {
+      "action": "enable",
+      "conversationHasArtifact": false,
+      "eventType": "artifact-creation",
+      "globalDefault": false,
+      "scope": "pending-new-chat",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "enabled": false,
+      "eventType": "artifact-creation-default-changed",
+      "sawArtifactThisSession": false,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactToolMode": "auto",
+      "creationSetting": "default-on",
+      "eventType": "artifact-turn-context",
+      "generationType": "new",
+      "hasExistingArtifact": false,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactToolMode": "revise",
+      "creationSetting": "chat-off",
+      "eventType": "artifact-turn-context",
+      "generationType": "regenerate",
+      "hasExistingArtifact": true,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactPosition": 1,
+      "artifactToolMode": "auto",
+      "artifactType": "code",
+      "contentLengthBucket": "1k-10k",
+      "eventType": "artifact-created",
+      "languageBucket": "python",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactPosition": 2,
+      "artifactToolMode": "create",
+      "artifactType": "document",
+      "contentLengthBucket": "0-1k",
+      "eventType": "artifact-created",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactPosition": 1,
+      "artifactToolMode": "revise",
+      "artifactType": "document",
+      "contentLengthBucket": "0-1k",
+      "eventType": "artifact-revised",
+      "revisionSource": "inline-edit",
+      "versionNumber": 2,
+      "viewedOlderVersion": false,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactPosition": 1,
+      "artifactType": "document",
+      "contentLengthBucket": "0-1k",
+      "eventType": "artifact-revised",
+      "revisionSource": "manual-edit",
+      "versionNumber": 3,
+      "viewedOlderVersion": true,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "enabled": true,
+      "eventType": "artifact-creation-default-changed",
+      "sawArtifactThisSession": true,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactPosition": 1,
+      "artifactType": "presentation",
+      "eventType": "panel-opened",
+      "source": "chip",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactPosition": 2,
+      "artifactType": "document",
+      "eventType": "panel-opened",
+      "source": "library",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactPosition": 3,
+      "artifactType": "code",
+      "eventType": "panel-opened",
+      "source": "drawer",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "presentation",
+      "closedDuringLoading": false,
+      "eventType": "panel-closed",
+      "openDurationBucket": "1m-5m",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "closedDuringLoading": true,
+      "eventType": "panel-closed",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "code",
+      "eventType": "content-copied",
+      "layout": "fullscreen",
+      "viewedOlderVersion": true,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "presentation",
+      "contentLengthBucket": "1k-10k",
+      "eventType": "downloaded",
+      "format": "pptx",
+      "layout": "docked",
+      "result": "error",
+      "viewedOlderVersion": false,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "document",
+      "contentLengthBucket": "10k+",
+      "eventType": "downloaded",
+      "format": "pdf",
+      "layout": "fullscreen",
+      "result": "print_dialog",
+      "viewedOlderVersion": true,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "document",
+      "eventType": "save-to-drive-completed",
+      "format": "md",
+      "result": "success",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "code",
+      "eventType": "inline-action-sent",
+      "kind": "explain",
+      "layout": "mobile",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "eventType": "webpage-view-toggled",
+      "layout": "docked",
+      "mode": "code",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "document",
+      "eventType": "title-menu-opened",
+      "layout": "docked",
+      "versionCount": 4,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "document",
+      "eventType": "version-selected",
+      "layout": "docked",
+      "source": "history",
+      "versionsBehindLatest": 2,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "document",
+      "eventType": "version-selected",
+      "layout": "fullscreen",
+      "source": "banner",
+      "versionsBehindLatest": 0,
+    },
+  ],
+  [
+    "lumo-message-event",
+    {
+      "artifactInFlight": true,
+      "eventType": "abort",
+    },
+  ],
+  [
+    "lumo-message-event",
+    {
+      "artifactInFlight": false,
+      "eventType": "abort",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactToolMode": "auto",
+      "eventType": "artifact-tool-call-invalid",
+      "reason": "invalid-json",
+      "recoveredInSameMessage": false,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "eventType": "artifact-tool-call-invalid",
+      "reason": "missing-fields",
+      "recoveredInSameMessage": true,
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "artifactType": "presentation",
+      "eventType": "render-failed",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "entered": true,
+      "eventType": "panel-fullscreen-toggled",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "entered": false,
+      "eventType": "panel-fullscreen-toggled",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "eventType": "library-opened",
+      "hasCreations": false,
+      "tab": "creations",
+    },
+  ],
+  [
+    "lumo-artifact-event",
+    {
+      "eventType": "library-opened",
+      "tab": "images",
+    },
+  ],
+]
+`;

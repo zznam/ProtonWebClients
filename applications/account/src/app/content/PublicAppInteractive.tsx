@@ -21,6 +21,7 @@ import {
     VPN_TV_SIGNUP_REDIRECT,
 } from '@proton/shared/lib/constants';
 import { UnleashFlagProviderWithToolbar } from '@proton/unleash/UnleashFlagProviderWithToolbar';
+import { FlagProvider } from '@proton/unleash/proxy';
 import noop from '@proton/utils/noop';
 
 import bornPrivateActivatePage from '../../pages/born-private.activate';
@@ -50,7 +51,8 @@ import SigninHelpContainer from '../public/SigninHelpContainer';
 import SwitchAccountContainer from '../public/SwitchAccountContainer';
 import VerifyEmailContainer from '../public/VerifyEmailContainer';
 import TokenRedemptionContainer from '../public/orgJoiningLink/TokenRedemptionContainer';
-import PassExtensionOnboarding from '../public/pass/PassExtensionOnboarding';
+import { PassAccountOnboarding } from '../public/pass/PassAccountOnboarding';
+import { PassExtensionOnboarding } from '../public/pass/PassExtensionOnboarding';
 import SignInWithAnotherDeviceContainer from '../public/signInWithAnotherDevice/SignInWithAnotherDeviceContainer';
 import SignInContainer, { type SignInLocationState } from '../sign-in/SignInContainer';
 import { AuthType } from '../sign-in/auth/interface';
@@ -217,7 +219,7 @@ const PublicAppInteractive = ({
                                 handleLoginResult(loginLocationState);
                             } catch (error) {}
                         }}
-                        onLogin={({ username, token, flow }) => {
+                        onLogin={({ username, token, flow, persistent }) => {
                             const state: SignInLocationState = {
                                 authTypeData: {
                                     type: AuthType.ExternalSSO,
@@ -225,6 +227,7 @@ const PublicAppInteractive = ({
                                 externalSSO: {
                                     token,
                                     flow,
+                                    persistent,
                                 },
                                 username,
                             };
@@ -343,7 +346,14 @@ const PublicAppInteractive = ({
             </Route>
             <Route path={SSO_PATHS.PASS_EXTENSION_ONBOARDING}>
                 <UnauthenticatedApiProvider unauthenticatedApi={extraThunkArguments.unauthenticatedApi}>
-                    <PassExtensionOnboarding />
+                    <FlagProvider unleashClient={extraThunkArguments.unleashClient}>
+                        <PassExtensionOnboarding />
+                    </FlagProvider>
+                </UnauthenticatedApiProvider>
+            </Route>
+            <Route path={SSO_PATHS.PASS_ACCOUNT_ONBOARDING}>
+                <UnauthenticatedApiProvider unauthenticatedApi={extraThunkArguments.unauthenticatedApi}>
+                    <PassAccountOnboarding />
                 </UnauthenticatedApiProvider>
             </Route>
             {blockingLoginEffect && <Route path="*">{blockingLoginEffect}</Route>}

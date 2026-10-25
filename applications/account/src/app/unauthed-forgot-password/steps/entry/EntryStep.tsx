@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import useFormErrors from '@proton/components/components/v2/useFormErrors';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
@@ -14,18 +14,20 @@ import Text from '../../../public/Text';
 import { useResetPasswordTelemetry } from '../../../reset/resetPasswordTelemetry';
 import { useAutomaticMnemonicVerification } from '../../hooks/useAutomaticMnemonicVerification';
 import { useAutomaticRecoveryVerification } from '../../hooks/useAutomaticRecoveryVerification';
-import { selectSubmitting } from '../../state-machine/UnauthedForgotPasswordStateMachine';
+import { selectSubmitting, selectUsername } from '../../state-machine/UnauthedForgotPasswordStateMachine';
 import { ForgotPasswordContext } from '../../wizard/ForgotPasswordContext';
 import type { ForgotPasswordStepProps } from '../../wizard/forgotPasswordStep';
 
 export const EntryStep = ({ onBack }: ForgotPasswordStepProps) => {
-    const { sendResetPasswordStepLoad } = useResetPasswordTelemetry({ variant: 'B' });
+    const { sendResetPasswordStepLoad } = useResetPasswordTelemetry();
     const { send } = ForgotPasswordContext.useActorRef();
     // The recovery methods are being requested, or a link that opened the page is being checked
     const loading = ForgotPasswordContext.useSelector(selectSubmitting);
 
     const { validator, onFormSubmit } = useFormErrors();
-    const [username, setUsername] = useState('');
+    // Back here, or starting over, the form starts with the username the user gave
+    const initialUsername = ForgotPasswordContext.useSelector(selectUsername);
+    const [username, setUsername] = useState(initialUsername);
     useAutomaticMnemonicVerification();
     useAutomaticRecoveryVerification({ onUsername: setUsername });
 

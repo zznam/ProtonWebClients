@@ -1,12 +1,13 @@
 import { runSaga } from 'redux-saga';
 
-import type { Address, User } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
 import { exposePassCrypto } from '../../../../lib/crypto';
-import type { PassCryptoWorker } from '../../../../types';
+import type { PassCryptoWorker } from '../../../../types/crypto/pass-crypto';
 import { uniqueId } from '../../../../utils/string/unique-id';
-import { syncIntent } from '../../../actions';
-import { sagaSetup } from '../../testing';
+import { sagaSetup } from '../../../../utils/tests/saga';
+import { syncIntent } from '../../../actions/creators/client';
 import { onUserRefreshed } from './channel.core';
 
 describe('`onUserRefreshed`', () => {

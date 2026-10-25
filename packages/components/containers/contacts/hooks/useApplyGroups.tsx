@@ -10,7 +10,7 @@ import { useContactGroups } from '@proton/mail/store/labels/hooks';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { labelContactEmails, unLabelContactEmails } from '@proton/shared/lib/api/contacts';
 import { hasReachedContactGroupMembersLimit } from '@proton/shared/lib/contacts/helpers/contactGroup';
-import type { Contact, ContactEmail } from '@proton/shared/lib/interfaces/contacts';
+import type { Contact, ContactEmail } from '@proton/shared/lib/interfaces/contacts/Contact';
 
 import { useModalTwoStatic } from '../../../components/modalTwo/useModalTwo';
 import useEventManager from '../../../hooks/useEventManager';
@@ -21,7 +21,7 @@ import type { SelectEmailsProps } from '../modals/SelectEmailsModal';
  * Collect contacts having multiple emails
  * Used for <SelectEmailsModal />
  */
-export const collectContacts = (contactEmails: ContactEmail[] = [], contacts: Contact[]) => {
+const collectContacts = (contactEmails: ContactEmail[] = [], contacts: Contact[]) => {
     return contactEmails.reduce(
         (acc, { ContactID }) => {
             acc.duplicate[ContactID] = (acc.duplicate[ContactID] || 0) + 1;

@@ -1,14 +1,14 @@
 import {
     artifactSupportsSaveToDrive,
-    getArtifactDownloadLabel,
+    getArtifactFormatMenuLabel,
     getArtifactSaveFormatLabel,
     getArtifactSaveFormats,
-    getArtifactSourceDownloadLabel,
+    getArtifactSourceMenuLabel,
 } from './artifactSaveFormats';
 
 describe('artifactSaveFormats', () => {
     it('returns document save formats', () => {
-        expect(getArtifactSaveFormats('document')).toEqual(['md', 'txt', 'pdf']);
+        expect(getArtifactSaveFormats('document')).toEqual(['docx', 'pdf', 'md', 'txt']);
         expect(artifactSupportsSaveToDrive('document')).toBe(true);
     });
 
@@ -24,6 +24,7 @@ describe('artifactSaveFormats', () => {
     });
 
     it('provides human-readable labels', () => {
+        expect(getArtifactSaveFormatLabel('docx')).toBe('Word (.docx)');
         expect(getArtifactSaveFormatLabel('md')).toContain('Source');
         expect(getArtifactSaveFormatLabel('md')).toContain('Markdown');
         expect(getArtifactSaveFormatLabel('txt')).toContain('Plain text');
@@ -31,10 +32,13 @@ describe('artifactSaveFormats', () => {
         expect(getArtifactSaveFormatLabel('pptx')).toContain('PowerPoint');
     });
 
-    it('provides download labels that distinguish source, plain text, and exports', () => {
-        expect(getArtifactSourceDownloadLabel('document')).toContain('Markdown');
-        expect(getArtifactSourceDownloadLabel('presentation')).toContain('HTML');
-        expect(getArtifactDownloadLabel('txt')).toContain('plain text');
-        expect(getArtifactDownloadLabel('pdf')).toContain('PDF');
+    it("names formats and each type's source download for the title menu", () => {
+        expect(getArtifactFormatMenuLabel('md')).toBe('Markdown');
+        expect(getArtifactFormatMenuLabel('docx')).toBe('Word document');
+        expect(getArtifactFormatMenuLabel('pptx')).toBe('PowerPoint');
+        expect(getArtifactSourceMenuLabel('document')).toBe('Markdown');
+        expect(getArtifactSourceMenuLabel('presentation')).toBe('Web presentation');
+        expect(getArtifactSourceMenuLabel('webpage')).toBe('Webpage');
+        expect(getArtifactSourceMenuLabel('code')).toBe('Source file');
     });
 });

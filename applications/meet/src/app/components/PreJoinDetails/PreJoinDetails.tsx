@@ -7,7 +7,7 @@ import { Button } from '@proton/atoms/Button/Button';
 import Checkbox from '@proton/components/components/input/Checkbox';
 import InputFieldStacked from '@proton/components/components/inputFieldStacked/InputFieldStacked';
 import InputFieldStackedGroup from '@proton/components/components/inputFieldStacked/InputFieldStackedGroup';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { IcMeetCopy } from '@proton/icons/icons/IcMeetCopy';
 import { useMeetSelector } from '@proton/meet/store/hooks';
@@ -16,13 +16,18 @@ import {
     selectIsMeetingLoading,
     selectIsPersonalRoom,
     selectMeetingLink,
-    selectRoomName,
-} from '@proton/meet/store/slices/meetingInfo';
+    selectMeetingName,
+} from '@proton/meet/store/slices/currentMeeting';
 import { selectWaitingRoomSetting } from '@proton/meet/store/slices/settings';
 import { selectIsWaitingRoomAdmissionActive } from '@proton/meet/store/slices/waitingRoomSlice';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
+import { isElectronApp } from '@proton/shared/lib/helpers/desktop';
 import clsx from '@proton/utils/clsx';
 
 import { SettingToggle } from '../../atoms/SettingToggle/SettingToggle';
+import { canOpenInDesktopApp, clearDesktopAppPreference } from '../../utils/desktopAppDetector';
+import { OpenInDesktopApp } from '../OpenInDesktopApp/OpenInDesktopApp';
+import { useDesktopAppPreferenceStorageKey } from '../OpenInDesktopApp/useDesktopAppPreferenceStorageKey';
 import { PreJoinDetailsHeader } from './PreJoinDetailsHeader';
 import { WaitingRoomAdmission } from './WaitingRoomAdmission/WaitingRoomAdmission';
 import { WaitingRoomDropdown } from './WaitingRoomDropdown';
@@ -31,7 +36,7 @@ import { PreJoinDetailsShell } from './shared/PreJoinDetailsShell';
 import './PreJoinDetails.scss';
 
 type PreJoinDetailsProps = {
-    roomId: string;
+    meetingLinkName: string;
     displayName: string;
     keepDisplayName: boolean;
     onDisplayNameChange: (displayName: string) => void;
@@ -40,7 +45,7 @@ type PreJoinDetailsProps = {
 };
 
 export const PreJoinDetails = ({
-    roomId,
+    meetingLinkName,
     displayName,
     onDisplayNameChange,
     keepDisplayName,
@@ -51,18 +56,36 @@ export const PreJoinDetails = ({
     const { viewportWidth } = useActiveBreakpoint();
 
     const isMeetingLoading = useMeetSelector(selectIsMeetingLoading);
-    const meetingName = useMeetSelector(selectRoomName);
+    const meetingName = useMeetSelector(selectMeetingName);
     const isPersonalRoom = useMeetSelector(selectIsPersonalRoom);
     const isHost = useMeetSelector(selectCanManageWaitingRoom);
     const meetingLink = useMeetSelector(selectMeetingLink);
     const showWaitingRoomAdmission = useMeetSelector(selectIsWaitingRoomAdmissionActive);
     const waitingRoomEnabled = useMeetSelector(selectWaitingRoomSetting);
+    const desktopAppPreferenceStorageKey = useDesktopAppPreferenceStorageKey();
 
     const [keepDisplayNameOnDevice, setKeepDisplayNameOnDevice] = useState(keepDisplayName);
 
-    const actionLabel = instantMeeting ? c('Action').t`Start meeting` : c('Action').t`Join meeting`;
-
     const showHostScreen = instantMeeting || isHost;
+
+    const getActionLabel = () => {
+        if (instantMeeting) {
+            return c('Action').t`Start meeting`;
+        }
+        if (isElectronApp) {
+            return c('Action').t`Join meeting`;
+        }
+        return isHost ? c('Action').t`Start meeting in browser` : c('Action').t`Join in browser`;
+    };
+
+    const showOpenInDesktopApp = !instantMeeting && canOpenInDesktopApp();
+
+    const handleJoinMeeting = () => {
+        if (showOpenInDesktopApp) {
+            clearDesktopAppPreference(desktopAppPreferenceStorageKey);
+        }
+        onJoinMeeting(displayName, keepDisplayNameOnDevice);
+    };
 
     const NameInput = (
         <InputFieldStacked isGroupElement classname={clsx(!showHostScreen && viewportWidth['<=small'] && 'rounded-xl')}>
@@ -104,11 +127,12 @@ export const PreJoinDetails = ({
                     className="primary py-4 px-5 md:py-5 rounded-full"
                     size="large"
                     fullWidth
-                    onClick={() => onJoinMeeting(displayName, keepDisplayNameOnDevice)}
+                    onClick={handleJoinMeeting}
                     disabled={displayName.trim() === ''}
                 >
-                    {actionLabel}
+                    {getActionLabel()}
                 </Button>,
+                ...(showOpenInDesktopApp ? [<OpenInDesktopApp key="open-in-desktop-app" />] : []),
                 ...(!showHostScreen && waitingRoomEnabled
                     ? [
                           <span key="meeting-with-waiting-room-message" className="color-hint text-sm text-no-bold">{c(
@@ -142,7 +166,7 @@ export const PreJoinDetails = ({
                                 type="text"
                                 unstyled
                                 inputClassName="rounded-none"
-                                value={roomId || c('Placeholder').t`Loading...`}
+                                value={meetingLinkName || c('Placeholder').t`Loading...`}
                                 onChange={(e) => e.preventDefault()}
                                 readOnly
                                 tabIndex={-1}
@@ -158,6 +182,9 @@ export const PreJoinDetails = ({
                                 }}
                                 onClick={() => {
                                     void navigator.clipboard.writeText(meetingLink);
+                                    sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_link_copied, {
+                                        source: 'prejoin',
+                                    });
                                     notificationManager.createNotification({
                                         type: 'info',
                                         text: c('Notification').t`Copied to clipboard`,

@@ -8,10 +8,10 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import { useModalStateWithData } from '@proton/components/components/modalTwo/useModalState';
 import { WALLET_APP_NAME } from '@proton/shared/lib/constants';
 import { canonicalizeEmailByGuess, validateEmailAddress } from '@proton/shared/lib/helpers/email';
-import type { Recipient } from '@proton/shared/lib/interfaces';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
 import { MAX_RECIPIENTS_PER_TRANSACTIONS } from '@proton/wallet/constants/settings';
-import { useWalletApiClients } from '@proton/wallet/contexts';
-import { useBitcoinNetwork } from '@proton/wallet/store/hooks';
+import { useWalletApiClients } from '@proton/wallet/contexts/ExtendedApiContext';
+import { useBitcoinNetwork } from '@proton/wallet/store/hooks/useBitcoinNetwork';
 
 import { useGetRecipientVerifiedAddressKey } from '../../../hooks/useGetRecipientVerifiedAddressKey';
 import type { TxBuilderHelper } from '../../../hooks/useTxBuilder';

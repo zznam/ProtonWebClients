@@ -1,11 +1,11 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { renderWithProviders } from '@proton/components/containers/contacts/tests/render';
 import { mockUseFolders } from '@proton/mail/testing/mockUseFolders';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { ALMOST_ALL_MAIL } from '@proton/shared/lib/mail/mailSettings';
 
 import LocationField from './LocationField';

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { Environment } from '../interfaces';
+import type { Environment } from '../interfaces/Environment';
 import type { DesktopInboxHeartbeatMetricPayload } from '../metrics/desktopInboxHeartbeat';
 import type { ColorScheme } from '../themes/constants';
 import type { ThemeSetting } from '../themes/themes';
@@ -47,6 +47,7 @@ export type IPCInboxDesktopFeature =
     | 'ClearAppModal'
     | 'SnapSupport'
     | 'BugReportLogAttachments'
+    | 'BugReportProfilerAttachments'
     /**
      * @deprecated on Desktop clients running Electron 41+
      */
@@ -103,7 +104,7 @@ export type IPCInboxClientUpdateMessage =
     | { type: 'triggerCrash'; payload?: undefined }
     | { type: 'reportTestingError'; payload?: undefined }
     | { type: 'metricsListenerChanged'; payload: 'ready' | 'removed' }
-    | { type: 'toggleAppCache'; payload: boolean }
+    | { type: 'toggleAppCache'; payload: boolean } // INDA-782: remove this
     /**
      * @deprecated for Desktop Clients with Electron 41+
      */
@@ -114,11 +115,17 @@ export type IPCInboxClientUpdateMessage =
     | { type: 'setAllowedProtocols'; payload: { protocols: string[]; source: ProtocolSource } }
     | { type: 'setUrlRedirectRules'; payload: { rules: SerializedUrlRule[] } }
     | { type: 'authStatusResult'; payload: { hasAuth: boolean; uuid: string } };
-export type IPCInboxClientGetAsyncDataMessage = {
-    type: 'getElectronLogs';
-    args: [maxSize?: number];
-    result: Uint8Array<ArrayBuffer> | null;
-};
+export type IPCInboxClientGetAsyncDataMessage =
+    | {
+          type: 'getElectronLogs';
+          args: [maxSize?: number];
+          result: Uint8Array<ArrayBuffer> | null;
+      }
+    | {
+          type: 'getProfilerReports';
+          args: [maxSize?: number];
+          result: { name: string; data: Uint8Array<ArrayBuffer> }[];
+      };
 export type IPCInboxClientUpdateMessageType = IPCInboxClientUpdateMessage['type'];
 
 export const IPCInboxHostUpdateMessageSchema = z.discriminatedUnion('type', [
@@ -205,11 +212,16 @@ export type PayloadOfHostUpdateType<T extends IPCInboxHostUpdateMessageType> = E
 export type IPCMeetClientUpdateMessage = { type: 'openExternal'; payload: string };
 type IPCMeetClientUpdateMessageType = IPCMeetClientUpdateMessage['type'];
 
+// "not-requested" means macOS has not shown its prompt yet; once it has, only System Settings can grant it.
+export type MeetScreenCaptureAccess = 'granted' | 'not-requested' | 'denied';
+
 export type IPCMeetMessageBroker = {
     send?: <T extends IPCMeetClientUpdateMessageType>(
         type: T,
         payload: Extract<IPCMeetClientUpdateMessage, { type: T }>['payload']
     ) => void;
+    getScreenCaptureAccess?: () => Promise<MeetScreenCaptureAccess>;
+    requestScreenCaptureAccess?: () => Promise<MeetScreenCaptureAccess>;
 };
 
 export interface InboxDesktopFreeTrialDates {

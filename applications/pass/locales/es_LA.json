@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } para Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } para iOS"
-      ],
       "Accept": [
         "Aceptar"
       ],
@@ -328,6 +322,15 @@
       "Don't show this again": [
         "No mostrar esto de nuevo"
       ],
+      "Download for Linux": [
+        "Descargar para Linux"
+      ],
+      "Download for macOS": [
+        "Descargar para macOS"
+      ],
+      "Download for Windows": [
+        "Descargar para Windows"
+      ],
       "Download this CSV template": [
         "Descargar esta plantilla CSV"
       ],
@@ -532,6 +535,9 @@
       "Open navigation": [
         "Abrir navegación"
       ],
+      "Open platform selection dropdown": [
+        "Abrir menú de selección de plataforma"
+      ],
       "Organize vaults": [
         "Organizar bóvedas"
       ],
@@ -688,6 +694,12 @@
       "Show Less": [
         "Mostrar menos"
       ],
+      "Show less": [
+        "Mostrar menos"
+      ],
+      "Show more": [
+        "Mostrar más"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Iniciar sesión con ${ BRAND_NAME }"
       ],
@@ -826,8 +838,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicación de escritorio de ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Aplicación de escritorio de ${ appName }"
       ]
     },
     "Button": {
@@ -1001,6 +1013,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "Error con la autenticación. Confirme su segunda contraseña para continuar con la exportación."
       ],
+      "Biometric authentication cancelled.": [
+        "Autenticación biométrica cancelada."
+      ],
       "Biometric authentication failed.": [
         "Error en la autenticación biométrica."
       ],
@@ -1081,6 +1096,9 @@
       "Editing item failed": [
         "Error al editar el elemento"
       ],
+      "Email is not valid": [
+        "Correo no válido"
+      ],
       "Empty CSV file": [
         "Archivo CSV vacío"
       ],
@@ -1092,6 +1110,9 @@
       ],
       "Encrypted JSON not supported": [
         "JSON cifrado no soportado"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Ingrese su nombre de usuario sin el dominio (@ejemplo.com)"
       ],
       "Error reporting problem": [
         "Error al reportar el problema"
@@ -1283,6 +1304,9 @@
       "Incorrect backup password. Please try again.": [
         "La contraseña de respaldo no es correcta. Inténtelo de nuevo."
       ],
+      "Incorrect password. Please try again.": [
+        "Contraseña incorrecta. Intente de nuevo."
+      ],
       "Incorrect second password. Please try again.": [
         "La segunda contraseña no es correcta. Inténtelo de nuevo."
       ],
@@ -1316,8 +1340,14 @@
       "Network error": [
         "Error de red"
       ],
+      "Not a valid number": [
+        "Número no válido"
+      ],
       "Passphrase is incorrect": [
         "La frase contraseña es incorrecta"
+      ],
+      "Passwords do not match": [
+        "Las contraseñas no coinciden"
       ],
       "PIN codes do not match": [
         "Los códigos PIN no coinciden"
@@ -1382,11 +1412,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Debe iniciar sesión en la aplicación de escritorio de ${ PASS_APP_NAME }"
       ],
+      "The email addresses do not match": [
+        "Las direcciónes de correo electrónico no son las mismas"
+      ],
       "The session has expired. Please sign in again.": [
         "La sesión ha expirado. Inicie sesión de nuevo."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Hubo un error al eliminar el enlace seguro. Intente de nuevo en unos minutos."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Este campo excede el máximo de ${ maximumLength } caracteres."
+      ],
+      "This field is required": [
+        "Este campo es obligatorio"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Este campo requiere un mínimo de ${ minimumLength } caracteres."
       ],
       "This invite is no longer available": [
         "Esta invitación ya no está disponible"
@@ -1399,6 +1441,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Intente comunicarse con el propietario del enlace."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Intente usando solo letras, números y _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "No se puede generar un código OTP para este elemento"
@@ -1433,6 +1478,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Error al actualizar la bóveda \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "El nombre de usuario debe comenzar con una letra o dígito"
+      ],
+      "Username must end with a letter or digit": [
+        "El nombre de usuario debe terminar con una letra o dígito"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Error al crear la bóveda \"${ payload.content.name }\""
       ],
@@ -1456,6 +1507,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Código PIN incorrecto. Intente de nuevo."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase de recuperación incorrecta. Vuelva a intentarlo o use otro método de recuperación."
       ],
       "Wrong second password": [
         "La segunda contraseña no es correcta."
@@ -1804,9 +1858,6 @@
       "Can view this item.": [
         "Puede ver este elemento."
       ],
-      "Change your password": [
-        "Cambie la contraseña"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Comprobando ${ compromised.progress.completed } de ${ compromised.progress.total } contraseñas"
       ],
@@ -1893,9 +1944,6 @@
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "correo"
       ],
       "Email address successfully deleted from monitoring": [
         "La dirección de correo electrónico fue eliminada del monitoreo."
@@ -1993,9 +2041,6 @@
       "Fill in the CSV with your data": [
         "Complete el CSV con los datos"
       ],
-      "finance": [
-        "finanzas"
-      ],
       "Finish signing in in the browser window that just opened. ${ PASS_APP_NAME } will pick up automatically once you're done.": [
         "Finalice el inicio de sesión en la ventana del navegador que acaba de abrir. ${ PASS_APP_NAME } se cargará automáticamente una vez que lo haga."
       ],
@@ -2085,6 +2130,9 @@
       "invites you to access items in": [
         "le invita a acceder a elementos de"
       ],
+      "iOS and Android Apps": [
+        "Aplicaciones para iOS y Android"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Parece que ya había iniciado sesión en ${ PASS_APP_NAME }. Si quiere iniciar sesión con una cuenta diferente, cierre previamente la sesión actual."
       ],
@@ -2164,9 +2212,6 @@
       "Medium Priority": [
         "Prioridad media"
       ],
-      "Monitor accounts": [
-        "Monitoreo de cuentas"
-      ],
       "Monitoring settings successfully updated": [
         "Ajustes de monitoreo actualizados"
       ],
@@ -2184,7 +2229,8 @@
         "Moviendo todos los elementos desde \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Mover un elemento a otra bóveda eliminará sus enlaces seguros."
+        "Mover un elemento a otra bóveda eliminará sus enlaces seguros.",
+        "Mover elementos a otra bóveda eliminará sus enlaces seguros."
       ],
       "Moving items": [
         "Moviendo los elementos"
@@ -2268,9 +2314,6 @@
       ],
       "Pass Plus trial": [
         "Prueba de Proton Pass Plus"
-      ],
-      "password": [
-        "contraseña"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Se registró el bloqueo por contraseña. Úsela para desbloquear ${ PASS_APP_NAME }"
@@ -2468,6 +2511,12 @@
       "Restoring trashed items...": [
         "Restaurando elementos de la papelera..."
       ],
+      "Scan to download": [
+        "Escanear para descargar"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "Escanee para descargar ${ PASS_APP_NAME } para iOS y Android"
+      ],
       "Secure links": [
         "Enlaces seguros"
       ],
@@ -2661,6 +2710,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "Para verificar los datos importados, pulse el ícono de ${ PASS_APP_NAME } en la barra de herramientas del navegador."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "Para configurar el desbloqueo biométrico, ${ PASS_APP_NAME } necesita un permiso de navegador nuevo."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "Para configurar el desbloqueo biométrico, ${ PASS_APP_NAME } requiere un permiso de navegador nuevo. Después de aceptarlo, la extensión se recargará. Luego abra esta página."
       ],
@@ -2720,9 +2772,6 @@
       ],
       "User's access successfully updated": [
         "Se actualizó el acceso del usuario."
-      ],
-      "username": [
-        "nombre de usuario"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Se eliminó la bóveda «${ payload.content.name }»."
@@ -2931,6 +2980,9 @@
       "${ hours } hour": [
         "${ hours } hora",
         "${ hours } horas"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } caracteres"
       ],
       "${ minutes } minute": [
         "${ minutes } minuto",
@@ -3547,11 +3599,17 @@
       "LinkedIn account": [
         "Cuenta de LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Inicio de sesión"
       ],
       "Logins": [
         "Inicios de sesión"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Buzones"
@@ -4110,6 +4168,9 @@
       ],
       "WiFi network": [
         "Red Wi-Fi"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Detalles del trabajo"
@@ -4896,6 +4957,12 @@
       "Folder options": [
         "Opciones de carpeta"
       ],
+      "Get mobile and desktop apps": [
+        "Obtenga aplicaciones móviles y de escritorio"
+      ],
+      "Get mobile apps": [
+        "Descargar aplicaciones móviles"
+      ],
       "Get Started": [
         "Comenzar"
       ],
@@ -5289,8 +5356,16 @@
       "OTP secret or URI is invalid": [
         "Clave secreta OTP o URI inválido"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "La contraseña debe tener al menos ${ MIN_PASSWORD_LENGTH } caracter",
+        "La contraseña debe tener al menos ${ MIN_PASSWORD_LENGTH } caracteres"
+      ],
       "Section name cannot be empty": [
         "El nombre de la sección no puede estar vacío"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Intente con un nombre de usuario corto (${ n } caracter máx.)",
+        "Intente con un nombre de usuario corto (${ n } caracteres máx.)"
       ],
       "URL already exists": [
         "La URL ya existe."
@@ -5311,6 +5386,22 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "Se requiere la contraseña de ${ BRAND_NAME }"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "Se fusionó ${ count } carpeta con su carpeta principal porque se alcanzó el nivel máximo de anidamiento.",
+        "Se fusionaron ${ count } carpetas con su carpeta principal porque se alcanzó el nivel máximo de anidamiento."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "No se importó ${ count } carpeta porque su carpeta principal alcanzó el número máximo de subcarpetas. Sus elementos se importaron a la carpeta disponible más cercana.",
+        "No se importaron ${ count } carpetas porque su carpeta principal alcanzó el número máximo de subcarpetas. Sus elementos se importaron a la carpeta disponible más cercana."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "No se importó ${ count } carpeta porque esta bóveda alcanzó el número máximo de carpetas. Sus elementos se importaron a la carpeta disponible más cercana.",
+        "No se importaron ${ count } carpetas porque esta bóveda alcanzó el número máximo de carpetas. Sus elementos se importaron a la carpeta disponible más cercana."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "No se pudo crear ${ failed } carpeta. Sus elementos se importaron a la carpeta disponible más cercana.",
+        "No se pudieron crear ${ failed } carpetas. Sus elementos se importaron a la carpeta disponible más cercana."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } brinda un control potente, pero un solo error puede provocar que la función de autocompletar coincida con datos de sitios web fraudulentos o de suplantación y los complete automáticamente."
@@ -5449,9 +5540,6 @@
       ],
       "Move to trash": [
         "Mover a la papelera"
-      ],
-      "Name is required": [
-        "El nombre es obligatorio."
       ],
       "No items": [
         "No hay elementos"

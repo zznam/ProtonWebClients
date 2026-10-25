@@ -2,7 +2,11 @@ import type { ReactNode } from 'react';
 
 import { c } from 'ttag';
 
-import { MemberUnprivatizationMode, getMemberUnprivatizationMode } from '@proton/account/members/memberUnprivatization';
+import {
+    MemberUnprivatizationMode,
+    getHasPausedMemberRoleAssignment,
+    getMemberUnprivatizationMode,
+} from '@proton/account/members/memberUnprivatization';
 import { selectUnprivatizationState } from '@proton/account/members/unprivatizeMembers';
 import type { UseMembersUsageResult } from '@proton/account/members/useMembersUsage';
 import { isOwnerRole } from '@proton/account/organizationRoles/helpers';
@@ -17,15 +21,14 @@ import { IcKey } from '@proton/icons/icons/IcKey';
 import { IcMinusCircle } from '@proton/icons/icons/IcMinusCircle';
 import { IcShareNode } from '@proton/icons/icons/IcShareNode';
 import { IcShieldHalfFilled } from '@proton/icons/icons/IcShieldHalfFilled';
-import { baseUseSelector } from '@proton/react-redux-store';
+import { baseUseSelector } from '@proton/react-redux-store/ProtonStoreContext';
 import type { MemberUsageColumnState } from '@proton/shared/lib/api/members';
 import { LUMO_SHORT_APP_NAME } from '@proton/shared/lib/constants';
 import { hasMailProduct } from '@proton/shared/lib/helpers/organization';
 import { getInitials } from '@proton/shared/lib/helpers/string';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { EnhancedMember } from '@proton/shared/lib/interfaces';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
 import { getIsMemberDisabled, getIsMemberInvited } from '@proton/shared/lib/keys/memberHelper';
-import { getHasPausedRoleAssignment } from '@proton/shared/lib/organization/helper';
 import clsx from '@proton/utils/clsx';
 
 import Info from '../../../components/link/Info';
@@ -115,7 +118,7 @@ export const MembersTable = ({
         const hasPendingFamilyInvitation = getIsMemberInvited(member);
         const isDisabled = getIsMemberDisabled(member);
 
-        const hasPausedRoleAssignment = getHasPausedRoleAssignment({
+        const hasPausedRoleAssignment = getHasPausedMemberRoleAssignment({
             member,
             requiresOrgKeyPromotion: models.requiresOrgKeyPromotionMap?.[member.ID],
         });

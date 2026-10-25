@@ -7,6 +7,7 @@ import { Button } from '@proton/atoms/Button/Button';
 import { Href } from '@proton/atoms/Href/Href';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import { selectMeetingReadyPopupOpen, setMeetingReadyPopupOpen } from '@proton/meet/store/slices/uiStateSlice';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { isMobile } from '@proton/shared/lib/helpers/browser';
 
 import { CloseButton } from '../../atoms/CloseButton/CloseButton';
@@ -61,7 +62,7 @@ export const MeetingReadyPopup = ({ meetingLink, closeBySlide }: MeetingReadyPop
                         .t`Your meeting is ready`}</div>
 
                     <div className="color-weak text-center">{c('Info')
-                        .t`Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.`}</div>
+                        .t`Share this link to invite others. You can also find it anytime under Meeting info in the More options menu.`}</div>
                 </div>
 
                 <div className="link-container flex flex-column bg-norm border border-norm p-6">
@@ -76,6 +77,9 @@ export const MeetingReadyPopup = ({ meetingLink, closeBySlide }: MeetingReadyPop
                     size="large"
                     onClick={async () => {
                         void navigator.clipboard.writeText(meetingLink);
+                        sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_link_copied, {
+                            source: 'meeting_ready_popup',
+                        });
                         dispatch(setMeetingReadyPopupOpen(false));
                         notifications.createNotification({
                             type: 'success',

@@ -1,21 +1,26 @@
-import { initEvent, userSettingsThunk, userThunk, welcomeFlagsActions } from '@proton/account';
 import * as bootstrap from '@proton/account/bootstrap';
 import { bootstrapEvent } from '@proton/account/bootstrap/action';
 import { serverEvent } from '@proton/account/eventLoop';
+import { initEvent } from '@proton/account/init';
 import { getDecryptedPersistedState } from '@proton/account/persist/helper';
+import { userThunk } from '@proton/account/user';
+import { userSettingsThunk } from '@proton/account/userSettings';
+import { welcomeFlagsActions } from '@proton/account/welcomeFlags';
 import { setupGuestCrossStorage } from '@proton/cross-storage/account/guest';
 import { featureFlagStore } from '@proton/drive/modules/flags';
 import { driveMetrics } from '@proton/drive/modules/metrics';
-import { FeatureCode, fetchFeatures } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import { fetchFeatures } from '@proton/features/reducer';
 import createApi from '@proton/shared/lib/api/createApi';
 import { queryUserSettings } from '@proton/shared/lib/api/drive/user';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { registerSessionRemovalListener } from '@proton/shared/lib/authentication/persistedSessionStorage';
 import { initSafariFontFixClassnames } from '@proton/shared/lib/helpers/initSafariFontFixClassnames';
 import { setMetricsEnabled } from '@proton/shared/lib/helpers/metrics';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import type { UserSettingsResponse } from '@proton/shared/lib/interfaces/drive/userSettings';
 import { appMode } from '@proton/shared/lib/webpack.constants';
+import { initTracker } from '@proton/telemetry-tracker/tracker';
 import noop from '@proton/utils/noop';
 
 import locales from './locales';
@@ -33,6 +38,7 @@ export const bootstrapApp = async ({ config }: { config: ProtonConfig }) => {
     const silentApi = getSilentApi(api);
     const authentication = bootstrap.createAuthentication();
     bootstrap.init({ config, authentication, locales });
+    initTracker({ api: silentApi });
     setupGuestCrossStorage({ appMode, appName });
     initSafariFontFixClassnames();
     const streamsPolyfillPromise = loadStreamsPolyfill();

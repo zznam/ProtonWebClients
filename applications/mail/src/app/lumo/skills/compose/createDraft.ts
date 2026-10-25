@@ -3,16 +3,16 @@ import { c } from 'ttag';
 import { ToolInputError } from '@proton/llm/lib/lumoAgent/contracts/errors';
 import type { ToolDefinition, ToolHandler } from '@proton/llm/lib/lumoAgent/contracts/types';
 import type { PartialMessageState } from '@proton/mail/store/messages/messagesTypes';
-import type { Recipient } from '@proton/shared/lib/interfaces';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
 
 import { selectParams } from '../../../store/elements/elementsSelectors';
 import { DraftKind, MESSAGE_ACTION_FOR } from '../../helpers/draftKind';
-import { withStepTimeout } from '../../helpers/messages';
-import { resolveTypedId } from '../../helpers/references';
+import { isUnsent, replyTargetIDFor, withStepTimeout } from '../../helpers/messages';
+import { assertReferenceKind, isConversationReferenceID, resolveTypedId } from '../../helpers/references';
 import type { MailToolDeps, MailToolModule } from '../../toolModule';
 import { createDraftCardRenderer } from './createDraftCard';
 import type { References } from './recipients';
-import { toRecipients } from './recipients';
+import { assertRecipientShape, toRecipients } from './recipients';
 
 const ANSWERING_ACTIONS = [DraftKind.REPLY, DraftKind.REPLY_ALL, DraftKind.FORWARD];
 
@@ -92,6 +92,40 @@ export const createDraftDefinition: ToolDefinition<CreateDraftParams, CreateDraf
             },
         },
     ],
+    checkParams: ({ kind, answers, to, cc, subject, body }) => {
+        if (!body?.trim()) {
+            throw new ToolInputError('`body` was empty: pass the text the draft should hold.');
+        }
+
+        if (ANSWERING_ACTIONS.includes(kind)) {
+            if (!answers) {
+                throw new ToolInputError(
+                    `A ${kind} needs \`answers\`: the email-… reference of the message it answers.`
+                );
+            }
+
+            const isReply = kind !== DraftKind.FORWARD;
+            const inherited = [
+                to?.length && isReply && CreateDraftField.TO,
+                cc?.length && isReply && CreateDraftField.CC,
+                subject && CreateDraftField.SUBJECT,
+            ].filter(Boolean);
+            if (inherited.length) {
+                throw new ToolInputError(
+                    `A ${kind} inherits its recipients and subject from the email it answers, so ` +
+                        `${inherited.join(', ')} cannot be set on this call. Name them only on a new email.`
+                );
+            }
+
+            assertReferenceKind(answers, ['email']);
+        } else if (answers) {
+            throw new ToolInputError(
+                '`answers` only belongs on a reply, reply_all or forward. For a new email, name the recipients in `to`.'
+            );
+        }
+
+        [...(to ?? []), ...(cc ?? [])].forEach(assertRecipientShape);
+    },
     serializeForLumo: (result) => {
         const opened = result.kind === DraftKind.NEW ? 'a new email' : `a ${result.kind.replace('_', ' ')}`;
         return (
@@ -146,37 +180,41 @@ const answeredMessage = async (mail: MailToolDeps, id: string): Promise<PartialM
     return message?.data && message.messageDocument?.initialized === true ? message : undefined;
 };
 
-type AddressedFields = Pick<CreateDraftParams, 'answers' | 'to' | 'cc' | 'subject'>;
+/** A reply answers one message, so a conversation reference stands for the one Mail's own Reply would answer. */
+const replyTargetOf = async (mail: MailToolDeps, conversationID: string): Promise<string | undefined> => {
+    if (!mail.store.getState().conversations[conversationID]?.Messages?.length) {
+        try {
+            await withStepTimeout(mail.loadConversation(conversationID));
+        } catch {
+            // Judged on what the store holds afterwards, below.
+        }
+    }
+
+    return replyTargetIDFor(mail.store, conversationID);
+};
 
 /** The email a reply or forward quotes, and from which it inherits its recipients and subject. */
 const quotedMessage = async (
     mail: MailToolDeps,
-    { kind, answers, to, cc, subject }: AddressedFields & { kind: DraftKind },
+    { kind, answers }: Pick<CreateDraftParams, 'kind' | 'answers'>,
     references: References
 ): Promise<PartialMessageState> => {
-    if (!answers) {
-        throw new ToolInputError(`A ${kind} needs \`answers\`: the email-… reference of the message it answers.`);
-    }
-
-    const isReply = kind !== DraftKind.FORWARD;
-    const inherited = [
-        to?.length && isReply && CreateDraftField.TO,
-        cc?.length && isReply && CreateDraftField.CC,
-        subject && CreateDraftField.SUBJECT,
-    ].filter(Boolean);
-    if (inherited.length) {
-        throw new ToolInputError(
-            `A ${kind} inherits its recipients and subject from the email it answers, so ` +
-                `${inherited.join(', ')} cannot be set on this call. Name them only on a new email.`
-        );
-    }
-
-    const id = resolveTypedId(answers, ['email'], references);
-    const referenceMessage = await answeredMessage(mail, id);
+    // `checkParams` has already required `answers` on every answering kind.
+    const id = resolveTypedId(answers ?? '', ['email'], references);
+    const messageID = isConversationReferenceID(references, id) ? await replyTargetOf(mail, id) : id;
+    const referenceMessage = messageID ? await answeredMessage(mail, messageID) : undefined;
     if (!referenceMessage) {
         throw new ToolInputError(
             `That email could not be read, so there was nothing to quote in the ${kind}. ` +
                 'Opening and reading the email is what decrypts it.'
+        );
+    }
+
+    if (isUnsent(referenceMessage.data)) {
+        throw new ToolInputError(
+            'That email had not been sent yet (it was still in the Outbox or scheduled), so nothing was drafted: ' +
+                'an unsent email cannot be replied to or forwarded. Tell the user, and offer to answer an earlier ' +
+                'message in the conversation instead.'
         );
     }
 
@@ -186,15 +224,9 @@ const quotedMessage = async (
 /** A fresh email, carrying only the recipients and subject the model named. */
 const newMessage = (
     mail: MailToolDeps,
-    { answers, to, cc, subject }: AddressedFields,
+    { to, cc, subject }: Pick<CreateDraftParams, 'to' | 'cc' | 'subject'>,
     references: References
 ): PartialMessageState => {
-    if (answers) {
-        throw new ToolInputError(
-            '`answers` only belongs on a reply, reply_all or forward. For a new email, name the recipients in `to`.'
-        );
-    }
-
     return {
         data: {
             ToList: toRecipients(mail, to, references) as Recipient[],
@@ -206,15 +238,10 @@ const newMessage = (
 
 export const createCreateDraftHandler =
     (mail: MailToolDeps): ToolHandler<CreateDraftParams, CreateDraftResult> =>
-    async ({ kind, answers, to, cc, subject, body: rawBody }, { references }) => {
-        const body = rawBody?.trim() ?? '';
-        if (!body) {
-            throw new ToolInputError('`body` was empty: pass the text the draft should hold.');
-        }
-
+    async ({ kind, answers, to, cc, subject, body }, { references }) => {
         const referenceMessage = ANSWERING_ACTIONS.includes(kind)
-            ? await quotedMessage(mail, { kind, answers, to, cc, subject }, references)
-            : newMessage(mail, { answers, to, cc, subject }, references);
+            ? await quotedMessage(mail, { kind, answers }, references)
+            : newMessage(mail, { to, cc, subject }, references);
 
         let forwardRecipients: Partial<Record<'ToList' | 'CCList', Recipient[]>> | undefined;
         if (kind === DraftKind.FORWARD) {
@@ -230,7 +257,7 @@ export const createCreateDraftHandler =
         }
 
         const composerID = await composerOpenedBy(mail, () =>
-            mail.composeDraft({ action: MESSAGE_ACTION_FOR[kind], referenceMessage, bodyBeforeQuote: body })
+            mail.composeDraft({ action: MESSAGE_ACTION_FOR[kind], referenceMessage, bodyBeforeQuote: body.trim() })
         );
 
         if (forwardRecipients && Object.keys(forwardRecipients).length) {

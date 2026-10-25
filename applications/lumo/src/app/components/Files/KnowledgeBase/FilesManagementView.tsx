@@ -1,11 +1,13 @@
 import React from 'react';
 
-import type { ModalStateProps } from '@proton/components';
-import { ModalTwo, ModalTwoContent } from '@proton/components';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
 
 import { useLumoSelector } from '../../../redux/hooks';
 import { selectProvisionalAttachments } from '../../../redux/selectors';
 import type { Message } from '../../../types';
+import type { ConversationArtifactDrawerEntry } from '../../Conversation/artifact/conversationArtifactDrawerList';
 import { KnowledgeBasePanel } from './KnowledgeBasePanel';
 
 import './KnowledgeBasePanel.scss';
@@ -22,6 +24,8 @@ interface FilesManagementViewProps {
     /** Required when forceModal is true so the ModalTwo open/close lifecycle is properly controlled. */
     modalProps?: ModalStateProps;
     spaceId?: string;
+    drawerArtifacts?: ConversationArtifactDrawerEntry[];
+    onOpenArtifact?: (artifactId: string) => void;
 }
 
 export const FilesManagementView = ({
@@ -34,6 +38,8 @@ export const FilesManagementView = ({
     forceModal = false,
     modalProps,
     spaceId,
+    drawerArtifacts = [],
+    onOpenArtifact,
 }: FilesManagementViewProps) => {
     const currentAttachments = useLumoSelector(selectProvisionalAttachments);
     const handleClose = modalProps?.onClose ?? onClose;
@@ -49,6 +55,8 @@ export const FilesManagementView = ({
             onClearFilter={onClearFilter}
             initialShowDriveBrowser={initialShowDriveBrowser}
             spaceId={spaceId}
+            drawerArtifacts={drawerArtifacts}
+            onOpenArtifact={onOpenArtifact}
         />
     );
 

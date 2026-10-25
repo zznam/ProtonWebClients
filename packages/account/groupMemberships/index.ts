@@ -1,6 +1,6 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
@@ -12,7 +12,7 @@ import {
     type GroupMember,
     type GroupMembership,
     type GroupMembershipReturn,
-} from '@proton/shared/lib/interfaces';
+} from '@proton/shared/lib/interfaces/GroupMember';
 
 const name = 'groupMemberships';
 

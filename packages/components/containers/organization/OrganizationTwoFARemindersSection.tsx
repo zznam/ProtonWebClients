@@ -1,13 +1,13 @@
 import { c, msgid } from 'ttag';
 
-import { useMemberAddresses } from '@proton/account';
 import { useMembers } from '@proton/account/members/hooks';
+import { useMemberAddresses } from '@proton/account/members/useMemberAddresses';
 import { useUserPermissions } from '@proton/account/userPermissions/hooks';
 import { useConfig } from '@proton/app-context/useConfig';
 import { Button } from '@proton/atoms/Button/Button';
 import { APPS } from '@proton/shared/lib/constants';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Organization } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 
 import Info from '../../components/link/Info';
 import Loader from '../../components/loader/Loader';

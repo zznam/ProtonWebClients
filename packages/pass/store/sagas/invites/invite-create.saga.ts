@@ -7,14 +7,18 @@ import { createNewUserInvites, createUserInvites } from '../../../lib/invites/in
 import type { InviteBatchResult } from '../../../lib/invites/invite.utils';
 import { concatInviteResults } from '../../../lib/invites/invite.utils';
 import { createTelemetryEvent } from '../../../lib/telemetry/utils';
-import type { ItemRevision, Maybe } from '../../../types';
 import { UserPassPlan } from '../../../types/api/plan';
 import type { InviteMemberDTO, InviteUserDTO } from '../../../types/data/invites.dto';
+import type { ItemRevision } from '../../../types/data/items';
+import { ShareRole } from '../../../types/data/shares';
 import { TelemetryEventName, TelemetryItemType, TelemetryTargetType } from '../../../types/data/telemetry';
+import type { Maybe } from '../../../types/utils';
 import { partition } from '../../../utils/array/partition';
-import { inviteBatchCreateFailure, inviteBatchCreateIntent, inviteBatchCreateSuccess } from '../../actions';
+import { inviteBatchCreateFailure, inviteBatchCreateIntent, inviteBatchCreateSuccess } from '../../actions/creators/invite';
 import { syncAccess } from '../../actions/creators/polling';
-import { selectAccessMembers, selectItem, selectPassPlan } from '../../selectors';
+import { selectAccessMembers } from '../../selectors/access';
+import { selectItem } from '../../selectors/items';
+import { selectPassPlan } from '../../selectors/user';
 import type { RootSagaOptions } from '../../types';
 
 function* createInviteWorker(
@@ -37,10 +41,12 @@ function* createInviteWorker(
          * proton user, `publicKey` will be `undefined` and we should
          * treat it as as a new user invite */
         const membersDTO: InviteMemberDTO[] = yield Promise.all(
-            members.map<Promise<InviteMemberDTO>>(async ({ value: { email, role } }) => ({
+            members.map<Promise<InviteMemberDTO>>(async ({ value: { email, role, hideSensitiveContent } }) => ({
                 email: email,
                 publicKey: await getPrimaryPublicKeyForEmail(email),
                 role,
+                /** `HideSensitiveContent` is only allowed by the API for Viewer invites */
+                hideSensitiveContent: role === ShareRole.READ ? hideSensitiveContent : false,
             }))
         );
 

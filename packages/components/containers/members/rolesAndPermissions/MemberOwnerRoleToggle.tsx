@@ -1,18 +1,19 @@
 import { c } from 'ttag';
 
-import { getPrivateAdminError, setMemberOwnerRole } from '@proton/account';
+import { setMemberOwnerRole } from '@proton/account/members/actions';
 import { MemberUnprivatizationMode, getMemberUnprivatizationMode } from '@proton/account/members/memberUnprivatization';
 import { useOrganization } from '@proton/account/organization/hooks';
+import { getPrivateAdminError } from '@proton/account/organizationKey/actions';
 import { useOrganizationKey } from '@proton/account/organizationKey/hooks';
 import { canManageOwnerRole, hasUserSourcedOwnerRole } from '@proton/account/organizationRoles/helpers';
 import { useUserPermissions } from '@proton/account/userPermissions/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcInfoCircleFilled } from '@proton/icons/icons/IcInfoCircleFilled';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
-import type { EnhancedMember } from '@proton/shared/lib/interfaces';
-import { getIsPasswordless } from '@proton/shared/lib/keys';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
+import { getIsPasswordless } from '@proton/shared/lib/keys/organizationKeys';
 
 import { useModalTwo } from '../../../components/modalTwo/useModalTwo';
 import Toggle from '../../../components/toggle/Toggle';

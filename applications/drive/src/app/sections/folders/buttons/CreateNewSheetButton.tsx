@@ -1,6 +1,7 @@
 import { c } from 'ttag';
 
-import { MimeIcon, ToolbarButton } from '@proton/components';
+import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton';
+import { MimeProtonSheet } from '@proton/file-icons/icons/MimeProtonSheet';
 
 import { ContextMenuButton } from '../../../statelessComponents/ContextMenu';
 import type { ActionButtonProps } from '../../buttons/types';
@@ -12,7 +13,7 @@ export const CreateNewSheetButton = ({ type, close, onClick }: ActionButtonProps
         return (
             <ToolbarButton
                 data-testid="toolbar-new-sheet"
-                icon={<MimeIcon name="proton-sheet" alt={title} />}
+                icon={<MimeProtonSheet alt={title} />}
                 title={title}
                 onClick={onClick}
             />
@@ -23,7 +24,7 @@ export const CreateNewSheetButton = ({ type, close, onClick }: ActionButtonProps
         return (
             <ContextMenuButton
                 testId="context-menu-new-sheet"
-                icon={<MimeIcon name="proton-sheet" />}
+                icon={<MimeProtonSheet />}
                 name={title}
                 action={onClick}
                 close={close}

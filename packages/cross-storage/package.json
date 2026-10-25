@@ -6,16 +6,19 @@
         "./account/interface": "./account-impl/interface.ts"
     },
     "scripts": {
-        "check-types": "tsc --checkers 1",
-        "lint": "eslint --quiet"
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet"
     },
     "dependencies": {
         "@proton/shared": "workspace:^"
     },
     "devDependencies": {
-        "@proton/eslint-config-proton": "workspace:^",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.11.0",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
+        "@proton/oxlint-config": "workspace:^",
+        "@types/node": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:"
     }
 }

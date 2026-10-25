@@ -61,9 +61,6 @@
       "A participant reacted with ${ emoji }": [
         "Een deelnemer reageerde met ${ emoji }"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Verbonden via TURN-relaymodus vanwege netwerkbeperkingen. Dit kan de latentie verhogen en de gesprekskwaliteit beïnvloeden."
-      ],
       "Connection lost. Reconnecting…": [
         "Verbinding verbroken. Opnieuw verbinden…"
       ],
@@ -280,9 +277,6 @@
       "Download": [
         "Downloaden"
       ],
-      "Download app": [
-        "App downloaden"
-      ],
       "Download local participant report": [
         "Lokale deelnemersrapport downloaden"
       ],
@@ -391,6 +385,9 @@
       "Minimize preview": [
         "Voorbeeld minimaliseren"
       ],
+      "More info": [
+        "Meer informatie"
+      ],
       "More info: ${ safeTitle }": [
         "Meer informatie: ${ safeTitle }"
       ],
@@ -409,8 +406,8 @@
       "Noise cancellation": [
         "Ruisonderdrukking"
       ],
-      "Open app": [
-        "Open app"
+      "Not now": [
+        "Niet nu"
       ],
       "Open link": [
         "Link openen"
@@ -585,9 +582,6 @@
       "Stay in meeting": [
         "Blijf in de vergadering"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Stop met het openen van vergaderingen in de desktop-app"
-      ],
       "Stop receiving video": [
         "Video-ontvangst stoppen"
       ],
@@ -599,6 +593,9 @@
       ],
       "Stop Recording Track Stats": [
         "Stop met het registreren van Track Statistieken"
+      ],
+      "Stop sharing": [
+        "Delen stoppen"
       ],
       "Submit": [
         "Versturen"
@@ -677,9 +674,6 @@
       "Blur background": [
         "Achtergrond vervagen"
       ],
-      "Chat": [
-        "Chat"
-      ],
       "Close": [
         "Sluiten"
       ],
@@ -692,9 +686,6 @@
       "Copy meeting link": [
         "Vergadering link kopiëren"
       ],
-      "Debug overlay": [
-        "Foutopsporing overlay"
-      ],
       "Go to dashboard": [
         "Ga naar dashboard"
       ],
@@ -703,12 +694,6 @@
       ],
       "Lock meeting": [
         "Vergadering vergrendelen"
-      ],
-      "Lower hand": [
-        "Laat hand zakken"
-      ],
-      "Meeting details": [
-        "Vergaderingsgegevens"
       ],
       "More options": [
         "Meer opties"
@@ -725,23 +710,11 @@
       "Participant host control options": [
         "Opties voor deelnemersbeheer door de host"
       ],
-      "Participants": [
-        "Deelnemers"
-      ],
-      "Raise hand": [
-        "Hand opsteken"
-      ],
       "Rotate camera": [
         "Camera roteren"
       ],
       "Save my name on this device": [
         "Mijn naam opslaan op dit apparaat"
-      ],
-      "Screen share": [
-        "Scherm delen"
-      ],
-      "Settings": [
-        "Instellingen"
       ],
       "Stop recording and download.": [
         "Stop met opnemen en download de video."
@@ -752,17 +725,11 @@
       "Toggle emoji reactions": [
         "Emoji's in- of uitschakelen"
       ],
-      "Toggle meeting details": [
-        "Vergaderingsgegevens in-/uitschakelen"
-      ],
       "Toggle participants": [
         "Deelnemers in-/uitschakelen"
       ],
       "Toggle screen share": [
         "Scherm delen in-/uitschakelen"
-      ],
-      "Toggle settings": [
-        "Instellingen openen/sluiten"
       ],
       "Video settings": [
         "Video-instellingen"
@@ -817,16 +784,6 @@
     "Badge": {
       "Active": [
         "Actief"
-      ]
-    },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Verbonden via TURN-relaymodus vanwege uw netwerkbeperkingen. Dit kan de latentie verhogen en de gesprekskwaliteit beïnvloeden."
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } desktop-app"
       ]
     },
     "Bug category": {
@@ -1815,6 +1772,12 @@
       "Cannot verify who uploaded this file": [
         "Kan niet verifiëren wie dit bestand heeft geüpload"
       ],
+      "Check your audio settings and try again": [
+        "Controleer je audio-instellingen en probeer het opnieuw"
+      ],
+      "Connection lost — captions will resume when reconnected": [
+        "Verbinding verbroken: de ondertiteling wordt hervat wanneer er opnieuw verbinding wordt gemaakt"
+      ],
       "Copy operation aborted": [
         "Kopieerbewerking afgebroken"
       ],
@@ -1980,6 +1943,9 @@
       "Incorrect backup password. Please try again.": [
         "Onjuist back-up wachtwoord. Probeer het opnieuw."
       ],
+      "Incorrect password. Please try again.": [
+        "Onjuist wachtwoord. Probeer het opnieuw."
+      ],
       "Incorrect second password. Please try again.": [
         "Onjuist tweede wachtwoord. Probeer het opnieuw."
       ],
@@ -2000,6 +1966,9 @@
       ],
       "Legacy public link cannot be updated. Please re-create a new public link.": [
         "Verouderde openbare link kan niet worden bijgewerkt. Maak opnieuw een nieuwe openbare link."
+      ],
+      "Microphone not detected": [
+        "Microfoon niet gedetecteerd"
       ],
       "Missing inviter email": [
         "Ontbrekende e-mail uitnodiger"
@@ -2155,8 +2124,14 @@
       "Too many server requests, please try again later": [
         "Te veel serververzoeken. Probeer het later opnieuw"
       ],
+      "Try turning live captions off and on again.": [
+        "Probeer live ondertiteling uit en weer in te schakelen."
+      ],
       "Try using only letters, numerals, and _.-": [
         "Probeer enkel letters, nummers en _.- te gebruiken"
+      ],
+      "Unable to generate captions": [
+        "Kan geen bijschriften genereren."
       ],
       "Unknown error": [
         "Onbekende fout"
@@ -2175,6 +2150,9 @@
       ],
       "We couldn’t send a verification code using this method.": [
         "We konden via deze methode geen verificatiecode verzenden."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Verkeerde herstelzijn. Probeer opnieuw of probeer een andere herstelmethode."
       ],
       "You can create public links for your own files only": [
         "U kunt alleen openbare links voor uw eigen bestanden maken"
@@ -2476,6 +2454,9 @@
       "Camera permission denied": [
         "Cameratoegang geweigerd"
       ],
+      "Captions on": [
+        "Onderschriften aan"
+      ],
       "Changes are staged. Apply to rebuild the preview with the new constants.": [
         "Wijzigingen zijn klaargezet. Toepassen om het voorbeeld opnieuw op te bouwen met de nieuwe constanten."
       ],
@@ -2623,9 +2604,6 @@
       "Get a secure meeting link then add it to your calendar": [
         "Krijg een beveiligde vergaderingslink en voeg deze vervolgens toe aan uw agenda"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Krijg de beste ervaring met de ${ protonMeet } desktop-app"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Ga naar about:config, zoek naar media.peerconnection.enabled, en stel het in op true."
       ],
@@ -2682,6 +2660,9 @@
       ],
       "Loading calendar, please wait. You will be redirected to our scheduling platform Calendly in a new tab.": [
         "Laden van kalender, gelieve te wachten. U wordt automatisch doorverwezen naar onze agendaplanner Calendly in een nieuw tabblad."
+      ],
+      "Loading captions…": [
+        "Ondertiteling laden…"
       ],
       "Loading meeting details...": [
         "Vergaderingsgegevens laden..."
@@ -2923,9 +2904,6 @@
       "Share screen": [
         "Scherm delen"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Deel deze link om andere uit te nodigen. U kunt deze ook altijd vinden door op het informatiepictogram in de werkbalk te klikken."
-      ],
       "Sign in": [
         "Inloggen"
       ],
@@ -2934,9 +2912,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "Spreker is niet beschikbaar in deze browser. Gebruik de instellingen van uw systeem om een andere spreker te kiezen."
-      ],
-      "Start recording": [
-        "Opname starten"
       ],
       "Starting camera…": [
         "Camera starten…"
@@ -2976,9 +2951,6 @@
       ],
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "Deze bijeenkomst bereikte de tijdslimiet van een gratis plan. Upgrade om de lengte van uw vergadering bij toekomstige gesprekken te verlengen."
-      ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "Deze vergadering is geopend in de desktop-app ${ MEET_APP_NAME }."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "Deze opname wordt definitief van dit apparaat verwijderd. Deze actie kan niet ongedaan worden gemaakt."
@@ -3040,6 +3012,9 @@
       "View ": [
         "Bekijken "
       ],
+      "Waiting for speech…": [
+        "Wachten op spraak…"
+      ],
       "Waiting for the host to admit you. The host has been notified that you're waiting.": [
         "Wachten tot de host u toelaat. De host heeft een melding ontvangen dat u wacht."
       ],
@@ -3072,9 +3047,6 @@
       ],
       "You are almost there": [
         "U bent er bijna"
-      ],
-      "You can close this tab.": [
-        "U kunt dit tabblad sluiten."
       ],
       "You can now return to the application to continue": [
         "U kunt nu teruggaan naar het programma om door te gaan"
@@ -3271,6 +3243,9 @@
       "Leave meeting options": [
         "Opties voor verlaten vergadering"
       ],
+      "Live captions": [
+        "Live ondertiteling"
+      ],
       "Manage recordings": [
         "Beheer opnames"
       ],
@@ -3288,6 +3263,9 @@
       ],
       "Monday to Friday": [
         "Maandag t/m vrijdag"
+      ],
+      "More options": [
+        "Meer opties"
       ],
       "Muted": [
         "Gedempt"

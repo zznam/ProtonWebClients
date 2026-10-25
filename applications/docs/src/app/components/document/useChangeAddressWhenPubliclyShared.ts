@@ -1,12 +1,14 @@
 import useAuthentication from '@proton/components/hooks/useAuthentication'
-import type { DocumentState, PublicDocumentState } from '@proton/docs-core'
-import { CacheService } from '@proton/docs-core/lib/Services/CacheService'
-import type { NodeMeta, PublicNodeMeta } from '@proton/docs-shared'
-import OpenTracer from '@proton/docs-shared/lib/Tracer/Module'
-import type { ShareResult } from '@proton/drive'
-import { generateNodeUid, getDrive } from '@proton/drive'
-import { isPrivateNodeMeta } from '@proton/drive-store/lib/NodeMeta'
-import { addSentryBreadcrumb, SentryRealtimeInitiatives, traceError } from '@proton/shared/lib/helpers/sentry'
+import type { DocumentState, PublicDocumentState } from '@proton/docs-core/State/DocumentState'
+import { CacheService } from '@proton/docs-core/Services/CacheService'
+import { traceErrorSDK } from '@proton/docs-core/DriveSDK/traceErrorSDK'
+import type { NodeMeta, PublicNodeMeta } from '@proton/docs-shared/BasicTypes'
+import { isPrivateNodeMeta } from '@proton/docs-shared/NodeMetaHelpers'
+import OpenTracer from '@proton/docs-shared/Tracer/Module'
+import type { ShareResult } from '@proton/drive/sdk'
+import { generateNodeUid, getDrive } from '@proton/drive/sdk'
+import { addSentryBreadcrumb } from '@proton/shared/lib/helpers/sentry'
+import { stripLocalBasenameFromPathname } from '@proton/shared/lib/authentication/pathnameHelper'
 import { useEffect, useRef } from 'react'
 import { useApplication } from '~/utils/application-context'
 
@@ -90,27 +92,13 @@ export function replaceAddress({
 }
 
 export function reportChangeAddressError(error: any, breadcrumb: Record<string, any>) {
-  if (error instanceof Error && error.name === 'AbortError') {
-    return
-  }
-
-  const errorMessage = 'Failed to change URL in address bar after changing public sharing'
-
-  const errorWithCurrentStack = new Error(errorMessage)
-  errorWithCurrentStack.cause = error
-
   addSentryBreadcrumb({
     category: 'docs',
     level: 'warning',
     message: 'Failure in useChangeAddressWhenPubliclyShared',
     data: breadcrumb,
   })
-  traceError(errorWithCurrentStack, {
-    tags: {
-      initiative: SentryRealtimeInitiatives.SDK_SWITCH,
-      feature: 'DocsSharingModalDriveSDK',
-    },
-  })
+  traceErrorSDK(error, 'DocsSharingModalDriveSDK')
 }
 
 // We are transitioning from toggle OFF to ON
@@ -128,7 +116,7 @@ function getPublicURL(publicLinkUrl: string) {
   const token = getToken(pathname)
 
   // Output should be /doc?mode=open-url&token=FOO&linkId=BAR#QAZ
-  const result = new URL(currentLocation.origin)
+  const result = new URL(stripLocalBasenameFromPathname(currentLocation.pathname), currentLocation.origin)
   result.search = new URLSearchParams({ mode: 'open-url', linkId, token }).toString()
   result.hash = hash
   return result
@@ -146,7 +134,7 @@ function getToken(pathname: string) {
 function getPrivateURL(volumeId: string, linkId: string) {
   const currentLocation = new URL(window.location.href)
   // Output should be /doc?mode=open&volumeId=ZXC&linkId=BAR
-  const result = new URL(currentLocation.origin)
+  const result = new URL(stripLocalBasenameFromPathname(currentLocation.pathname), currentLocation.origin)
   result.search = new URLSearchParams({ mode: 'open', volumeId, linkId }).toString()
   return result
 }

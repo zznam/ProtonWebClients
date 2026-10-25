@@ -18,7 +18,7 @@ import { getAppName } from '@proton/shared/lib/apps/helper';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS, VPN_CONNECTIONS } from '@proton/shared/lib/constants';
 import { everythingInPlanOrAppNameText, selectPlanOrAppNameText } from '@proton/shared/lib/i18n/ttag';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { getSelectFromNCountries, getVpnDevices } from '@proton/shared/lib/vpn/features';
 import { VPN_SERVERS } from '@proton/shared/lib/vpn/vpnServers';
 
@@ -33,7 +33,7 @@ import type { PlanCardFeatureDefinition } from '../../../features/interface';
 import { getFoldersAndLabelsFeature, getNAddressesFeature, getNDomainsFeature } from '../../../features/mail';
 import { PASS_PLUS_VAULTS, get2FAAuthenticator, getHideMyEmailAliases, getVaults } from '../../../features/pass';
 import { PlanCardFeatureList } from '../../PlanCardFeatures';
-import { isUpsellWithPlan } from '../../helpers';
+import { isUpsellWithPlan } from '../../helpers/dashboard-upsells';
 import UpsellPrice from '../../panels/components/UpsellPrice';
 import { CycleSelector } from '../CycleSelector';
 import { FreeVPNFeaturesB } from '../PlanFeatureSections';

@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { KeyboardKey } from '@proton/shared/lib/interfaces';
+import type { HotkeyTuple } from '@proton/hooks/useHotkeys';
+import { KeyboardKey } from '@proton/shared/lib/interfaces/Hotkeys';
 
-import type { HotkeyTuple } from '../../hooks/useHotkeys';
 import type { ModalSize } from '../modalTwo/Modal';
 import ModalTwo from '../modalTwo/Modal';
 import ModalTwoContent from '../modalTwo/ModalContent';
@@ -29,7 +29,7 @@ export interface ConfirmActionModalProps {
     size?: ModalSize;
 }
 
-export const ConfirmActionModal = ({
+const ConfirmActionModal = ({
     cancelText = c('Action').t`Cancel`,
     submitText = c('Action').t`Submit`,
     loading,

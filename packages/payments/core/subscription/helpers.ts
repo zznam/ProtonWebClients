@@ -2,7 +2,9 @@ import isDeepEqual from 'lodash/isEqual';
 
 import type { ProductParam } from '@proton/shared/lib/apps/product';
 import { APPS } from '@proton/shared/lib/constants';
-import { Audience, type Organization, type UserModel } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import {
     type ADDON_NAMES,
@@ -21,6 +23,7 @@ import {
 } from '../constants';
 import { hasLifetimeCoupon } from '../coupons';
 import { isRegionalCurrency } from '../currencies';
+import type { EntitlementCatalog } from '../entitlements/interface';
 import type { Currency, FeatureLimitKey, FreeSubscription, PlanIDs } from '../interface';
 import { getSupportedAddons, hasAddonFromPlanIDs, isAddonType } from '../plan/addons';
 import { getPlansLimit, getPlansQuantity } from '../plan/feature-limits';
@@ -59,7 +62,6 @@ export {
     getHasMeetIncludedInPlan,
     getHasPassB2BPlan,
     getHasVpnB2BPlan,
-    getHasVpnGatewaysUpsellPlan,
     getHasVpnOnlyB2BPlan,
 } from './helpers/plan-b2b';
 export { getPlanIDs } from './helpers/plan-ids';
@@ -144,20 +146,28 @@ export const getHas2025OfferCoupon = (coupon: string | undefined | null): boolea
     return blackFriday2025Discounts.has(coupon?.toUpperCase());
 };
 
-const q3Sale2026Discounts: Set<string> = new Set([
-    COUPON_CODES.SEP26BUNDLESALE,
-    COUPON_CODES.SEP26BUNDLEDEAL,
+export const BLACK_FRIDAY_2026_COUPONS: COUPON_CODES[] = [
+    COUPON_CODES.BLACK_FRIDAY_2026_NEW,
+    COUPON_CODES.BLACK_FRIDAY_2026_BUNDLE,
+    COUPON_CODES.BLACK_FRIDAY_2026_PARTNERS,
+    COUPON_CODES.BLACK_FRIDAY_2026_BUSINESS,
+    COUPON_CODES.BLACK_FRIDAY_2026_TRIAL,
 
-    COUPON_CODES.SEP26BUNDLESALECS,
-    COUPON_CODES.SEP26BUNDLEDEALCS,
-]);
+    COUPON_CODES.BLACK_FRIDAY_2026_NEW_CS,
+    COUPON_CODES.BLACK_FRIDAY_2026_BUNDLE_CS,
+    COUPON_CODES.BLACK_FRIDAY_2026_PARTNERS_CS,
+    COUPON_CODES.BLACK_FRIDAY_2026_BUSINESS_CS,
+    COUPON_CODES.BLACK_FRIDAY_2026_TRIAL_CS,
+];
 
-export function hasQ3Sale2026Coupon(subscription: MaybeFreeSubscription): boolean {
+const blackFriday2026Discounts: Set<string> = new Set(BLACK_FRIDAY_2026_COUPONS);
+
+export function hasBlackFriday2026Coupon(subscription: MaybeFreeSubscription): boolean {
     const coupon = subscription?.CouponCode;
     if (!coupon) {
         return false;
     }
-    return q3Sale2026Discounts.has(coupon.toUpperCase());
+    return blackFriday2026Discounts.has(coupon.toUpperCase());
 }
 
 export const hasMigrationDiscount = (subscription: MaybeFreeSubscription) => {
@@ -237,19 +247,21 @@ export const shouldPassIsTrial = ({
     newCycle,
     downgradeIsTrial,
     subscription: subscriptionParam,
+    entitlementCatalog,
 }: {
     plansMap: PlansMap;
     subscription: Subscription | FreeSubscription | undefined;
     newPlanIDs: PlanIDs;
     newCycle: CYCLE;
     downgradeIsTrial: boolean;
+    entitlementCatalog: EntitlementCatalog | undefined;
 }) => {
     const subscription = subscriptionParam?.UpcomingSubscription ?? subscriptionParam;
     if (!subscription || isFreeSubscription(subscription)) {
         return false;
     }
 
-    if (!getTrialInfoForSingleSubscription(subscription).isB2BTrial) {
+    if (!getTrialInfoForSingleSubscription(entitlementCatalog, subscription).isB2BTrial) {
         return false;
     }
 
@@ -447,6 +459,45 @@ export function isSubscriptionUnchanged(
     const cycleUnchanged = !cycle || cycle === subscription?.Cycle;
 
     return planIdsUnchanged && cycleUnchanged;
+}
+
+/**
+ * A checkout or modification selection identified by plan/addon quantities and billing cycle.
+ */
+export type SubscriptionSelection = {
+    planIDs: PlanIDs;
+    cycle: CYCLE;
+};
+
+/**
+ * Compares two subscription selections for equality.
+ *
+ * @param a - First selection to compare.
+ * @param b - Second selection to compare.
+ * @returns `true` when both selections have the same cycle and equivalent planIDs (including addon quantities).
+ */
+export function isSubscriptionSelectionEqual(a: SubscriptionSelection, b: SubscriptionSelection): boolean {
+    return a.cycle === b.cycle && isDeepEqual(a.planIDs, b.planIDs);
+}
+
+/**
+ * Whether the given selection differs from the subscriber's current paid subscription.
+ *
+ * @param subscription - The subscriber's active subscription.
+ * @param planIDs - Selected plan and addon quantities.
+ * @param cycle - Selected billing cycle.
+ * @returns `true` when the subscriber is paid and the selection does not match their current planIDs and cycle; otherwise `false` (including for free subscribers).
+ */
+export function isModifyingPaidSubscriptionSelection(
+    subscription: Subscription | FreeSubscription,
+    planIDs: PlanIDs,
+    cycle: CYCLE
+): boolean {
+    if (isFreeSubscription(subscription)) {
+        return false;
+    }
+
+    return !isSubscriptionUnchanged(subscription, planIDs, cycle);
 }
 
 export const hasLumoAddon = (subscription: MaybeFreeSubscription) => {
@@ -821,6 +872,19 @@ export function subscriptionExpires(
             expirationDate: null,
         };
     }
+}
+
+export function getSoonestEndingSubscription(
+    subscriptions: Subscription[],
+    isCandidate: (subscription: Subscription) => boolean
+): Subscription | undefined {
+    return subscriptions
+        .filter(isCandidate)
+        .reduce<Subscription | undefined>(
+            (soonest, subscription) =>
+                !soonest || subscription.PeriodEnd < soonest.PeriodEnd ? subscription : soonest,
+            undefined
+        );
 }
 
 /** If plan has changed but coupon remains, check if there is a mismatch */

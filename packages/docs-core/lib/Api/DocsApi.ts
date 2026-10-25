@@ -3,20 +3,18 @@ import { DocsApiPublicRouteBuilder } from './Routes/DocsApiPublicRouteBuilder'
 import { DocsApiRouteBuilder } from './Routes/DocsApiRouteBuilder'
 import { forgeImageURL } from '@proton/shared/lib/helpers/image'
 import { getErrorString } from '../Util/GetErrorString'
-import { isPublicNodeMeta } from '@proton/drive-store'
-import {
-  Result,
-  type SuggestionThreadStateAction,
-  type ApiResult,
-  type NodeMeta,
-  type PublicNodeMeta,
-} from '@proton/docs-shared'
+import type { ApiResult } from '@proton/docs-shared/ApiResult'
+import type { NodeMeta, PublicNodeMeta } from '@proton/docs-shared/BasicTypes'
+import { isPublicNodeMeta } from '@proton/docs-shared/NodeMetaHelpers'
+import { Result } from '@proton/docs-shared/Result'
+import type { SuggestionThreadStateAction } from '@proton/docs-shared/SuggestionThreadStateAction'
 import type { ApiAddCommentToThread, AddCommentToThreadDTO } from './Requests/ApiAddCommentToThread'
 import type { AddCommentToThreadResponse } from './Types/AddCommentToThreadResponse'
 import type { ApiCreateThread, CreateThreadDTO } from './Requests/ApiCreateThread'
 import type { ApiEditComment, EditCommentDTO } from './Requests/ApiEditComment'
 import type { ApiGetThread } from './Requests/ApiGetThread'
-import type { Commit, SquashCommit } from '@proton/docs-proto'
+import type { Commit } from '@proton/docs-proto/Generated/Commit'
+import type { SquashCommit } from '@proton/docs-proto/Generated/Squash'
 import type { CreateThreadResponse } from './Types/CreateThreadResponse'
 import type { CreateValetTokenResponse } from './Types/CreateValetTokenResponse'
 import type { DeleteCommentResponse } from './Types/DeleteCommentResponse'

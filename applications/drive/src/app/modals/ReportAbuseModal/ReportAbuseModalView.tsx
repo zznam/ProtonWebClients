@@ -3,24 +3,22 @@ import { useState } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import type { ModalStateProps } from '@proton/components';
-import {
-    Checkbox,
-    Form,
-    InputFieldTwo,
-    Label,
-    ModalTwo,
-    ModalTwoContent,
-    ModalTwoFooter,
-    ModalTwoHeader,
-    Option,
-    SelectTwo,
-    TextAreaTwo,
-    useFormErrors,
-} from '@proton/components';
-import { AbuseCategory, type NodeType } from '@proton/drive';
+import Form from '@proton/components/components/form/Form';
+import Checkbox from '@proton/components/components/input/Checkbox';
+import Label from '@proton/components/components/label/Label';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
+import Option from '@proton/components/components/option/Option';
+import SelectTwo from '@proton/components/components/selectTwo/SelectTwo';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
+import TextAreaTwo from '@proton/components/components/v2/input/TextArea';
+import useFormErrors from '@proton/components/components/v2/useFormErrors';
 import ModalContentLoader from '@proton/drive/modals/modalUtils/ModalContentLoader';
-import { useLoading } from '@proton/hooks';
+import { AbuseCategory, type NodeType } from '@proton/drive/sdk';
+import useLoading from '@proton/hooks/useLoading';
 import { emailValidator, requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 
 import { FileCard } from './FileCard';
@@ -28,8 +26,7 @@ import type { AbuseReportPrefill } from './types';
 import { ABUSE_CATEGORIES, CATEGORIES_WITH_EMAIL_VERIFICATION } from './useReportAbuseModalState';
 
 export type ReportAbuseModalViewProps =
-    | (LoadedReportAbuseModalViewProps & ModalStateProps & { loaded: true })
-    | { loaded: false };
+    (LoadedReportAbuseModalViewProps & ModalStateProps & { loaded: true }) | { loaded: false };
 
 type LoadedReportAbuseModalViewProps = {
     handleSubmit: (formData: { category: AbuseCategory; email?: string; comment?: string }) => Promise<void>;

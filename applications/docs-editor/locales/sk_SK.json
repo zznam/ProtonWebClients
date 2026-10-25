@@ -122,8 +122,11 @@
       "Fit table to page width": [
         "Prispôsobiť tabuľku šírke strany"
       ],
-      "Go to label": [
-        "Prejsť na štítok"
+      "Header column": [
+        "Stĺpec záhlavia"
+      ],
+      "Header row": [
+        "Riadok záhlavia"
       ],
       "Indent": [
         "Odsadenie"
@@ -136,6 +139,9 @@
       ],
       "Insert comment": [
         "Vložiť komenár"
+      ],
+      "Insert emoji": [
+        "Vložiť smajlíka"
       ],
       "Insert image": [
         "Vložiť obrázok"
@@ -197,9 +203,6 @@
       "Refresh the page": [
         "Obnoviť stránku"
       ],
-      "Remove": [
-        "Vymazať"
-      ],
       "Remove link": [
         "Odstrániť odkaz"
       ],
@@ -227,9 +230,6 @@
       "Strike-through": [
         "Prečiarknuté"
       ],
-      "Submit": [
-        "Potvrdiť"
-      ],
       "Subscript": [
         "Dolný index"
       ],
@@ -247,143 +247,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "jablko"
-      ],
-      "azureish white": [
-        "azúrovo biela"
-      ],
       "black": [
         "čierna"
-      ],
-      "blanched almond": [
-        "blanšírované mandle"
-      ],
-      "blue-gray": [
-        "modro-sivá"
-      ],
-      "caramel": [
-        "karamel"
       ],
       "carrot": [
         "mrkva"
       ],
-      "cerise": [
-        "čerešňa"
-      ],
-      "cinnabar": [
-        "rumelka"
-      ],
-      "cobalt": [
-        "kobalt"
-      ],
-      "copper": [
-        "meď"
-      ],
-      "cyan-blue azure": [
-        "azúrovo-modrá"
-      ],
-      "dandelion": [
-        "púpava"
-      ],
-      "dark cerulean": [
-        "tmavo blankytná"
-      ],
-      "dark midnight blue": [
-        "tmavá polnočná modrá"
-      ],
-      "dim gray": [
-        "tmavo šedá"
-      ],
-      "enzian": [
-        "horec"
-      ],
-      "fern": [
-        "papraď"
-      ],
-      "field drab": [
-        "poľná jednotvárna"
-      ],
-      "forest": [
-        "les"
-      ],
-      "gainsboro": [
-        "veľmi svetlosivá"
-      ],
       "gray": [
         "sivá"
-      ],
-      "japanese laurel": [
-        "japonský vavrín"
-      ],
-      "kiwi": [
-        "kiwi"
-      ],
-      "lemon yellow": [
-        "citrónovo žltá"
-      ],
-      "light carmine pink": [
-        "svetlo karmínovo ružová"
-      ],
-      "light moss green": [
-        "machovo svetlo zelená"
-      ],
-      "light red": [
-        "svetlo červená"
-      ],
-      "maize": [
-        "kukurica"
-      ],
-      "mughal green": [
-        "mughalská zelená"
-      ],
-      "ocean": [
-        "oceán"
       ],
       "olive": [
         "oliva"
       ],
-      "outer space": [
-        "vesmírny priestor"
-      ],
       "pacific": [
         "pacifik"
       ],
-      "palatinate blue": [
-        "palatinátovo modrá"
-      ],
-      "pale cerulean": [
-        "bledo blankytná"
-      ],
-      "pastel gray": [
-        "pastelovo sivá"
-      ],
-      "persian plum": [
-        "perzská slivka"
-      ],
-      "persian red": [
-        "perzská červená"
-      ],
-      "philippine gray": [
-        "filipínska sivá"
-      ],
-      "philippine silver": [
-        "filipínska strieborná"
-      ],
-      "pickle": [
-        "uhorka"
-      ],
-      "pine": [
-        "borovica"
-      ],
       "pink": [
         "ružová"
-      ],
-      "pistachio": [
-        "pistácia"
-      ],
-      "plum": [
-        "slivka"
       ],
       "purple": [
         "purpurová"
@@ -394,29 +274,8 @@
       "reef": [
         "útes"
       ],
-      "ruddy pink": [
-        "perzská červená"
-      ],
-      "sahara": [
-        "sahara"
-      ],
-      "satin sheen gold": [
-        "saténovo lesklá zlatá"
-      ],
       "slateblue": [
         "bridlicová modrá"
-      ],
-      "soil": [
-        "pôda"
-      ],
-      "strawberry": [
-        "jahoda"
-      ],
-      "vivid auburn": [
-        "živá gaštanová"
-      ],
-      "white": [
-        "biela"
       ]
     },
     "Confirm": {
@@ -433,17 +292,46 @@
       ],
       "Read or print final document": [
         "Čítanie alebo tlač finálneho dokumentu"
+      ]
+    },
+    "Emoji category": {
+      "Activities": [
+        "Aktivity"
       ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "Pomocou rozbaľovacieho zoznamu vyššie môžete prepnúť a začať podávať návrhy."
+      "Animals and nature": [
+        "Zvieratá a príroda"
+      ],
+      "Flags": [
+        "Vlajky"
+      ],
+      "Food and drink": [
+        "Jedlo a nápoje"
+      ],
+      "Objects": [
+        "Objekty"
+      ],
+      "Smileys and people": [
+        "Smajlíky a ľudia"
+      ],
+      "Symbols": [
+        "Symboly"
+      ],
+      "Travel and places": [
+        "Cestovanie a miesta"
       ]
     },
     "Error": {
       "An error occurred while loading the document. To prevent document corruption, the editor has been locked. Please reload the page and try again. If the error persists, please open Version History from the menu options to attempt to restore your document to an earlier version.": [
         "Pri načítaní dokumentu došlo k chybe. Aby sa zabránilo poškodeniu dokumentu, editor bol uzamknutý. Znovu načítajte stránku a skúste to znova, prosím. Ak chyba pretrváva, otvorte, prosím, v menu voľbu História verzií a pokúste sa obnoviť dokument na skoršiu verziu."
       ],
+      "Could not load emoji. Close the picker and try again.": [
+        "Emodži sa nepodarilo načítať. Zatvorte výber a skúste to znova."
+      ],
       "Failed to export document.": [
         "Dokument sa nepodarilo exportovať."
+      ],
+      "Failed to import document due to unsupported file format.": [
+        "Import dokumentu sa nepodaril kvôli nepodporovanému formátu súboru."
       ],
       "Failed to import HTML due to unknown error.": [
         "Nepodarilo sa importovať HTML z dôvodu neznámej chyby."
@@ -468,9 +356,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "Táto tabuľka nie je kompatibilná so súčasnou verziou klienta. Skúste klienta reštartovať, prosím. Ak chyba pretrváva, kontaktujte podporu, prosím."
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "Pokúsil sa importovať údaje hárka do nástroja Lexical"
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "Nie je možné previesť dokument programu Word. Je chránený heslom? Ak áno, odstráňte heslo a skúste to znova."
@@ -549,11 +434,11 @@
       "Just now": [
         "Práve teraz"
       ],
-      "Labels:": [
-        "Štítky:"
-      ],
       "Loading": [
         "Načítavanie"
+      ],
+      "Loading emoji…": [
+        "Načítanie emodži…"
       ],
       "Loading spreadsheet content...": [
         "Načítavanie obsahu tabuľky..."
@@ -566,6 +451,9 @@
       ],
       "No comments": [
         "Žiadne komentáre"
+      ],
+      "No emoji found": [
+        "Nenašlo sa žiadne emoji"
       ],
       "No title": [
         "Bez názvu"
@@ -626,6 +514,9 @@
       "Clear formatting": [
         "Vymazať formátovanie"
       ],
+      "Comments": [
+        "Komentáre"
+      ],
       "Delete": [
         "Odstrániť"
       ],
@@ -655,6 +546,12 @@
       ],
       "Duplicate table row": [
         "Duplikovať riadok tabuľky"
+      ],
+      "Emoji": [
+        "Emoji"
+      ],
+      "Emoji suggestions": [
+        "Návrhy emodži"
       ],
       "Format": [
         "Formát"
@@ -695,11 +592,26 @@
       "Page break": [
         "Zlom strany"
       ],
+      "Recent": [
+        "Nedávne"
+      ],
       "Replace": [
         "Nahradiť"
       ],
       "Replace link": [
         "Nahradiť odkaz"
+      ],
+      "Resize outline": [
+        "Zmeniť veľkosť obrysu"
+      ],
+      "Search emoji": [
+        "Vyhľadať emodži"
+      ],
+      "Search results": [
+        "Výsledky vyhľadávania"
+      ],
+      "Table": [
+        "Tabuľka"
       ],
       "Text and highlight color": [
         "Farba textu a zvýraznenia"
@@ -860,7 +772,377 @@
         "Poznámka"
       ]
     },
+    "sheets_2025:Spreadsheet cellFormatOptions": {
+      "Accounting": [
+        "Účtovníctvo"
+      ],
+      "Bottom": [
+        "Dole"
+      ],
+      "Center": [
+        "Na stred"
+      ],
+      "Clip": [
+        "Klip"
+      ],
+      "Currency": [
+        "Mena"
+      ],
+      "Currency formats are used for general monetary values.": [
+        "Formáty mien sa používajú pre všeobecné peňažné hodnoty."
+      ],
+      "Custom": [
+        "Vlastné"
+      ],
+      "Date": [
+        "Dátum"
+      ],
+      "Date formats display date and time serial numbers as date values.": [
+        "Formáty dátumu zobrazujú sériové čísla dátumu a času ako hodnoty dátumu."
+      ],
+      "Fraction": [
+        "Zlomok"
+      ],
+      "General": [
+        "Všeobecné"
+      ],
+      "General format cells have no specific number format.": [
+        "Bunky so všeobecným formátom nemajú žiadny konkrétny číselný formát."
+      ],
+      "Left": [
+        "Vľavo"
+      ],
+      "Number": [
+        "Číslo"
+      ],
+      "Number is used for general display of numbers.": [
+        "Číslo sa používa na bežné zobrazenie čísel."
+      ],
+      "Overflow": [
+        "Pretečenie"
+      ],
+      "Percentage": [
+        "Percentá"
+      ],
+      "Right": [
+        "Vpravo"
+      ],
+      "Scientific": [
+        "Vedecké"
+      ],
+      "Text": [
+        "Text"
+      ],
+      "Time": [
+        "Čas"
+      ],
+      "Time formats display date and time serial numbers as date values.": [
+        "Formáty času zobrazujú sériové čísla dátumu a času ako hodnoty dátumu."
+      ],
+      "Top": [
+        "Hore"
+      ],
+      "Wrap": [
+        "Zalomiť"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartAggregates": {
+      "Average": [
+        "Priemer"
+      ],
+      "Count": [
+        "Počet"
+      ],
+      "Max": [
+        "Max"
+      ],
+      "Median": [
+        "Medián"
+      ],
+      "Min": [
+        "Min"
+      ],
+      "Sum": [
+        "Súčet"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartEditorDialog": {
+      "None": [
+        "Žiadny"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartTypes": {
+      "2D Pie": [
+        "2D koláčový"
+      ],
+      "Clustered Column": [
+        "Zoskupený stĺpec"
+      ],
+      "Column": [
+        "Stĺpec"
+      ],
+      "Doughnut": [
+        "Prstencový"
+      ],
+      "Hierarchy": [
+        "Hiererchický"
+      ],
+      "Line": [
+        "Čiara"
+      ],
+      "Pie": [
+        "Koláčový"
+      ],
+      "Smooth line": [
+        "Plynulý čiarový"
+      ],
+      "Stacked column": [
+        "Viacvrstvový stĺpcový"
+      ],
+      "Stacked line": [
+        "Viacvrstvový čiarový"
+      ],
+      "Sunburst": [
+        "Slnečný lúč"
+      ],
+      "Treemap": [
+        "Stromová mapa"
+      ]
+    },
+    "sheets_2025:Spreadsheet conditions": {
+      "Above average": [
+        "Nad priemerom"
+      ],
+      "April": [
+        "Apríl"
+      ],
+      "August": [
+        "August"
+      ],
+      "Below average": [
+        "Pod priemerom"
+      ],
+      "Between": [
+        "Medzi"
+      ],
+      "Bottom N items": [
+        "Posledných N položiek"
+      ],
+      "Bottom N percent": [
+        "Spodných N percent"
+      ],
+      "Checkbox": [
+        "Zaškrtávacie pole"
+      ],
+      "Custom formula": [
+        "Vlastný vzorrec"
+      ],
+      "Date is after": [
+        "Dátum je po"
+      ],
+      "Date is before": [
+        "Dátum je pred"
+      ],
+      "Date is between": [
+        "Dátum je medzi"
+      ],
+      "Date is equal to": [
+        "Dátum je rovnaký ako"
+      ],
+      "Date is not between": [
+        "Dátum nie je medzi"
+      ],
+      "Date is not equal to": [
+        "Dátum nie je rovnaký ako"
+      ],
+      "Date is on or after": [
+        "Dátum je dňa alebo po"
+      ],
+      "Date is on or before": [
+        "Dátum je dňa alebo pred"
+      ],
+      "Date is valid": [
+        "Dátum je platný"
+      ],
+      "December": [
+        "December"
+      ],
+      "Dropdown": [
+        "Rozbaľovacia ponuka"
+      ],
+      "Dropdown (from a range)": [
+        "Rozbaľovacia ponuka (z výberu)"
+      ],
+      "Equal to": [
+        "Rovné"
+      ],
+      "Errors": [
+        "Chyby"
+      ],
+      "February": [
+        "Február"
+      ],
+      "Greater than": [
+        "Väčšie ako"
+      ],
+      "Greater than or equal to": [
+        "Väčšie alebo rovné"
+      ],
+      "Greater than or equal to previous": [
+        "Je väčšie alebo rovné predchádzajúcemu"
+      ],
+      "Greater than previous": [
+        "Väčšie než predchádzajúce"
+      ],
+      "Is empty": [
+        "Je prázdny"
+      ],
+      "Is not empty": [
+        "Nie je prázdne"
+      ],
+      "January": [
+        "Január"
+      ],
+      "July": [
+        "Júl"
+      ],
+      "June": [
+        "Jún"
+      ],
+      "Last 7 days": [
+        "Posledných 7 dní"
+      ],
+      "Last month": [
+        "Posledný mesiac"
+      ],
+      "Last quarter": [
+        "Posledný štvrťrok"
+      ],
+      "Last week": [
+        "Minulý týždeň"
+      ],
+      "Last year": [
+        "Minulý rok"
+      ],
+      "Less than": [
+        "Menej ako"
+      ],
+      "Less than or equal to": [
+        "Menej alebo rovná sa"
+      ],
+      "Less than or equal to previous": [
+        "Je menšie alebo rovné predchádzajúcemu"
+      ],
+      "Less than previous": [
+        "Menej ako predchádzajúci"
+      ],
+      "March": [
+        "Marec"
+      ],
+      "May": [
+        "Máj"
+      ],
+      "Next month": [
+        "Budúci mesiac"
+      ],
+      "Next quarter": [
+        "Budúci štvrťrok"
+      ],
+      "Next week": [
+        "Nasledujúci týždeň"
+      ],
+      "Next year": [
+        "Nasledujúci rok"
+      ],
+      "No errors": [
+        "Bez chýb"
+      ],
+      "Not between": [
+        "Nie je medzi"
+      ],
+      "Not equal to": [
+        "Nerovná sa"
+      ],
+      "November": [
+        "November"
+      ],
+      "October": [
+        "Október"
+      ],
+      "Quarter 1": [
+        "1. štvrťrok"
+      ],
+      "Quarter 2": [
+        "2. štvrťrok"
+      ],
+      "Quarter 3": [
+        "3. štvrťrok"
+      ],
+      "Quarter 4": [
+        "4. štvrťrok"
+      ],
+      "September": [
+        "September"
+      ],
+      "Text contains": [
+        "Text obsahuje"
+      ],
+      "Text does not contain": [
+        "Text neobsahuje"
+      ],
+      "Text ends with": [
+        "Text končí na"
+      ],
+      "Text is email": [
+        "Text je email"
+      ],
+      "Text is exactly": [
+        "Text je presne"
+      ],
+      "Text is not equal": [
+        "Text nie je rovný"
+      ],
+      "Text is URL": [
+        "Text je URL"
+      ],
+      "Text starts with": [
+        "Text začínajúci s"
+      ],
+      "This month": [
+        "Tento mesiac"
+      ],
+      "This quarter": [
+        "Tento štvrťrok"
+      ],
+      "This week": [
+        "Tento týždeň"
+      ],
+      "This year": [
+        "Tento rok"
+      ],
+      "Today": [
+        "Dnes"
+      ],
+      "Tomorrow": [
+        "Zajtra"
+      ],
+      "Top N items": [
+        "Prvých N položiek"
+      ],
+      "Top N percent": [
+        "Horných N percent"
+      ],
+      "Year to date": [
+        "Od začiatku roka"
+      ],
+      "Yesterday": [
+        "Včera"
+      ]
+    },
     "sheets_2025:Spreadsheet context menu": {
+      "(Blanks)": [
+        "(Prázdne miesta)"
+      ],
       "AI Quick Edit": [
         "Rýchla úprava pomocou AI"
       ],
@@ -1210,6 +1492,14 @@
         "Rok"
       ]
     },
+    "sheets_2025:Spreadsheet customCurrencyFormatDialog": {
+      "Format": [
+        "Formát"
+      ],
+      "Symbol": [
+        "Symbol"
+      ]
+    },
     "sheets_2025:Spreadsheet delete sheet dialog": {
       "Are you sure you want to delete ${ sheetName }?": [
         "Naozaj chcete odstrániť hárok \"${ sheetName }\"?"
@@ -1236,6 +1526,11 @@
       ],
       "Your screen is too small to edit this spreadsheet. You’re in view-only mode. To make changes, please open this spreadsheet on a larger screen or expand your browser window.": [
         "Vaša obrazovka je príliš malá na úpravu tejto tabuľky. Ste v režime určenom len na prezeranie. Ak chcete vykonať zmeny, otvorte túto tabuľku na väčšej obrazovke alebo zväčšite okno prehliadača."
+      ]
+    },
+    "sheets_2025:Spreadsheet editingDisabledButton": {
+      "Edit": [
+        "Upraviť"
       ]
     },
     "sheets_2025:Spreadsheet editor": {
@@ -1676,6 +1971,9 @@
       ]
     },
     "sheets_2025:Spreadsheet editor search dialog": {
+      "${ current } of ${ total }": [
+        "${ current } z ${ total }"
+      ],
       "Close": [
         "Zavrieť"
       ],
@@ -1707,11 +2005,29 @@
       ]
     },
     "sheets_2025:Spreadsheet editor toolbar": {
+      "Apply border": [
+        "Použiť orámovanie"
+      ],
+      "Apply fill color": [
+        "Použiť výplň"
+      ],
+      "Apply text color": [
+        "Použiť farbu textu"
+      ],
       "Bold": [
         "Tučné"
       ],
       "Border": [
         "Okraj"
+      ],
+      "Choose border": [
+        "Vyberte orámovanie"
+      ],
+      "Choose fill color": [
+        "Vyberte farbu výplne"
+      ],
+      "Choose text color": [
+        "Vyberte farbu textu"
       ],
       "Clear formatting": [
         "Vyčistiť formátovanie"
@@ -1860,6 +2176,35 @@
         "Zoradiť Z → A"
       ]
     },
+    "sheets_2025:Spreadsheet filterByCondition": {
+      "None": [
+        "Žiadne"
+      ]
+    },
+    "sheets_2025:Spreadsheet formatMenu": {
+      "Coming soon...": [
+        "Už čoskoro ..."
+      ]
+    },
+    "sheets_2025:Spreadsheet formulaBar": {
+      "Edit": [
+        "Upraviť"
+      ],
+      "Remove": [
+        "Odstrániť"
+      ],
+      "View": [
+        "Zobraziť"
+      ]
+    },
+    "sheets_2025:Spreadsheet gridFooter": {
+      "Add": [
+        "Pridať"
+      ],
+      "more rows at the bottom": [
+        "ďalšie riadky v spodnej časti"
+      ]
+    },
     "sheets_2025:Spreadsheet insert link dialog": {
       "Apply": [
         "Použiť"
@@ -1895,23 +2240,23 @@
       "Cancel": [
         "Zrušiť"
       ],
-      "column": [
-        "stĺpec"
-      ],
-      "column width": [
-        "šírka stĺpca"
-      ],
-      "Default": [
-        "Predvolené"
+      "Default ${ size }": [
+        "Predvolené ${ size }"
       ],
       "OK": [
         "OK"
       ],
-      "row": [
-        "riadok"
+      "Resize column ${ title }": [
+        "Zmeniť veľkosť stĺpca ${ title }"
       ],
-      "row height": [
-        "výška riadka"
+      "Resize row ${ title }": [
+        "Zmeniť veľkosť riadka ${ title }"
+      ],
+      "Specify column width (px)": [
+        "Zadajte šírku stĺpca (px)"
+      ],
+      "Specify row height (px)": [
+        "Zadajte výšku riadku (px)"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2086,6 +2431,18 @@
       ],
       "Series": [
         "Série"
+      ],
+      "Series ${ seriesNumber }": [
+        "Séria ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Aggregate": [
+        "Súhrnné údaje série ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Name": [
+        "Názov série ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Range": [
+        "Rozsah série ${ seriesNumber }"
       ],
       "Show data in hidden rows and columns": [
         "Zobraziť skryté riadky a stĺpce s údajmi"
@@ -2351,15 +2708,32 @@
         "Názov tabuľky"
       ]
     },
+    "sheets_2025:Spreadsheet viewMenu": {
+      "1 column": [
+        "1 stĺpec"
+      ],
+      "1 row": [
+        "1 riadok"
+      ],
+      "2 columns": [
+        "2 stĺpce"
+      ],
+      "2 rows": [
+        "2 riadky"
+      ],
+      "No columns": [
+        "Bez stĺpcov"
+      ],
+      "No rows": [
+        "Bez riadkov"
+      ]
+    },
     "Title": {
       "Delete comment": [
         "Vymazať komentár"
       ],
       "Delete thread": [
         "Vymazať vlákno"
-      ],
-      "Explore the New Suggestion Mode": [
-        "Preskúmajte nový režim návrhov"
       ],
       "Language not supported": [
         "Jazyk nie je podporovaný"

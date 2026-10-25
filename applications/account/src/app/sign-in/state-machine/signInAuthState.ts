@@ -1,16 +1,17 @@
 import type { ProductParam } from '@proton/shared/lib/apps/product';
 import type { AuthResponse, AuthVersion } from '@proton/shared/lib/authentication/interface';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { KeySalt } from '@proton/shared/lib/interfaces/KeySalt';
 import type {
-    Address,
-    Api,
     KeyMigrationKTVerifier,
-    KeySalt,
     KeyTransparencyActivation,
     PreAuthKTVerifier,
-    User,
-} from '@proton/shared/lib/interfaces';
+} from '@proton/shared/lib/interfaces/KeyTransparency';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
+import type { ClaimedAddressRecovery } from '../auth/claimedAddress';
 import type { AuthType } from '../auth/interface';
 import type { LoginFlowContext } from '../auth/loginFlowContext';
 
@@ -27,6 +28,8 @@ export interface SignInAuthState {
         persistent: boolean;
         /** Needed until the keys are unlocked or set up; it goes when the account flow ends. */
         loginPassword: string;
+        /** Set when the account was reached through the claimed-address recovery flow: it needs a new address. */
+        claimedAddress?: ClaimedAddressRecovery;
     };
     account: {
         user?: User;

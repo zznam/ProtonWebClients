@@ -1,20 +1,21 @@
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { useSettingsLink } from '@proton/components/index';
+import useSettingsLink from '@proton/components/components/link/useSettingsLink';
 import { useMeetSelector } from '@proton/meet/store/hooks';
 import { selectSubscriptionStatus } from '@proton/meet/store/slices/userSlice';
 import { UpsellModalTypes } from '@proton/meet/types/types';
-import { PLANS } from '@proton/payments/core/constants';
 
+import { getMeetUpgradeLink } from '../../../utils/getMeetUpgradeLink';
 import type { CTAModalBaseProps } from '../shared/types';
 import { EndCallModalShell } from './EndCallModalShell';
+import { PostCallTitle } from './PostCallTitle';
 
 export const HostFreeAccountModal = ({ open, onClose, rejoin, action, upsellModalType }: CTAModalBaseProps) => {
     const goToSettings = useSettingsLink();
     const isExpired = upsellModalType === UpsellModalTypes.MeetingExpiredHostFree;
     const { hasSubscriptionWithoutMeet } = useMeetSelector(selectSubscriptionStatus);
-    const link = hasSubscriptionWithoutMeet ? `/dashboard?addon=meet` : `/dashboard?plan=${PLANS.MEET_BUSINESS}`;
+    const link = getMeetUpgradeLink(hasSubscriptionWithoutMeet);
 
     return (
         <EndCallModalShell
@@ -34,7 +35,7 @@ export const HostFreeAccountModal = ({ open, onClose, rejoin, action, upsellModa
                 </Button>
             }
             rejoin={isExpired ? undefined : rejoin}
-            title={isExpired ? c('Info').t`Meeting time is up` : c('Info').t`You left the meeting`}
+            title={<PostCallTitle kind={isExpired ? 'timeUp' : 'left'} />}
             subtitle={
                 isExpired
                     ? c('Info')

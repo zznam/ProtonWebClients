@@ -4,7 +4,7 @@ import type { PassCoreProxy } from '@proton/pass/lib/core/core.types';
 import type { MonitorService } from '@proton/pass/lib/monitor/service';
 import type { NativeMessagingService } from '@proton/pass/lib/native-messaging/native-messaging.extension';
 import type { ConnectivityService } from '@proton/pass/lib/network/connectivity.service';
-import type { MaybeNull } from '@proton/pass/types/utils/index';
+import type { MaybeNull } from '@proton/pass/types/utils';
 import type { AppState, AppStatus } from '@proton/pass/types/worker/state';
 
 import type { ActivationService } from '../services/activation';
@@ -33,6 +33,7 @@ import type { VaultsService } from '../services/vaults';
 export interface WorkerContextInterface {
     status: AppStatus;
     booted: boolean;
+    unlockDeclined: boolean;
     authStore: AuthStore;
     service: {
         activation: ActivationService;
@@ -67,6 +68,8 @@ export interface WorkerContextInterface {
     setStatus: (status: AppStatus) => void;
     /** `booted` flag update  */
     setBooted: (booted: boolean) => void;
+    /** `unlockDeclined` flag update, reset on every `status` change */
+    setUnlockDeclined: (declined: boolean) => void;
     /** Returns the current worker state */
     getState: () => AppState;
     /** Returned promise will resolve when worker "ready" */

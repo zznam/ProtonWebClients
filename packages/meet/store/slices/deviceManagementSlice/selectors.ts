@@ -1,3 +1,4 @@
+import { logger } from '@protontech/logger';
 import { createSelector } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
@@ -8,6 +9,7 @@ import {
     filterDevices,
     getDefaultDevice,
     getDevicesHash,
+    getSelectableDevices,
     isDefaultDevice,
     toSerializableDevice,
 } from '../../../utils/deviceUtils';
@@ -21,6 +23,9 @@ export const selectMicrophonePermission = (state: MeetState) => state.deviceMana
 export const selectCameras = (state: MeetState) => state.deviceManagement.cameras;
 export const selectMicrophones = (state: MeetState) => state.deviceManagement.microphones;
 export const selectSpeakers = (state: MeetState) => state.deviceManagement.speakers;
+
+export const selectMicrophoneUnavailable = (state: MeetState) =>
+    selectMicrophonePermission(state) !== 'granted' || selectMicrophones(state).length === 0;
 
 const sortDevices = (devices: SerializableDeviceInfo[]) =>
     [...devices].sort((a, b) => {
@@ -47,12 +52,9 @@ export const selectSortedFilteredSpeakers = createSelector([selectFilteredSpeake
 // Prevent us to use stale devices when plugging/unplugging them, array is not memoized
 export const selectRealtimeDevices = async (store: MeetStore, kind: 'audioinput' | 'audiooutput' | 'videoinput') => {
     try {
-        return (await navigator.mediaDevices.enumerateDevices())
-            .filter((d) => d.kind === kind && d.deviceId !== '')
-            .map(toSerializableDevice);
+        return getSelectableDevices(await navigator.mediaDevices.enumerateDevices(), kind).map(toSerializableDevice);
     } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('[selectRealtimeDevices] error getting realtime devices, falling back to redux store', error);
+        logger.error('[selectRealtimeDevices] error getting realtime devices, falling back to redux store', error);
 
         switch (kind) {
             case 'audioinput':
@@ -72,6 +74,8 @@ export const selectPreferredSpeakerId = (state: MeetState) => state.deviceManage
 export const selectActiveCameraId = (state: MeetState) => state.deviceManagement.activeCameraId;
 export const selectActiveMicrophoneId = (state: MeetState) => state.deviceManagement.activeMicrophoneId;
 export const selectActiveAudioOutputId = (state: MeetState) => state.deviceManagement.activeAudioOutputId;
+
+export const selectDisconnectedActiveDevices = (state: MeetState) => state.deviceManagement.disconnectedActiveDevices;
 
 export const selectInitialCameraState = (state: MeetState) => state.deviceManagement.initialCameraState;
 export const selectInitialAudioState = (state: MeetState) => state.deviceManagement.initialAudioState;

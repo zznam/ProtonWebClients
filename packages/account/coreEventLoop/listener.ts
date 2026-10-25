@@ -1,5 +1,5 @@
 import { eventLoopTimingTracker } from '@proton/metrics/eventLoopMetrics';
-import type { SharedStartListening } from '@proton/redux-shared-store-types';
+import type { SharedStartListening } from '@proton/redux-shared-store-types/interface';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 
 import { addressesLoop } from '../addresses/eventLoopV6';
@@ -14,6 +14,7 @@ import { membersLoop } from '../members/eventLoopV6';
 import { organizationLoop } from '../organization/eventLoopV6';
 import { paymentMethodsLoop } from '../paymentMethods/eventLoopV6';
 import { samlSSOLoop } from '../samlSSO/eventLoopV6';
+import { authDevicesLoop } from '../sso/eventLoopV6';
 import { subscriptionLoop } from '../subscription/eventLoopV6';
 import { userLoop } from '../user/eventLoopV6';
 import { userInvitationsLoops } from '../userInvitations/eventLoopV6';
@@ -37,6 +38,7 @@ const loops: CoreEventLoopV6Callback[] = [
     groupOwnerInvitesLoop,
     delegatedAccessLoop,
     entitlementsLoop,
+    authDevicesLoop,
 ];
 Object.freeze(loops);
 

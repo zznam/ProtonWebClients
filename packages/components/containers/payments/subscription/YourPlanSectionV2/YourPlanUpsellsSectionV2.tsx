@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { usePlans } from '@proton/account/plans/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
@@ -44,7 +45,7 @@ import { getTrialInfoForSingleSubscription } from '@proton/payments/core/trials'
 import { checkoutTelemetry } from '@proton/payments/telemetry/telemetry';
 import { APPS, type APP_NAMES } from '@proton/shared/lib/constants';
 import humanSize from '@proton/shared/lib/helpers/humanSize';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { hasPassLifetime } from '@proton/shared/lib/user/helpers';
 import type { VPNDashboardVariant } from '@proton/unleash/UnleashFeatureFlagsVariants';
 import { useVariant } from '@proton/unleash/useVariant';
@@ -53,7 +54,7 @@ import noop from '@proton/utils/noop';
 
 import Loader from '../../../../components/loader/Loader';
 import useLoad from '../../../../hooks/useLoad';
-import { type Upsell, isUpsellWithPlan } from '../helpers';
+import { type Upsell, isUpsellWithPlan } from '../helpers/dashboard-upsells';
 import CurrentPlanInfoWithUpsellSection from './Upsells/CurrentPlanInfoSection';
 import DuoBanner from './Upsells/DuoBanner';
 import DuoBannerExtendSubscription, { useDuoBannerExtendSubscription } from './Upsells/DuoBannerExtendSubscription';
@@ -119,6 +120,7 @@ export type UpsellsHook = {
 };
 
 const useUpsellSection = ({ subscription, app, user, plansMap, freePlan }: GetUpsellSectionProps) => {
+    const [entitlementCatalog] = useEntitlementCatalog();
     const isFree = user.isFree;
 
     const vpnVariant = useVariant('VPNDashboard');
@@ -135,7 +137,7 @@ const useUpsellSection = ({ subscription, app, user, plansMap, freePlan }: GetUp
     const hasLumoPlus = hasLumo(subscription);
 
     // For users on Ex-Family Unlimited trial, show Unlimited 1m + 12m upsell
-    const exFamilyTrial = getTrialInfoForSingleSubscription(subscription).isFamilyTrial;
+    const exFamilyTrial = getTrialInfoForSingleSubscription(entitlementCatalog, subscription).isFamilyTrial;
 
     // We want to show the VPN upsells to users with Lumo plan since they migrate from the Lumo plan to having a Lumo addon
     const isFreeUser = hasMailFree || hasDriveFree || hasPassFree || hasVPNFree || hasLumoPlus || hasMeetFree;
@@ -827,5 +829,3 @@ export const YourPlanUpsellsSectionV2 = (props: YourPlanSectionV2Props) => {
         </PaymentsContextProvider>
     );
 };
-
-export default YourPlanUpsellsSectionV2;

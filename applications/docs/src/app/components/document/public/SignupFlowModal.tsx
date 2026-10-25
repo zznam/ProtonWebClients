@@ -1,7 +1,7 @@
 import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState'
 import DriveLogo from '@proton/components/components/logo/DriveLogo'
 import Form from '@proton/components/components/form/Form'
-import InputFieldTwo from '@proton/components/components/v2/field/InputField'
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField'
 import ModalTwo from '@proton/components/components/modalTwo/Modal'
 import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent'
 import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter'
@@ -20,9 +20,9 @@ import { DRIVE_APP_NAME } from '@proton/shared/lib/constants'
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors'
 import { emailValidator } from '@proton/shared/lib/helpers/formValidators'
 
-import { useDocsUrlPublicToken } from '@proton/drive-store'
-import { RedirectAction } from '@proton/docs-shared'
-import { Actions, countActionWithTelemetry } from '@proton/drive-store/utils/telemetry'
+import { RedirectAction } from '@proton/docs-shared/DocumentAction'
+import { useDocsUrlPublicToken } from '@proton/docs-shared/Hooks/useDocsUrlPublicToken'
+import { Actions, countActionWithTelemetry } from './telemetry'
 import { redirectToSignIn, redirectToSignUp } from './utils'
 
 export type SignupFlowModalProps = ModalStateProps & {

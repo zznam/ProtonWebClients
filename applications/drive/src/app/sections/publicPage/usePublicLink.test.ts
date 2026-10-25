@@ -1,24 +1,25 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useAuthentication } from '@proton/components';
-import { NodeType, getDrive } from '@proton/drive';
+import useAuthentication from '@proton/components/hooks/useAuthentication';
 import { getNodeEntity } from '@proton/drive/legacy/sdkUtils/getNodeEntity';
+import { NodeType, getDrive } from '@proton/drive/sdk';
 import { isNativeProtonDocsAppFile } from '@proton/shared/lib/helpers/mimetype';
 
 import { setPublicLinkClient } from './publicLinkClient';
 import { usePublicLink } from './usePublicLink';
 import { shouldRedirectToPrivateApp } from './utils/shouldRedirectToPrivateApp';
 
-jest.mock('@proton/components', () => ({
-    useAuthentication: jest.fn(),
+jest.mock('@proton/components/hooks/useAuthentication', () => ({
+    __esModule: true,
+    default: jest.fn(),
 }));
 
 jest.mock('@proton/app-context/useNotifications', () => ({
     useNotifications: jest.fn(),
 }));
 
-jest.mock('@proton/drive', () => ({
+jest.mock('@proton/drive/sdk', () => ({
     getDrive: jest.fn(),
     NodeType: { File: 'file', Folder: 'folder', Photo: 'photo' },
     DecryptionError: class DecryptionError extends Error {},
@@ -31,7 +32,7 @@ jest.mock('@proton/drive/modules/upload', () => ({
     uploadManager: { setDriveClient: jest.fn() },
 }));
 
-jest.mock('@proton/metrics', () => ({
+jest.mock('@proton/metrics/metricsInstance', () => ({
     __esModule: true,
     default: {
         setAuthHeaders: jest.fn(),

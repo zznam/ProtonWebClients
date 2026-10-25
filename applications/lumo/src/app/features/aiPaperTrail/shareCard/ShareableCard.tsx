@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 
 import { c } from 'ttag';
 
+import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { ModalTwo, ModalTwoContent, ModalTwoFooter, ModalTwoHeader } from '@proton/components';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
 import { IcBrandFacebook } from '@proton/icons/icons/IcBrandFacebook';
 import { IcBrandLinkedin } from '@proton/icons/icons/IcBrandLinkedin';
@@ -13,10 +17,11 @@ import { IcBrandTwitter } from '@proton/icons/icons/IcBrandTwitter';
 import { LUMO_SHORT_APP_NAME } from '@proton/shared/lib/constants';
 
 import { LumoIcon } from '../../../components/LumoIcon/LumoIcon';
+import { triggerFileDownload } from '../../../util/triggerFileDownload';
 import type { PaperTrailCardData } from '../reportTypes';
 import { ShareCardCanvasPreview } from './ShareCardCanvasPreview';
 import type { ShareCardTheme } from './drawShareCard';
-import { SHARE_TEXT, SHARE_URL, type SocialPlatform, buildShareIntentUrl } from './socialShare';
+import { SHARE_URL, type SocialPlatform, buildShareIntentUrl, getShareText } from './socialShare';
 
 import './ShareableCard.scss';
 
@@ -32,6 +37,7 @@ const canvasToBlob = (canvas: HTMLCanvasElement): Promise<Blob | null> =>
     new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
 
 export const ShareableCard = ({ data, ...modalProps }: Props) => {
+    const { createNotification } = useNotifications();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [canShareFiles, setCanShareFiles] = useState(false);
     const [theme, setTheme] = useState<ShareCardTheme>('light');
@@ -51,16 +57,15 @@ export const ShareableCard = ({ data, ...modalProps }: Props) => {
         if (!canvas) {
             return;
         }
-        const blob = await canvasToBlob(canvas);
-        if (!blob) {
-            return;
+        try {
+            const blob = await canvasToBlob(canvas);
+            if (!blob) {
+                throw new Error('Failed to encode image');
+            }
+            await triggerFileDownload(blob, fileNameForTheme(theme), 'image');
+        } catch {
+            createNotification({ type: 'error', text: c('Error').t`Failed to download image. Please try again.` });
         }
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileNameForTheme(theme);
-        link.click();
-        URL.revokeObjectURL(url);
     };
 
     const handleShare = async () => {
@@ -89,14 +94,14 @@ export const ShareableCard = ({ data, ...modalProps }: Props) => {
     // Web share intents can't carry the image, so save the card first for the user to attach,
     // then open the platform's compose window.
     const handleSocialShare = (platform: SocialPlatform) => {
-        const intentUrl = buildShareIntentUrl(platform, { url: SHARE_URL, text: SHARE_TEXT });
+        const intentUrl = buildShareIntentUrl(platform, { url: SHARE_URL, text: getShareText() });
         window.open(intentUrl, '_blank', 'noopener,noreferrer');
         void handleDownload();
     };
 
     const handleCopyLink = async () => {
         try {
-            await navigator.clipboard.writeText(`${SHARE_TEXT} ${SHARE_URL}`);
+            await navigator.clipboard.writeText(`${getShareText()} ${SHARE_URL}`);
             setLinkCopied(true);
             setTimeout(() => setLinkCopied(false), 2000);
         } catch {

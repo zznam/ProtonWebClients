@@ -2,22 +2,20 @@ import type { ReactNode } from 'react';
 
 import { c } from 'ttag';
 
-import { signoutAction } from '@proton/account';
+import { signoutAction } from '@proton/account/authenticationService/authenticationListener';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
-import {
-    AuthenticatedBugModal,
-    SettingsLink,
-    SidebarExpandButton,
-    SidebarListItem,
-    SidebarListItemButton,
-    SidebarListItemContent,
-    SidebarListItemContentIcon,
-    SidebarListItemLink,
-    SidebarListItemSettingsLink,
-    useModalState,
-} from '@proton/components';
+import SidebarExpandButton from '@proton/components/components/button/SidebarExpandButton';
+import SettingsLink from '@proton/components/components/link/SettingsLink';
+import useModalState from '@proton/components/components/modalTwo/useModalState';
+import SidebarListItem from '@proton/components/components/sidebar/SidebarListItem';
+import SidebarListItemButton from '@proton/components/components/sidebar/SidebarListItemButton';
+import SidebarListItemContent from '@proton/components/components/sidebar/SidebarListItemContent';
+import SidebarListItemContentIcon from '@proton/components/components/sidebar/SidebarListItemContentIcon';
+import SidebarListItemLink from '@proton/components/components/sidebar/SidebarListItemLink';
+import SidebarListItemSettingsLink from '@proton/components/components/sidebar/SidebarListItemSettingsLink';
+import AuthenticatedBugModal from '@proton/components/containers/support/AuthenticatedBugModal';
 import useToggle from '@proton/hooks/useToggle';
 import type { IconComponent } from '@proton/icons/component';
 import { IcArrowOutFromRectangle } from '@proton/icons/icons/IcArrowOutFromRectangle';

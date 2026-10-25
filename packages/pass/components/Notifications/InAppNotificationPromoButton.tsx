@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
 
-import { PromotionButton } from '@proton/components/components/button/PromotionButton';
+import PromotionButton from '@proton/components/components/button/PromotionButton/PromotionButton';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { IcUpgrade } from '@proton/icons/icons/IcUpgrade';
 
 import type { PrefetchResource } from '../../hooks/utils/usePrefetchResources';
 import { usePrefetchResources } from '../../hooks/utils/usePrefetchResources';
 import { isUnreadNotification } from '../../lib/notifications/notifications.utils';
-import type { Callback } from '../../types';
-import { InAppNotificationState } from '../../types';
+import { InAppNotificationState } from '../../types/api/pass';
+import type { Callback } from '../../types/utils';
 import { pipe } from '../../utils/fp/pipe';
 import { useOnline } from '../Core/ConnectivityProvider';
 import { usePassThemeMode } from '../Layout/Theme/ThemeProvider';

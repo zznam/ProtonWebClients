@@ -1,9 +1,9 @@
-import type { NodeMeta, PublicNodeMeta } from '@proton/docs-shared'
+import type { NodeMeta, PublicNodeMeta } from '@proton/docs-shared/BasicTypes'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import { mergeUpdates } from 'yjs'
 import { DocumentDebounceMode } from './DocumentDebounceMode'
 import { UpdateDebouncerEventType } from './UpdateDebouncerEventType'
-import type { DecryptedValue } from '@proton/docs-proto'
+import type { DecryptedValue } from '@proton/docs-proto/DecryptedValue'
 
 /** When in realtime, we will perform a flush every 100ms, without waiting for inactivity. */
 const REALTIME_STREAMING_PERIOD = 300

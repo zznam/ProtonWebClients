@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 
 import { c } from 'ttag';
 
-import { validateMnemonic } from '@proton/shared/lib/mnemonic';
+import { validateMnemonic } from '@proton/shared/lib/mnemonic/bip39Wrapper';
 
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import type { InputFieldProps } from '../../components/v2/field/InputField';
 import TextAreaTwo from '../../components/v2/input/TextArea';
 

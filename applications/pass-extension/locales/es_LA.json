@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } para Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } para iOS"
-      ],
       "Accept": [
         "Aceptar"
       ],
@@ -238,6 +232,9 @@
       "Create a ${ BRAND_NAME } account": [
         "Crear una cuenta de ${ BRAND_NAME }"
       ],
+      "Create a login": [
+        "Crear inicio de sesión"
+      ],
       "Create a new vault": [
         "Crear una bóveda"
       ],
@@ -339,6 +336,15 @@
       ],
       "Do not suggest on this website": [
         "No sugerir en este sitio web"
+      ],
+      "Download for Linux": [
+        "Descargar para Linux"
+      ],
+      "Download for macOS": [
+        "Descargar para macOS"
+      ],
+      "Download for Windows": [
+        "Descargar para Windows"
       ],
       "Download this CSV template": [
         "Descargar esta plantilla CSV"
@@ -493,6 +499,9 @@
       "Maximum views": [
         "Número máximo de vistas"
       ],
+      "More details about how to export": [
+        "Más detalles de cómo exportar"
+      ],
       "More info": [
         "Más información"
       ],
@@ -540,6 +549,9 @@
       ],
       "Open navigation": [
         "Abrir navegación"
+      ],
+      "Open platform selection dropdown": [
+        "Abrir menú de selección de plataforma"
       ],
       "Organize vaults": [
         "Organizar bóvedas"
@@ -700,6 +712,12 @@
       "Show Less": [
         "Mostrar menos"
       ],
+      "Show less": [
+        "Mostrar menos"
+      ],
+      "Show more": [
+        "Mostrar más"
+      ],
       "Sign back in": [
         "Volver a iniciar sesión"
       ],
@@ -708,6 +726,9 @@
       ],
       "Sign out": [
         "Cerrar sesión"
+      ],
+      "Skip for now": [
+        "Omitir por ahora"
       ],
       "Start from scratch": [
         "Empezar desde cero"
@@ -843,9 +864,15 @@
         "Bóveda"
       ]
     },
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "${ hiddenResultsCount } resultado más no se muestra",
+        "${ hiddenResultsCount } más resultados no mostrados"
+      ]
+    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicación de escritorio de ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Aplicación de escritorio de ${ appName }"
       ]
     },
     "Button": {
@@ -1025,6 +1052,9 @@
       "Authentication failure: ${ message }": [
         "Error de la autenticación: ${ message }"
       ],
+      "Biometric authentication cancelled.": [
+        "Autenticación biométrica cancelada."
+      ],
       "Biometric authentication failed.": [
         "Error en la autenticación biométrica."
       ],
@@ -1108,6 +1138,9 @@
       "Editing item failed": [
         "Error al editar el elemento"
       ],
+      "Email is not valid": [
+        "Correo no válido"
+      ],
       "Empty CSV file": [
         "Archivo CSV vacío"
       ],
@@ -1119,6 +1152,9 @@
       ],
       "Encrypted JSON not supported": [
         "JSON cifrado no soportado"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Ingrese su nombre de usuario sin el dominio (@ejemplo.com)"
       ],
       "Error reporting problem": [
         "Error al reportar el problema"
@@ -1307,6 +1343,9 @@
       "Incorrect backup password. Please try again.": [
         "La contraseña de respaldo no es correcta. Inténtelo de nuevo."
       ],
+      "Incorrect password. Please try again.": [
+        "Contraseña incorrecta. Intente de nuevo."
+      ],
       "Incorrect second password. Please try again.": [
         "La segunda contraseña no es correcta. Inténtelo de nuevo."
       ],
@@ -1349,8 +1388,14 @@
       "Network error": [
         "Error de red"
       ],
+      "Not a valid number": [
+        "Número no válido"
+      ],
       "Passphrase is incorrect": [
         "La frase contraseña es incorrecta"
+      ],
+      "Passwords do not match": [
+        "Las contraseñas no coinciden"
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "Permiso denegado para acceder al sitio web ${ domainsJSX }."
@@ -1424,6 +1469,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Debe iniciar sesión en la aplicación de escritorio de ${ PASS_APP_NAME }"
       ],
+      "The email addresses do not match": [
+        "Las direcciónes de correo electrónico no son las mismas"
+      ],
       "The URL is in the list": [
         "La URL está en la lista."
       ],
@@ -1432,6 +1480,15 @@
       ],
       "This domain is already managed by your organization": [
         "Este dominio ya está administrado por su organización"
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Este campo excede el máximo de ${ maximumLength } caracteres."
+      ],
+      "This field is required": [
+        "Este campo es obligatorio"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Este campo requiere un mínimo de ${ minimumLength } caracteres."
       ],
       "This invite is no longer available": [
         "Esta invitación ya no está disponible"
@@ -1444,6 +1501,9 @@
       ],
       "Trashing item failed": [
         "Error al eliminar el elemento"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Intente usando solo letras, números y _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "No se puede generar un código OTP para este elemento"
@@ -1481,6 +1541,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Error al actualizar la bóveda \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "El nombre de usuario debe comenzar con una letra o dígito"
+      ],
+      "Username must end with a letter or digit": [
+        "El nombre de usuario debe terminar con una letra o dígito"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Error al crear la bóveda \"${ payload.content.name }\""
       ],
@@ -1504,6 +1570,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Código PIN incorrecto. Intente de nuevo."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase de recuperación incorrecta. Vuelva a intentarlo o use otro método de recuperación."
       ],
       "Wrong second password": [
         "La segunda contraseña no es correcta."
@@ -1594,6 +1663,182 @@
         "Nombre de usuario"
       ]
     },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Se encontró ${ itemsCount } sugerencia. Use el teclado para navegar.",
+        "Se encontraron ${ itemsCount } sugerencias. Use el teclado para navegar."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "Use las teclas Arriba y Abajo para acceder y navegar por las sugerencias después de la entrada. Pulse Enter para confirmar su elección, o Escape para cerrar el cuadro de sugerencias."
+      ]
+    },
+    "Import Tutorial": {
+      "${ name } saves your passwords in the ${ passwords } app. Open it and go to ${ file } → ${ exportAll }.": [
+        "${ name } guarda sus contraseñas en la aplicación ${ passwords }. Ábrala y vaya a ${ file } → ${ exportAll }."
+      ],
+      "Account & Data": [
+        "Cuenta y Datos"
+      ],
+      "Advanced Options": [
+        "Opciones avanzadas"
+      ],
+      "As a security measure, LastPass will email you to confirm the request. Open the email and click ${ continueExport }.": [
+        "Como medida de seguridad, LastPass le enviará un correo para confirmar la solicitud. Abra el correo y pulse ${ continueExport }."
+      ],
+      "At the confirmation screen, log back into your ${ name } Vault and to ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel } again.": [
+        "En la pantalla de confirmación, inicie sesión de nuevo en la bóveda ${ name } y en ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel } de nuevo."
+      ],
+      "Autofill and passwords": [
+        "Completado automático y contraseñas"
+      ],
+      "Choose ${ formatJson } as the file format, click ${ exportLabel } and confirm with your master password.": [
+        "Elija ${ formatJson } como formato de archivo, pulse ${ exportLabel } y confirme con su contraseña principal."
+      ],
+      "Choose JSON downloads": [
+        "Elija descargas JSON"
+      ],
+      "Choose the file format → Select ${ exportLabel }.": [
+        "Elija el formato de archivo → Seleccione ${ exportLabel }."
+      ],
+      "Continue export": [
+        "Continuar la exportación"
+      ],
+      "Download file": [
+        "Descargar archivo"
+      ],
+      "Enter your 1Password master password, ensure ${ format1pux } is selected, and click ${ exportData }.": [
+        "Ingrese su contraseña principal de 1Password, asegúrese de que ${ format1pux } esté seleccionado y luego pulse ${ exportData }."
+      ],
+      "Export": [
+        "Exportar"
+      ],
+      "Export All Passwords to File": [
+        "Exportar todas las contraseñas al archivo"
+      ],
+      "Export Data": [
+        "Exportar datos"
+      ],
+      "Export data": [
+        "Exportar datos"
+      ],
+      "Export file format: 1PUX": [
+        "Formato de archivo de exportación: 1PUX"
+      ],
+      "Export items": [
+        "Exporte elementos"
+      ],
+      "Export passwords": [
+        "Exportar contraseñas"
+      ],
+      "Export to CSV": [
+        "Exportar a CSV"
+      ],
+      "Export to TXT": [
+        "Exportar a TXT"
+      ],
+      "File": [
+        "Archivo"
+      ],
+      "Go to ${ exportPasswords } and select ${ downloadFile }.": [
+        "Vaya a ${ exportPasswords } y seleccione ${ downloadFile }."
+      ],
+      "Go to ${ passwords }.": [
+        "Vaya a ${ passwords }."
+      ],
+      "Go to the settings to locate the export action.": [
+        "Vaya a los ajustes para ubicar la acción de exportar."
+      ],
+      "Go to ☰ → ⚙ ${ settings } → Click ${ downloadFile }.": [
+        "Vaya a ☰ → ⚙ ${ settings } → Pulse ${ downloadFile }."
+      ],
+      "Google Password Manager": [
+        "Administrador de Contraseñas de Google"
+      ],
+      "Identify your password manager.": [
+        "Identifique su gestor de contraseña."
+      ],
+      "Manage your vault": [
+        "Gestione su bóveda"
+      ],
+      "Microsoft password manager": [
+        "Administrador de contraseñas de Microsoft"
+      ],
+      "More actions": [
+        "Más acciones"
+      ],
+      "Navigate to ${ settings } tab.": [
+        "Navegue a la pestaña ${ settings }."
+      ],
+      "Open ${ name } and go to ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel }.": [
+        "Abra ${ name } y vaya a ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel }."
+      ],
+      "Open ${ name } and go to ${ file } → ${ exportLabel } → your 1Password username.": [
+        "Abra ${ name } y vaya a ${ file } → ${ exportLabel } → su usuario de 1Password."
+      ],
+      "Open ${ name } and go to ${ menu } → ${ option }.": [
+        "Abra ${ name } y vaya a ${ menu } → ${ option }."
+      ],
+      "Open ${ name } and go to ⋮ → ${ passwordsAndAutofill } → ${ googlePasswordManager }.": [
+        "Abra ${ name } y vaya a ⋮ → ${ passwordsAndAutofill } → ${ googlePasswordManager }."
+      ],
+      "Open ${ name } and go to ☰ → ${ settings } → ${ autoFill }.": [
+        "Abra ${ name } y vaya a ☰ → ${ settings } → ${ autoFill }."
+      ],
+      "Open ${ name } and select ${ menu } → ${ option }.": [
+        "Abra ${ name } y seleccione ${ menu } → ${ option }."
+      ],
+      "Open ${ name } and select ${ settings }.": [
+        "Abra ${ name } y seleccione ${ settings }."
+      ],
+      "Open ${ name } and select ⋯.": [
+        "Abra ${ name } y seleccione ⋯."
+      ],
+      "Open ${ name } and select ☰ → ${ passwords }.": [
+        "Abra ${ name } y seleccione ☰ → ${ passwords }."
+      ],
+      "Passwords": [
+        "Contraseñas"
+      ],
+      "Passwords and Autofill": [
+        "Contraseñas y Completado automático"
+      ],
+      "Passwords and autofill": [
+        "Contraseñas y Completado automático"
+      ],
+      "Select ${ exportLabel } → ${ chooseJson } → ${ exportAgain }.": [
+        "Seleccione ${ exportLabel } → ${ chooseJson } → ${ exportAgain }."
+      ],
+      "Select ${ menu } → ${ option }.": [
+        "Seleccione ${ menu } → ${ option }."
+      ],
+      "Select ${ option }.": [
+        "Seleccione ${ option }."
+      ],
+      "Select the export format CSV.": [
+        "Seleccione el formato de exportación CSV."
+      ],
+      "Select ⋯ → ${ exportPasswords }.": [
+        "Seleccione ⋯ → ${ exportPasswords }."
+      ],
+      "Settings": [
+        "Ajustes"
+      ],
+      "Submit": [
+        "Enviar"
+      ],
+      "This time, you’ll be asked to re-confirm your ${ name } username and password. Click ${ submit }.": [
+        "Esta vez, se le pedirá que vuelva a confirmar su usuario y contraseña de ${ name }. Pulse ${ submit }."
+      ],
+      "Vault": [
+        "Bóveda"
+      ],
+      "Vault options": [
+        "Opciones de bóveda"
+      ],
+      "your username": [
+        "su nombre de usuario"
+      ]
+    },
     "Info": {
       "\"${ payload.itemName }\" item was dismissed": [
         "El elemento \"${ payload.itemName }\" fue descartado"
@@ -1620,6 +1865,9 @@
       "${ forwardedEmailsCount } forwarded": [
         "${ forwardedEmailsCount } reenvío",
         "${ forwardedEmailsCount } reenvíos"
+      ],
+      "${ imported } of ${ total } (${ percentage }%)": [
+        "${ imported } de ${ total } (${ percentage }%)"
       ],
       "${ inviterEmail } wants to share an item with a group you administer.": [
         "${ inviterEmail } desea compartir un elemento con un grupo que usted administra."
@@ -1898,9 +2146,6 @@
       "Can view this item.": [
         "Puede ver este elemento."
       ],
-      "Change your password": [
-        "Cambie la contraseña"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Comprobando ${ compromised.progress.completed } de ${ compromised.progress.total } contraseñas"
       ],
@@ -1991,6 +2236,9 @@
       "Domain: ${ domainPath } or @": [
         "Dominio: ${ domainPath } o @"
       ],
+      "Don’t close this tab": [
+        "No cierre esta pestaña"
+      ],
       "Download pass-cli from ${ passCliLink }.": [
         "Descargar pass-cli de ${ passCliLink }."
       ],
@@ -2005,9 +2253,6 @@
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "correo"
       ],
       "Email address successfully deleted from monitoring": [
         "La dirección de correo electrónico fue eliminada del monitoreo."
@@ -2105,9 +2350,6 @@
       "Fill in the CSV with your data": [
         "Complete el CSV con los datos"
       ],
-      "finance": [
-        "finanzas"
-      ],
       "Folder \"${ payload.folder.name }\" created": [
         "Carpeta «${ payload.folder.name }» creada"
       ],
@@ -2194,6 +2436,9 @@
       "invites you to access items in": [
         "le invita a acceder a elementos de"
       ],
+      "iOS and Android Apps": [
+        "Aplicaciones para iOS y Android"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Parece que ya había iniciado sesión en ${ PASS_APP_NAME }. Si quiere iniciar sesión con una cuenta diferente, cierre previamente la sesión actual."
       ],
@@ -2276,9 +2521,6 @@
       "Medium Priority": [
         "Prioridad media"
       ],
-      "Monitor accounts": [
-        "Monitoreo de cuentas"
-      ],
       "Monitoring settings successfully updated": [
         "Ajustes de monitoreo actualizados"
       ],
@@ -2296,7 +2538,8 @@
         "Moviendo todos los elementos desde \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Mover un elemento a otra caja fuerte eliminará sus enlaces seguros."
+        "Mover un elemento a otra bóveda eliminará sus enlaces seguros.",
+        "Mover elementos a otra bóveda eliminará sus enlaces seguros."
       ],
       "Moving items": [
         "Moviendo los elementos"
@@ -2336,6 +2579,9 @@
       ],
       "No login found": [
         "No se encontró ningún inicio de sesión"
+      ],
+      "No matching service. Try a different name.": [
+        "Ningún servicio coincidente. Pruebe con otro nombre."
       ],
       "No network connection": [
         "No hay conexión a la red"
@@ -2384,6 +2630,12 @@
       "Open the ${ PASS_APP_NAME } popup": [
         "Abra el popup de ${ PASS_APP_NAME }"
       ],
+      "Open the extension here.": [
+        "Abra la extensión aquí."
+      ],
+      "Open the extension to unlock it": [
+        "Abra la extensión para desbloquearla"
+      ],
       "Open the Safari settings, find ${ PASS_APP_NAME }, go to \"Permissions\" and enable site permissions.": [
         "Abra los ajustes de Safari, encuentre ${ PASS_APP_NAME }, vaya a «Permisos» y active los permisos del sitio."
       ],
@@ -2401,9 +2653,6 @@
       ],
       "Passkey sign-in": [
         "Inicio de sesión con clave de acceso"
-      ],
-      "password": [
-        "contraseña"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Se registró el bloqueo por contraseña. Úsela para desbloquear ${ PASS_APP_NAME }"
@@ -2634,6 +2883,12 @@
       "Save passkey": [
         "Guardar clave de acceso"
       ],
+      "Scan to download": [
+        "Escanear para descargar"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "Escanee para descargar ${ PASS_APP_NAME } para iOS y Android"
+      ],
       "Secure links": [
         "Enlaces seguros"
       ],
@@ -2824,6 +3079,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "Para verificar los datos importados, pulse el ícono de ${ PASS_APP_NAME } en la barra de herramientas del navegador."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "Para configurar el desbloqueo biométrico, ${ PASS_APP_NAME } necesita un permiso de navegador nuevo."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "Para configurar el desbloqueo biométrico, ${ PASS_APP_NAME } requiere un permiso de navegador nuevo. Después de aceptarlo, la extensión se recargará. Luego abra esta página."
       ],
@@ -2895,9 +3153,6 @@
       ],
       "User's access successfully updated": [
         "Se actualizó el acceso del usuario."
-      ],
-      "username": [
-        "nombre de usuario"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Se eliminó la bóveda «${ payload.content.name }»."
@@ -3115,6 +3370,9 @@
       "${ hours } hour": [
         "${ hours } hora",
         "${ hours } horas"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } caracteres"
       ],
       "${ minutes } minute": [
         "${ minutes } minuto",
@@ -3728,6 +3986,9 @@
       "LinkedIn account": [
         "Cuenta de LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Inicio de sesión"
       ],
@@ -3736,6 +3997,9 @@
       ],
       "Logins": [
         "Inicios de sesión"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Buzones"
@@ -4052,6 +4316,9 @@
       "Server": [
         "Servidor"
       ],
+      "Service": [
+        "Servicio"
+      ],
       "Settings": [
         "Ajustes"
       ],
@@ -4270,6 +4537,9 @@
       ],
       "WiFi network": [
         "Red Wi-Fi"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Detalles del trabajo"
@@ -4563,6 +4833,9 @@
       ],
       "E.g., ": [
         "Ej., "
+      ],
+      "E.g.: Google": [
+        "P.ej.: Google"
       ],
       "Email address": [
         "Dirección de correo"
@@ -4867,6 +5140,9 @@
       "Add mailbox": [
         "Agregar un buzón"
       ],
+      "Add one account": [
+        "Añadir una cuenta"
+      ],
       "Adjust autofill behaviors to change where logins are suggested.": [
         "Ajuste el comportamiento del completado automático para cambiar dónde se sugieren los inicios de sesión."
       ],
@@ -4902,6 +5178,9 @@
       ],
       "Browser permission required": [
         "Se requiere permiso de navegador"
+      ],
+      "Browsers": [
+        "Navegadores"
       ],
       "Cancel changing your email?": [
         "¿Cancelar el cambio de correo electrónico?"
@@ -4950,6 +5229,9 @@
       ],
       "Create subfolder in \"${ folderName }\"": [
         "Crear subcarpeta en «${ folderName }»"
+      ],
+      "Create your first login": [
+        "Cree su primer inicio de sesión"
       ],
       "Created": [
         "Creado"
@@ -5048,14 +5330,35 @@
       "Excluded items": [
         "Elementos excluidos"
       ],
+      "Export": [
+        "Exportar"
+      ],
+      "Export from ${ provider.title }": [
+        "Exportar de ${ provider.title }"
+      ],
       "Fill & copy password": [
         "Completar y copiar la contraseña"
+      ],
+      "Fill in your details": [
+        "Complete sus detalles"
       ],
       "Fill password": [
         "Completar la contraseña"
       ],
+      "First login created": [
+        "Primer inicio de sesión creado"
+      ],
       "Folder options": [
         "Opciones de carpeta"
+      ],
+      "For security purposes, delete your exported file.": [
+        "Por motivos de seguridad, elimine el archivo exportado."
+      ],
+      "Get mobile and desktop apps": [
+        "Obtenga aplicaciones móviles y de escritorio"
+      ],
+      "Get mobile apps": [
+        "Descargar aplicaciones móviles"
       ],
       "Get Started": [
         "Comenzar"
@@ -5084,8 +5387,29 @@
       "Import - ${ date }": [
         "Importación - ${ date }"
       ],
+      "Import completed with warnings": [
+        "Importación completada con advertencias"
+      ],
+      "Import failed": [
+        "Error en la importación"
+      ],
+      "Import successful": [
+        "Importación exitosa"
+      ],
       "Import to vault(s)": [
         "Importar a las bóvedas"
+      ],
+      "Import your passwords in less than a minute": [
+        "Importe sus contraseñas en menos de un minuto"
+      ],
+      "Important: Once your data has been imported, delete the exported file.": [
+        "Importante: una vez que sus datos sean importados, elimine el archivo exportado."
+      ],
+      "Imported from:": [
+        "Importado desde:"
+      ],
+      "Imported items:": [
+        "Elementos importados:"
       ],
       "Importing your data": [
         "Importando sus datos"
@@ -5161,6 +5485,9 @@
       "Move all items?": [
         "¿Mover todos los elementos?"
       ],
+      "Move everything at once": [
+        "Mueva todo al mismo tiempo"
+      ],
       "Move item to \"${ target }\"": [
         "Mover elemento a «${ target }»"
       ],
@@ -5197,6 +5524,9 @@
       "No shared secure links": [
         "No hay enlaces seguros compartidos"
       ],
+      "None of your items could be imported. See the details below.": [
+        "No se pudo importar ninguno de sus elementos. Vea los detalles a continuación."
+      ],
       "Open pagination": [
         "Abrir paginación"
       ],
@@ -5214,6 +5544,9 @@
       ],
       "Password Health": [
         "Estado de las contraseñas"
+      ],
+      "Password managers": [
+        "Gestores de contraseñas"
       ],
       "Pause monitoring?": [
         "¿Pausar el monitoreo?"
@@ -5289,6 +5622,9 @@
       "Select the default domain for aliases": [
         "Seleccionar el dominio por defecto por los alias"
       ],
+      "Select your password manager": [
+        "Seleccione su gestor de contraseñas"
+      ],
       "Set access level": [
         "Configurar el nivel de acceso"
       ],
@@ -5313,8 +5649,14 @@
       "Shared via": [
         "Compartido por"
       ],
+      "Some of your items could not be imported. See the details below.": [
+        "No se pudieron importar algunos de sus elementos. Vea los detalles a continuación."
+      ],
       "SPF (Optional)": [
         "SPF (opcional)"
+      ],
+      "Starting the extension": [
+        "Iniciando la extensión"
       ],
       "Status": [
         "Estado"
@@ -5361,6 +5703,12 @@
       "Upgrade to check for compromised passwords": [
         "Actualice para comprobar contraseñas comprometidas"
       ],
+      "Upload": [
+        "Cargar"
+      ],
+      "Upload your data": [
+        "Cargue sus datos"
+      ],
       "URL matching": [
         "Coincidencia de URL"
       ],
@@ -5382,6 +5730,9 @@
       "Want to learn more?": [
         "¿Desea saber más?"
       ],
+      "We'll guide you through the process. First choose where you currently store your passwords.": [
+        "Le guiaremos durante el proceso. Primero elija dónde guarda sus contraseñas actualmente."
+      ],
       "Weak password": [
         "Contraseña débil"
       ],
@@ -5399,6 +5750,12 @@
       ],
       "What is the difference between ${ PASS_SHORT_APP_NAME } note and SimpleLogin note?": [
         "¿Cuál es la diferencia entre una nota de ${ PASS_SHORT_APP_NAME } y una nota de SimpleLogin?"
+      ],
+      "Which service do you want to create the login for?": [
+        "¿A cuál servicio desearía crear el inicio de sesión?"
+      ],
+      "You are ready to get the most out of ${ PASS_APP_NAME }.": [
+        "Está listo para sacarle el máximo provecho a ${ PASS_APP_NAME }."
       ],
       "You don't have any vaults": [
         "No tiene ninguna bóveda."
@@ -5420,6 +5777,9 @@
       ],
       "Your welcome gift": [
         "Su regalo de bienvenida"
+      ],
+      "You’re a step away from autofill magic!": [
+        "¡Está a un paso de la magia del completado automático!"
       ],
       "You’re about to permanently delete ${ aliasCount } alias.": [
         "Está a punto de eliminar definitivamente ${ aliasCount } alias.",
@@ -5457,8 +5817,16 @@
       "OTP secret or URI is invalid": [
         "Clave secreta OTP o URI inválido"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "La contraseña debe tener al menos ${ MIN_PASSWORD_LENGTH } caracter",
+        "La contraseña debe tener al menos ${ MIN_PASSWORD_LENGTH } caracteres"
+      ],
       "Section name cannot be empty": [
         "El nombre de la sección no puede estar vacío"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Intente con un nombre de usuario corto (${ n } caracter máx.)",
+        "Intente con un nombre de usuario corto (${ n } caracteres máx.)"
       ],
       "URL already exists": [
         "La URL ya existe."
@@ -5479,6 +5847,22 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "Se requiere la contraseña de ${ BRAND_NAME }"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "Se fusionó ${ count } carpeta con su carpeta principal porque se alcanzó el nivel máximo de anidamiento.",
+        "Se fusionaron ${ count } carpetas con su carpeta principal porque se alcanzó el nivel máximo de anidamiento."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "No se importó ${ count } carpeta porque su carpeta principal alcanzó el número máximo de subcarpetas. Sus elementos se importaron a la carpeta disponible más cercana.",
+        "No se importaron ${ count } carpetas porque su carpeta principal alcanzó el número máximo de subcarpetas. Sus elementos se importaron a la carpeta disponible más cercana."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "No se importó ${ count } carpeta porque esta bóveda alcanzó el número máximo de carpetas. Sus elementos se importaron a la carpeta disponible más cercana.",
+        "No se importaron ${ count } carpetas porque esta bóveda alcanzó el número máximo de carpetas. Sus elementos se importaron a la carpeta disponible más cercana."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "No se pudo crear ${ failed } carpeta. Sus elementos se importaron a la carpeta disponible más cercana.",
+        "No se pudieron crear ${ failed } carpetas. Sus elementos se importaron a la carpeta disponible más cercana."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } brinda un control potente, pero un solo error puede provocar que la función de autocompletar coincida con datos de sitios web fraudulentos o de suplantación y los complete automáticamente."
@@ -5623,9 +6007,6 @@
       ],
       "Move to trash": [
         "Mover a la papelera"
-      ],
-      "Name is required": [
-        "El nombre es obligatorio."
       ],
       "No items": [
         "No hay elementos"

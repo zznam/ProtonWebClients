@@ -1,11 +1,17 @@
 import { type SearchParamStringOptions, getSearchParamString } from '@proton/utils/searchParams';
 
-import { type ADDON_GENERIC_NAME, ADDON_GENERIC_NAMES, type COUPON_CODES, CURRENCIES, type PLANS } from '../constants';
+import {
+    type ADDON_TOTAL_PARAM_NAME,
+    ADDON_TOTAL_PARAM_NAMES,
+    type COUPON_CODES,
+    CURRENCIES,
+    type PLANS,
+} from '../constants';
 import type { Currency } from '../interface';
 import { correctDeprecatedPlanName } from '../plan/helpers';
 import { getValidCycle } from './helpers';
 
-type TotalParams = Partial<Record<`total${ADDON_GENERIC_NAME}`, number>>;
+type TotalParams = Partial<Record<`total${ADDON_TOTAL_PARAM_NAME}`, number>>;
 type SubscriptionSearchParamsBase = {
     /** Any coupon code; enum values get autocomplete, arbitrary strings are allowed */
     coupon?: COUPON_CODES | (string & {});
@@ -62,10 +68,21 @@ export type SubscriptionSearchParams = SubscriptionSearchParamsBase &
     SubscriptionSearchParamsTarget &
     TotalParams;
 
-const TOTAL_ADDON_KEYS = Object.values(ADDON_GENERIC_NAMES).map((addon) => `total${addon}`);
+const TOTAL_ADDON_KEYS = Object.values(ADDON_TOTAL_PARAM_NAMES).map(
+    (addon) => `total${addon}`
+) as (keyof TotalParams)[];
+/**
+ * Relax target/plan condition for retrocompatibility
+ */
+export type LooseSubscriptionSearchParams = SubscriptionSearchParamsBase &
+    SubscriptionSearchParamsCycle &
+    TotalParams & {
+        target?: 'compare' | 'checkout';
+        plan?: PLANS;
+    };
 
-const getTotalParams = (params: URLSearchParams): TotalParams =>
-    TOTAL_ADDON_KEYS.reduce((result, key) => {
+const getTotalParams = (params: URLSearchParams, addons: (keyof TotalParams)[] = TOTAL_ADDON_KEYS): TotalParams =>
+    addons.reduce((result, key) => {
         const total = Math.floor(Number(params.get(key)));
 
         return total > 0 ? { ...result, [key]: total } : result;
@@ -117,7 +134,8 @@ export const extractSubscriptionSearchParams = (
 
     const upsellRef = params.get('upsellRef') || undefined;
 
-    const totals = plan ? getTotalParams(params) : {};
+    // without plan we still get the totalLumo and totalMeet for expansion and replace addon=lumo|meet
+    const totals = plan ? getTotalParams(params) : getTotalParams(params, ['totalLumo', 'totalMeet']);
 
     if (!plan) {
         const addon = params.get('addon');
@@ -199,7 +217,7 @@ export const getSubscriptionSearchParamsString = (
 
     const [definedTotals, others] = Object.entries(othersAndTotals).reduce<[TotalParams, Record<string, any>]>(
         ([prevTotals, prevOthers], [key, value]) => {
-            if (TOTAL_ADDON_KEYS.includes(key)) {
+            if (TOTAL_ADDON_KEYS.includes(key as keyof TotalParams)) {
                 return [
                     {
                         ...prevTotals,
@@ -213,6 +231,12 @@ export const getSubscriptionSearchParamsString = (
         [{}, {}]
     );
 
+    // allow to replace addon=lumo|meet with totalLumo and totalMeet
+    const expansionTotals = {
+        ...(definedTotals.totalLumo && { totalLumo: definedTotals.totalLumo }),
+        ...(definedTotals.totalMeet && { totalMeet: definedTotals.totalMeet }),
+    };
+
     const plan = correctDeprecatedPlanName(rawPlan);
 
     if (target === 'checkout') {
@@ -221,7 +245,7 @@ export const getSubscriptionSearchParamsString = (
         }
     }
 
-    const totals = plan ? definedTotals : {};
+    const totals = plan ? definedTotals : expansionTotals;
 
     /**
      * As addon deprecated will be only take into consideration if plan is not set.

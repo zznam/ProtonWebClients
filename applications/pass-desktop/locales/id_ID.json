@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } untuk Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } untuk iOS"
-      ],
       "Accept": [
         "Terima"
       ],
@@ -333,6 +327,12 @@
       ],
       "Done": [
         "Selesai"
+      ],
+      "Download for macOS": [
+        "Unduh untuk macOS"
+      ],
+      "Download for Windows": [
+        "Unduh untuk Windows"
       ],
       "Download this CSV template": [
         "Unduh template CSV ini"
@@ -700,6 +700,12 @@
       "Show Less": [
         "Tampilkan Lebih Sedikit"
       ],
+      "Show less": [
+        "Tampilkan lebih sedikit"
+      ],
+      "Show more": [
+        "Tampilkan lebih banyak"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Masuk dengan ${ BRAND_NAME }"
       ],
@@ -853,11 +859,6 @@
       ],
       "Uninstall ${ PASS_APP_NAME }": [
         "Copot pemasangan ${ PASS_APP_NAME }"
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplikasi Desktop ${ MAIL_APP_NAME }"
       ]
     },
     "Button": {
@@ -1096,6 +1097,9 @@
       "Editing item failed": [
         "Item gagal diedit"
       ],
+      "Email is not valid": [
+        "Email tidak valid"
+      ],
       "Empty CSV file": [
         "File CSV kosong"
       ],
@@ -1107,6 +1111,9 @@
       ],
       "Encrypted JSON not supported": [
         "JSON terenkripsi tidak didukung"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Masukkan nama pengguna tanpa domain (@example.com)"
       ],
       "Error reporting problem": [
         "Terjadi masalah saat melaporkan kesalahan"
@@ -1288,6 +1295,9 @@
       "Incorrect backup password. Please try again.": [
         "Kata sandi cadangan salah. Silakan coba lagi."
       ],
+      "Incorrect password. Please try again.": [
+        "Kata sandi salah. Silakan coba lagi."
+      ],
       "Incorrect second password. Please try again.": [
         "Kata sandi kedua salah. Silakan coba lagi."
       ],
@@ -1321,8 +1331,14 @@
       "Network error": [
         "Kesalahan jaringan"
       ],
+      "Not a valid number": [
+        "Nomor telepon tidak valid"
+      ],
       "Passphrase is incorrect": [
         "Frasa sandi salah"
+      ],
+      "Passwords do not match": [
+        "Kata sandi tidak sesuai"
       ],
       "PIN codes do not match": [
         "Kode PIN tidak sesuai"
@@ -1381,11 +1397,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Aplikasi desktop ${ PASS_APP_NAME } harus masuk log."
       ],
+      "The email addresses do not match": [
+        "Alamat email tidak sesuai"
+      ],
       "The session has expired. Please sign in again.": [
         "Masa berlaku sesi telah habis. Silakan masuk lagi."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Terjadi kesalahan saat menghapus tautan aman. Silakan coba lagi dalam beberapa menit."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Isi kolom ini melebihi panjang maksimal ${ maximumLength } karakter."
+      ],
+      "This field is required": [
+        "Kolom ini wajib diisi"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Kolom ini harus diisi dengan minimal ${ minimumLength } karakter."
       ],
       "Too many failed attempts. Please sign in again.": [
         "Terlalu banyak percobaan yang gagal. Silakan masuk kembali."
@@ -1395,6 +1423,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Cobalah untuk menghubungi pemilik tautan."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Cobalah untuk hanya menggunakan huruf, angka, dan tanda _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Tidak dapat membuat kode OTP untuk item ini"
@@ -1426,6 +1457,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Gagal memperbarui brankas \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "Nama pengguna harus dimulai dengan huruf atau angka"
+      ],
+      "Username must end with a letter or digit": [
+        "Nama pengguna harus diakhiri dengan huruf atau angka"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Pembuatan brankas \"${ payload.content.name }\" gagal"
       ],
@@ -1449,6 +1486,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Kode PIN salah. Coba lagi."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frasa pemulihan salah. Mohon coba lagi atau gunakan metode pemulihan lain."
       ],
       "Wrong second password": [
         "Kata sandi kedua salah"
@@ -1802,9 +1842,6 @@
       "Can view this item.": [
         "Dapat melihat item ini."
       ],
-      "Change your password": [
-        "Ubah kata sandi Anda"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "Konfirmasikan kata sandi tambahan Anda untuk melanjutkan penghapusannya."
       ],
@@ -1885,9 +1922,6 @@
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "email"
       ],
       "Email address successfully deleted from monitoring": [
         "Alamat email berhasil dihapus dari monitoring"
@@ -1981,9 +2015,6 @@
       ],
       "Fill in the CSV with your data": [
         "Isi CSV dengan data Anda"
-      ],
-      "finance": [
-        "keuangan"
       ],
       "Find \"OpenSSH Authentication Agent\", right-click Properties.": [
         "Temukan \"Agen Autentikasi OpenSSH\", klik kanan Properti."
@@ -2150,9 +2181,6 @@
       "Medium Priority": [
         "Prioritas Menengah"
       ],
-      "Monitor accounts": [
-        "Monitor akun"
-      ],
       "Monitoring settings successfully updated": [
         "Pengaturan monitoring berhasil diperbarui"
       ],
@@ -2248,9 +2276,6 @@
       ],
       "Pass Plus trial": [
         "Uji coba Pass Plus"
-      ],
-      "password": [
-        "kata sandi"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Kunci kata sandi berhasil didaftarkan. Gunakan kunci ini untuk membuka ${ PASS_APP_NAME }"
@@ -2710,9 +2735,6 @@
       ],
       "User's access successfully updated": [
         "Akses pengguna berhasil diperbarui"
-      ],
-      "username": [
-        "nama pengguna"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Brankas \"${ payload.content.name }\" berhasil dihapus"
@@ -3340,6 +3362,9 @@
         "Lantai, apartemen, gedung"
       ],
       "Folder": [
+        "Folder"
+      ],
+      "Folders": [
         "Folder"
       ],
       "For a one-off sharing": [
@@ -5252,8 +5277,14 @@
       "OTP secret or URI is invalid": [
         "Rahasia OTP atau URI tidak valid"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Kata sandi harus mengandung setidaknya ${ MIN_PASSWORD_LENGTH } karakter"
+      ],
       "Section name cannot be empty": [
         "Nama bagian tidak dapat dikosongkan"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Cobalah nama pengguna yang lebih pendek (maksimal ${ n } karakter)"
       ],
       "URL already exists": [
         "URL sudah ada"
@@ -5405,9 +5436,6 @@
       ],
       "Move to trash": [
         "Pindahkan ke sampah"
-      ],
-      "Name is required": [
-        "Nama dibutuhkan"
       ],
       "No items": [
         "Tidak ada item"

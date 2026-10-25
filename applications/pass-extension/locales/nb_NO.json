@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } for Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } for iOS"
-      ],
       "Accept": [
         "Aksepter"
       ],
@@ -339,6 +333,12 @@
       ],
       "Do not suggest on this website": [
         "Ikke foreslå på dette nettstedet"
+      ],
+      "Download for macOS": [
+        "Last ned for macOS"
+      ],
+      "Download for Windows": [
+        "Last ned for Windows"
       ],
       "Download this CSV template": [
         "Last ned denne CSV-malen"
@@ -700,6 +700,12 @@
       "Show Less": [
         "Vis mindre"
       ],
+      "Show less": [
+        "Vis mindre"
+      ],
+      "Show more": [
+        "Vis mer"
+      ],
       "Sign back in": [
         "Logg på igjen"
       ],
@@ -843,9 +849,10 @@
         "Hvelv"
       ]
     },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME }-skrivebordsapplikasjon"
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "${ hiddenResultsCount } resultat til som ikke vises",
+        "${ hiddenResultsCount } resultater til som ikke vises"
       ]
     },
     "Button": {
@@ -1108,6 +1115,9 @@
       "Editing item failed": [
         "Redigering av element mislyktes"
       ],
+      "Email is not valid": [
+        "E-post er ikke gyldig"
+      ],
       "Empty CSV file": [
         "Tom CSV-fil"
       ],
@@ -1119,6 +1129,9 @@
       ],
       "Encrypted JSON not supported": [
         "Kryptert JSON ikke støttet"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Skriv inn brukernavnet ditt uten domenet (@eksempel.com)"
       ],
       "Error reporting problem": [
         "Problem med feilrapportering"
@@ -1297,6 +1310,9 @@
       "Incorrect backup password. Please try again.": [
         "Feil reservepassord. Forsøk igjen."
       ],
+      "Incorrect password. Please try again.": [
+        "Feil passord. Prøv igjen."
+      ],
       "Incorrect second password. Please try again.": [
         "Feil andre passord. Prøv på nytt."
       ],
@@ -1339,8 +1355,14 @@
       "Network error": [
         "Nettverksfeil"
       ],
+      "Not a valid number": [
+        "Ikke et gyldig tall"
+      ],
       "Passphrase is incorrect": [
         "Passfrase er feil"
+      ],
+      "Passwords do not match": [
+        "Passordene samsvarer ikke"
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "Nettstedstilgang nektet for domenene ${ domainsJSX }."
@@ -1414,6 +1436,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Skrivebordsappen ${ PASS_APP_NAME } skal være logget på."
       ],
+      "The email addresses do not match": [
+        "E-postadressene samsvarer ikke"
+      ],
       "The URL is in the list": [
         "Nettadressen er i listen"
       ],
@@ -1422,6 +1447,15 @@
       ],
       "This domain is already managed by your organization": [
         "Dette domenet administreres allerede av organisasjonen din"
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Dette feltet overskrider maksimalt tillatt ${ maximumLength } tegn."
+      ],
+      "This field is required": [
+        "Dette feltet er obligatorisk"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Dette feltet krever minimum ${ minimumLength } tegn."
       ],
       "This invite is no longer available": [
         "Denne invitasjonen er ikke lenger tilgjengelig."
@@ -1434,6 +1468,9 @@
       ],
       "Trashing item failed": [
         "Sletting av element til papirkurv mislyktes"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Prøv å bruke bare bokstaver, tall og _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Ikke i stand tl å generere en OTP-kode for dette elementet."
@@ -1471,6 +1508,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Oppdatering av hvelv \"${ payload.content.name }\" mislyktes."
       ],
+      "Username must begin with a letter or digit": [
+        "Brukernavn må begynne med en bokstav eller ett tall"
+      ],
+      "Username must end with a letter or digit": [
+        "Brukernavn må ende med en bokstav eller ett tall"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Opprettelse av hvelv \"${ payload.content.name }\" mislyktes."
       ],
@@ -1494,6 +1537,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Feil PIN-kode. Prøv igjen."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Feil gjenopprettingsfrase. Prøv igjen eller bruk en annen gjenopprettingsmetode."
       ],
       "Wrong second password": [
         "Feil andre passord"
@@ -1582,6 +1628,15 @@
       ],
       "Username": [
         "Brukernavn"
+      ]
+    },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Fant ${ itemsCount } forslag, bruk tastaturet til å navigere.",
+        "Fant ${ itemsCount } forslag, bruk tastaturet til å navigere."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "Bruk opp- og ned-tastene for å få tilgang til og bla gjennom forslag etter inndata. Trykk Enter for å bekrefte valget, eller Esc for å lukke forslagsboksen."
       ]
     },
     "Info": {
@@ -1885,9 +1940,6 @@
       "Can view this item.": [
         "Kan lese dette elementet."
       ],
-      "Change your password": [
-        "Endre passordet ditt"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Sjekker ${ compromised.progress.completed } av ${ compromised.progress.total } passord"
       ],
@@ -1990,9 +2042,6 @@
       "Editor": [
         "Redigerer"
       ],
-      "email": [
-        "e-post"
-      ],
       "Email address successfully deleted from monitoring": [
         "E-postadresse slettet fra overvåking"
       ],
@@ -2089,9 +2138,6 @@
       "Fill in the CSV with your data": [
         "Fyll ut CSV-filen med dataene dine"
       ],
-      "finance": [
-        "finans"
-      ],
       "Follow those steps to import your data with a generic CSV:": [
         "Følg disse trinnene for å importere dataene dine med en generisk CSV-fil:"
       ],
@@ -2165,6 +2211,9 @@
       ],
       "invites you to access items in": [
         "inviterer deg til å få tilgang til elementer i"
+      ],
+      "iOS and Android Apps": [
+        "iOS- og Android-apper"
       ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Det ser ut til at du allerede er logget inn på ${ PASS_APP_NAME }. Hvis du prøver å logge på med en annen konto, må du først logge av fra utvidelsen."
@@ -2248,9 +2297,6 @@
       "Medium Priority": [
         "Middels prioritet"
       ],
-      "Monitor accounts": [
-        "Overvåk kontoer"
-      ],
       "Monitoring settings successfully updated": [
         "Overvåkingsinnstillingene er oppdatert"
       ],
@@ -2268,7 +2314,8 @@
         "Flytter alle elementer fra \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Hvis du flytter et element til et annet hvelv, slettes de sikre koblingene."
+        "Hvis du flytter et element til et annet hvelv, slettes de sikre koblingene.",
+        "Hvis du flytter elementer til et annet hvelv, slettes de sikre koblingene."
       ],
       "Moving items": [
         "Flytter elementer"
@@ -2365,9 +2412,6 @@
       ],
       "Passkey sign-in": [
         "Tilgangsnøkkelpålogging"
-      ],
-      "password": [
-        "passord"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Passordlås er registrert. Bruk den til å låse opp ${ PASS_APP_NAME }"
@@ -2597,6 +2641,9 @@
       ],
       "Save passkey": [
         "Lagre tilgangsnøkkel"
+      ],
+      "Scan to download": [
+        "Skann for å laste ned"
       ],
       "Secure links": [
         "Sikre koblinger"
@@ -2857,9 +2904,6 @@
       "User's access successfully updated": [
         "Brukerens tilgang oppdatert"
       ],
-      "username": [
-        "brukernavn"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Hvelv \"${ payload.content.name }\" slettet"
       ],
@@ -3076,6 +3120,9 @@
       "${ hours } hour": [
         "${ hours } time",
         "${ hours } timer"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } tegn"
       ],
       "${ minutes } minute": [
         "${ minutes } minutt",
@@ -4979,6 +5026,9 @@
       "Excluded items": [
         "Ekskluderte elementer"
       ],
+      "Export": [
+        "Eksporter"
+      ],
       "Fill & copy password": [
         "Fyll ut & kopier passord"
       ],
@@ -4987,6 +5037,9 @@
       ],
       "Folder options": [
         "Alternativer for mapper"
+      ],
+      "Get mobile and desktop apps": [
+        "Skaff deg mobil- og skrivebordsapper"
       ],
       "Get Started": [
         "Kom i gang"
@@ -5014,6 +5067,9 @@
       ],
       "Import - ${ date }": [
         "Import - ${ date }"
+      ],
+      "Import failed": [
+        "Importen mislyktes"
       ],
       "Import to vault(s)": [
         "Importer til hvelv"
@@ -5369,8 +5425,16 @@
       "OTP secret or URI is invalid": [
         "OTP-hemmelighet eller URI er ugyldig"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Passord må inneholde minst ${ MIN_PASSWORD_LENGTH } tegn",
+        "Passord må inneholde minst ${ MIN_PASSWORD_LENGTH } tegn"
+      ],
       "Section name cannot be empty": [
         "Seksjonsnavn kan ikke være tomt"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Prøv et kortere brukernavn (maks ${ n } tegn)",
+        "Prøv et kortere brukernavn (maks ${ n } tegn)"
       ],
       "URL already exists": [
         "Nettadresse finnes allerede"
@@ -5529,9 +5593,6 @@
       ],
       "Move to trash": [
         "Flytt til papirkurven"
-      ],
-      "Name is required": [
-        "Navn kreves"
       ],
       "No items": [
         "Ingen elementer"

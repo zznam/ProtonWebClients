@@ -3,13 +3,14 @@ import { c } from 'ttag';
 
 import { createKTVerifier } from '@proton/key-transparency/helpers';
 import { resignSKLWithPrimaryKey } from '@proton/key-transparency/shared';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { updateFlags } from '@proton/shared/lib/api/settings';
 import { KEYGEN_CONFIGS } from '@proton/shared/lib/constants';
 import { DelegatedAccessStateEnum } from '@proton/shared/lib/interfaces/DelegatedAccess';
-import { addAddressKeysProcess, addUserKeysProcess, getPrimaryAddressKeysForSigning } from '@proton/shared/lib/keys';
+import { addAddressKeysProcess, addUserKeysProcess } from '@proton/shared/lib/keys/add/addKeysProcess';
+import { getPrimaryAddressKeysForSigning } from '@proton/shared/lib/keys/getPrimaryKey';
 import { getIsDeviceRecoveryEnabled } from '@proton/shared/lib/recoveryFile/deviceRecovery';
 import { getIsRecoveryFileAvailable } from '@proton/shared/lib/recoveryFile/recoveryFile';
 

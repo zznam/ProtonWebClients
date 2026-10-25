@@ -32,32 +32,28 @@ import { IcPencil } from '@proton/icons/icons/IcPencil'
 import { IcPrinter } from '@proton/icons/icons/IcPrinter'
 import { IcSquares } from '@proton/icons/icons/IcSquares'
 import { IcTrash } from '@proton/icons/icons/IcTrash'
-import type {
-  AuthenticatedDocControllerInterface,
-  DocumentState,
-  PublicDocumentState,
-  EditorControllerInterface,
-  RenameControllerInterface,
-} from '@proton/docs-core'
-import { isDocumentState, PostApplicationError } from '@proton/docs-core'
-import type {
-  FileMenuAction,
-  SheetImportData,
-  NodeMeta,
-  DocTrashState,
-  DocumentType,
-  DocumentAction,
-} from '@proton/docs-shared'
-import { FileMenuActionEvent, isWordCountSupported } from '@proton/docs-shared'
-import { isPrivateNodeMeta } from '@proton/drive-store'
+import type { AuthenticatedDocControllerInterface } from '@proton/docs-core/AuthenticatedDocController/AuthenticatedDocControllerInterface'
+import type { EditorControllerInterface } from '@proton/docs-core/EditorController/EditorController'
+import type { RenameControllerInterface } from '@proton/docs-core/RenameController/RenameController'
+import type { DocumentState, PublicDocumentState } from '@proton/docs-core/State/DocumentState'
+import { PostApplicationError } from '@proton/docs-core/Application/ApplicationEvent'
+import { isDocumentState } from '@proton/docs-core/State/DocumentState'
+import type { NodeMeta, DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { FileMenuAction } from '@proton/docs-shared/Bridge/EditorRequiresClientMethods'
+import type { DocTrashState } from '@proton/docs-shared/DocTrashEvent'
+import type { DocumentAction } from '@proton/docs-shared/DocumentAction'
+import type { SheetImportData } from '@proton/docs-shared/SheetImportData'
+import { FileMenuActionEvent } from '@proton/docs-shared/Bridge/EditorRequiresClientMethods'
+import { isPrivateNodeMeta } from '@proton/docs-shared/NodeMetaHelpers'
+import { isWordCountSupported } from '@proton/docs-shared/WordCount/isWordCountSupported'
 import { getAppHref } from '@proton/shared/lib/apps/helper'
 import { APPS, APPS_CONFIGURATION, DRIVE_APP_NAME } from '@proton/shared/lib/constants'
 import { isDefaultDocumentName } from '@proton/shared/lib/docs/utils/isDefaultDocumentName'
-import { traceError } from '@proton/shared/lib/helpers/sentry'
+import { traceErrorSDK } from '@proton/docs-core/DriveSDK/traceErrorSDK'
 import { getStaticURL } from '@proton/shared/lib/helpers/url'
 import { useApplication } from '~/utils/application-context'
 import { constructDriveFolderUrl } from '~/utils/open-drive-folder'
-import { getIsSharedWithMe } from '~/drive-sdk'
+import { getIsSharedWithMe } from '~/drive-sdk/getIsSharedWithMe'
 import { AutoGrowingInput } from './AutoGrowingInput'
 import { useHistoryViewerModal } from '../HistoryViewerModal/HistoryViewerModal'
 import { TrashedDocumentModal } from './TrashedDocumentModal'
@@ -72,7 +68,6 @@ import {
   useIsSheetsEnabled,
   useIsDownloadLogsAllowed,
   useMoveModalDriveSdkEnabled,
-  useRenameWithSDK,
   useTrashWithSDK,
   useIsODTEnabled,
 } from '~/utils/flags'
@@ -84,10 +79,10 @@ import { textToClipboard } from '@proton/shared/lib/helpers/browser'
 import { VersionNumber } from '@proton/docs-shared/components/ui/VersionNumber'
 import { versionCookieAtLoad } from '@proton/components/helpers/versionCookie'
 import { useMoveItemsModal } from '@proton/drive/public/moveItemsModal'
-import { generateNodeUid, getDrive } from '@proton/drive'
+import { generateNodeUid, getDrive } from '@proton/drive/sdk'
 import { IcListBullets } from '@proton/icons/icons/IcListBullets'
-import type { UserModel } from '@proton/shared/lib/interfaces'
-import { useOpenDocument } from '@proton/docs-shared/lib/Hooks/useOpenDocument'
+import type { UserModel } from '@proton/shared/lib/interfaces/User'
+import { useOpenDocument } from '@proton/docs-shared/Hooks/useOpenDocument'
 
 export type DocumentTitleDropdownProps = {
   authenticatedController: AuthenticatedDocControllerInterface | undefined
@@ -122,7 +117,6 @@ export function DocumentTitleDropdown({
   const appVersion = getAppVersion(APP_VERSION)
   const { createNotification } = useNotifications()
   const moveModalDriveSdkEnabled = useMoveModalDriveSdkEnabled()
-  const renameWithSDK = useRenameWithSDK()
   const trashWithSDK = useTrashWithSDK()
   const isSheetsEnabled = useIsSheetsEnabled()
   const isODTEnabled = useIsODTEnabled()
@@ -193,12 +187,13 @@ export function DocumentTitleDropdown({
       setIsRenaming(false)
 
       if (oldName !== newName) {
-        void renameController.renameDocument(newName, renameWithSDK).then((result) => {
+        const useSDK = privateContext || !publicContext?.compat
+        void renameController.renameDocument(newName).then((result) => {
           if (result.isFailed()) {
             PostApplicationError(application.eventBus, { translatedError: result.getTranslatedError() })
             setTitle(oldName)
-          } else if (renameWithSDK && privateContext) {
-            // Public rename uses legacy - already has the notification
+          } else if (useSDK) {
+            // Public rename with legacy already has the notification
             const successNotificationText = c('Notification').jt`"${newName}" renamed successfully`
             createNotification({
               text: <span className="text-pre-wrap">{successNotificationText}</span>,
@@ -336,7 +331,7 @@ export function DocumentTitleDropdown({
         to = constructDriveFolderUrl(node.parentNodeId, shareId, sharedWithMe)
       } catch (error) {
         // Fall back to Drive root
-        traceError(error)
+        traceErrorSDK(error, 'DocsDriveCompatSDK')
       }
     }
 

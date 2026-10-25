@@ -8,13 +8,9 @@ import { orderAddresses } from '@proton/account/addresses/actions';
 import type { KtState } from '@proton/account/kt';
 import { getKTActivation } from '@proton/account/kt/actions';
 import type { MemberState } from '@proton/account/member';
-import {
-    type MembersState,
-    UnavailableAddressesError,
-    getMemberAddresses,
-    membersThunk,
-} from '@proton/account/members';
+import { type MembersState, getMemberAddresses, membersThunk } from '@proton/account/members';
 import { createMember } from '@proton/account/members/actions';
+import UnavailableAddressesError from '@proton/account/members/errors/UnavailableAddressesError';
 import { decryptTemporaryPassword, encryptTemporaryPassword } from '@proton/account/orgJoiningLink/helpers';
 import { organizationThunk } from '@proton/account/organization';
 import { type OrganizationKeyState, organizationKeyThunk } from '@proton/account/organizationKey';
@@ -24,7 +20,7 @@ import type { UserInvitationsState } from '@proton/account/userInvitations';
 import type { UserSettingsState } from '@proton/account/userSettings';
 import { type CalendarsState, calendarsThunk } from '@proton/calendar/calendars';
 import { createKTVerifier } from '@proton/key-transparency/helpers';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { revoke } from '@proton/shared/lib/api/auth';
 import { createCalendar, updateCalendarUserSettings } from '@proton/shared/lib/api/calendars';
@@ -39,29 +35,20 @@ import { setupCalendarKey } from '@proton/shared/lib/calendar/crypto/keys/setupC
 import { ADDRESS_FLAGS, MEMBER_PRIVATE, MEMBER_ROLE } from '@proton/shared/lib/constants';
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
 import { getEmailParts } from '@proton/shared/lib/helpers/email';
-import {
-    type Address,
-    type Api,
-    CreateMemberMode,
-    type Domain,
-    type KeyPair,
-    type KeyTransparencyVerify,
-    type Member,
-} from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
+import type { KeyPair } from '@proton/shared/lib/interfaces/Key';
+import type { KeyTransparencyVerify } from '@proton/shared/lib/interfaces/KeyTransparency';
+import { CreateMemberMode, type Member } from '@proton/shared/lib/interfaces/Member';
 import type { Calendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
 import { setAddressFlagsHelper } from '@proton/shared/lib/keys/addressFlagsHelper';
 import { getDecryptedAddressKeys } from '@proton/shared/lib/keys/getDecryptedAddressKeys';
 import { getDecryptedUserKeys } from '@proton/shared/lib/keys/getDecryptedUserKeys';
 import getRandomString from '@proton/utils/getRandomString';
-import isTruthy from '@proton/utils/isTruthy';
 import noop from '@proton/utils/noop';
 
-import {
-    createJoiningLink,
-    createOrganizationImporter,
-    createOrganizationImporterMigration,
-    patchOrganizationImporter,
-} from '../api';
+import { createJoiningLink, createOrganizationImporter, patchOrganizationImporter } from '../api/api';
 import {
     type ApiImporterOrganization,
     ApiImporterOrganizationState,
@@ -70,6 +57,7 @@ import {
 } from '../api/api.interface';
 import type { OAuthToken } from '../logic/oauthToken';
 import { areEquivalentEmails, isRelevantAddress, shouldCreateUserPredicate } from './helpers';
+import { resolveMigrationCandidates, submitMigrations } from './migrationSubmission';
 import type { JoiningLink, MigrationConfiguration } from './types';
 
 type RequiredState = KtState &
@@ -440,25 +428,14 @@ export const createMigrationBatch = createAsyncThunk<
                 ]);
             }
 
-            const addressesToMigrate = (() => {
-                const knownAddresses = getKnownAddresses();
-                return users
-                    .map((u) => knownAddresses.find((a) => areEquivalentEmails(a.Email, u.Email)))
-                    .filter(isTruthy);
-            })();
+            const migrationCandidates = resolveMigrationCandidates(users, getKnownAddresses());
 
-            if (addressesToMigrate.length) {
-                await api(
-                    createOrganizationImporterMigration({
-                        ImporterOrganizationId: importerOrganizationId,
-                        AddressIds: addressesToMigrate.map((a) => a.ID),
-                    })
-                );
-            }
+            const { submitted, failed } = await submitMigrations(api, importerOrganizationId, migrationCandidates);
+            errors.push(...failed.map(({ candidate, error }) => toSerializableUserError(candidate.user, error)));
 
             return {
                 errors,
-                results: addressesToMigrate,
+                results: submitted.map(({ address }) => address),
             };
         } finally {
             extra.eventManager.start();

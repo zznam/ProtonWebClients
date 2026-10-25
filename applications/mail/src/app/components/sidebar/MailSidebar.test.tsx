@@ -1,29 +1,29 @@
-import { act, fireEvent, getAllByText, render, screen } from '@testing-library/react';
+import { act, fireEvent, getAllByText, screen } from '@testing-library/react';
 import { addDays, subDays } from 'date-fns';
 import loudRejection from 'loud-rejection';
 
 import { useRetentionPolicies } from '@proton/account/retentionPolicies/hooks';
 import { buildUser } from '@proton/account/testing/buildUser';
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import useEventManager from '@proton/components/hooks/useEventManager';
-import type { IconComponent } from '@proton/icons/component';
 import { IcCircleFilled } from '@proton/icons/icons/IcCircleFilled';
 import { IcFolder } from '@proton/icons/icons/IcFolder';
 import { IcFolders } from '@proton/icons/icons/IcFolders';
 import { conversationCountsActions } from '@proton/mail/store/counts/conversationCountsSlice';
 import { SessionAccessTypeFlag } from '@proton/shared/lib/authentication/sessionAccessType';
-import { LABEL_TYPE, MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
+import { APPS, LABEL_TYPE, MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
 import { removeItem, setItem } from '@proton/shared/lib/helpers/storage';
-import { CHECKLIST_DISPLAY_TYPE, ChecklistKey, type Label } from '@proton/shared/lib/interfaces';
+import { CHECKLIST_DISPLAY_TYPE, ChecklistKey } from '@proton/shared/lib/interfaces/Checklist';
 import type { Folder } from '@proton/shared/lib/interfaces/Folder';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 import { useFlag } from '@proton/unleash/useFlag';
 import noop from '@proton/utils/noop';
 import range from '@proton/utils/range';
 
 import type { OnboardingChecklistContext } from '../../containers/onboardingChecklist/provider/GetStartedChecklistProvider';
 import * as GetStartedChecklistProviderModule from '../../containers/onboardingChecklist/provider/GetStartedChecklistProvider';
-import { assertFocus } from '../../helpers/tests/assertion';
+import { assertFocus, assertIconComponent } from '../../helpers/tests/assertion';
 import { minimalCache } from '../../helpers/tests/cache';
 import { clearAll, getDropdown } from '../../helpers/tests/helper';
 import { mailTestRender } from '../../helpers/tests/render';
@@ -47,12 +47,6 @@ jest.mock('../../containers/onboardingChecklist/provider/GetStartedChecklistProv
 loudRejection();
 
 const mockUseFlag = useFlag as jest.MockedFunction<typeof useFlag>;
-
-/** The Ic* components inline their markup, so that markup is what identifies which icon was rendered. */
-const getIconMarkup = (Icon: IconComponent) => {
-    const { container } = render(<Icon />, { container: document.createElement('div') });
-    return container.querySelector('svg')!.innerHTML;
-};
 
 const folder = { ID: 'folder1', Type: LABEL_TYPE.MESSAGE_FOLDER, Name: 'folder1' } as Folder;
 const subfolder = { ID: 'folder2', Type: LABEL_TYPE.MESSAGE_FOLDER, Name: 'folder2', ParentID: folder.ID } as Folder;
@@ -169,7 +163,12 @@ describe('MailSidebar', () => {
     });
 
     it('should open app dropdown', async () => {
-        await setup();
+        setupTest();
+        await mailTestRender(<MailSidebar />, {
+            preloadedState: {
+                availableApps: [APPS.PROTONMAIL, APPS.PROTONCALENDAR, APPS.PROTONVPN_SETTINGS, APPS.PROTONDRIVE],
+            },
+        });
 
         const appsButton = screen.getByTitle('Proton applications');
         fireEvent.click(appsButton);
@@ -288,13 +287,13 @@ describe('MailSidebar', () => {
         const folderIcon = folderElement.querySelector('svg:not(.navigation-icon--expand)');
 
         expect(folderElement.textContent).toContain(folder.Name);
-        expect(folderIcon?.innerHTML).toBe(getIconMarkup(IcFolders));
+        assertIconComponent(folderIcon, IcFolders);
 
         const subfolderElement = screen.getByTestId(`navigation-link:${subfolder.ID}`);
         const subfolderIcon = subfolderElement.querySelector('svg');
 
         expect(subfolderElement.textContent).toContain(subfolder.Name);
-        expect(subfolderIcon?.innerHTML).toBe(getIconMarkup(IcFolder));
+        assertIconComponent(subfolderIcon, IcFolder);
 
         const collapseButton = folderElement.querySelector('button');
 
@@ -318,7 +317,7 @@ describe('MailSidebar', () => {
         const labelIcon = labelElement.querySelector('svg');
 
         expect(labelElement.textContent).toContain(label.Name);
-        expect(labelIcon?.innerHTML).toBe(getIconMarkup(IcCircleFilled));
+        assertIconComponent(labelIcon, IcCircleFilled);
         expect(labelIcon?.style.color).toBe('rgb(255, 0, 0)');
     });
 

@@ -1,8 +1,9 @@
 import { usePreviousSubscription } from '@proton/account/previousSubscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useConfig } from '@proton/app-context/useConfig';
-import { FeatureCode, useFeature } from '@proton/features';
-import { domIsBusy } from '@proton/shared/lib/busy';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
+import { domIsBusy } from '@proton/shared/lib/busy/busy';
 import { useFlag } from '@proton/unleash/useFlag';
 
 import type { OfferHookReturnValue } from '../../common/helpers/interface';

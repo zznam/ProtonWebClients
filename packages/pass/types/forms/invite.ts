@@ -1,9 +1,10 @@
-import type { SelectedItem, SelectedShare, ShareRole } from '..';
 import type { ListFieldValue } from '../../components/Form/Field/ListField';
 import type { AccessTarget } from '../../lib/access/types';
+import type { SelectedItem, SelectedShare } from '../data/items';
+import type { ShareRole } from '../data/shares';
 
 export type InviteFormStep = 'members' | 'permissions' | 'review';
-type InviteFormMemberValue = { email: string; role: ShareRole; isGroup: boolean };
+type InviteFormMemberValue = { email: string; role: ShareRole; isGroup: boolean; hideSensitiveContent?: boolean };
 export type InviteFormMemberItem = ListFieldValue<InviteFormMemberValue>;
 
 type InviteFormValuesBase<T extends AccessTarget = AccessTarget, V = {}> = {

@@ -2,7 +2,7 @@ import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
 import { createPreAuthKTVerifier } from '@proton/key-transparency/shared';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import {
     createAddress as createAddressConfig,
@@ -16,13 +16,14 @@ import { queryAvailableDomains } from '@proton/shared/lib/api/domains';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import mutatePassword from '@proton/shared/lib/authentication/mutate';
 import { ADDRESS_STATUS, ADDRESS_TYPE, type APP_NAMES } from '@proton/shared/lib/constants';
-import type { Address, Member } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
 import {
     type AddressGenerationPayload,
     handleCreateAddressAndKey,
     handleSetupAddressAndKey,
-    handleSetupAddressKeys,
-} from '@proton/shared/lib/keys';
+} from '@proton/shared/lib/keys/setupAddress';
+import { handleSetupAddressKeys } from '@proton/shared/lib/keys/setupAddressKeys';
 import noop from '@proton/utils/noop';
 
 import { createAddressKeysThunk, getCreateAddressKeysPayload } from '../addressKeys/createAddressKeys';

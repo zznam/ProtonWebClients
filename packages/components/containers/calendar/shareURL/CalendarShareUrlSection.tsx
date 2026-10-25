@@ -6,8 +6,8 @@ import { c, msgid } from 'ttag';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
 import useIsMounted from '@proton/hooks/useIsMounted';
+import useLoading from '@proton/hooks/useLoading';
 import { deletePublicLink, editPublicLink, getPublicLinks } from '@proton/shared/lib/api/calendars';
 import { CALENDAR_SETTINGS_SECTION_ID, MAX_LINKS_PER_CALENDAR } from '@proton/shared/lib/calendar/constants';
 import { getPrimaryCalendarKey } from '@proton/shared/lib/calendar/crypto/keys/helpers';
@@ -15,11 +15,11 @@ import { generateEncryptedPurpose, transformLinksFromAPI } from '@proton/shared/
 import { BRAND_NAME } from '@proton/shared/lib/constants';
 import { textToClipboard } from '@proton/shared/lib/helpers/browser';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { SimpleMap } from '@proton/shared/lib/interfaces';
 import type { ModalWithProps } from '@proton/shared/lib/interfaces/Modal';
-import type { ACCESS_LEVEL, CalendarLink, CalendarUrl, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
-import type { Nullable } from '@proton/shared/lib/interfaces/utils';
-import { splitKeys } from '@proton/shared/lib/keys';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { ACCESS_LEVEL, CalendarLink, CalendarUrl } from '@proton/shared/lib/interfaces/calendar/Link';
+import type { Nullable, SimpleMap } from '@proton/shared/lib/interfaces/utils';
+import { splitKeys } from '@proton/shared/lib/keys/keys';
 
 import Alert from '../../../components/alert/Alert';
 import Loader from '../../../components/loader/Loader';

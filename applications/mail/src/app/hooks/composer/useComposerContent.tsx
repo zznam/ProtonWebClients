@@ -9,8 +9,8 @@ import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import type { EditorMetadata } from '@proton/components/components/editor/interface';
 import useAssistantTelemetry from '@proton/components/hooks/assistant/useAssistantTelemetry';
-import { useHandler } from '@proton/components/hooks/useHandler';
-import { getHasAssistantStatus } from '@proton/llm/lib';
+import { useHandler } from '@proton/hooks/useHandler';
+import { getHasAssistantStatus } from '@proton/llm/lib/helpers';
 import type { OpenedAssistant } from '@proton/llm/lib/types';
 import { OpenedAssistantStatus } from '@proton/llm/lib/types';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
@@ -402,9 +402,8 @@ export const useComposerContent = (args: EditorArgs) => {
     const senderAddress = modelMessage.data?.Sender?.Address;
     const draftAction = modelMessage.draftFlags?.action;
     const addressSignature = useMemo(
-        () =>
-            getAddressPlainTextSignature({ senderAddress, action: draftAction, addresses, mailSettings, userSettings }),
-        [senderAddress, draftAction, mailSettings, userSettings, addresses]
+        () => getAddressPlainTextSignature({ senderAddress, addresses, mailSettings, userSettings }),
+        [senderAddress, mailSettings, userSettings, addresses]
     );
 
     /**

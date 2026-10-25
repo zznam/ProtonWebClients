@@ -1,20 +1,9 @@
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import type { Category, Label } from '@proton/shared/lib/interfaces';
+import type { Category } from '@proton/shared/lib/interfaces/Category';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 
 import type { CategoriesState } from './index';
 import { selectHasDefaultB2CCategoryConfiguration } from './selector';
-
-// The categories slice (./index) imports the @proton/account barrel, which pulls in the SSO/crypto
-// ESM chain this package's jest config does not transform. The selector needs none of it at runtime,
-// so we stub the two symbols the slice actually uses at load time.
-jest.mock('@proton/account', () => ({
-    getInitialModelState: (value: unknown) => ({
-        value,
-        error: undefined,
-        meta: { fetchedAt: 0, fetchedEphemeral: true },
-    }),
-    serverEvent: Object.assign(() => ({ type: 'serverEvent' }), { type: 'serverEvent' }),
-}));
 
 // Build a complete Label so the test protects against future field changes, not just today's shape.
 const buildCategoryLabel = (overrides: Partial<Label> & Pick<Label, 'ID'>): Label => ({

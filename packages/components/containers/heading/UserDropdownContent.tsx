@@ -11,7 +11,7 @@ import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
 import { IcChevronRight } from '@proton/icons/icons/IcChevronRight';
 import { IcPassShieldOk } from '@proton/icons/icons/IcPassShieldOk';
 import { IcPlus } from '@proton/icons/icons/IcPlus';
-import { ForkType } from '@proton/shared/lib/authentication/fork';
+import { ForkType } from '@proton/shared/lib/authentication/fork/constants';
 import { APPS, APPS_CONFIGURATION } from '@proton/shared/lib/constants';
 import { textToClipboard } from '@proton/shared/lib/helpers/browser';
 import clsx from '@proton/utils/clsx';
@@ -31,13 +31,7 @@ import { UserDropdownFooter } from './UserDropdownFooter';
 
 import './UserDropdown.scss';
 
-export const UserSection = ({
-    info,
-    upgrade,
-}: {
-    info: UserDropdownValue['info'];
-    upgrade: UserDropdownValue['upgrade'];
-}) => {
+const UserSection = ({ info, upgrade }: { info: UserDropdownValue['info']; upgrade: UserDropdownValue['upgrade'] }) => {
     const { createNotification } = useNotifications();
     const { viewportWidth } = useActiveBreakpoint();
     const currentTheme = useTheme();

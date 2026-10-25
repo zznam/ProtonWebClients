@@ -7,7 +7,7 @@ import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Href } from '@proton/atoms/Href/Href';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { getPassEventTypes, getPassLogs, getPassLogsDownload } from '@proton/shared/lib/api/b2bevents';
 import { PASS_APP_NAME, SORT_DIRECTION } from '@proton/shared/lib/constants';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
@@ -79,7 +79,7 @@ export const PassEvents = ({ upgradeRequired }: { upgradeRequired: boolean }) =>
     const fetchPassLogs = async (params: B2BLogsQuery) => {
         try {
             const { Items, Total } = await api(getPassLogs(params));
-            const passEvents = toCamelCase(Items);
+            const passEvents: PassEvent[] = toCamelCase(Items);
             setEvents(passEvents);
             setTotal(Total | 0);
         } catch (e) {

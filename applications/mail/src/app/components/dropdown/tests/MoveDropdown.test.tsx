@@ -1,12 +1,11 @@
-import { act, fireEvent, getByTestId as getByTestIdDefault, screen } from '@testing-library/react';
+import { act, fireEvent, getByTestId as getByTestIdDefault, screen, waitFor } from '@testing-library/react';
 
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { getLabelFromCategoryId } from '@proton/mail/features/categoriesView/categoriesStringHelpers';
 import type { MessageState } from '@proton/mail/store/messages/messagesTypes';
 import { ACCENT_COLORS } from '@proton/shared/lib/colors';
 import { LABEL_TYPE, MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import { wait } from '@proton/shared/lib/helpers/promise';
-import type { Label } from '@proton/shared/lib/interfaces';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 
 import { addApiMock } from '../../../helpers/tests/api';
 import { minimalCache } from '../../../helpers/tests/cache';
@@ -28,6 +27,7 @@ jest.mock('../../../store/mailbox/mailboxActions', () => {
 jest.mock('../../categoryView/useCategoriesView', () => ({
     useCategoriesView: jest.fn(() => ({
         shouldShowTabs: false,
+        canMoveToCategories: false,
         activeCategoriesTabs: [],
     })),
 }));
@@ -63,6 +63,7 @@ describe('MoveDropdown', () => {
     beforeEach(() => {
         mockedUseCategoriesView.mockReturnValue({
             shouldShowTabs: false,
+            canMoveToCategories: false,
             activeCategoriesTabs: [],
         });
     });
@@ -185,10 +186,10 @@ describe('MoveDropdown', () => {
         // Search for a label which does not exist
         const searchInput = screen.getByTestId('folder-dropdown:search-folder');
 
-        await act(async () => {
-            fireEvent.change(searchInput, { target: { value: search } });
-            // input has a debounce, so we need to wait for the onChange
-            await wait(300);
+        fireEvent.change(searchInput, { target: { value: search } });
+        // The search input is debounced, wait for the list to be filtered
+        await waitFor(() => {
+            expect(screen.queryAllByTestId(/label-dropdown:folder-radio-/)).toHaveLength(0);
         });
 
         // No more option are displayed
@@ -224,6 +225,7 @@ describe('MoveDropdown', () => {
         it('should disable the checkbox when a category is selected as destination', async () => {
             mockedUseCategoriesView.mockReturnValue({
                 shouldShowTabs: true,
+                canMoveToCategories: true,
                 activeCategoriesTabs: mockActiveCategoriesData,
             });
 
@@ -254,6 +256,7 @@ describe('MoveDropdown', () => {
         it('should untick the checkbox while the destination cannot create filters, and restore it afterwards', async () => {
             mockedUseCategoriesView.mockReturnValue({
                 shouldShowTabs: true,
+                canMoveToCategories: true,
                 activeCategoriesTabs: mockActiveCategoriesData,
             });
 
@@ -350,10 +353,10 @@ describe('MoveDropdown', () => {
         // Search for a label which does not exist
         const searchInput = screen.getByTestId('folder-dropdown:search-folder');
 
-        await act(async () => {
-            fireEvent.change(searchInput, { target: { value: search } });
-            // input has a debounce, so we need to wait for the onChange
-            await wait(300);
+        fireEvent.change(searchInput, { target: { value: search } });
+        // The search input is debounced, wait for the list to be filtered
+        await waitFor(() => {
+            expect(screen.queryAllByTestId(/label-dropdown:folder-radio-/)).toHaveLength(0);
         });
 
         // No more option are displayed

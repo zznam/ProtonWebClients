@@ -2,53 +2,52 @@ import { mergeRegister } from '@lexical/utils'
 import { useGetUserSettings } from '@proton/account/userSettings/hooks'
 import { useConfig } from '@proton/app-context/useConfig'
 import { Button } from '@proton/atoms/Button/Button'
-import MimeIcon from '@proton/components/components/icon/MimeIcon'
+import { MimeProtonDoc } from '@proton/file-icons/icons/MimeProtonDoc'
+import { MimeProtonSheet } from '@proton/file-icons/icons/MimeProtonSheet'
 import { useTheme } from '@proton/components/containers/themes/ThemeProvider'
 import useAuthentication from '@proton/components/hooks/useAuthentication'
 import type {
-  AuthenticatedDocControllerInterface,
   DocsClientSquashVerificationObjectionMadePayload,
-  DocumentState,
-  EditorControllerInterface,
-  EditorOrchestratorInterface,
   GeneralUserDisplayableErrorOccurredPayload,
   GenericInfoEventPayload,
-  PublicDocumentState,
-  WebsocketConnectionEventPayloads,
-} from '@proton/docs-core'
-import {
-  ApplicationEvent,
-  ClientToEditorBridge,
-  DocControllerEvent,
-  SquashVerificationObjectionDecision,
-  WebsocketConnectionEvent,
-} from '@proton/docs-core'
-import { getNodeName } from '@proton/docs-core/lib/DriveSDK/getNodeName'
-import { CacheService } from '@proton/docs-core/lib/Services/CacheService'
-import { useGetPrimaryAddressKeys } from '@proton/docs-core/lib/Crypto/useGetPrimaryAddressKeys'
-import type {
-  CommentMarkNodeChangeData,
-  DocumentAction,
-  DocumentType,
-  EditorInitializationConfig,
-  LiveCommentsTypeStatusChangeData,
-  NodeMeta,
-  PublicNodeMeta,
-} from '@proton/docs-shared'
-import { CommentsEvent, EditorEvent, EditorSystemMode, LiveCommentsEvent } from '@proton/docs-shared'
+} from '@proton/docs-core/Application/ApplicationEvent'
+import type { AuthenticatedDocControllerInterface } from '@proton/docs-core/AuthenticatedDocController/AuthenticatedDocControllerInterface'
+import type { EditorControllerInterface } from '@proton/docs-core/EditorController/EditorController'
+import type { WebsocketConnectionEventPayloads } from '@proton/docs-core/Realtime/WebsocketEvent/WebsocketConnectionEventPayloads'
+import type { EditorOrchestratorInterface } from '@proton/docs-core/Services/Orchestrator/EditorOrchestratorInterface'
+import type { DocumentState, PublicDocumentState } from '@proton/docs-core/State/DocumentState'
+import { ApplicationEvent } from '@proton/docs-core/Application/ApplicationEvent'
+import { DocControllerEvent } from '@proton/docs-core/AuthenticatedDocController/AuthenticatedDocControllerEvent'
+import { ClientToEditorBridge } from '@proton/docs-core/Bridge/ClientToEditorBridge'
+import { WebsocketConnectionEvent } from '@proton/docs-core/Realtime/WebsocketEvent/WebsocketConnectionEvent'
+import { SquashVerificationObjectionDecision } from '@proton/docs-core/Types/SquashVerificationObjection'
+import { getNodeName } from '@proton/docs-core/DriveSDK/getNodeName'
+import { CacheService } from '@proton/docs-core/Services/CacheService'
+import { useApi } from '@proton/app-context/useApi'
+import { useGetMemberAddressKeys } from '@proton/docs-core/Crypto/useGetMemberAddressKeys'
+import { useGetDefaultShareAddressKeys } from '@proton/docs-core/Crypto/useGetDefaultShareAddressKeys'
+import type { DocumentType, NodeMeta, PublicNodeMeta } from '@proton/docs-shared/BasicTypes'
+import type { CommentMarkNodeChangeData } from '@proton/docs-shared/CommentsEvent'
+import type { DocumentAction } from '@proton/docs-shared/DocumentAction'
+import type { EditorInitializationConfig } from '@proton/docs-shared/EditorInitializationConfig'
+import type { LiveCommentsTypeStatusChangeData } from '@proton/docs-shared/LiveCommentsEvent'
+import { EditorEvent } from '@proton/docs-shared/Bridge/EditorEvent'
+import { CommentsEvent } from '@proton/docs-shared/CommentsEvent'
+import { EditorSystemMode } from '@proton/docs-shared/EditorSystemMode'
+import { LiveCommentsEvent } from '@proton/docs-shared/LiveCommentsEvent'
+import { isPrivateNodeMeta, isPublicNodeMeta } from '@proton/docs-shared/NodeMetaHelpers'
 import { useGenericAlertModal } from '@proton/docs-shared/components/GenericAlert'
-import OpenTracer from '@proton/docs-shared/lib/Tracer/Module'
-import { generateNodeUid, getDrive, type DriveEvent, type NodeEntity } from '@proton/drive'
-import { isPrivateNodeMeta, isPublicNodeMeta } from '@proton/drive-store'
-import { UserSettingsProvider } from '@proton/drive-store/store'
-import { tmpConvertNewDocTypeToOld } from '@proton/docs-shared/lib/Hooks/useOpenDocument'
+import OpenTracer from '@proton/docs-shared/Tracer/Module'
+import { generateNodeUid, getDrive, ValidationError, type DriveEvent, type NodeEntity } from '@proton/drive/sdk'
+import { useDocumentWindowAction } from '@proton/docs-shared/Hooks/useOpenDocument'
+import { tmpConvertNewDocTypeToOld } from '@proton/docs-shared/Doc/convert-doc-type'
 import { IcLockFilled } from '@proton/icons/icons/IcLockFilled'
 import { DocsApiErrorCode } from '@proton/shared/lib/api/docs'
 import { getAppHref } from '@proton/shared/lib/apps/helper'
 import { APPS, SHEETS_APP_NAME } from '@proton/shared/lib/constants'
 import { isLocalEnvironment } from '@proton/shared/lib/env'
 import type { ProtonDocumentType } from '@proton/shared/lib/helpers/mimetype'
-import { SentryRealtimeInitiatives, traceError } from '@proton/shared/lib/helpers/sentry'
+import { traceErrorSDK } from '@proton/docs-core/DriveSDK/traceErrorSDK'
 import { useFlagsStatus } from '@proton/unleash/proxy'
 import { useFlag } from '@proton/unleash/useFlag'
 import { Availability, AvailabilityTypes } from '@proton/utils/availability'
@@ -65,13 +64,12 @@ import {
   useIsDarkThemeEnabled,
   useIsGatePrivateInviteAccessEnabled,
   useIsOpenTracerEnabled,
-  useIsSheetsEditorEnabled,
+  useIsSheetsEnabled,
 } from '~/utils/flags'
 import type { ProviderType } from '../../../provider-type'
 import TracerAlert from '../../../tracer/TracerAlert'
 import { EditorFrame } from '../EditorFrame'
 import { WordCountOverlay } from '../WordCount'
-import { useDocsContext } from '../context'
 import { useWelcomeSplashModal } from '../public/WelcomeSplashModal'
 import { useChangeAddressWhenPubliclyShared } from '../useChangeAddressWhenPubliclyShared'
 import { DebugMenu } from './DebugMenu'
@@ -80,6 +78,7 @@ import { useDriftDetectionErrorModal } from './DriftDetectionErrorModal'
 import type { InviteAutoAcceptResult } from './InviteAutoAccepter'
 import { InviteAutoAccepter } from './InviteAutoAccepter'
 import { PrivateDocumentInviteGate } from './PrivateDocumentInviteGate'
+import { getReportMeta } from './reportMeta'
 import { useSignatureCheckFailedModal } from './SignatureCheckFailedModal'
 import { useSheetsDebugArtifacts } from './useSheetsDebugArtifacts'
 
@@ -111,7 +110,7 @@ export function DocumentViewer({
   const { getLocalID } = useAuthentication()
   const getUserSettings = useGetUserSettings()
   const { isDebugMode } = useDebugMode()
-  const { APP_VERSION } = useConfig()
+  const { APP_VERSION, COMMIT } = useConfig()
   const { removeLocalIDFromUrl } = useDocsUrlBar()
 
   const [documentState, setDocumentState] = useState<DocumentState | PublicDocumentState | null>(null)
@@ -135,10 +134,12 @@ export function DocumentViewer({
   const [initializing, setInitializing] = useState(false)
   const [ready, setReady] = useState(false)
 
-  const isSheetsEditorEnabled = useIsSheetsEditorEnabled()
+  const isSheetsEnabled = useIsSheetsEnabled()
   const sdkEventsEnabled = useDocsDocumentViewerEventsSDK()
-  const isDriveCompatSDK = useDriveCompatSDK()
-  const getPrimaryAddressKeys = useGetPrimaryAddressKeys()
+  const isDriveCompatSDKFlagOn = useDriveCompatSDK()
+  const documentWindowAction = useDocumentWindowAction()
+  const getMemberAddressKeys = useGetMemberAddressKeys(useApi())
+  const getDefaultShareAddressKeys = useGetDefaultShareAddressKeys()
   const isOpenTracerEnabled = useIsOpenTracerEnabled()
   const isDarkThemeEnabled = useIsDarkThemeEnabled()
   const { information: themeInformation } = useTheme()
@@ -151,6 +152,7 @@ export function DocumentViewer({
   }, [bridge, isDarkMode])
 
   const isPrivateNode = isPrivateNodeMeta(nodeMeta)
+  const replaceDriveCompat = isPrivateNode ? isDriveCompatSDKFlagOn : !application.compatWrapper.getPublicCompat()
   const nodeUid = isPrivateNode ? generateNodeUid(nodeMeta.volumeId, nodeMeta.linkId) : null
 
   const { flagsReady } = useFlagsStatus()
@@ -182,12 +184,7 @@ export function DocumentViewer({
         setCurrentDocumentNode(node)
       })
       .catch((error) => {
-        traceError(error, {
-          tags: {
-            initiative: SentryRealtimeInitiatives.SDK_SWITCH,
-            feature: 'DocsDocumentViewerEventsSDK',
-          },
-        })
+        traceErrorSDK(error, 'DocsDocumentViewerEventsSDK')
       })
   }, [drive, nodeUid, sdkEventsEnabled])
 
@@ -212,12 +209,7 @@ export function DocumentViewer({
           }
         }
       } catch (error) {
-        traceError(error, {
-          tags: {
-            initiative: SentryRealtimeInitiatives.SDK_SWITCH,
-            feature: 'DocsDocumentViewerEventsSDK',
-          },
-        })
+        traceErrorSDK(error, 'DocsDocumentViewerEventsSDK')
       }
     },
     [documentState, drive, nodeUid],
@@ -228,18 +220,13 @@ export function DocumentViewer({
       return
     }
     void eventSubscriber.initialize(currentDocumentNode.treeEventScopeId, [handleEvent]).catch((error) => {
-      traceError(error, {
-        tags: {
-          initiative: SentryRealtimeInitiatives.SDK_SWITCH,
-          feature: 'DocsDocumentViewerEventsSDK',
-        },
-      })
+      traceErrorSDK(error, 'DocsDocumentViewerEventsSDK')
     })
     return () => eventSubscriber.reset()
   }, [application.logger, currentDocumentNode, documentState, eventSubscriber, handleEvent, sdkEventsEnabled])
 
   const [error, setError] = useState<DocumentError | null>(() => {
-    if (documentType === 'sheet' && !isSheetsEditorEnabled) {
+    if (documentType === 'sheet' && !isSheetsEnabled) {
       return { message: '', code: DocsApiErrorCode.InsufficientPermissions, userUnderstandableMessage: false }
     }
 
@@ -356,6 +343,13 @@ export function DocumentViewer({
       }
       const zip = new JSZip()
 
+      try {
+        const reportMeta = await getReportMeta({ appVersion: APP_VERSION, commit: COMMIT }, editorController)
+        zip.file('report-meta.json', JSON.stringify(reportMeta))
+      } catch (error) {
+        console.error('Could not include report meta in debug info', error)
+      }
+
       if (driftLogDetails) {
         try {
           zip.file('drift-log-details.json', JSON.stringify(driftLogDetails))
@@ -423,7 +417,7 @@ export function DocumentViewer({
         console.error('Could not generate zip file', error)
       }
     },
-    [docController, documentType, editorController],
+    [APP_VERSION, COMMIT, docController, documentType, editorController],
   )
 
   useEffect(() => {
@@ -664,16 +658,40 @@ export function DocumentViewer({
       setInitializing(true)
       void OpenTracer.trace('boot_doc_viewer_loader_initialize_start', { documentType })
 
-      if (isDriveCompatSDK && isPrivateNode) {
-        getPrimaryAddressKeys()
-          .then((keys) => {
-            void application.getDocLoader().initialize(nodeMeta, tmpConvertNewDocTypeToOld(documentType), keys)
-          })
-          .catch((error) => {
-            const errorMessage = 'Failed to fetch primary address keys'
-            application.logger.error(errorMessage, error)
-            handleInitError(errorMessage)
-          })
+      if (replaceDriveCompat) {
+        // Unlike legacy, which loads them in parallel with the document, address keys are loaded before it
+        if (isPrivateNode) {
+          getMemberAddressKeys(nodeMeta)
+            .then((keys) => {
+              void application.getDocLoader().initialize(nodeMeta, tmpConvertNewDocTypeToOld(documentType), {
+                primaryAddressKeys: keys,
+              })
+            })
+            .catch((error) => {
+              const errorMessage = 'Failed to fetch member address keys'
+              application.logger.error(errorMessage, error)
+              // SDK throws ValidationError (e.g. "Item not found") when the user lost access to the node
+              const code = error instanceof ValidationError ? DocsApiErrorCode.InsufficientPermissions : undefined
+              handleInitError(errorMessage, code)
+            })
+        } else {
+          // Like legacy getAddressKeyInfo, anonymous viewers get no address keys,
+          // signed-in viewers get their default share keys.
+          const addressKeysPromise =
+            providerType === 'public-unauthenticated' ? Promise.resolve(undefined) : getDefaultShareAddressKeys()
+          addressKeysPromise
+            .then((keys) => {
+              void application.getDocLoader().initialize(nodeMeta, tmpConvertNewDocTypeToOld(documentType), {
+                primaryAddressKeys: keys,
+                localID: getLocalID(),
+              })
+            })
+            .catch((error) => {
+              const errorMessage = 'Failed to fetch default share address keys'
+              application.logger.error(errorMessage, error)
+              handleInitError(errorMessage)
+            })
+        }
       } else {
         void application.getDocLoader().initialize(nodeMeta, tmpConvertNewDocTypeToOld(documentType))
       }
@@ -691,10 +709,12 @@ export function DocumentViewer({
     initializing,
     nodeMeta,
     accessReady,
-    isDriveCompatSDK,
+    replaceDriveCompat,
     removeLocalIDFromUrl,
-    getPrimaryAddressKeys,
+    getMemberAddressKeys,
     isPrivateNode,
+    providerType,
+    getDefaultShareAddressKeys,
   ])
 
   useEffect(() => {
@@ -724,17 +744,20 @@ export function DocumentViewer({
 
         if (isPublicNodeMeta(nodeMeta)) {
           void OpenTracer.trace('boot_doc_viewer_invite_accept_public_redirect')
-          application.compatWrapper.getPublicCompat().redirectToAuthedDocument({
-            volumeId: result.acceptedNodeMeta.volumeId,
-            linkId: result.acceptedNodeMeta.linkId,
-          })
+          const meta = { volumeId: result.acceptedNodeMeta.volumeId, linkId: result.acceptedNodeMeta.linkId }
+          const publicCompat = application.compatWrapper.getPublicCompat()
+          if (publicCompat) {
+            publicCompat.redirectToAuthedDocument(meta)
+          } else {
+            documentWindowAction({ ...meta, type: 'doc', mode: 'open', window })
+          }
         } else {
           void OpenTracer.trace('boot_doc_viewer_invite_accept_reload')
           window.location.reload()
         }
       }
     },
-    [application.compatWrapper, application.logger, nodeMeta],
+    [application.compatWrapper, application.logger, nodeMeta, documentWindowAction],
   )
 
   /**
@@ -749,8 +772,6 @@ export function DocumentViewer({
    */
   const isPrivateModeUserWithInsufficientPermissions =
     isPrivateNodeMeta(nodeMeta) && error && error.code === DocsApiErrorCode.InsufficientPermissions
-
-  const { publicContext, privateContext } = useDocsContext()
 
   const shouldAttemptAutoAcceptInvite =
     !didAttemptToAutoAcceptInvite &&
@@ -791,23 +812,7 @@ export function DocumentViewer({
 
     return (
       <>
-        <UserSettingsProvider
-          initialUser={publicContext?.user ?? privateContext?.user ?? ({} as any)}
-          initialDriveUserSettings={{
-            Defaults: {
-              RevisionRetentionDays: 0,
-              PhotoTags: [],
-            },
-            UserSettings: {
-              Sort: null,
-              Layout: null,
-              RevisionRetentionDays: null,
-              PhotoTags: null,
-            },
-          }}
-        >
-          <InviteAutoAccepter nodeMeta={nodeMeta} onResult={onInviteAutoAcceptResult} />
-        </UserSettingsProvider>
+        <InviteAutoAccepter nodeMeta={nodeMeta} onResult={onInviteAutoAcceptResult} />
         <Loader documentType={documentType} />
       </>
     )
@@ -868,7 +873,11 @@ function Loader({ documentType }: LoaderProps) {
   return (
     <div className="relative h-full w-full">
       <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center justify-center">
-        <MimeIcon name={documentType === 'sheet' ? 'proton-sheet' : 'proton-doc'} size={9} className="shrink-0" />
+        {documentType === 'sheet' ? (
+          <MimeProtonSheet size={9} className="shrink-0" />
+        ) : (
+          <MimeProtonDoc size={9} className="shrink-0" />
+        )}
 
         <div className="mb-4 mt-12">
           <LoadingBar />

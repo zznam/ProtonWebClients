@@ -5,9 +5,11 @@ import {
   $createRangeSelectionFromDom,
   $createTextNode,
   $getRoot,
+  $getSelection,
   $insertNodes,
   $isParagraphNode,
   $isRangeSelection,
+  SELECTION_CHANGE_COMMAND,
   SELECTION_INSERT_CLIPBOARD_NODES_COMMAND,
 } from 'lexical'
 import { AllNodes } from '../../AllNodes'
@@ -18,7 +20,7 @@ import React from 'react'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ProtonContentEditable } from '../../ContentEditable/ProtonContentEditable'
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
-import * as ReactTestUtils from '../../../../Utils/react-test-utils'
+import * as ReactTestUtils from '../TestUtils/react-test-utils'
 import { assertCondition } from '../Suggestions/TestUtils'
 import type { TableCellNode, TableNode, TableRowNode } from '@lexical/table'
 import {
@@ -33,14 +35,17 @@ import { $generateNodesFromDOM } from '@lexical/html'
 import { TablePlugin } from './TablePlugin'
 import { mergedCellsHTML, TablesWithUnalignedRowsAndColumns } from './__mocks__/TestTables'
 import { $createHeadingNode, $isHeadingNode } from '@lexical/rich-text'
-import DocumentEditorTheme from '../../../../Theme/Theme'
-import { EditorStateProvider } from '../../../EditorStateProvider'
-import { EditorSystemMode } from '@proton/docs-shared'
+import DocumentEditorTheme from '../../theme/Theme'
+import { DocsDependenciesProvider, type DocsDependencies } from '../../DocsDependenciesProvider'
+import { DocsPresentationProvider } from '../../DocsPresentationProvider'
+import { defaultDocsMessages } from '../../messages/defaultDocsMessages'
+import { EditorUserMode } from '../../contract/EditorUserMode'
 
 describe('TablePlugin', () => {
   let container: HTMLElement
   let reactRoot: Root
   let editor: LexicalEditor | null = null
+  const onError = jest.fn((error: Error) => console.error(error))
 
   async function update(fn: () => void) {
     await ReactTestUtils.act(async () => {
@@ -55,24 +60,26 @@ describe('TablePlugin', () => {
         return null
       }
       return (
-        <EditorStateProvider systemMode={EditorSystemMode.Edit}>
-          <LexicalComposer
-            initialConfig={{
-              namespace: 'test',
-              nodes: AllNodes,
-              onError: console.error,
-              theme: DocumentEditorTheme,
-            }}
-          >
-            <RichTextPlugin
-              contentEditable={<ProtonContentEditable isSuggestionMode={true} />}
-              placeholder={null}
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-            <TestPlugin />
-            <TablePlugin />
-          </LexicalComposer>
-        </EditorStateProvider>
+        <DocsDependenciesProvider dependencies={{ defaultMessages: defaultDocsMessages } as DocsDependencies}>
+          <DocsPresentationProvider userMode={EditorUserMode.Edit}>
+            <LexicalComposer
+              initialConfig={{
+                namespace: 'test',
+                nodes: AllNodes,
+                onError,
+                theme: DocumentEditorTheme,
+              }}
+            >
+              <RichTextPlugin
+                contentEditable={<ProtonContentEditable isSuggestionMode={true} />}
+                placeholder={null}
+                ErrorBoundary={LexicalErrorBoundary}
+              />
+              <TestPlugin />
+              <TablePlugin />
+            </LexicalComposer>
+          </DocsPresentationProvider>
+        </DocsDependenciesProvider>
       )
     }
 
@@ -89,6 +96,7 @@ describe('TablePlugin', () => {
   }
 
   beforeEach(async () => {
+    onError.mockClear()
     container = document.createElement('div')
     document.body.appendChild(container)
     reactRoot = createRoot(container)
@@ -357,6 +365,39 @@ describe('TablePlugin', () => {
     } finally {
       nativeSelection.removeAllRanges()
     }
+  })
+
+  test('should move the caret between tables on touch without an editor error', async () => {
+    await update(() => {
+      $getRoot().append(
+        $createTableNodeWithDimensions(1, 1, false),
+        $createParagraphNode(),
+        $createTableNodeWithDimensions(1, 1, false),
+      )
+    })
+    await update(() => {
+      $getTables()[0].getFirstDescendant()!.selectStart()
+    })
+
+    const secondTableKey = editor!.read(() => $getTables()[1].getKey())
+    const secondTableElement = editor!.getElementByKey(secondTableKey)!.querySelector('table')!
+    // jsdom has no PointerEvent
+    const touchEvent = (type: string) =>
+      Object.assign(new MouseEvent(type, { bubbles: true }), { pointerType: 'touch' })
+    secondTableElement.dispatchEvent(touchEvent('pointerdown'))
+    window.dispatchEvent(touchEvent('pointerup'))
+
+    await update(() => {
+      $getTables()[1].getFirstDescendant()!.selectStart()
+      editor!.dispatchCommand(SELECTION_CHANGE_COMMAND, undefined)
+    })
+
+    expect(onError).not.toHaveBeenCalled()
+    editor!.read(() => {
+      const selection = $getSelection()
+      assertCondition($isRangeSelection(selection), 'selection is a range selection')
+      expect(secondTableElement.contains(editor!.getElementByKey(selection.anchor.key))).toBe(true)
+    })
   })
 
   describe('should normalize tables with missing cells or rows', () => {

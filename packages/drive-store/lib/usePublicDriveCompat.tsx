@@ -4,17 +4,19 @@ import type { ReactNode } from 'react';
 import type { ResumedSessionResult } from '@proton/shared/lib/authentication/persistedSessionHelper';
 import type { SHARE_URL_PERMISSIONS } from '@proton/shared/lib/drive/permissions';
 import { LinkType } from '@proton/shared/lib/interfaces/drive/link';
+import type { HandshakeInfoVendorType } from '@proton/shared/lib/interfaces/drive/sharing';
 
-import { useGetPublicKeysForEmail, usePublicActions } from '../store';
+import { usePublicActions } from '../store/_actions/usePublicActions';
 import { useDriveDocsPublicSharingFF } from '../store/_documents/useDriveDocsPublicSharingFF';
 import type { DocumentType } from '../store/_documents/useOpenDocument';
 import { useOpenDocument } from '../store/_documents/useOpenDocument';
-import { useAbortSignal } from '../store/_views/utils';
+import { useGetPublicKeysForEmail } from '../store/_user/useGetPublicKeysForEmail';
+import useAbortSignal from '../store/_views/utils/useAbortSignal';
 import type { NodeMeta, PublicNodeMeta } from './NodeMeta';
-import type { PublicDocumentKeys } from './_documents';
-import { usePublicNode } from './_nodes';
+import type { PublicDocumentKeys } from './_documents/DocumentKeys';
 import type { DecryptedNode } from './_nodes/interface';
-import { usePublicDocsToken } from './_shares';
+import { usePublicNode } from './_nodes/usePublicNode';
+import { usePublicDocsToken } from './_shares/usePublicDocsToken';
 
 export interface PublicDriveCompat {
     /**
@@ -56,6 +58,11 @@ export interface PublicDriveCompat {
      * Submits the custom password.
      */
     submitPassword: (customPassword: string) => Promise<void>;
+
+    /**
+     * The type of the shared item, known from the handshake before any password is entered.
+     */
+    vendorType: HandshakeInfoVendorType | undefined;
 
     /**
      * Whether or not the interface is ready to receive calls.
@@ -122,6 +129,7 @@ const usePublicDriveCompatValue = (session?: ResumedSessionResult): PublicDriveC
         isWaitingForPasswordFromDriveWindow,
         isPasswordNeeded,
         submitPassword,
+        vendorType,
     } = usePublicDocsToken(session);
 
     const {
@@ -173,6 +181,7 @@ const usePublicDriveCompatValue = (session?: ResumedSessionResult): PublicDriveC
         isWaitingForPasswordFromDriveWindow,
         isPasswordNeeded,
         submitPassword,
+        vendorType,
         token,
         urlPassword,
         isSharedUrlAFolder: sharedUrlInfo?.linkType === LinkType.FOLDER,

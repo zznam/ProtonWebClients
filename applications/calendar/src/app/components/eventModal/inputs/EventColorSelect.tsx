@@ -2,20 +2,20 @@ import { useMemo } from 'react';
 
 import { c } from 'ttag';
 
-import { useWelcomeFlags } from '@proton/account';
 import { useUser } from '@proton/account/user/hooks';
-import Badge from '@proton/components/components/badge/Badge';
+import { useWelcomeFlags } from '@proton/account/welcomeFlags';
+import { Badge } from '@proton/components/components/badge/Badge';
 import ColorPicker from '@proton/components/components/input/ColorPicker';
 import useModalState from '@proton/components/components/modalTwo/useModalState';
 import Spotlight from '@proton/components/components/spotlight/Spotlight';
 import useSpotlightShow from '@proton/components/components/spotlight/useSpotlightShow';
 import UpsellModal from '@proton/components/components/upsell/UpsellModal/UpsellModal';
 import useSpotlightOnFeature from '@proton/components/hooks/useSpotlightOnFeature';
-import { FeatureCode } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
 import { APP_UPSELL_REF_PATH, CALENDAR_UPSELL_PATHS, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
 import { getIsIframe } from '@proton/shared/lib/helpers/browser';
-import { getUpsellRef } from '@proton/shared/lib/helpers/upsell';
-import type { EventModel } from '@proton/shared/lib/interfaces/calendar';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
+import type { EventModel } from '@proton/shared/lib/interfaces/calendar/Event';
 import paintImg from '@proton/styles/assets/img/illustrations/new-upsells-img/paint.svg';
 
 interface Props {

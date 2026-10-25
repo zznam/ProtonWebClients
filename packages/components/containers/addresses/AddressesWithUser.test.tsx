@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, within } from '@testing-library/react';
 
 import { useAddressesKeys } from '@proton/account/addressKeys/hooks';
 import { orderAddresses } from '@proton/account/addresses/actions';
@@ -8,10 +8,11 @@ import { useAddresses } from '@proton/account/addresses/hooks';
 import { useOrganizationKey } from '@proton/account/organizationKey/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { mockUseFeatureBarrel } from '@proton/features/testing/mockUseFeatureBarrel';
+import { mockUseFeature } from '@proton/features/testing/mockUseFeature';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
-import { ADDRESS_FLAGS, ADDRESS_TYPE } from '@proton/shared/lib/constants';
-import type { Address, UserModel } from '@proton/shared/lib/interfaces';
+import { ADDRESS_FLAGS, ADDRESS_STATUS, ADDRESS_TYPE } from '@proton/shared/lib/constants';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { useFlag } from '@proton/unleash/useFlag';
 
 import { SortableList } from '../../components/dnd/SortableList';
@@ -39,7 +40,7 @@ const mockedOrderAddresses = orderAddresses as jest.MockedFunction<typeof orderA
 jest.mock('@proton/redux-shared-store/sharedProvider');
 const mockedUseDispatch = useDispatch as jest.MockedFunction<typeof useDispatch>;
 
-jest.mock('@proton/shared/lib/helpers/upsell.ts', () => ({ __esModule: true, getUpsellRef: () => '' }));
+jest.mock('@proton/shared/lib/helpers/ref', () => ({ __esModule: true, getUpsellRef: () => '' }));
 
 jest.mock('../../components/dnd/SortableList');
 const ActualSortableList = jest.requireActual('../../components/dnd/SortableList').SortableList;
@@ -134,7 +135,7 @@ describe('addresses with user', () => {
         } as any,
         handleSetAddressFlags: async () => {},
     });
-    mockUseFeatureBarrel({ feature: { Value: true } as any });
+    mockUseFeature({ feature: { Value: true } as any });
 
     const getFirstAddress = (container: HTMLElement) => {
         return container.querySelector('[data-testid^="users-and-addresses-table"]');
@@ -196,6 +197,28 @@ describe('addresses with user', () => {
                 text: 'A disabled address cannot be default',
             });
             expect(getFirstAddress(container)?.textContent).toBe('a@proton.me');
+        });
+    });
+
+    describe('sign in only label', () => {
+        afterEach(() => {
+            mockedUseAddresses.mockReturnValue([addresses, false]);
+        });
+
+        it('should only label enabled external addresses', () => {
+            const disabledExternal = {
+                ...addresses[1],
+                ID: '5',
+                Email: 'b@foo.bar',
+                Status: ADDRESS_STATUS.STATUS_DISABLED,
+            };
+            mockedUseAddresses.mockReturnValue([[...addresses, disabledExternal], false]);
+
+            const { getByText } = render(<AddressesWithUser user={user} allowAddressDeletion={false} />);
+
+            const getLabel = (email: string) => within(getByText(email).closest('button')!).queryByText('Sign in only');
+            expect(getLabel('a@foo.bar')).not.toBeNull();
+            expect(getLabel('b@foo.bar')).toBeNull();
         });
     });
 });

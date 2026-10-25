@@ -1,5 +1,13 @@
+import { c } from 'ttag';
+
 import { formatRequestedModel, resolveChatModel } from '@proton/lumo-api-client/core/chat-completions';
 import { LumoApiClient } from '@proton/lumo-api-client/core/client';
+import {
+    ContextLengthExceededError,
+    getContextLengthExceededUpstreamMessage,
+    isContextLengthExceededApiError,
+    isContextLengthExceededError,
+} from '@proton/lumo-api-client/core/context-length';
 import { getDesktopLumoApiClientConfig } from '@proton/lumo-api-client/core/desktop-tools';
 import { getTerminalTypeFromApiError } from '@proton/lumo-api-client/core/generation-terminal';
 import type {
@@ -11,7 +19,7 @@ import type {
 } from '@proton/lumo-api-client/core/types';
 import { postProcessTitle } from '@proton/lumo-api-client/utils';
 import { HTTP_ERROR_CODES } from '@proton/shared/lib/errors';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 import { selectAttachmentsBySpaceId } from '../redux/selectors';
 import { addAttachment, pushAttachmentRequest } from '../redux/slices/core/attachments';
@@ -34,16 +42,11 @@ import {
 } from '../redux/slices/core/messages';
 import type { LumoDispatch, LumoState } from '../redux/store';
 import { attachmentDataCache } from '../services/attachmentDataCache';
-import {
-    ContextLengthExceededError,
-    getContextLengthExceededUpstreamMessage,
-    isContextLengthExceededApiError,
-    isContextLengthExceededError,
-} from '../services/errors/contextLengthError';
 import { recordLastRequest } from '../services/feedback/lastRequestStore';
 import { applyUsageFromStreamMessage } from '../services/usageLimitsStore';
 import { ConversationStatus, Role } from '../types';
 import { CONTEXT_LENGTH_EXCEEDED_CODE } from '../types-api';
+import { getLumoFeatureFlagsForChatCompletions } from '../util/unleashFeatureFlagsForObservability';
 import { createImageAttachment, generateImageMarkdown } from './imageAttachment';
 
 export const getTerminalTypeForApiError = (error: unknown) => {
@@ -103,9 +106,12 @@ export function sendMessageWithRedux(
             ...config,
         });
 
+        const featureFlags = getLumoFeatureFlagsForChatCompletions();
+
         try {
             return await client.callAssistant(api, turns, {
                 ...assistantOptions,
+                featureFlags,
                 chunkCallback: async (message: GenerationResponseMessage) => {
                     switch (message.type) {
                         case 'tool-error':
@@ -149,7 +155,11 @@ export function sendMessageWithRedux(
                         case 'ingesting':
                             // When we start ingesting the message and we have a title, persist it
                             if (message.target !== 'message' && accumulatedTitle && conversationId && spaceId) {
-                                const processedTitle = postProcessTitle(accumulatedTitle);
+                                // translator: Default chat title when no usable title is available.
+                                const processedTitle = postProcessTitle(
+                                    accumulatedTitle,
+                                    c('collider_2025:Title').t`Untitled conversation`
+                                );
                                 dispatch(
                                     changeConversationTitle({
                                         id: conversationId,
@@ -180,7 +190,11 @@ export function sendMessageWithRedux(
                                             changeConversationTitle({
                                                 id: conversationId,
                                                 spaceId,
-                                                title: postProcessTitle(accumulatedTitle),
+                                                // translator: Default chat title when no usable title is available.
+                                                title: postProcessTitle(
+                                                    accumulatedTitle,
+                                                    c('collider_2025:Title').t`Untitled conversation`
+                                                ),
                                                 persist: false,
                                             })
                                         );
@@ -292,7 +306,8 @@ export function sendMessageWithRedux(
                                 message,
                                 assistantOptions.modelTier === 'lumo-lite' ||
                                     assistantOptions.modelTier === 'lumo-max' ||
-                                    assistantOptions.modelTier === 'apertus-15'
+                                    assistantOptions.modelTier === 'apertus-15' ||
+                                    assistantOptions.modelTier === 'lumo-preview'
                                     ? assistantOptions.modelTier
                                     : undefined
                             );
@@ -396,7 +411,11 @@ export function sendMessageWithRedux(
                         dispatch(pushMessageRequest({ id: messageId }));
 
                         // Handle final title processing
-                        const finalTitle = postProcessTitle(accumulatedTitle);
+                        // translator: Default chat title when no usable title is available.
+                        const finalTitle = postProcessTitle(
+                            accumulatedTitle,
+                            c('collider_2025:Title').t`Untitled conversation`
+                        );
                         if (accumulatedTitle) {
                             dispatch(
                                 changeConversationTitle({

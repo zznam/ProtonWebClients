@@ -130,9 +130,6 @@
       "Done": [
         "完成"
       ],
-      "Downgrade": [
-        "降级"
-      ],
       "Download ${ DRIVE_APP_NAME } apps": [
         "下载 ${ DRIVE_APP_NAME } 应用"
       ],
@@ -232,6 +229,9 @@
       "More benefits": [
         "更多福利"
       ],
+      "More info": [
+        "更多信息"
+      ],
       "More info: ${ safeTitle }": [
         "更多信息：${ safeTitle }"
       ],
@@ -285,9 +285,6 @@
       ],
       "Remove": [
         "移除"
-      ],
-      "Remove bonuses": [
-        "放弃特权"
       ],
       "Remove gift code": [
         "移除礼品码"
@@ -372,6 +369,9 @@
       ],
       "Switch or add account": [
         "切换或添加账户"
+      ],
+      "Switch to ${ planName }": [
+        "切换至 ${ planName }"
       ],
       "Take a tour": [
         "开始导览"
@@ -500,6 +500,12 @@
       ],
       "Domains": [
         "域名"
+      ],
+      "Managed Service Provider": [
+        "托管服务提供商"
+      ],
+      "Organizations with the Managed Service Provider addon can create and manage subsidiary organizations.": [
+        "包含托管服务提供商附加组件的组织可以创建和管理附属组织。"
       ],
       "Servers": [
         "服务器"
@@ -890,8 +896,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } 桌面应用"
+      "${ appName } Desktop application": [
+        "${ appName } 桌面应用"
       ]
     },
     "Bug category": {
@@ -1130,9 +1136,6 @@
       ],
       "Basic chat history": [
         "基础聊天记录"
-      ],
-      "Built and based in Europe": [
-        "在欧洲构建并运营"
       ],
       "Compliance with data protection regulations": [
         "符合数据保护法规要求"
@@ -2356,6 +2359,9 @@
       "Incorrect backup password. Please try again.": [
         "备份密码不正确，请重试。"
       ],
+      "Incorrect password. Please try again.": [
+        "密码错误，请重试。"
+      ],
       "Incorrect second password. Please try again.": [
         "二级密码错误，请重试。"
       ],
@@ -2505,6 +2511,9 @@
       ],
       "Wrong billing address": [
         "错误的账单地址"
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "恢复短语错误，请重试或使用其他恢复方法。"
       ]
     },
     "Error message": {
@@ -2556,38 +2565,6 @@
       ],
       "We strongly recommend using the descriptor above instead, as it contains all necessary information to ensure correct address generation. xpub, ypub, and zpub are not part of standard BIPs and should only be used with caution.": [
         "我们强烈建议改用上述描述符，因为它包含了正确生成地址所需的所有必要信息。xpub、ypub 和 zpub 并非标准 BIP 的一部分，应谨慎使用。"
-      ]
-    },
-    "familyOffer_2023:Error": {
-      "Family group not recognized. Try again.": [
-        "无法识别家庭群组。请重试。"
-      ],
-      "Organization not recognized. Try again.": [
-        "无法识别机构，请重试。"
-      ]
-    },
-    "familyOffer_2023:Label": {
-      "Enter family group name to confirm": [
-        "输入家庭群组名称以确认"
-      ],
-      "Enter organization name to confirm": [
-        "请输入机构名称进行确认"
-      ]
-    },
-    "familyOffer_2023:Member downgrade modal": {
-      "This will permanently delete all sub-users, accounts, and data associated with your organization.": [
-        "这将永久删除与您的组织相关的所有子用户、账户和数据。"
-      ],
-      "This will remove all ${ BRAND_NAME } premium features for every family member.": [
-        "这将删除每个家庭成员所有的 ${ BRAND_NAME } 高级功能。"
-      ]
-    },
-    "familyOffer_2023:Title": {
-      "Delete family group?": [
-        "删除家庭群组？"
-      ],
-      "Delete organization?": [
-        "删除机构?"
       ]
     },
     "Feature": {
@@ -2797,14 +2774,11 @@
       "(${ serverPrice }/month)": [
         "(${ serverPrice }/月)"
       ],
-      "+${ bonusSpace } bonus storage": [
-        "+${ bonusSpace } 特权存储空间"
+      "1 device per user": [
+        "1 设备/用户"
       ],
-      "+${ organization.BonusVPN } connection for ${ VPN_APP_NAME } (allows you to connect more devices to VPN)": [
-        "+${ organization.BonusVPN } ${ VPN_APP_NAME } 连接数（允许您将更多设备连接至VPN）"
-      ],
-      "30-day money-back guarantee.": [
-        "30 天内可退款。"
+      "1 vault per user": [
+        "1 保险库/用户"
       ],
       "A phone number can only be used to verify one ${ BRAND_NAME } account": [
         "每个手机号只能用于验证一个 ${ BRAND_NAME } 账户"
@@ -2857,9 +2831,6 @@
       "Bitcoin": [
         "比特币"
       ],
-      "By downgrading to a Free plan, you will permanently lose these benefits, even if you upgrade again in the future.": [
-        "一旦降级为免费用户，无论今后是否再次付费升级，您都将永远失去这些特权。"
-      ],
       "Click \"Request new code\" to have a new verification code sent to ${ strong }. If this phone number is incorrect, click \"Edit\" to correct it.": [
         "点击“请求新验证码”将发送到 ${ strong }。如果此电话号码不正确，请点击“编辑”。"
       ],
@@ -2901,9 +2872,6 @@
       ],
       "Downgrade": [
         "降级"
-      ],
-      "Downgrading will terminate any connections to paid ${ VPN_APP_NAME } servers.": [
-        "降级将导致与 ${ VPN_APP_NAME } 服务器的所有连接中断。"
       ],
       "Download current logs": [
         "下载当前日志"
@@ -2974,15 +2942,6 @@
       "If you lost access to your authenticator app, you can use 1 of the 16 backup recovery codes provided when you set up two-factor authentication. ${ learnMoreLink }": [
         "如果您无法访问验证器应用，可以使用设置 2FA 时提供的 16 个备用恢复码之一。${ learnMoreLink }"
       ],
-      "If you proceed with the downgrade, you will lose access to ${ MAIL_APP_NAME } and ${ VPN_APP_NAME } paid features.": [
-        "降级账户后您将不能再使用 ${ MAIL_APP_NAME } 和 ${ VPN_APP_NAME } 的收费功能。"
-      ],
-      "If you proceed with the downgrade, you will lose access to ${ MAIL_APP_NAME } paid features, including additional storage and filters.": [
-        "降级账户后您将不能使用 ${ MAIL_APP_NAME } 的收费功能，包括额外的存储空间和筛选规则。"
-      ],
-      "If you proceed with the downgrade, you will lose access to ${ VPN_APP_NAME } paid features.": [
-        "降级账户后您将不能再使用 ${ VPN_APP_NAME } 的收费功能。"
-      ],
       "In the next step, you’ll be able to submit a deposit using a Bitcoin address.": [
         "在下一步中，您将能够使用比特币地址提交存款。"
       ],
@@ -3027,6 +2986,9 @@
       ],
       "No payment is required at this time.": [
         "目前不需要支付。"
+      ],
+      "No payment is required.": [
+        "无需付款！"
       ],
       "No results found": [
         "未找到结果"
@@ -3087,9 +3049,6 @@
       ],
       "Setting up your new address…": [
         "正在设置您的新地址…"
-      ],
-      "Since you're a loyal user, your account has additional features enabled.": [
-        "作为 Proton 忠实用户，您拥有以下特权。"
       ],
       "Start sharing it with contacts and use it for online services.": [
         "开始与联系人分享，并将其用于在线服务。"
@@ -3172,6 +3131,9 @@
       "We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.": [
         "我们将在新标签页中为您打开 PayPal 完成支付，如果您使用了弹窗屏蔽插件，请将其关闭后再继续。"
       ],
+      "We'll get back to you shortly.": [
+        "我们会尽快回复您。"
+      ],
       "We'll send a new verification code to ${ strong }": [
         "我们将向 ${ strong } 发送新的验证码"
       ],
@@ -3219,9 +3181,6 @@
       ],
       "You may be redirected to your bank’s website.": [
         "您可能将转至银行网站。"
-      ],
-      "You must disable or remove any additional ${ MAIL_APP_NAME } users, addresses, and custom domains before you can downgrade.": [
-        "降级前需要停用或移除所有额外的 ${ MAIL_APP_NAME } 用户、地址和自有域名。"
       ],
       "You will lose access to ${ planTitle } features on this date.": [
         "您将在该日期失去对 ${ planTitle } 功能的访问权限。"
@@ -3471,6 +3430,9 @@
       "Phone number": [
         "电话号码"
       ],
+      "Please share any feedback to help us improve.": [
+        "请分享任何反馈意见，以帮助我们改进工作。"
+      ],
       "Postal code": [
         "邮编"
       ],
@@ -3515,6 +3477,9 @@
       ],
       "What happened?": [
         "发生了什么？"
+      ],
+      "Why would you like to cancel?": [
+        "您为什么想要取消？"
       ],
       "Your password (admin)": [
         "您的密码（管理员）"
@@ -3770,31 +3735,11 @@
       ]
     },
     "new_plans: action": {
-      "Delete account": [
-        "删除账户"
-      ],
-      "Downgrade account": [
-        "降级账户"
-      ],
       "Get ${ BRAND_NAME } for free": [
         "免费获得 ${ BRAND_NAME }"
       ],
       "Get ${ planName }": [
         "开通 ${ planName }"
-      ],
-      "Keep ${ plan }": [
-        "保留 ${ plan }"
-      ],
-      "Keep account": [
-        "保留账户"
-      ],
-      "Switch plan": [
-        "切换套餐"
-      ]
-    },
-    "new_plans: Action": {
-      "Downgrade to ${ downgradedPlanName }": [
-        "降级至 ${ downgradedPlanName }"
       ]
     },
     "new_plans: feature": {
@@ -3924,9 +3869,6 @@
       "Auto-reply": [
         "自动回复"
       ],
-      "Autofill credit cards (coming soon)": [
-        "自动填写信用卡信息（即将推出）"
-      ],
       "Automatic email forwarding": [
         "自动转发邮件"
       ],
@@ -3953,9 +3895,6 @@
       ],
       "Custom and secure business email": [
         "定制和安全的商务电子邮件"
-      ],
-      "Custom domains for email aliases": [
-        "用于邮箱别名的自有域名"
       ],
       "Custom email domains": [
         "自有域名"
@@ -4014,9 +3953,6 @@
       "Free features from ${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }, ${ CALENDAR_SHORT_APP_NAME }, and ${ DRIVE_SHORT_APP_NAME }": [
         "${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }、 ${ CALENDAR_SHORT_APP_NAME }和 ${ DRIVE_SHORT_APP_NAME } 的免费功能"
       ],
-      "Free VPN on a single device": [
-        "单台设备免费 VPN"
-      ],
       "Fully refundable for 30 days": [
         "30 天内无理由全额退款"
       ],
@@ -4025,9 +3961,6 @@
       ],
       "Group management (coming soon)": [
         "群组管理（即将推出）"
-      ],
-      "High-speed VPN on ${ n } device": [
-        "${ n } 台设备可同时接入高速 VPN"
       ],
       "HTML signatures": [
         "HTML 落款"
@@ -4167,9 +4100,6 @@
       "Unlimited shared ${ PASS_SHORT_APP_NAME } vaults per user": [
         "每位用户可无限共享 ${ PASS_SHORT_APP_NAME } 保险库"
       ],
-      "Unlimited shared vaults with access permissions": [
-        "具有访问权限的无限制共享保险库"
-      ],
       "Unlimited vault sharing": [
         "无限制共享保险库"
       ],
@@ -4269,18 +4199,6 @@
       "For next-level password management and identity protection.": [
         "体验更高等级的密码管理与身份保护。"
       ],
-      "If you delete your account, you lose all ${ visionary } plan benefits and it won’t be available if you create a new account.": [
-        "删除您的账户后，您将失去所有${ visionary } 套餐福利，如果您创建新账户，则无法享受这些福利。"
-      ],
-      "If you downgrade your account, you lose all ${ visionary } plan benefits and it won’t be available if you try to subscribe again.": [
-        "降级您的账户后，您将失去所有${ visionary } 套餐福利，如果您再次尝试订阅，则无法享受这些福利。"
-      ],
-      "If you switch to a different plan, you lose all ${ visionary } plan benefits and won’t be able to switch back to ${ visionary }.": [
-        "如果您切换到其他套餐，您将失去${ visionary } 套餐的所有福利，并且无法切换回${ visionary }。"
-      ],
-      "Our ${ visionary } plan is no longer available to new subscribers as it is a special plan for original ${ BRAND_NAME } users with special features and benefits.": [
-        "我们的 ${ visionary } 套餐已不再适用于新订阅者，因为它是针对原始 ${ BRAND_NAME } 用户的特殊套餐，具有特殊功能和优势。"
-      ],
       "Pay once, secure your passwords and identity forever.": [
         "仅需一次支付，即可永久保护您的密码和身份。"
       ],
@@ -4310,29 +4228,14 @@
       ],
       "Unlimited privacy and more storage for up to 2 people.": [
         "无限的私密性和更多的存储空间，最多可容纳 2 人。"
-      ],
-      "You’re enjoying a promotional price on your current plan. If you delete your account, you will lose your promotional price and it won’t be available if you create a new account.": [
-        "您当前套餐享受优惠价格。如果删除账户，您将失去该优惠价格，且创建新账户时无法重新获得。"
-      ],
-      "You’re enjoying a promotional price on your current plan. If you downgrade your account, you will lose your promotional price and it won’t be available if you try to subscribe again.": [
-        "您当前套餐享受优惠价格。如果降级账户，您将失去该优惠价格，且再次订阅时无法重新获得。"
       ]
     },
     "new_plans: title": {
-      "Delete account?": [
-        "删除账户？"
-      ],
-      "Downgrade account?": [
-        "降级账户？"
-      ],
       "Review subscription": [
         "查看订阅"
       ],
       "Review subscription and pay": [
         "确认订单并支付"
-      ],
-      "Switch plans?": [
-        "切换套餐？"
       ]
     },
     "new_plans: tooltip": {
@@ -4453,9 +4356,6 @@
       "Our servers’ hard disks are fully encrypted with multiple password layers so your data is protected even if our hardware is compromised": [
         "我们的服务器硬盘均已使用多层密码全盘加密，即使硬件遭到掠夺，数据也不会泄露"
       ],
-      "Password management and identity protection": [
-        "密码管理和身份保护"
-      ],
       "Personalize your email signature with logos, images, social media icons, links to your contact details, and more": [
         "在邮件落款中加入图标、图像、链接、社交网络标识等个性化元素"
       ],
@@ -4557,12 +4457,6 @@
       "${ n } country": [
         "${ n } 个国家/地区"
       ],
-      "Access advanced VPN features": [
-        "解锁高级 VPN 功能"
-      ],
-      "Add more personalization with 15 email addresses and support for 3 custom email domains": [
-        "15 个邮箱地址和 3 个自有域名供您选择"
-      ],
       "AES 256-bit VPN encryption": [
         "AES 256 位 VPN 加密"
       ],
@@ -4572,9 +4466,6 @@
       "Boost your storage space to ${ bundleStorage } per user": [
         "每位用户存储空间可升至 ${ bundleStorage }"
       ],
-      "Boost your storage space to ${ bundleStorage } total": [
-        "总存储空间升至 ${ bundleStorage }"
-      ],
       "Browser extension": [
         "浏览器扩展"
       ],
@@ -4583,12 +4474,6 @@
       ],
       "Central control panel": [
         "中央控制面板"
-      ],
-      "Create up to ${ n } calendar": [
-        "最多可创建 ${ n } 份日历"
-      ],
-      "Dedicated Account manager": [
-        "专职客户经理"
       ],
       "Dedicated server locations in ${ numberOfCountries }+ countries": [
         "${ numberOfCountries }+ 个国家的专用服务器地址"
@@ -4666,9 +4551,6 @@
       ],
       "Secure vault, item and link sharing": [
         "安全保险库、项目和链接共享"
-      ],
-      "Unlimited logins, notes, credit cards and more": [
-        "无限制登录、备注、信用卡等功能"
       ]
     },
     "pass_signup_2023: Title": {
@@ -4725,6 +4607,11 @@
         "您需要访问组织密钥才能执行此操作。"
       ]
     },
+    "Payment Method": {
+      "Bank Account": [
+        "银行账户"
+      ]
+    },
     "Payment method option": {
       "Apple Pay": [
         "Apple Pay"
@@ -4754,6 +4641,12 @@
       "${ formattedPrice } (excl. tax)": [
         "${ formattedPrice } (不含税)"
       ],
+      "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } can’t be combined with ${ PLAN_NAMES[PLANS.PASS] }.": [
+        "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } 不能与 ${ PLAN_NAMES[PLANS.PASS] } 组合使用。"
+      ],
+      "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } is only available on business plans.": [
+        "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } 仅适用于商业套餐。"
+      ],
       "${ rate }% tax: ${ taxAmountElement }": [
         "${ rate }% 税费：${ taxAmountElement }"
       ],
@@ -4763,8 +4656,17 @@
       "Amount due after trial on ${ formattedDate }": [
         "试用期结束后于 ${ formattedDate } 应付金额"
       ],
+      "An organization is required for this plan.": [
+        "此套餐需要组织！"
+      ],
       "Billing Country": [
         "计费国家/地区"
+      ],
+      "Buying credits requires a separate purchase.": [
+        "购买额度需要单独进行！"
+      ],
+      "By switching, you agree to our ${ termsLink }.": [
+        "切换即表示您同意我们的${ termsLink }。"
       ],
       "Card number": [
         "卡号"
@@ -4805,20 +4707,38 @@
       "More plans are available in other currencies": [
         "更多计划以及其他货币提供"
       ],
+      "Only one ${ PLAN_NAMES[PLANS.PASS_LIFETIME] } can be purchased.": [
+        "仅可购买一个 ${ PLAN_NAMES[PLANS.PASS_LIFETIME] }。"
+      ],
       "Pay with ${ IDEAL_WERO_BRAND_NAME }": [
         "使用 ${ IDEAL_WERO_BRAND_NAME } 付款"
       ],
       "Payment method required for the subscription to be activated after the trial ends.": [
         "您需要提供付款方式，以便试用期结束后激活订阅。"
       ],
+      "Plan switch is incompatible for the following reasons:": [
+        "套餐切换不兼容，原因如下："
+      ],
+      "Please close extra wallet accounts before changing your plan.": [
+        "请在更改套餐前关闭多余的钱包账户。"
+      ],
+      "Please close extra wallets before changing your plan.": [
+        "请在更改套餐前关闭多余的钱包。"
+      ],
       "Please reactivate your subscription first to decrease the number of add-ons.": [
         "请先重新激活您的订阅以减少附加功能。"
+      ],
+      "Proton Meet seats must match the number of members.": [
+        "Proton Meet 席位数量必须与成员数量匹配。"
       ],
       "Renewal pricing subject to change according to ${ termsAndConditionsLink }.": [
         "续费价格会根据${ termsAndConditionsLink }进行调整。"
       ],
       "Renews at ${ renewPriceStr }, cancel anytime.": [
         "续费价格是${ renewPriceStr }，可随时取消。"
+      ],
+      "Scribe seats can’t exceed the number of members.": [
+        "Scribe 席位数量不能超过成员数量。"
       ],
       "Tax ${ rate }%": [
         "税费 ${ rate }%"
@@ -4831,6 +4751,18 @@
       ],
       "The discount is valid for ${ renewalsWithCoupon } renewal.": [
         "该折扣适用于 ${ renewalsWithCoupon } 次续订"
+      ],
+      "The selected plan doesn’t offer enough addresses for your account.": [
+        "所选套餐未为您的账户提供足够的地址。"
+      ],
+      "The selected plan doesn’t offer enough domains for your account.": [
+        "所选套餐未为您的账户提供足够的域名。"
+      ],
+      "The selected plan doesn’t offer enough members for your account.": [
+        "所选套餐未为您的账户提供足够的成员名额。"
+      ],
+      "The selected plan doesn’t offer enough storage for your account.": [
+        "所选套餐未为您的账户提供足够的存储空间。"
       ],
       "The specially discounted price is valid for ${ couponRedemptions } month. Then it will automatically be renewed at ${ renewPriceStr } for 1 month. You can cancel at any time.": [
         "特惠价格在 ${ couponRedemptions } 个月内有效，之后将以每月 ${ renewPriceStr } 续订，您可以随时取消。"
@@ -4856,14 +4788,41 @@
       "This action expands the existing subscription. You will be charged only for the new add-ons and the remaining time of the current billing cycle. The renewal date of your subscription will not be changed.": [
         "此操作将扩展您现有的订阅。您只需支付新增附加项的费用以及当前计费周期剩余时间的费用。您的订阅续订日期将不会改变。"
       ],
+      "This dedicated server is assigned to a gateway and can’t be changed.": [
+        "此专用服务器已分配给网关，无法更改。"
+      ],
       "This offer is not available with your current plan.": [
         "此优惠不适用于您当前的套餐"
       ],
       "This payment method will become your new default for all future renewals.": [
         "此付款方式将成为您未来所有续订的新默认方式。"
       ],
+      "This plan doesn’t support the managed features on your account.": [
+        "此套餐不支持您账户上的托管功能。"
+      ],
+      "This plan doesn’t support the members on your account.": [
+        "此套餐不支持您账户中的成员。"
+      ],
+      "This subscription can’t be completed right now. Please try again.": [
+        "当前无法完成此订阅，请重试。"
+      ],
       "Timeout exceeded": [
         "超时"
+      ],
+      "Trial plans don’t support ${ LUMO_SHORT_APP_NAME } seats.": [
+        "试用套餐不支持 ${ LUMO_SHORT_APP_NAME } 席位。"
+      ],
+      "Trial plans don’t support custom domains.": [
+        "试用套餐不支持自定义域名。"
+      ],
+      "Trial plans don’t support dedicated IPs.": [
+        "试用套餐不支持专用 IP。"
+      ],
+      "Trial plans don’t support Scribe seats.": [
+        "试用套餐不支持 Scribe 席位。"
+      ],
+      "Trial plans don’t support this many members.": [
+        "试用套餐不支持如此多的成员。"
       ],
       "VAT number": [
         "增值税号"
@@ -4876,6 +4835,9 @@
       ],
       "You already have a subscription to this plan. You can change your subscription on ${ subscriptionPlatform }.": [
         "您已订阅此套餐，您可以在 ${ subscriptionPlatform } 上更改您的订阅。"
+      ],
+      "You already own ${ PLAN_NAMES[PLANS.PASS_LIFETIME] }.": [
+        "您已经拥有 ${ PLAN_NAMES[PLANS.PASS_LIFETIME] }。"
       ],
       "You will soon be redirected to PayPal to verify your payment.": [
         "您即将被重定向至 PayPal 以验证付款。"
@@ -4928,7 +4890,7 @@
       ]
     },
     "Payments.iDEAL": {
-      "By confirming, you authorise ${ BRAND_NAME } and Stripe, our payment service provider, our payment service provider, to collect future payments for your subscription from this bank account by SEPA Direct Debit, and your bank to debit those payments. Your first payment is made now by ${ IDEAL_WERO_BRAND_NAME }. Your plan auto renews, until you cancel; we'll notify you before each collection. For direct debit collections you can request a refund from your bank within 8 weeks of the debit date, under the terms of your agreement with your bank. This does not apply to the ${ IDEAL_WERO_BRAND_NAME } payment you're making now.": [
+      "By confirming, you authorise ${ BRAND_NAME } and Stripe, our payment service provider, to collect future payments for your subscription from this bank account by SEPA Direct Debit, and your bank to debit those payments. Your first payment is made now by ${ IDEAL_WERO_BRAND_NAME }. Your plan auto renews, until you cancel; we'll notify you before each collection. For direct debit collections you can request a refund from your bank within 8 weeks of the debit date, under the terms of your agreement with your bank. This does not apply to the ${ IDEAL_WERO_BRAND_NAME } payment you're making now.": [
         "确认即表示您授权 ${ BRAND_NAME } 及我们的支付服务商 Stripe 通过 SEPA 直接借记从该银行账户收取您订阅的未来款项，并授权您的银行执行这些扣款。您的首笔付款现通过 ${ IDEAL_WERO_BRAND_NAME } 完成。您的套餐将自动续订，直至您取消；我们会在每次扣款前通知您。对于直接借记扣款，根据您与银行达成的协议条款，您可在扣款日起 8 周内向银行申请退款。此规定不适用于您当前正在进行的 ${ IDEAL_WERO_BRAND_NAME } 付款。"
       ]
     },
@@ -5074,6 +5036,9 @@
       ],
       "Please select a country": [
         "请选择国家/地区"
+      ],
+      "Please select the main reason": [
+        "请选择主要原因"
       ],
       "Postal code": [
         "邮政编码"
@@ -5387,9 +5352,6 @@
       "Storage used": [
         "存储空间已使用"
       ],
-      "We’ll add the credits for the remaining time to your ${ BRAND_NAME } Account.": [
-        "我们会将剩余时间的点数计入您的 ${ BRAND_NAME } 账户。"
-      ],
       "You still have **${ daysRemaining }** day left on your **${ currentPlanName }** plan.": [
         "您的 **${ currentPlanName }** 账户等级还有 **${ daysRemaining }** 天的有效期。"
       ],
@@ -5427,9 +5389,6 @@
       ],
       "${ n } VPN connection": [
         "${ n } 台设备可同时接入 VPN"
-      ],
-      "${ n } VPN connection per user": [
-        "每位用户可通过 ${ n } 台设备同时接入 VPN"
       ],
       "VPN connection for ${ n } device per user": [
         "每位用户 ${ n } 个设备的 VPN 连接"
@@ -5554,9 +5513,6 @@
       ],
       "You have successfully canceled your subscription.": [
         "您已成功取消订阅"
-      ],
-      "You have successfully unsubscribed": [
-        "您已退订成功"
       ]
     },
     "Suffix": {
@@ -5661,6 +5617,9 @@
       "Billing cycle": [
         "计费周期"
       ],
+      "Black Friday": [
+        "黑色星期五"
+      ],
       "Cancel ${ MAIL_SHORT_APP_NAME } subscription": [
         "取消 ${ MAIL_SHORT_APP_NAME } 订阅"
       ],
@@ -5673,12 +5632,6 @@
       "Collaborate on documents": [
         "协作处理文件"
       ],
-      "Confirm downgrade": [
-        "确认降级"
-      ],
-      "Confirm loss of ${ BRAND_NAME } bonuses": [
-        "确定放弃 ${ BRAND_NAME } 特权"
-      ],
       "Connect apps and devices": [
         "连接应用和设备"
       ],
@@ -5688,6 +5641,9 @@
       "Connect your custom domain": [
         "连接您的自定义域名"
       ],
+      "Contact us": [
+        "联系我们"
+      ],
       "Coupon": [
         "优惠券"
       ],
@@ -5696,9 +5652,6 @@
       ],
       "Downgrade account": [
         "降级账户"
-      ],
-      "Downgrade to ${ downgradedPlanName }?": [
-        "降级至 ${ downgradedPlanName }?"
       ],
       "Download ${ DRIVE_APP_NAME } apps": [
         "下载 ${ DRIVE_APP_NAME } 应用"
@@ -5769,14 +5722,14 @@
       "Request new code": [
         "请求新验证码"
       ],
+      "Request sent": [
+        "请求已发送"
+      ],
       "Reverse charge not supported": [
         "不支持反向收费"
       ],
       "Select a plan": [
         "选择账户等级"
-      ],
-      "September Sale": [
-        "九月特惠"
       ],
       "Set recovery methods": [
         "设置恢复方式"
@@ -5925,6 +5878,9 @@
       "Upgrade to a supported plan to use admin roles.": [
         "升级至受支持的套餐以使用管理员角色。"
       ],
+      "You can't change your own roles. Ask another admin to change them.": [
+        "您无法更改自己的角色，请联系其他管理员进行更改。"
+      ],
       "You'll be able to assign roles once the user has accepted the invitation.": [
         "用户接受邀请后，您即可为其分配角色。"
       ]
@@ -5935,6 +5891,20 @@
       ],
       "Try a shorter username (${ n } character max)": [
         "请缩短用户名（最长 ${ n } 个字符）"
+      ]
+    },
+    "VPN B2B cancellation reason": {
+      "I found another service that I like better": [
+        "不如别的产品好用"
+      ],
+      "It’s missing a key feature": [
+        "缺少一个关键功能"
+      ],
+      "It’s too expensive": [
+        "价格太贵"
+      ],
+      "Other": [
+        "其它"
       ]
     },
     "VPN Plan Feature": {

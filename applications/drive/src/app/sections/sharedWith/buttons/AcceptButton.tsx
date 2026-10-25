@@ -1,7 +1,7 @@
 import { c } from 'ttag';
 
-import { ToolbarButton } from '@proton/components';
-import type { NodeType } from '@proton/drive';
+import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton';
+import type { NodeType } from '@proton/drive/sdk';
 import { IcCheckmark } from '@proton/icons/icons/IcCheckmark';
 
 import { ContextMenuButton } from '../../../statelessComponents/ContextMenu';

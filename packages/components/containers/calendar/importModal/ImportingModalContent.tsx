@@ -17,17 +17,13 @@ import {
     splitHiddenErrors,
 } from '@proton/shared/lib/calendar/import/import';
 import { getVeventWithDefaultCalendarAlarms } from '@proton/shared/lib/calendar/mailIntegration/invite';
-import type {
-    EncryptedEvent,
-    ImportCalendarModel,
-    ImportedEvent,
-    VcalVeventComponent,
-} from '@proton/shared/lib/interfaces/calendar';
-import { IMPORT_STEPS } from '@proton/shared/lib/interfaces/calendar';
+import type { EncryptedEvent, ImportCalendarModel, ImportedEvent } from '@proton/shared/lib/interfaces/calendar/Import';
+import { IMPORT_STEPS } from '@proton/shared/lib/interfaces/calendar/Import';
+import type { VcalVeventComponent } from '@proton/shared/lib/interfaces/calendar/VcalModel';
 
 import DynamicProgress from '../../../components/progress/DynamicProgress';
 import useBeforeUnload from '../../../hooks/useBeforeUnload';
-import useGetCalendarInfo from '../../../hooks/useGetCalendarInfo';
+import { useGetCalendarInfo } from '../../../hooks/useGetCalendarInfo';
 
 const getEventsWithoutDefaultNotifications = (events: VcalVeventComponent[]) => {
     return events.map((eventComponent) => ({ eventComponent, hasDefaultNotifications: false }));

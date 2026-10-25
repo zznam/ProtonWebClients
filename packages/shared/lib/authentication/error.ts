@@ -38,6 +38,25 @@ export class InvalidCodeError extends Error {
     }
 }
 
+/**
+ * A wrong recovery phrase; callers let the user try again. Its message is the one the recovery phrase form shows when
+ * the words themselves are wrong (`useMnemonicInputValidation`), so the user reads the same either way. Keeps what
+ * refused the phrase as the cause.
+ */
+export class InvalidRecoveryPhraseError extends Error {
+    name = 'InvalidRecoveryPhraseError';
+
+    trace = false;
+
+    constructor(cause?: unknown) {
+        // Not the API's message ("Invalid recovery phrase. Please try again"), unlike other errors the API decides: the
+        // form refuses a phrase whose words are wrong with this one, and users can't tell which check refused theirs,
+        // so a wrong phrase reads the same whichever did
+        super(c('Error').t`Wrong recovery phrase. Try again or use another recovery method.`, { cause });
+        Object.setPrototypeOf(this, InvalidRecoveryPhraseError.prototype);
+    }
+}
+
 /** A wrong password for the keys (the second password or the SSO backup password); callers let the user try again. */
 export class PasswordError extends Error {
     name = 'PasswordError';
@@ -63,5 +82,13 @@ export class BackupPasswordError extends PasswordError {
     constructor() {
         super(c('Error').t`Incorrect backup password. Please try again.`);
         Object.setPrototypeOf(this, BackupPasswordError.prototype);
+    }
+}
+
+/** A wrong current password, on a member's first SSO sign-in after the organization converted them to SSO. */
+export class ConversionPasswordError extends PasswordError {
+    constructor() {
+        super(c('Error').t`Incorrect password. Please try again.`);
+        Object.setPrototypeOf(this, ConversionPasswordError.prototype);
     }
 }

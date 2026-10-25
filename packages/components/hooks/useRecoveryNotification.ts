@@ -1,8 +1,9 @@
 import { c } from 'ttag';
 
 import { selectRecoveryNotification } from '@proton/account/recovery/recoveryNotification';
-import { ThemeColor } from '@proton/colors';
-import { FeatureCode, useFeature } from '@proton/features';
+import { ThemeColor } from '@proton/colors/types';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 import { useSelector } from '@proton/redux-shared-store/sharedProvider';
 
 import useSecurityCenter from '../components/drawer/views/SecurityCenter/useSecurityCenter';

@@ -1,7 +1,8 @@
 import type { ComponentType, ReactNode } from 'react';
 
-import type { ToolName as ServerToolName } from '@proton/lumo-api-client';
-import type { ServerToolSource } from '@proton/lumo-ui';
+import type { ToolName as ServerToolName } from '@proton/lumo-api-client/core/types';
+import type { LumoClientType } from '@proton/lumo-api-client/types-api';
+import type { ServerToolSource } from '@proton/lumo-ui/ServerToolChip';
 import type { WelcomeSuggestionCard } from '@proton/lumo-ui/WelcomeSuggestions';
 import type { IconComponent } from '@proton/lumo-ui/types';
 
@@ -80,6 +81,8 @@ export enum LumoChainEnd {
     REPLACED = 'replaced',
     /** The conversation it belonged to went away: cleared, or the panel unmounted under it. */
     DISCARDED = 'discarded',
+    /** The backend refused the conversation because it no longer fits the model's context window. */
+    CONTEXT_LIMIT = 'context_limit',
 }
 
 export enum LumoConfirmAnswer {
@@ -102,10 +105,24 @@ export interface LumoAgentConfig {
     cardRenderers?: CardRenderers;
     /** A callback so rules can follow what is on screen. Called once per message sent. */
     productRules?: () => string;
+    /**
+     * The Lumo backend supplies this product's whole system prompt (chosen by {@link clientType}), so no system
+     * turn is sent: no protocol base, no {@link productRules}. Switches on standalone-prompt mode.
+     */
+    serverPrompt?: boolean;
+    /** Standalone-prompt mode only: prepended to each user message the model reads, so the turn carries the moment it was sent. */
+    turnContext?: () => string;
+    /** Forwarded to the transport as `clientType`. */
+    clientType?: LumoClientType;
     serverTools?: ServerToolName[];
     serverToolMeta?: Partial<Record<ServerToolName, ServerToolMeta>>;
     /** Empty-state cards. Omitted by a product that wants no empty state of its own. */
     suggestions?: WelcomeSuggestionCard[];
     /** Absent for a host that reports nothing; every call site is then a no-op. */
     telemetry?: LumoAgentTelemetry;
+    /**
+     * Show Lumo's context-limit toast instead of the inline error when the backend reports
+     * `context_length_exceeded`, and end the chain as {@link LumoChainEnd.CONTEXT_LIMIT}.
+     */
+    showContextLimitToast?: boolean;
 }

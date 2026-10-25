@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
-import type { Unwrap } from '@proton/shared/lib/interfaces';
+import type { Unwrap } from '@proton/shared/lib/interfaces/utils';
 import noop from '@proton/utils/noop';
 
 import BasePasswordStrengthIndicator from './BasePasswordStrengthIndicator';
 import type { PasswordPenalties, PasswordScore, PasswordStrengthIndicatorVariant } from './interface';
 
-export const loadWasm = () => {
+const loadWasm = () => {
     return import(/* webpackChunkName: "pass-rust-core/password" */ '@protontech/pass-rust-core/password');
 };
 
-export type PasswordWasm = Unwrap<ReturnType<typeof loadWasm>>;
+type PasswordWasm = Unwrap<ReturnType<typeof loadWasm>>;
 
 const context: {
     promise: Promise<boolean> | undefined;

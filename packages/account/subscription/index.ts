@@ -11,14 +11,14 @@ import { formatSubscription, getSubscription } from '@proton/payments/core/api/a
 import { FREE_SUBSCRIPTION } from '@proton/payments/core/constants';
 import type { FreeSubscription } from '@proton/payments/core/interface';
 import type { Subscription } from '@proton/payments/core/subscription/interface';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { previousSelector } from '@proton/redux-utilities/creator';
 import { getFetchedAt, getFetchedEphemeral } from '@proton/redux-utilities/fetchedAt';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import type { CacheType } from '@proton/redux-utilities/interface';
 import { cacheHelper, createPromiseStore } from '@proton/redux-utilities/promiseStore';
 import updateObject from '@proton/shared/lib/helpers/updateObject';
-import type { User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
 import { isAdmin, isPaid } from '@proton/shared/lib/user/helpers';
 
 import { serverEvent } from '../eventLoop';

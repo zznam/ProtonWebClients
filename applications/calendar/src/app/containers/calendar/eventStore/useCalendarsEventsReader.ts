@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { c } from 'ttag';
 
 import { useApi } from '@proton/app-context/useApi';
+import { useGetCalendarEventRaw } from '@proton/calendar/calendarEvent/useGetCalendarEventRaw';
 import { useContactEmailsCache } from '@proton/components/containers/contacts/ContactEmailsProvider';
-import useGetCalendarEventRaw from '@proton/components/hooks/useGetCalendarEventRaw';
 import useIsMounted from '@proton/hooks/useIsMounted';
 import { getEvent } from '@proton/shared/lib/api/calendars';
 import { getApiWithAbort } from '@proton/shared/lib/api/helpers/customConfig';
@@ -15,9 +15,10 @@ import { naiveGetIsDecryptionError } from '@proton/shared/lib/calendar/helper';
 import { pick } from '@proton/shared/lib/helpers/object';
 import { wait } from '@proton/shared/lib/helpers/promise';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
-import type { Api, RequireSome } from '@proton/shared/lib/interfaces';
-import type { CalendarEvent } from '@proton/shared/lib/interfaces/calendar';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { CalendarEvent } from '@proton/shared/lib/interfaces/calendar/Event';
 import type { GetCalendarEventRaw } from '@proton/shared/lib/interfaces/hooks/GetCalendarEventRaw';
+import type { RequireSome } from '@proton/shared/lib/interfaces/utils';
 
 import type { OpenedMailEvent } from '../../../hooks/useGetOpenedMailEvents';
 import getAllEventsByUID from '../getAllEventsByUID';

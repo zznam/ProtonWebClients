@@ -1,16 +1,14 @@
-import {
-    addressesThunk,
-    initEvent,
-    organizationThunk,
-    startLogoutListener,
-    userSettingsThunk,
-    userThunk,
-    welcomeFlagsActions,
-} from '@proton/account';
+import { addressesThunk } from '@proton/account/addresses';
 import * as bootstrap from '@proton/account/bootstrap';
 import { bootstrapEvent } from '@proton/account/bootstrap/action';
 import { serverEvent } from '@proton/account/eventLoop';
+import { initEvent } from '@proton/account/init';
+import { organizationThunk } from '@proton/account/organization';
 import { getDecryptedPersistedState } from '@proton/account/persist/helper';
+import { startLogoutListener } from '@proton/account/persist/listener';
+import { userThunk } from '@proton/account/user';
+import { userSettingsThunk } from '@proton/account/userSettings';
+import { welcomeFlagsActions } from '@proton/account/welcomeFlags';
 import { internalBookingThunk } from '@proton/calendar/bookings/store';
 import { calendarBootstrapThunk } from '@proton/calendar/calendarBootstrap';
 import { createCalendarModelEventManager } from '@proton/calendar/calendarModelEventManager';
@@ -18,7 +16,8 @@ import { calendarSettingsThunk } from '@proton/calendar/calendarUserSettings';
 import { calendarsThunk } from '@proton/calendar/calendars';
 import { holidaysDirectoryThunk } from '@proton/calendar/holidaysDirectory';
 import { setupGuestCrossStorage } from '@proton/cross-storage/account/guest';
-import { FeatureCode, fetchFeatures } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import { fetchFeatures } from '@proton/features/reducer';
 import createApi from '@proton/shared/lib/api/createApi';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { loadAllowedTimeZones } from '@proton/shared/lib/date/timezone';
@@ -27,8 +26,9 @@ import { getIsAuthorizedApp } from '@proton/shared/lib/drawer/helpers';
 import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
 import { initSafariFontFixClassnames } from '@proton/shared/lib/helpers/initSafariFontFixClassnames';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { appMode } from '@proton/shared/lib/webpack.constants';
+import { initTracker } from '@proton/telemetry-tracker/tracker';
 import { CommonFeatureFlag } from '@proton/unleash/Flags';
 import noop from '@proton/utils/noop';
 
@@ -53,6 +53,7 @@ export const bootstrapApp = async ({ config }: { config: ProtonConfig }) => {
     const silentApi = getSilentApi(api);
     const authentication = bootstrap.createAuthentication();
     bootstrap.init({ config, authentication, locales });
+    initTracker({ api: silentApi });
 
     setupGuestCrossStorage({ appMode, appName });
     initSafariFontFixClassnames();

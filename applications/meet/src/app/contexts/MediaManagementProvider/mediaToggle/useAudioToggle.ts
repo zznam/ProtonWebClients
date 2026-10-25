@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useLocalParticipant, useRoomContext } from '@livekit/components-react';
+import { logger } from '@protontech/logger';
 import type { LocalTrack } from 'livekit-client';
 import { Track } from 'livekit-client';
+import { c } from 'ttag';
 
+import { useNotifications } from '@proton/app-context/useNotifications';
 import { DEFAULT_DEVICE_ID } from '@proton/meet/constants';
 import { useMeetErrorReporting } from '@proton/meet/hooks/useMeetErrorReporting';
 import { useMeetSelector, useMeetStore } from '@proton/meet/store/hooks';
@@ -14,6 +17,8 @@ import {
     selectMicrophones,
     selectRealtimeDevices,
 } from '@proton/meet/store/slices/deviceManagementSlice/selectors';
+import { toToggleState } from '@proton/meet/telemetry/dimensions';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { isAudioSessionAvailable, setAudioSessionType } from '@proton/meet/utils/iosAudioSession';
 import { withTimeout } from '@proton/meet/utils/withTimeout';
 import { isSafari } from '@proton/shared/lib/helpers/browser';
@@ -40,8 +45,7 @@ const SAFARI_DEVICE_RELEASE_DELAY_MS = 300;
 const DEBUG_PREFIX = '[AudioToggle]';
 
 const debugLog = (message: string, data?: Record<string, unknown>) => {
-    // eslint-disable-next-line no-console
-    console.log(`${DEBUG_PREFIX} ${message}`, data ?? {});
+    logger.info(`${DEBUG_PREFIX} ${message}`, data ?? {});
 };
 
 const getErrorReason = (error: unknown) => {
@@ -58,8 +62,8 @@ const getErrorReason = (error: unknown) => {
  * means the browser's native noiseSuppression constraint is the fallback.
  *
  * Shared architecture:
- * - Processors run in the shared playback AudioContext; sample rate pinned models get a dedicated
- *   one, reused across device switches.
+ * - Processors run in the shared playback AudioContext; models pinned to a different sample rate get
+ *   a dedicated one, reused across device switches.
  * - A new processor is created per track (processors can't be reused across tracks because LiveKit
  *   calls processor.destroy() when a track is stopped).
  * - On device change, LiveKit internally calls processor.restart() on the existing track — we do NOT
@@ -68,6 +72,7 @@ const getErrorReason = (error: unknown) => {
  */
 export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudioContext: MeetAudioContext) => {
     const { reportMeetError: reportError } = useMeetErrorReporting();
+    const { createNotification } = useNotifications();
 
     const noiseCancellationModel = useNoiseCancellationModel();
     const isNoiseCancellationDisabledByDefault = useIsNoiseCancellationDisabledByDefault();
@@ -137,7 +142,8 @@ export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudio
     const getProcessorAudioContext = () => {
         const requiredSampleRate = noiseCancellationModel.audioContextSampleRate;
 
-        if (!requiredSampleRate) {
+        // DeepFilterNet's 48 kHz usually matches the playback context
+        if (!requiredSampleRate || meetAudioContext.audioContext.sampleRate === requiredSampleRate) {
             return meetAudioContext.audioContext;
         }
 
@@ -280,6 +286,24 @@ export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudio
         }
     };
 
+    const turnOffNoiseFilterForPerformance = useStableCallback(async (generation: number) => {
+        if (generation !== noiseFilterGeneration.current) {
+            debugLog('noiseFilter:disabled-for-performance-stale', { generation });
+            return;
+        }
+
+        debugLog('noiseFilter:disabled-for-performance', { model: noiseCancellationModel.id });
+        setNoiseFilter(false);
+        await detachNoiseFilter();
+
+        createNotification({
+            key: 'noise-cancellation-disabled-for-performance',
+            type: 'warning',
+            text: c('Info')
+                .t`Noise cancellation was turned off because your device is experiencing performance issues. You can turn it back on in audio settings.`,
+        });
+    });
+
     /**
      * Creates a new noise filter processor (Krisp or DTLN) and attaches it to the current audio track.
      * Guards against stale attach via generation counter — if abandonNoiseFilter() is called while
@@ -339,7 +363,11 @@ export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudio
             return;
         }
 
-        const processor = noiseCancellationModel.createProcessor();
+        const processor = noiseCancellationModel.createProcessor({
+            onDisabledForPerformance: () => {
+                void turnOffNoiseFilterForPerformance(gen);
+            },
+        });
 
         if (!processor) {
             debugLog('noiseFilter:attach-skip-no-processor', { model: noiseCancellationModel.id });
@@ -505,15 +533,17 @@ export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudio
             return false;
         }
 
-        toggleInProgress.current = true;
+        let failedStep: string | undefined;
 
         const runStep = async <T>(step: string, fn: () => Promise<T>): Promise<T> => {
             debugLog('step:start', { operationId, step });
             try {
                 const result = await fn();
+                failedStep = undefined;
                 debugLog('step:success', { operationId, step });
                 return result;
             } catch (error) {
+                failedStep = step;
                 debugLog('step:failed', { operationId, step, reason: getErrorReason(error) });
                 throw error;
             }
@@ -529,22 +559,26 @@ export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudio
             dtx: false,
         };
 
+        const audioPublication = getCurrentPublication();
+        const audioTrack = audioPublication?.audioTrack;
+        const captureTrack = audioTrack?.mediaStream?.getAudioTracks()[0];
+        const isTrackEnded = captureTrack?.readyState === 'ended';
+        const isDeviceChanging = currentDeviceId.current !== deviceId;
+        const isJustTogglingMute = !!audioTrack && !isDeviceChanging && !isTrackEnded;
+        const hasTrackProcessor = !!audioTrack?.getProcessor();
+
+        debugLog('toggle:strategy', {
+            operationId,
+            hasAudioTrack: !!audioTrack,
+            isTrackEnded,
+            isDeviceChanging,
+            isJustTogglingMute,
+            trackReadyState: audioTrack?.mediaStreamTrack?.readyState,
+        });
+
+        toggleInProgress.current = true;
+
         try {
-            const audioPublication = getCurrentPublication();
-            const audioTrack = audioPublication?.audioTrack;
-            const isTrackEnded = audioTrack?.mediaStreamTrack?.readyState === 'ended';
-            const isDeviceChanging = currentDeviceId.current !== deviceId;
-            const isJustTogglingMute = !!audioTrack && !isDeviceChanging && !isTrackEnded;
-
-            debugLog('toggle:strategy', {
-                operationId,
-                hasAudioTrack: !!audioTrack,
-                isTrackEnded,
-                isDeviceChanging,
-                isJustTogglingMute,
-                trackReadyState: audioTrack?.mediaStreamTrack?.readyState,
-            });
-
             if (isJustTogglingMute) {
                 if (isEnabled) {
                     await runStep('fast-path-unmute', () => withTimeout(audioTrack.unmute(), 'Unmute audio track'));
@@ -668,9 +702,10 @@ export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudio
                 debugLog('noiseFilter:skipped-for-recovery', { operationId });
             }
         } catch (error) {
-            reportError('Failed to toggle audio', error);
-            // eslint-disable-next-line no-console
-            console.error(error);
+            reportError('Failed to toggle audio', {
+                context: { error },
+                tags: { isEnabled, failedStep, isTrackEnded, hasTrackProcessor },
+            });
             debugLog('toggle:error', { operationId, reason: getErrorReason(error) });
         } finally {
             toggleInProgress.current = false;
@@ -730,8 +765,15 @@ export const useAudioToggle = (switchActiveDevice: SwitchActiveDevice, meetAudio
         const newValue = !noiseFilter;
         setNoiseFilter(newValue);
         persistNoiseFilter(newValue);
+        sendMeetActionsEvent(TelemetryMeetActionsEvents.noise_cancellation_toggled, {
+            state: toToggleState(newValue),
+            noiseCancellationModel: noiseCancellationModel.id,
+        });
 
-        if (isMicrophoneEnabled) {
+        // Muted mics still carry the processor, and unmuting only ever attaches one, never removes it.
+        const shouldDetachWhileMuted = !newValue && !noiseCancellationModel.isNative && !!noiseFilterProcessor.current;
+
+        if (isMicrophoneEnabled || shouldDetachWhileMuted) {
             try {
                 if (noiseCancellationModel.isNative) {
                     // Recreate the mic track with the native `noiseSuppression` constraint, since

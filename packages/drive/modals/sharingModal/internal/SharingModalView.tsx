@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { MemberRole, type ProtonDriveClient, type ShareNodeSettings, type ShareResult } from '@protontech/drive-sdk';
 import { c } from 'ttag';
@@ -7,28 +7,19 @@ import { c } from 'ttag';
 import { useAddresses } from '@proton/account/addresses/hooks';
 import { Button } from '@proton/atoms/Button/Button';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import {
-    ContactEmailsProvider,
-    FileIcon,
-    type ModalStateProps,
-    ModalTwo,
-    Spotlight,
-    useConfirmActionModal,
-} from '@proton/components';
+import { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
 import { ModalHeaderCloseButton } from '@proton/components/components/modalTwo/ModalHeader';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
+import ContactEmailsProvider from '@proton/components/containers/contacts/ContactEmailsProvider';
 import { useTheme } from '@proton/components/containers/themes/ThemeProvider';
+import { getFileIcon } from '@proton/file-icons/getFileIcon';
 import useLoading from '@proton/hooks/useLoading';
 import useToggle from '@proton/hooks/useToggle';
 import { IcCogWheel } from '@proton/icons/icons/IcCogWheel';
 import { IcLockFilled } from '@proton/icons/icons/IcLockFilled';
-import { getItem, removeItem, setItem } from '@proton/shared/lib/helpers/storage';
-import { useFlag } from '@proton/unleash/useFlag';
 
-import {
-    useFlagsDriveDirectSharing,
-    useFlagsDrivePublicSharing,
-    useFlagsDriveSharingAdminPermissions,
-} from '../../../modules/flags';
+import { useFlagsDriveDirectSharing, useFlagsDrivePublicSharing } from '../../../modules/flags';
 import ModalContentLoader from '../../modalUtils/ModalContentLoader';
 import { DirectSharingAutocomplete } from './DirectSharing/DirectSharingAutocomplete';
 import { DirectSharingFooter } from './DirectSharing/DirectSharingFooter';
@@ -86,8 +77,6 @@ export interface SharingModalViewProps extends ModalStateProps {
     };
 }
 
-const ADMIN_SPOTLIGHT_STORAGE_KEY = 'proton-drive-admin-spotlight';
-
 export const SharingModalView = ({
     onClose,
     onExit,
@@ -117,11 +106,8 @@ export const SharingModalView = ({
 
     const { isDirectSharingDisabled } = useFlagsDriveDirectSharing();
     const { isPublicEditModeEnabled } = useFlagsDrivePublicSharing();
-    const adminRoleEnabled = useFlagsDriveSharingAdminPermissions();
-    const isSharingAdminTooltipEnabled = useFlag('DriveWebSharingAdminTooltip');
 
     const [settingsModal, showSettingsModal] = useSharingSettingsModal();
-    const [showSpotlight, setShowSpotlight] = useState(false);
 
     const [confirmModal, showConfirmRemoveYourself] = useConfirmActionModal();
 
@@ -145,27 +131,12 @@ export const SharingModalView = ({
         () => !invitees.length || !!invitees.find((invitee) => invitee.isLoading || invitee.error),
         [invitees]
     );
-    const canChangePermissions = adminRoleEnabled && roleOnParentNode === MemberRole.Admin && !isPhotoOrAlbum;
+    const canChangePermissions = roleOnParentNode === MemberRole.Admin && !isPhotoOrAlbum;
 
     const isSettingsVisible =
         !isInvitationWorkflow && !publicLinkStateChanging && !publicLinkUpdating && isShared && canChangePermissions;
 
     const isClosedButtonDisabled = publicLinkBusy || isAdding;
-
-    useEffect(() => {
-        if (!isSharingAdminTooltipEnabled) {
-            // Cleanup storage when FF will be disabled
-            removeItem(ADMIN_SPOTLIGHT_STORAGE_KEY);
-            return;
-        }
-        if (getItem(ADMIN_SPOTLIGHT_STORAGE_KEY) === 'true' || !canChangePermissions || !isShared) {
-            return;
-        }
-        if (directMembers.some((member) => member.role === MemberRole.Admin)) {
-            setItem(ADMIN_SPOTLIGHT_STORAGE_KEY, 'true');
-            setShowSpotlight(true);
-        }
-    }, [directMembers, isSharingAdminTooltipEnabled, canChangePermissions, isShared]);
 
     const cleanFields = () => {
         setInviteMessage('');
@@ -277,38 +248,21 @@ export const SharingModalView = ({
             return <ModalContentLoader>{c('Info').t`Loading`}</ModalContentLoader>;
         }
 
+        const MediaTypeIcon = getFileIcon(mediaType ?? '');
+
         return (
             <ContactEmailsProvider>
                 <div className="flex items-center justify-space-between flex-nowrap border-bottom border-weak px-8 py-3 mb-5">
                     <div className="flex items-center flex-nowrap gap-2 m-0" data-testid="modal-two-header">
-                        <FileIcon mimeType={mediaType ?? ''} />
+                        <MediaTypeIcon className="shrink-0" />
                         <span className="modal-two-header-title h4 text-bold text-ellipsis">{c('Title')
                             .t`Share "${fileName}"`}</span>
                     </div>
 
                     <div className="grow-0 shrink-0">
-                        {isSettingsVisible &&
-                            (showSpotlight ? (
-                                <Spotlight
-                                    show={showSpotlight}
-                                    type="new"
-                                    onClose={() => setShowSpotlight(false)}
-                                    content={
-                                        <>
-                                            <p className="text-bold mt-0 mb-2">{c('Spotlight')
-                                                .t`Editor permissions`}</p>
-                                            <p className="m-0">{c('Spotlight')
-                                                .t`Editors can now manage sharing and invite others. You can turn it off anytime in Share settings.`}</p>
-                                        </>
-                                    }
-                                    originalPlacement="top-end"
-                                    isAboveModal
-                                >
-                                    {settingsButton}
-                                </Spotlight>
-                            ) : (
-                                <Tooltip title={c('Tooltip').t`Change shared item settings`}>{settingsButton}</Tooltip>
-                            ))}
+                        {isSettingsVisible && (
+                            <Tooltip title={c('Tooltip').t`Change shared item settings`}>{settingsButton}</Tooltip>
+                        )}
 
                         <ModalHeaderCloseButton buttonProps={{ disabled: isClosedButtonDisabled }} />
                     </div>

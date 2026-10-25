@@ -14,14 +14,11 @@ import noop from '@proton/utils/noop';
 import { UpsellRef } from '../../constants';
 import { fromFolderKey, getFolderKey } from '../../lib/items/item.utils';
 import type { VaultShareItem, WithItemCount } from '../../store/reducers';
-import {
-    selectFolders,
-    selectVaultLimits,
-    selectWritableSharedVaultsWithCount,
-    selectWritableVaultsWithCount,
-} from '../../store/selectors';
+import { selectFolders } from '../../store/selectors/folders';
+import { selectVaultLimits } from '../../store/selectors/limits';
 import { NOOP_LIST_SELECTOR } from '../../store/selectors/utils';
-import type { MaybeNull } from '../../types';
+import { selectWritableSharedVaultsWithCount, selectWritableVaultsWithCount } from '../../store/selectors/vaults';
+import type { MaybeNull } from '../../types/utils';
 import { PassExpandButton } from '../Folders/PassExpandButton';
 import { PassFolderIcon } from '../Folders/PassFolderIcon';
 import { useFoldersAccess } from '../Folders/useFoldersAccess';
@@ -100,7 +97,7 @@ export const VaultSelect: FC<VaultSelectProps> = ({
             <Panel
                 header={
                     <PanelHeader
-                        title={title && <h3>{title}</h3>}
+                        title={title && <h3 className="text-semibold">{title}</h3>}
                         actions={[
                             <Button
                                 key="close-modal-button"
@@ -158,7 +155,7 @@ export const VaultSelect: FC<VaultSelectProps> = ({
                                     icon={row.vault.content.display.icon}
                                 />
                                 <div className="flex flex-1 min-w-0 flex-column">
-                                    <span className="text-ellipsis inline-block max-w-full color-norm">
+                                    <span className="text-ellipsis inline-block max-w-full color-norm text-lg text-semibold">
                                         {row.vault.content.name}
                                     </span>
                                     <span className="block color-weak">{row.vault.count} items</span>
@@ -172,7 +169,9 @@ export const VaultSelect: FC<VaultSelectProps> = ({
                                 >
                                     {expandButton}
                                     <PassFolderIcon hasChildren={row.hasChildren} size={5} />
-                                    <span className="flex-1 min-w-0 text-ellipsis color-norm">{row.folder.name}</span>
+                                    <span className="flex-1 min-w-0 text-ellipsis color-norm text-semibold">
+                                        {row.folder.name}
+                                    </span>
                                 </div>
                             </RadioLabelledButton>
                         );

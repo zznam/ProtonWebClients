@@ -1,4 +1,4 @@
-import type { PrimaryAddressKeys } from '../../DriveSDK/getDocumentKeys'
+import type { DocLoaderInitializeOptions, DocLoaderInterface } from './DocLoaderInterface'
 import { AuthenticatedDocController } from '../../AuthenticatedDocController/AuthenticatedDocController'
 import { CommentController } from '../Comments/CommentController'
 import type { DocumentState } from '../../State/DocumentState'
@@ -6,15 +6,14 @@ import { EditorController } from '../../EditorController/EditorController'
 import { EditorOrchestrator } from '../Orchestrator/EditorOrchestrator'
 import { metricsBucketNumberForUpdateCount } from '../../Util/bucketNumberForUpdateCount'
 import { RealtimeController } from '../../RealtimeController/RealtimeController'
-import metrics from '@proton/metrics'
+import metrics from '@proton/metrics/metricsInstance'
 import type { AuthenticatedDocControllerInterface } from '../../AuthenticatedDocController/AuthenticatedDocControllerInterface'
 import type { CreateComment } from '../../UseCase/CreateComment'
 import type { CreateNewDocument } from '../../UseCase/CreateNewDocument'
 import type { CreateThread } from '../../UseCase/CreateThread'
-import type { DocLoaderInterface } from './DocLoaderInterface'
 import type { DocLoaderStatusObserver } from './StatusObserver'
 import type { DocsApi } from '../../Api/DocsApi'
-import type { DriveCompat } from '@proton/drive-store'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
 import type { DuplicateDocument } from '../../UseCase/DuplicateDocument'
 import type { EditorControllerInterface } from '../../EditorController/EditorController'
 import type { EditorOrchestratorInterface } from '../Orchestrator/EditorOrchestratorInterface'
@@ -22,13 +21,10 @@ import type { EncryptComment } from '../../UseCase/EncryptComment'
 import type { GetDocumentMeta } from '../../UseCase/GetDocumentMeta'
 import type { GetNode } from './../../UseCase/GetNode'
 import type { HandleRealtimeCommentsEvent } from '../../UseCase/HandleRealtimeCommentsEvent'
-import type {
-  InternalEventBusInterface,
-  CommentControllerInterface,
-  SyncedEditorState,
-  NodeMeta,
-  DocumentType,
-} from '@proton/docs-shared'
+import type { NodeMeta, DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { CommentControllerInterface } from '@proton/docs-shared/CommentServiceInterface'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { SyncedEditorState } from '@proton/docs-shared/State/SyncedEditorState'
 import type { FetchDecryptedCommit } from '../../UseCase/FetchDecryptedCommit'
 import type { LoadDocument } from '../../UseCase/LoadDocument'
 import type { LoadThreads } from '../../UseCase/LoadThreads'
@@ -43,7 +39,7 @@ import type { UnleashClient } from '@proton/unleash/UnleashClient'
 import type { DocSizeTracker } from '../../SizeTracker/SizeTracker'
 import { isProtonDocsSpreadsheet } from '@proton/shared/lib/helpers/mimetype'
 import type { SheetsStorageService } from '../SheetsStorage/SheetsStorageService'
-import OpenTracer from '@proton/docs-shared/lib/Tracer/Module'
+import OpenTracer from '@proton/docs-shared/Tracer/Module'
 
 export class DocLoader implements DocLoaderInterface<DocumentState> {
   private docController?: AuthenticatedDocControllerInterface
@@ -87,7 +83,7 @@ export class DocLoader implements DocLoaderInterface<DocumentState> {
   public async initialize(
     nodeMeta: NodeMeta,
     documentType: DocumentType,
-    primaryAddressKeys?: PrimaryAddressKeys,
+    options?: DocLoaderInitializeOptions,
   ): Promise<void> {
     void OpenTracer.trace('boot_doc_loader_initialize_start', { documentType })
     if (this.docController) {
@@ -95,6 +91,7 @@ export class DocLoader implements DocLoaderInterface<DocumentState> {
     }
 
     const startTime = Date.now()
+    const { primaryAddressKeys } = options ?? {}
 
     const loadResult = await this.loadDocument.executePrivate(nodeMeta, primaryAddressKeys)
     if (loadResult.isFailed()) {

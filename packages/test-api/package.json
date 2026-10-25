@@ -9,19 +9,23 @@
         "./mockRandomValues": "./src/mockRandomValues.ts"
     },
     "scripts": {
-        "check-types": "tsc --checkers 1",
-        "lint": "eslint --quiet",
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet",
         "lint:fix": "pnpm run lint --fix"
     },
     "dependencies": {
         "@proton/utils": "workspace:^"
     },
     "devDependencies": {
-        "@jest/globals": "^30.5.2",
-        "@proton/eslint-config-proton": "workspace:^",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.11.0",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
+        "@jest/globals": "catalog:",
+        "@proton/oxlint-config": "workspace:^",
+        "@types/jest": "catalog:",
+        "@types/node": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:"
     },
     "peerDependencies": {
         "@jest/globals": "^30.5.2"

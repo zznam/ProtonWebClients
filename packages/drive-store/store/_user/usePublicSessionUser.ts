@@ -1,12 +1,11 @@
-import { useAuthentication } from '@proton/components';
+import useAuthentication from '@proton/components/hooks/useAuthentication';
 
 import usePublicSession from '../_api/usePublicSession';
 
 export const usePublicSessionUser = () => {
     const auth = useAuthentication();
-    const { user, userAddressEmail } = usePublicSession();
-    const localID: number | undefined = auth.getLocalID();
+    const { user } = usePublicSession();
     const UID: string = auth.getUID();
 
-    return { user, userAddressEmail, localID, UID };
+    return { user, UID };
 };

@@ -5,7 +5,7 @@ import { FieldArray, type FormikErrors, useFormikContext } from 'formik';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import { IcCogWheel } from '@proton/icons/icons/IcCogWheel';
 import { IcCross } from '@proton/icons/icons/IcCross';
 import { IcEarth } from '@proton/icons/icons/IcEarth';
@@ -15,8 +15,8 @@ import { useFeatureFlag } from '../../../../hooks/useFeatureFlag';
 import { maybeErrorMessage } from '../../../../hooks/useFieldControl';
 import { createNewUrlItem, getModeDescription, isAutofillModeDataOfTypeUrl } from '../../../../lib/urls/utils/autofill';
 import { sanitizeURL } from '../../../../lib/urls/utils/sanitize';
-import type { UrlGroupValues, UrlItem } from '../../../../types';
 import { PassFeature } from '../../../../types/api/features';
+import type { UrlGroupValues, UrlItem } from '../../../../types/forms/fields';
 import { AutofillMode } from '../../../../types/protobuf';
 import { isEmptyString } from '../../../../utils/string/is-empty-string';
 import { FieldBox } from '../Layout/FieldBox';

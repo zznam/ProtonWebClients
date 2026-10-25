@@ -11,6 +11,7 @@ import { Scroll } from '@proton/atoms/Scroll/Scroll';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { lockSensitiveSettings, unlockPasswordChanges } from '@proton/shared/lib/api/user';
 import { BRAND_NAME, MAIL_APP_NAME } from '@proton/shared/lib/constants';
+import { shouldDisplayEmailNextToName } from '@proton/shared/lib/helpers/email';
 import {
     confirmPasswordValidator,
     passwordLengthValidator,
@@ -27,11 +28,12 @@ import Modal from '../../components/modalTwo/Modal';
 import ModalContent from '../../components/modalTwo/ModalContent';
 import ModalFooter from '../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../components/modalTwo/ModalHeader';
-import { PasswordPolicy, usePasswordPolicyValidation } from '../../components/passwordPolicy/index';
+import { PasswordPolicy } from '../../components/passwordPolicy/PasswordPolicy';
+import { usePasswordPolicyValidation } from '../../components/passwordPolicy/usePasswordPolicyValidation';
 import PasswordStrengthIndicator, {
     useLoadPasswordStrengthIndicatorWasm,
 } from '../../components/passwordStrengthIndicator/PasswordStrengthIndicator';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import PasswordInputTwo from '../../components/v2/input/PasswordInput';
 import useFormErrors from '../../components/v2/useFormErrors';
 import useBeforeUnload from '../../hooks/useBeforeUnload';
@@ -146,7 +148,8 @@ const ChangePasswordModal = ({
             if (!user.isSelf) {
                 const userName = (
                     <b key="user" className="text-break">
-                        {user.Name} ({user.Email})
+                        {user.Name || user.Email}
+                        {shouldDisplayEmailNextToName(user.Name, user.Email) && ` (${user.Email})`}
                     </b>
                 );
                 return {

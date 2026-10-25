@@ -1,6 +1,6 @@
 import { c } from 'ttag';
 
-import { userSettingsThunk } from '@proton/account';
+import { userSettingsThunk } from '@proton/account/userSettings';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { isDesktopInboxUser } from '@proton/shared/lib/helpers/usedClientsFlags';
 import desktopAppBackground from '@proton/styles/assets/img/onboarding/feature_tour-desktop-app-background.svg';
@@ -18,7 +18,7 @@ export const shouldDisplayDesktopAppTourStep: ShouldDisplayTourStep = async (dis
     };
 };
 
-export const DesktopAppTourStep = (props: FeatureTourStepProps) => {
+const DesktopAppTourStep = (props: FeatureTourStepProps) => {
     const { desktopAppLink, loading } = useInboxDesktopVersion();
 
     return (

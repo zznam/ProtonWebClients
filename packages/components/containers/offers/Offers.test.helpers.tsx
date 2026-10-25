@@ -4,11 +4,11 @@ import { Route, Router } from 'react-router';
 import { createMemoryHistory } from 'history';
 
 import { APPS } from '@proton/shared/lib/constants';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 
 import ConfigProvider from '../config/Provider';
 
-export const DEFAULT_CONFIG = {
+const DEFAULT_CONFIG = {
     APP_NAME: APPS.PROTONMAIL,
     APP_VERSION: 'test-version',
     DATE_VERSION: 'test-date-version',

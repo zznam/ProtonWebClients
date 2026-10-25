@@ -2,13 +2,16 @@ import { c } from 'ttag'
 import type { SquashDocument } from '../UseCase/SquashDocument'
 import type { DuplicateDocument } from '../UseCase/DuplicateDocument'
 import type { CreateNewDocument } from '../UseCase/CreateNewDocument'
-import type { DriveCompat } from '@proton/drive-store'
-import type { InternalEventBusInterface, YjsState, DocumentType, NodeMeta } from '@proton/docs-shared'
-import { Result } from '@proton/docs-shared'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
+import type { DocumentType, NodeMeta } from '@proton/docs-shared/BasicTypes'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { YjsState } from '@proton/docs-shared/YjsState'
+import { Result } from '@proton/docs-shared/Result'
 import type { AuthenticatedDocControllerInterface } from './AuthenticatedDocControllerInterface'
 import type { SeedInitialCommit } from '../UseCase/SeedInitialCommit'
-import type { VersionHistoryUpdate } from '../VersionHistory'
-import { getVersionHistoryUpdatesFromCommit, NativeVersionHistory } from '../VersionHistory'
+import type { VersionHistoryUpdate } from '../VersionHistory/VersionHistoryBatch'
+import { NativeVersionHistory } from '../VersionHistory/NativeVersionHistory'
+import { getVersionHistoryUpdatesFromCommit } from '../VersionHistory/VersionHistoryBatch'
 import { DocControllerEvent } from './AuthenticatedDocControllerEvent'
 
 import type { DocsClientSquashVerificationObjectionMadePayload } from '../Application/ApplicationEvent'
@@ -25,7 +28,7 @@ import { isDocumentState, type DocumentState } from '../State/DocumentState'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import { getErrorString } from '../Util/GetErrorString'
 import { isProtonDocsSpreadsheet } from '@proton/shared/lib/helpers/mimetype'
-import type { DocumentUpdate } from '@proton/docs-proto'
+import type { DocumentUpdate } from '@proton/docs-proto/Generated/DocumentUpdate'
 import { decompressDocumentUpdate, isCompressedDocumentUpdate } from '../utils/document-update-compression'
 import { WebsocketConnectionEvent } from '../Realtime/WebsocketEvent/WebsocketConnectionEvent'
 import type { WebsocketConnectionEventPayloads } from '../Realtime/WebsocketEvent/WebsocketConnectionEventPayloads'
@@ -37,7 +40,7 @@ import {
   restoreDocument as restoreDocumentSDK,
   trashDocument as trashDocumentSDK,
 } from '../DriveSDK/trash'
-import { generateNodeUid } from '@proton/drive'
+import { generateNodeUid } from '@proton/drive/sdk'
 
 /**
  * Controls the lifecycle of a single document for an authenticated user.
@@ -400,13 +403,13 @@ export class AuthenticatedDocController implements AuthenticatedDocControllerInt
     return result.getValue()
   }
 
-  public async trashDocument(useSDK = false): Promise<void> {
+  public async trashDocument(replaceDriveCompat = false): Promise<void> {
     this.documentState.setProperty('documentTrashState', 'trashing')
 
     try {
       const decryptedNode = this.documentState.getProperty('decryptedNode')
 
-      if (useSDK) {
+      if (replaceDriveCompat) {
         try {
           await trashDocumentSDK(generateNodeUid(decryptedNode.volumeId, decryptedNode.nodeId))
         } catch (error) {
@@ -432,13 +435,13 @@ export class AuthenticatedDocController implements AuthenticatedDocControllerInt
     }
   }
 
-  public async restoreDocument(useSDK = false): Promise<void> {
+  public async restoreDocument(replaceDriveCompat = false): Promise<void> {
     this.documentState.setProperty('documentTrashState', 'restoring')
 
     try {
       const decryptedNode = this.documentState.getProperty('decryptedNode')
 
-      if (useSDK) {
+      if (replaceDriveCompat) {
         await restoreDocumentSDK(generateNodeUid(decryptedNode.volumeId, decryptedNode.nodeId))
       } else {
         // Not replacing this, because will be deleted when we switch to SDK 100%
@@ -448,7 +451,7 @@ export class AuthenticatedDocController implements AuthenticatedDocControllerInt
 
       await this.refreshNodeAndDocMeta({ imposeTrashState: 'not_trashed' })
     } catch (error: any) {
-      if (useSDK) {
+      if (replaceDriveCompat) {
         if (error.message.includes('Insufficient permissions')) {
           PostApplicationError(this.eventBus, {
             translatedError: c('Error')

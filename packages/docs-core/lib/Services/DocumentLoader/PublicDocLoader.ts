@@ -3,17 +3,14 @@ import type { PublicDocumentState } from '../../State/DocumentState'
 import { EditorController } from '../../EditorController/EditorController'
 import { EditorOrchestrator } from '../Orchestrator/EditorOrchestrator'
 import { RealtimeController } from '../../RealtimeController/RealtimeController'
-import {
-  AnonymousUserDisplayName,
-  type InternalEventBusInterface,
-  type SyncedEditorState,
-  type CommentControllerInterface,
-  type PublicNodeMeta,
-  type DocumentType,
-} from '@proton/docs-shared'
+import { AnonymousUserDisplayName } from '@proton/docs-shared/AnonymousUser'
+import type { PublicNodeMeta, DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { CommentControllerInterface } from '@proton/docs-shared/CommentServiceInterface'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { SyncedEditorState } from '@proton/docs-shared/State/SyncedEditorState'
 import type { CreateComment } from '../../UseCase/CreateComment'
 import type { CreateThread } from '../../UseCase/CreateThread'
-import type { DocLoaderInterface } from './DocLoaderInterface'
+import type { DocLoaderInterface, DocLoaderInitializeOptions } from './DocLoaderInterface'
 import type { DocLoaderStatusObserver } from './StatusObserver'
 import type { DocsApi } from '../../Api/DocsApi'
 import type { EditorControllerInterface } from '../../EditorController/EditorController'
@@ -28,14 +25,15 @@ import type { LoadDocument } from '../../UseCase/LoadDocument'
 import type { LoadThreads } from '../../UseCase/LoadThreads'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import type { MetricService } from '../Metrics/MetricService'
-import type { PublicDriveCompat } from '@proton/drive-store'
+import type { PublicDriveCompat } from '@proton/drive-store/lib/usePublicDriveCompat'
 import type { WebsocketServiceInterface } from '../Websockets/WebsocketServiceInterface'
 import { PublicRenameController } from '../../RenameController/RenameController'
 import type { GetNode } from '../../UseCase/GetNode'
 import { isProtonDocsSpreadsheet } from '@proton/shared/lib/helpers/mimetype'
 import { redirectToCorrectDocTypeIfNeeded } from '../../Util/redirect-to-correct-doc-type'
 import type { DocSizeTracker } from '../../SizeTracker/SizeTracker'
-import OpenTracer from '@proton/docs-shared/lib/Tracer/Module'
+import OpenTracer from '@proton/docs-shared/Tracer/Module'
+import { getDocumentActionUrl } from '@proton/docs-shared/URL/getDocumentActionUrl'
 
 export class PublicDocLoader implements DocLoaderInterface<PublicDocumentState> {
   private editorController?: EditorControllerInterface
@@ -46,7 +44,7 @@ export class PublicDocLoader implements DocLoaderInterface<PublicDocumentState> 
   private readonly statusObservers: DocLoaderStatusObserver<PublicDocumentState>[] = []
 
   constructor(
-    private driveCompat: PublicDriveCompat,
+    private driveCompat: PublicDriveCompat | undefined,
     private websocketSerivce: WebsocketServiceInterface,
     private docsApi: DocsApi,
     private loadDocument: LoadDocument,
@@ -79,10 +77,15 @@ export class PublicDocLoader implements DocLoaderInterface<PublicDocumentState> 
     return this.unleashClient.isEnabled(docsFlag)
   }
 
-  public async initialize(nodeMeta: PublicNodeMeta, documentType: DocumentType): Promise<void> {
+  public async initialize(
+    nodeMeta: PublicNodeMeta,
+    documentType: DocumentType,
+    options?: DocLoaderInitializeOptions,
+  ): Promise<void> {
     const publicEditingEnabled = this.publicEditingEnabled()
+    const { primaryAddressKeys, localID } = options ?? {}
 
-    const loadResult = await this.loadDocument.executePublic(nodeMeta, publicEditingEnabled)
+    const loadResult = await this.loadDocument.executePublic(nodeMeta, publicEditingEnabled, primaryAddressKeys)
     if (loadResult.isFailed()) {
       this.logger.error('Failed to load document', loadResult.getError())
       this.statusObservers.forEach((observer) => {
@@ -103,13 +106,13 @@ export class PublicDocLoader implements DocLoaderInterface<PublicDocumentState> 
       this.logger.info('Redirecting to authed document')
       this.docsApi.resetInflightCount()
       void OpenTracer.trace('boot_public_doc_loader_redirect_to_authed_document_start')
-      this.driveCompat.redirectToAuthedDocument(
-        {
-          volumeId: documentState.getProperty('documentMeta').volumeId,
-          linkId: nodeMeta.linkId,
-        },
-        isProtonDocsSpreadsheet(mimeType) ? 'sheet' : 'doc',
-      )
+      const meta = { volumeId: documentState.getProperty('documentMeta').volumeId, linkId: nodeMeta.linkId }
+      const type = isProtonDocsSpreadsheet(mimeType) ? 'sheet' : 'doc'
+      if (this.driveCompat) {
+        this.driveCompat.redirectToAuthedDocument(meta, type)
+      } else {
+        window.location.assign(getDocumentActionUrl({ ...meta, type, mode: 'open' }, localID))
+      }
       return
     }
 

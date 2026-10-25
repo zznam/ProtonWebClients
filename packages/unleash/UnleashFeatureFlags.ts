@@ -5,6 +5,7 @@
 
 enum AccountB2BFeatureFlag {
     AccountSettingsUserDisableFE = 'AccountSettingsUserDisableFE',
+    AdminConsoleSurvey = 'AdminConsoleSurvey',
     AdminRoleMVP = 'AdminRoleMVP',
     AdminRolesWithMSP = 'AdminRolesWithMSP',
     DataRetentionPolicy = 'DataRetentionPolicy',
@@ -12,7 +13,6 @@ enum AccountB2BFeatureFlag {
     SsoForPbs = 'SsoForPbs',
     SyncOwnerRoleClientKillSwitch = 'SyncOwnerRoleClientKillSwitch',
     UserGroupsGroupOwner = 'UserGroupsGroupOwner',
-    UserGroupsNoCustomDomain = 'UserGroupsNoCustomDomain',
     UserGroupsScimGroups = 'UserGroupsScimGroups',
 }
 
@@ -28,8 +28,10 @@ enum AccountFeatureFlag {
     EduGainSSO = 'EduGainSSO',
     EnableZenDeskAIAgent = 'EnableZenDeskAIAgent',
     MailTrialOffer = 'MailTrialOffer',
+    PassAccountNewOnboarding = 'PassAccountNewOnboarding',
     PassTrialOffer = 'PassTrialOffer',
     ShowLiteAppCheckoutV2 = 'ShowLiteAppCheckoutV2',
+    ShowSignInRestrictionToggle = 'ShowSignInRestrictionToggle',
     SpacesAvailable = 'SpacesAvailable',
     VisionarySignup = 'VisionarySignup',
     VPNDashboard = 'VPNDashboard',
@@ -47,6 +49,7 @@ enum AccountVPNFeatureFlag {
     VpnB2bUserActivity = 'VpnB2bUserActivity',
     VpnOrganizationLogRelayGatewayCreationMultiIp = 'VpnOrganizationLogRelayGatewayCreationMultiIp',
     VpnOrganizationLogRelayGatewayUpdateMultiIp = 'VpnOrganizationLogRelayGatewayUpdateMultiIp',
+    B2BGatewayChartViewEnabled = 'B2BGatewayChartViewEnabled',
 }
 
 type AccountProjectFeatureFlag =
@@ -58,6 +61,7 @@ type AccountProjectFeatureFlag =
 
 enum ActivationFeatureFlag {
     MaintenanceImporter = 'MaintenanceImporter',
+    CanClaimExternalAddress = 'CanClaimExternalAddress',
 }
 
 enum AdminFeatureFlag {
@@ -99,9 +103,6 @@ export enum CommonFeatureFlag {
     DesktopDownloadApiEnabled = 'DesktopDownloadApiEnabled',
     DisableElectronMail = 'DisableElectronMail',
     DisablePostSubscriptionB2BOnboarding = 'DisablePostSubscriptionB2BOnboarding',
-    // Whether to show Docs in the app switcher. NOT whether the docs homepage is enabled (that's `DocsHomepageEnabled` instead).
-    // We'll clean up the naming of this flag in the future, if we don't remove it before then.
-    DriveDocsLandingPageEnabled = 'DriveDocsLandingPageEnabled',
     EasySwitchB2CForDriveWeb = 'EasySwitchB2CForDriveWeb',
     EasySwitchB2CForDriveWebNewUI = 'EasySwitchB2CForDriveWebNewUI',
     EasySwitchB2CForDriveWebSidebarRollout = 'EasySwitchB2CForDriveWebSidebarRollout',
@@ -111,18 +112,15 @@ export enum CommonFeatureFlag {
     GoUnlimitedOffer2025 = 'GoUnlimitedOffer2025',
     InboxBringYourOwnEmail = 'InboxBringYourOwnEmail',
     InboxBringYourOwnEmailClient = 'InboxBringYourOwnEmailClient',
+    InboxBringYourOwnEmailImportPeriod = 'InboxBringYourOwnEmailImportPeriod',
     InboxBringYourOwnEmailSignup = 'InboxBringYourOwnEmailSignup',
+    // INDA-782: Remove this
     InboxDesktopAppSessionCacheDisabled = 'InboxDesktopAppSessionCacheDisabled',
-    InboxDesktopBugReportLogAttachmentDisabled = 'InboxDesktopBugReportLogAttachmentDisabled',
-    InboxDesktopCategoryViewSettingsToggleReloadDisabled = 'InboxDesktopCategoryViewSettingsToggleReloadDisabled',
     InboxDesktopDefaultEmailSetupHelperDisabled = 'InboxDesktopDefaultEmailSetupHelperDisabled',
     InboxDesktopDefaultEmailSetupHelperDisabledV2 = 'InboxDesktopDefaultEmailSetupHelperDisabledV2',
     InboxDesktopInAppPayments = 'InboxDesktopInAppPayments',
+    InboxDesktopMacSigningMigrationBanner = 'InboxDesktopMacSigningMigrationBanner',
     InboxDesktopManualUpdateBannerDisabled = 'InboxDesktopManualUpdateBannerDisabled',
-    InboxDesktopMultiAccountSupport = 'InboxDesktopMultiAccountSupport',
-    InboxDesktopSaveAsPdfPrintDialogDisabled = 'InboxDesktopSaveAsPdfPrintDialogDisabled',
-    InboxDesktopThemeSelection = 'InboxDesktopThemeSelection',
-    InboxDesktopWinLinNewAppSwitcher = 'InboxDesktopWinLinNewAppSwitcher',
     InboxWebPostSubscriptionFlow = 'InboxWebPostSubscriptionFlow',
     KeyTransparencyLogOnly = 'KeyTransparencyLogOnly',
     KeyTransparencyShowUI = 'KeyTransparencyShowUI',
@@ -140,9 +138,9 @@ export enum CommonFeatureFlag {
     NewScheduleOption = 'NewScheduleOption',
     Oles365 = 'Oles365',
     OrganizationLevelEasySwitch = 'OrganizationLevelEasySwitch',
+    PassNewOnboarding = 'PassNewOnboarding',
     PassSimpleLoginLifetimeOffer = 'PassSimpleLoginLifetimeOffer',
     PingOMatic = 'PingOMatic',
-    Q3Sale2026FreeToUnlimitedSecondPopup = 'Q3Sale2026FreeToUnlimitedSecondPopup',
     ReferralExpansionDiscover = 'ReferralExpansionDiscover',
     ReferralFreeUsersDiscover = 'ReferralFreeUsersDiscover',
     ScribeAdminSetting = 'ScribeAdminSetting',
@@ -162,9 +160,10 @@ export enum CommonFeatureFlag {
 
 enum DocsFeatureFlag {
     // General
-    DocsAppSwitcher = 'DocsAppSwitcher',
     DocsDarkTheme = 'DocsDarkTheme',
+    DocsEmojiPicker = 'DocsEmojiPicker',
     DocsGatePrivateInviteAccess = 'DocsGatePrivateInviteAccess',
+    DocsHomepageBulkTrash = 'DocsHomepageBulkTrash',
     DocsODTEnabled = 'DocsODTEnabled',
     DocsOpenTracer = 'DocsOpenTracer',
     DocsPublicEditing = 'DocsPublicEditing',
@@ -173,21 +172,16 @@ enum DocsFeatureFlag {
     DriveWebTextFileEdit = 'DriveWebTextFileEdit',
     // Comments
     DocsEnableNotificationsOnNewComment = 'DocsEnableNotificationsOnNewComment',
-    // Homepage
-    DocsHomepageEnabled = 'DocsHomepageEnabled',
     // Public sharing
-    DriveDocsPublicSharing = 'DriveDocsPublicSharing',
     DriveDocsPublicSharingDisabled = 'DriveDocsPublicSharingDisabled',
     // Suggestions
     DocsSuggestionsDisabled = 'DocsSuggestionsDisabled',
     // Sheets
     DocsSheetsDisabled = 'DocsSheetsDisabled',
-    DocsSheetsEnabled = 'DocsSheetsEnabled',
     SheetsActionsStorageEnabled = 'SheetsActionsStorageEnabled',
     SheetsCustomDateTimeFormatEnabled = 'SheetsCustomDateTimeFormatEnabled',
     SheetsCustomNumberFormatEnabled = 'SheetsCustomNumberFormatEnabled',
     SheetsDriftDetectionEnabled = 'SheetsDriftDetectionEnabled',
-    SheetsEditorEnabled = 'SheetsEditorEnabled',
     SheetsMountAfterInitialLoadDisabled = 'SheetsMountAfterInitialLoadDisabled',
     SheetsODSExportEnabled = 'SheetsODSExportEnabled',
     SheetsODSImportEnabled = 'SheetsODSImportEnabled',
@@ -209,7 +203,6 @@ enum DocsFeatureFlag {
     DocsInvitationsDriveSDK = 'DocsInvitationsDriveSDK',
     DocsLoadRecentsWithDriveSDK = 'DocsLoadRecentsWithDriveSDK',
     DocsMoveModalDriveSDK = 'DocsMoveModalDriveSDK',
-    DocsRenameWithDriveSDK = 'DocsRenameWithDriveSDK',
     DocsTrashWithDriveSDK = 'DocsTrashWithDriveSDK',
 }
 
@@ -221,7 +214,7 @@ enum DriveFeatureFlag {
     DriveSharingDisabled = 'DriveSharingDisabled',
     DriveSharingEditingDisabled = 'DriveSharingEditingDisabled',
     // Rollouts
-    DriveSharingAdminPermissions = 'DriveSharingAdminPermissions',
+    DriveWebRecentlyAccessed = 'DriveWebRecentlyAccessed',
     DriveWebSearchFoundation = 'DriveWebSearchFoundation',
     // Offers
     DriveFreeMinutesUpload = 'DriveFreeMinutesUpload',
@@ -238,8 +231,6 @@ enum DriveFeatureFlag {
     // SDK rollouts — names should match @protontech/drive-sdk FeatureFlags enum, or have a manual mapping
     DriveCryptoEncryptBlocksWithPgpAead = 'DriveCryptoEncryptBlocksWithPgpAead',
     DriveSmallFileUpload = 'DriveSmallFileUpload',
-    // Spotlight
-    DriveWebSharingAdminTooltip = 'DriveWebSharingAdminTooltip',
     // Lumo in Drive
     DriveWebLumo = 'DriveWebLumo',
     DriveWebLumoDestructiveActionsDisabled = 'DriveWebLumoDestructiveActionsDisabled',
@@ -251,8 +242,10 @@ enum LumoFeatureFlag {
     LumoAiPaperTrailRoute = 'LumoAiPaperTrailRoute',
     LumoApertusModel = 'LumoApertusModel',
     LumoAPIKeyManagement = 'LumoAPIKeyManagement',
+    LumoArtifactSlides = 'LumoArtifactSlides',
     LumoArtifactsView = 'LumoArtifactsView',
     LumoArtifactsViewSpotlight = 'LumoArtifactsViewSpotlight',
+    LumoAskUserQuestionsTool = 'LumoAskUserQuestionsTool',
     LumoCustomAgents = 'LumoCustomAgents',
     LumoDarkMode = 'LumoDarkMode',
     LumoDictationV2 = 'LumoDictationV2',
@@ -266,7 +259,9 @@ enum LumoFeatureFlag {
     LumoNativeComposerImage = 'LumoNativeComposerImage',
     LumoNativeComposerModelSelection = 'LumoNativeComposerModelSelection',
     LumoNewMarketingLinks = 'LumoNewMarketingLinks',
+    LumoPreviewModel = 'LumoPreviewModel',
     LumoProjects = 'LumoProjects',
+    LumoSchedules = 'LumoSchedules',
     LumoShowNextPromptSuggestions = 'LumoShowNextPromptSuggestions',
     LumoSmoothedRendering = 'LumoSmoothedRendering',
     LumoSpecialTheme = 'LumoSpecialTheme',
@@ -292,12 +287,13 @@ export enum MailFeatureFlag {
     CategoryReportUnreadCountDisabled = 'CategoryReportUnreadCountDisabled',
     CategoryView = 'CategoryView',
     CategoryViewVariant = 'CategoryViewVariant',
-    MailRecordLastUnseenIncomingMessageEventID = 'MailRecordLastUnseenIncomingMessageEventID',
+    UseUserEmbedding = 'UseUserEmbedding',
     MailStoreDebugMode = 'MailStoreDebugMode',
     // Attempt to fix the unability to save/send drafts on huge accounts
     PreventEventLoopCallOnCompose = 'PreventEventLoopCallOnCompose',
     //ML R&D
     LumoInMail = 'LumoInMail',
+    LumoInMailStandalonePrompt = 'LumoInMailStandalonePrompt',
     OneTimePasscode = 'OneTimePasscode',
     ScribeToLumo = 'ScribeToLumo',
     // reworked local search using foundation search
@@ -323,14 +319,19 @@ enum MeetFeatureFlag {
     MeetBackgroundEffectsOnMobileBrowsers = 'MeetBackgroundEffectsOnMobileBrowsers',
     MeetBlurMulticlassPersonConfidenceBoost = 'MeetBlurMulticlassPersonConfidenceBoost',
     MeetBlurPersonConfidenceBoost = 'MeetBlurPersonConfidenceBoost',
+    MeetChatLumoEmojis = 'MeetChatLumoEmojis',
     MeetChatMentions = 'MeetChatMentions',
     MeetChatThreads = 'MeetChatThreads',
     MeetClientMetricsLog = 'MeetClientMetricsLog',
+    MeetCollectLogsKillSwitch = 'MeetCollectLogsKillSwitch',
     MeetCoreWorker = 'MeetCoreWorker',
     MeetCountdownUpsell = 'MeetCountdownUpsell',
     MeetCpuOptimizations = 'MeetCpuOptimizations',
     MeetCustomVirtualBackground = 'MeetCustomVirtualBackground',
     MeetDebugMode = 'MeetDebugMode',
+    MeetDeepFilterNet = 'MeetDeepFilterNet',
+    MeetDeepFilterNetMobile = 'MeetDeepFilterNetMobile',
+    MeetDesktopScreenPickerEnabled = 'MeetDesktopScreenPickerEnabled',
     MeetDtlnPerfMonitor = 'MeetDtlnPerfMonitor',
     MeetDynacast = 'MeetDynacast',
     MeetE2eeDebugStats = 'MeetE2eeDebugStats',
@@ -360,6 +361,7 @@ enum MeetFeatureFlag {
     MeetProtonCalendarDeepLink = 'MeetProtonCalendarDeepLink',
     MeetQualityTelemetry = 'MeetQualityTelemetry',
     MeetQualityTelemetryKillSwitch = 'MeetQualityTelemetryKillSwitch',
+    MeetRecordingEncryption = 'MeetRecordingEncryption',
     MeetRecordingRecoveryUI = 'MeetRecordingRecoveryUI',
     MeetRecordingShowAllRecordings = 'MeetRecordingShowAllRecordings',
     MeetRecordingWebCodecs = 'MeetRecordingWebCodecs',
@@ -384,19 +386,23 @@ enum MeetFeatureFlag {
     MeetWebClientDebug = 'MeetWebClientDebug',
     PersonalMeetingRotation = 'PersonalMeetingRotation',
     MeetParticipantCountMismatch = 'MeetParticipantCountMismatch',
+    MeetTranscription = 'MeetTranscription',
+    MeetExtendedTelemetry = 'MeetExtendedTelemetry',
+    MeetHandleStalledLiveKitReconnect = 'MeetHandleStalledLiveKitReconnect',
+    MeetJoinLeaveSoundsNotifications = 'MeetJoinLeaveSoundsNotifications',
+    MeetAllowResettingFrozenVideoTracks = 'MeetAllowResettingFrozenVideoTracks',
 }
 
 enum PaymentsFeatureFlag {
     ApplePayCapabilities = 'ApplePayCapabilities',
+    CheckoutCondensedAddons = 'CheckoutCondensedAddons',
     DomainVpnBiz2023 = 'DomainVpnBiz2023',
     EmailForInvoices = 'EmailForInvoices',
     EmailForInvoicesKillSwitch = 'EmailForInvoicesKillSwitch',
     EnableIdeal = 'EnableIdeal',
-    GooglePay = 'GooglePay',
     NewProtonBusinessBundlePlans = 'NewProtonBusinessBundlePlans',
+    PaymentProcessorsRefactor = 'PaymentProcessorsRefactor',
     PaypalKrw = 'PaypalKrw',
-    PaypalRegionalCurrenciesBatch3 = 'PaypalRegionalCurrenciesBatch3',
-    RegionalCurrenciesBatch3 = 'RegionalCurrenciesBatch3',
     SepaPayments = 'SepaPayments',
     SepaPaymentsB2C = 'SepaPaymentsB2C',
     Vpn2024AddonsExperiment = 'Vpn2024AddonsExperiment',

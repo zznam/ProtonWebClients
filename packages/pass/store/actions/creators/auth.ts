@@ -6,8 +6,10 @@ import { PASS_APP_NAME } from '@proton/shared/lib/constants';
 import type { Lock, LockCreateDTO, UnlockDTO } from '../../../lib/auth/lock/types';
 import { LockMode } from '../../../lib/auth/lock/types';
 import type { ExtraPasswordDTO, PasswordConfirmDTO } from '../../../lib/auth/password';
-import type { ClientEndpoint } from '../../../types';
+import { getNativeMessageErrorType } from '../../../lib/native-messaging/errors';
+import { NativeMessageErrorType } from '../../../types/desktop/extension-unlock-with-desktop';
 import { NotificationKey } from '../../../types/worker/notification';
+import type { ClientEndpoint } from '../../../types/worker/runtime';
 import { SilentError } from '../../../utils/errors/errors';
 import { getErrorMessage } from '../../../utils/errors/get-error-message';
 import { pipe } from '../../../utils/fp/pipe';
@@ -106,9 +108,16 @@ export const lockCreateSuccess = createAction(
 
 export const unlock = requestActionsFactory<UnlockDTO, LockMode, LockMode>('auth::unlock')({
     failure: {
-        prepare: (error, payload) => {
+        prepare: (error, mode) => {
+            /** Desktop unlock carries the precise `NativeMessageErrorType` as data — no
+             * localized string in the channel, and no `withNotification`: the UI hook
+             * (`useDesktopUnlock`) reconstructs the error and owns the single notification. */
+            if (mode === LockMode.DESKTOP) {
+                return { payload: mode, error: getNativeMessageErrorType(error) ?? NativeMessageErrorType.UNKNOWN };
+            }
+
             const reason = (() => {
-                switch (payload) {
+                switch (mode) {
                     case LockMode.SESSION:
                         if (error instanceof Error) {
                             if (error.name === 'LockedSession') return c('Error').t`Wrong PIN code. Try again.`;
@@ -117,14 +126,12 @@ export const unlock = requestActionsFactory<UnlockDTO, LockMode, LockMode>('auth
                             }
                         }
                         return c('Error').t`Unlock failure`;
-                    case LockMode.DESKTOP:
-                        return getErrorMessage(error, c('Error').t`Unlock failure`);
                     default:
                         return c('Error').t`Unlock failure`;
                 }
             })();
 
-            const dto = { payload, error: reason };
+            const dto = { payload: mode, error: reason };
 
             return error instanceof SilentError
                 ? dto

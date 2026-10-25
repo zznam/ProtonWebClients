@@ -22,7 +22,7 @@ import {
 } from '@proton/shared/lib/constants';
 import humanSize from '@proton/shared/lib/helpers/humanSize';
 import { sizeUnits } from '@proton/shared/lib/helpers/size';
-import { Audience } from '@proton/shared/lib/interfaces';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
 
 import type { PlanCardFeature, PlanCardFeatureDefinition } from './interface';
 
@@ -66,7 +66,6 @@ export const getStorageFeature = (
         boldStorageSize?: boolean;
         family?: boolean;
         duo?: boolean;
-        visionary?: boolean;
         subtext?: boolean;
     }
 ): PlanCardFeatureDefinition => {
@@ -112,15 +111,6 @@ export const getStorageFeature = (
     };
 };
 
-export const getStorageBoostFeature = (bundleStorage: string): PlanCardFeatureDefinition => {
-    return {
-        id: 'storage-boost',
-        icon: IcStorage,
-        text: c('new_plans: Upsell attribute').t`Boost your storage space to ${bundleStorage} total`,
-        included: true,
-    };
-};
-
 export const getStorageBoostFeatureB2B = (bundleStorage: string): PlanCardFeatureDefinition => {
     return {
         id: 'storage-boost-b2b',
@@ -162,7 +152,7 @@ export const getShortStorageFeatureB2B = (bytes: number): PlanCardFeatureDefinit
     };
 };
 
-export const getEndToEndEncryption = (): PlanCardFeatureDefinition => {
+const getEndToEndEncryption = (): PlanCardFeatureDefinition => {
     return {
         id: 'drive-end-to-end-encryption',
         text: c('new_plans: feature').t`End-to-end encryption`,
@@ -198,15 +188,6 @@ export const getVersionHistory = (options?: 'generic' | 365 | '10y'): PlanCardFe
         text: c('new_plans: feature').t`Recover previous file versions`,
         included: true,
         icon: IcClockRotateLeft,
-    };
-};
-
-export const getPremiumFeatures = (): PlanCardFeatureDefinition => {
-    return {
-        id: 'premium-features',
-        text: c('Plan description')
-            .t`All premium features from ${BRAND_NAME} ${MAIL_SHORT_APP_NAME}, ${PASS_SHORT_APP_NAME}, ${VPN_SHORT_APP_NAME}, ${DRIVE_SHORT_APP_NAME}, and ${CALENDAR_SHORT_APP_NAME}`,
-        included: true,
     };
 };
 
@@ -333,10 +314,9 @@ export const getStorage = (plansMap: PlansMap, freePlan: FreePlanDefault): PlanC
             [PLANS.LUMO_BUSINESS]: getStorageFeature(-1, { subtext: true, freePlan }),
             [PLANS.MEET_BUSINESS]: getStorageFeature(-1, { subtext: true, freePlan }),
             [PLANS.MEET]: getStorageFeature(-1, { subtext: true, freePlan }),
-            [PLANS.VISIONARY]: getStorageFeature(plansMap[PLANS.VISIONARY]?.MaxSpace ?? 3298534883328, {
-                subtext: true,
-                freePlan,
-            }),
+            [PLANS.VISIONARY]: plansMap[PLANS.VISIONARY]
+                ? getStorageFeature(plansMap[PLANS.VISIONARY].MaxSpace, { subtext: true, freePlan })
+                : null,
             [PLANS.VPN_PASS_BUNDLE_BUSINESS]: getStorageFeature(
                 plansMap[PLANS.VPN_PASS_BUNDLE_BUSINESS]?.MaxSpace ?? -1,
                 { subtext: true, freePlan }

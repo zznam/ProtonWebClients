@@ -1,6 +1,6 @@
-import { useUserSettings } from '@proton/account';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import {
@@ -10,7 +10,7 @@ import {
     sendTelemetryData,
 } from '@proton/shared/lib/api/telemetry';
 import { getBaseTelemetryDimensions } from '@proton/shared/lib/helpers/metrics';
-import type { SimpleMap } from '@proton/shared/lib/interfaces';
+import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 
 import { getZeroNinetyNineOfferAgeCategory } from './zeroNinetyNineOfferState';
 

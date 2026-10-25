@@ -6,7 +6,7 @@ import { useCallback, useRef, useState } from 'react'
 import type { CommentEditorHandle } from './CommentEditor'
 import { CommentEditor } from './CommentEditor'
 import { clsx } from 'clsx'
-import { isMac } from '@proton/shared/lib/helpers/browser'
+import { isMac } from '../../Utils/isMac'
 
 export function CommentsComposer({
   autoFocus,
@@ -63,7 +63,7 @@ export function CommentsComposer({
       ref={composerRef}
       className={clsx(
         'comment-composer relative flex flex-wrap gap-1 rounded-lg px-2 py-1 text-sm',
-        hasNewLines ? 'flex-column' : 'items-center justify-between',
+        hasNewLines ? 'flex-col' : 'items-center justify-between',
         className,
       )}
       onClick={(event) => {

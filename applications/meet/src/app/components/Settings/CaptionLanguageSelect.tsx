@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 
+import { logger } from '@protontech/logger';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
@@ -41,8 +42,7 @@ export const CaptionLanguageSelect = () => {
         try {
             await setLanguage(value);
         } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Failed to update caption language', error);
+            logger.error('Failed to update caption language', error);
             createNotification({
                 type: 'error',
                 text: c('Error').t`Failed to update caption language. Please try again.`,

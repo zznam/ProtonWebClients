@@ -3,8 +3,8 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import Toggle from '@proton/components/components/toggle/Toggle';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
-import { useLoading } from '@proton/hooks';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
+import useLoading from '@proton/hooks/useLoading';
 import { wait } from '@proton/shared/lib/helpers/promise';
 
 const meta: Meta<typeof Toggle> = {

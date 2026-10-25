@@ -1,11 +1,11 @@
 import type { UseCaseInterface } from '../Domain/UseCase/UseCaseInterface'
-import { Result } from '@proton/docs-shared'
+import { Result } from '@proton/docs-shared/Result'
 import type { EncryptionService } from '../Services/Encryption/EncryptionService'
-import type { DocumentKeys, PublicDocumentKeys } from '@proton/docs-shared'
+import type { DocumentKeys, PublicDocumentKeys } from '@proton/docs-shared/CryptoTypes'
 import { GetAssociatedEncryptionDataForComment } from './GetAdditionalEncryptionData'
 import type { EncryptionContext } from '../Services/Encryption/EncryptionContext'
 import { utf8StringToUint8Array } from '@protontech/crypto/utils'
-import metrics from '@proton/metrics'
+import metrics from '@proton/metrics/metricsInstance'
 import { canKeysSign } from '../Types/DocumentEntitlements'
 
 export class EncryptComment implements UseCaseInterface<string> {

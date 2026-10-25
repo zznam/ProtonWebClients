@@ -85,9 +85,6 @@
       "Blurred office background applied": [
         "Bolo použité rozmazané pozadie kancelárie"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Pripojené prostredníctvom režimu TURN relay z dôvodu obmedzení siete. Môže to zvýšiť latenciu a ovplyvniť kvalitu hovoru."
-      ],
       "Connection lost. Reconnecting…": [
         "Pripojenie bolo prerušené. Opätovné pripájanie…"
       ],
@@ -246,11 +243,11 @@
       "Cancel": [
         "Zrušiť"
       ],
-      "Change layout": [
-        "Zmeniť rozloženie"
-      ],
       "Change password": [
         "Zmeniť heslo"
+      ],
+      "Chat": [
+        "Chat"
       ],
       "Chat with us": [
         "Komunikácia s nami"
@@ -309,6 +306,9 @@
       "Create meeting": [
         "Vytvoriť schôdzu"
       ],
+      "Debug overlay": [
+        "Ladiaca vrstva"
+      ],
       "Delete": [
         "Odstrániť"
       ],
@@ -348,9 +348,6 @@
       "Download": [
         "Stiahnuť"
       ],
-      "Download app": [
-        "Stiahnuť aplikáciu"
-      ],
       "Download local participant report": [
         "Stiahnuť správu miestneho účastníka"
       ],
@@ -380,9 +377,6 @@
       ],
       "Enable camera": [
         "Povoliť kameru"
-      ],
-      "Enable captions": [
-        "Povoliť titulky"
       ],
       "Enable waiting room": [
         "Povoliť čakáreň"
@@ -441,6 +435,12 @@
       "Join": [
         "Pripojiť sa"
       ],
+      "Join and leave sounds": [
+        "Zvuky pri vstupe a odchode"
+      ],
+      "Join in browser": [
+        "Pripojiť sa cez prehliadač"
+      ],
       "Join meeting": [
         "Pripojiť sa k schôdzi"
       ],
@@ -452,6 +452,9 @@
       ],
       "Kick out ${ participantName }": [
         "Vyhodiť účastníka ${ participantName }"
+      ],
+      "Layout": [
+        "Rozloženie"
       ],
       "Leave": [
         "Opustiť"
@@ -471,11 +474,20 @@
       "Lower hand": [
         "Zložiť ruku"
       ],
+      "Meeting debug": [
+        "Ladenie schôdze"
+      ],
+      "Meeting info": [
+        "Informácie o schôdzi"
+      ],
       "Meeting timer": [
         "Časovač schôdze"
       ],
       "Minimize preview": [
         "Zmenšiť náhľad"
+      ],
+      "More info": [
+        "Viac informácií"
       ],
       "More info: ${ safeTitle }": [
         "Viac informácií: ${ safeTitle }"
@@ -498,14 +510,17 @@
       "Noise cancellation": [
         "Potlačenie hluku"
       ],
-      "Open app": [
-        "Otvoriť aplikáciu"
+      "Not now": [
+        "Teraz nie"
       ],
       "Open link": [
         "Otvoriť odkaz"
       ],
       "Open mention from ${ senderName } in chat": [
         "Otvoriť zmienku od ${ senderName } v chate"
+      ],
+      "Participants": [
+        "Účastníci"
       ],
       "Participants join after you approve them": [
         "Účastníci sa pripoja až po tom, čo ich schválite"
@@ -554,6 +569,9 @@
       ],
       "Record": [
         "Záznam"
+      ],
+      "Recording": [
+        "Nahrávanie"
       ],
       "Recording your microphone...": [
         "Nahrávanie vášho mikrofónu..."
@@ -651,6 +669,12 @@
       "Settings": [
         "Nastavenia"
       ],
+      "Share screen": [
+        "Zdieľať obrazovku"
+      ],
+      "Show captions": [
+        "Zobraziť titulky"
+      ],
       "Show options": [
         "Zobraziť možnosti"
       ],
@@ -690,6 +714,9 @@
       "Start meeting": [
         "Začať stretnutie"
       ],
+      "Start meeting in browser": [
+        "Spustiť schôdzku v prehliadači"
+      ],
       "Start new meeting": [
         "Začať novú schôdzu"
       ],
@@ -708,9 +735,6 @@
       "Stay in meeting": [
         "Zostať v stretnutí"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Zastaviť otváranie schôdzí v desktopovej aplikácii"
-      ],
       "Stop receiving video": [
         "Zastaviť prijímanie videa"
       ],
@@ -722,6 +746,9 @@
       ],
       "Stop Recording Track Stats": [
         "Zastaviť zaznamenávanie štatistík nahrávok"
+      ],
+      "Stop sharing": [
+        "Zastaviť zdieľanie"
       ],
       "Submit": [
         "Potvrdiť"
@@ -740,6 +767,9 @@
       ],
       "The current link will stop working.": [
         "Tento odkaz prestane fungovať."
+      ],
+      "Transcription": [
+        "Prepis"
       ],
       "Try again": [
         "Skús znova"
@@ -770,9 +800,6 @@
       ],
       "Use camera": [
         "Použiť kameru"
-      ],
-      "Use it": [
-        "Použiť"
       ],
       "Use microphone": [
         "Použiť mikrofón"
@@ -821,9 +848,6 @@
       "Blur background": [
         "Rozostriť pozadie"
       ],
-      "Chat": [
-        "Chat"
-      ],
       "Close": [
         "Zavrieť"
       ],
@@ -836,23 +860,14 @@
       "Copy meeting link": [
         "Kopírovať odkaz na schôdzu"
       ],
-      "Debug devices": [
-        "Ladiť zariadenia"
-      ],
-      "Debug overlay": [
-        "Ladiaca vrstva"
-      ],
-      "Device Debugger": [
-        "Ladiaci nástroj zariadenia"
-      ],
       "Go to dashboard": [
         "Prejsť na nástenku"
       ],
       "Incoming video": [
         "Prichádzajúce video"
       ],
-      "Layout: ${ selectedLabel }": [
-        "Rozloženie: ${ selectedLabel }"
+      "Join and leave sounds": [
+        "Zvuky pri vstupe a odchode"
       ],
       "Leave Meeting": [
         "Opustiť stretnutie"
@@ -862,12 +877,6 @@
       ],
       "Lock meeting": [
         "Uzamknúť stretnutie"
-      ],
-      "Lower hand": [
-        "Zložiť ruku"
-      ],
-      "Meeting details": [
-        "Podrobnosti stretnutia"
       ],
       "Meeting timer": [
         "Časovač schôdze"
@@ -887,14 +896,8 @@
       "Participant host control options": [
         "Možnosti ovládania účastníkov hostiteľom"
       ],
-      "Participants": [
-        "Účastníci"
-      ],
       "Picture-in-picture while sharing": [
         "Obraz v obraze počas zdieľania"
-      ],
-      "Raise hand": [
-        "Zdvihnúť ruku"
       ],
       "Rotate camera": [
         "Otočiť kameru"
@@ -902,14 +905,8 @@
       "Save my name on this device": [
         "Uložiť moje meno na tomto zariadení"
       ],
-      "Screen share": [
-        "Zdieľanie obrazovky"
-      ],
       "Self view": [
         "Zobrazenie seba samého"
-      ],
-      "Settings": [
-        "Nastavenia"
       ],
       "Stop recording and download.": [
         "Zastaviť nahrávanie a stiahnuť."
@@ -920,17 +917,11 @@
       "Toggle emoji reactions": [
         "Prepnúť reakcie s emoji"
       ],
-      "Toggle meeting details": [
-        "Prepnúť podrobnosti o stretnutí"
-      ],
       "Toggle participants": [
         "Prepnúť účastníkov"
       ],
       "Toggle screen share": [
         "Prepnúť zdieľanie obrazovky"
-      ],
-      "Toggle settings": [
-        "Prepnúť nastavenia"
       ],
       "Video settings": [
         "Nastavenie videa"
@@ -1002,14 +993,9 @@
         "Aktívne"
       ]
     },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Pripojené prostredníctvom režimu TURN relay z dôvodu obmedzení vašej siete. Môže to zvýšiť latenciu a ovplyvniť kvalitu hovoru."
-      ]
-    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } desktopová aplikácia"
+      "${ appName } Desktop application": [
+        "Desktopová aplikácia ${ appName }"
       ]
     },
     "Bug category": {
@@ -1998,6 +1984,12 @@
       "Cannot verify who uploaded this file": [
         "Nie je možné overiť, kto tento súbor nahral"
       ],
+      "Check your audio settings and try again": [
+        "Skontrolujte nastavenia zvuku a skúste to znova"
+      ],
+      "Connection lost — captions will resume when reconnected": [
+        "Pripojenie sa prerušilo — titulky sa opäť začnú zobrazovať po obnovení pripojenia"
+      ],
       "Copy operation aborted": [
         "Operácia kopírovania bola prerušená"
       ],
@@ -2199,6 +2191,9 @@
       "Incorrect backup password. Please try again.": [
         "Nesprávne záložné heslo. Skúste to znova, prosím."
       ],
+      "Incorrect password. Please try again.": [
+        "Nesprávne heslo. Skúste to prosím, znovu."
+      ],
       "Incorrect second password. Please try again.": [
         "Nesprávne druhé heslo. Skúste to znova, prosím."
       ],
@@ -2220,9 +2215,6 @@
       "Legacy public link cannot be updated. Please re-create a new public link.": [
         "Starý verejný odkaz nie je možné aktualizovať. Vytvorte nový verejný odkaz, prosím."
       ],
-      "Live captions aren't working. Try turning them off and on again.": [
-        "Živé titulky nefungujú. Skúste ich vypnúť a znova zapnúť."
-      ],
       "Live captions couldn't be started.": [
         "Živé titulky sa nepodarilo spustiť."
       ],
@@ -2234,6 +2226,9 @@
       ],
       "Microphone access is blocked. Allow it in your browser settings.": [
         "Prístup k mikrofónu je blokovaný. Povoľte ho v nastaveniach prehliadača."
+      ],
+      "Microphone not detected": [
+        "Mikrofón nebol rozpoznaný"
       ],
       "Missing inviter email": [
         "Chýba emailová adresa pozývajúceho"
@@ -2268,6 +2263,9 @@
       "Not a valid number": [
         "Neplatné číslo"
       ],
+      "Not enough storage space to record. Free up space and try again.": [
+        "Nie je dostatok voľného miesta na nahrávanie. Uvoľnite miesto a skúste to znova."
+      ],
       "Only admins can convert external invitations": [
         "Externé pozvánky môžu konvertovať len správcovia"
       ],
@@ -2297,6 +2295,9 @@
       ],
       "Please allow screen sharing in your system permissions, then try again": [
         "Povoľte, prosím, zdieľanie obrazovky v systémových povoleniach a potom to skúste znova"
+      ],
+      "Recording stopped because it could not be saved. We kept it up to this point.": [
+        "Nahrávanie sa zastavilo, pretože sa nedalo uložiť. Do tohto bodu sme v ňom pokračovali."
       ],
       "Renaming root item is not allowed": [
         "Pomenovanie koreňovej položky nie je povolené"
@@ -2351,6 +2352,9 @@
       ],
       "The email addresses do not match": [
         "Emailové adresy sa nezhodujú"
+      ],
+      "The emoji could not be added because the message is at its character limit": [
+        "Toto emoji nebolo možné pridať, pretože správa dosiahla maximálny počet znakov."
       ],
       "The meeting password is incorrect": [
         "Heslo k stretnutiu je nesprávne"
@@ -2421,8 +2425,14 @@
       "Too many server requests, please try again later": [
         "Príliš veľa požiadaviek na server, skúste to neskôr, prosím"
       ],
+      "Try turning live captions off and on again.": [
+        "Skúste vypnúť a opäť zapnúť živé titulky."
+      ],
       "Try using only letters, numerals, and _.-": [
         "Skúste používať iba písmená, číslice a _.-"
+      ],
+      "Unable to generate captions": [
+        "Nie je možné vygenerovať titulky"
       ],
       "Unknown error": [
         "Neznáma chyba"
@@ -2444,6 +2454,9 @@
       ],
       "We couldn’t send a verification code using this method.": [
         "Touto metódou sa nám nepodarilo odoslať overovací kód."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Zlá obnovovacia fráza. Skúste to znovu, alebo použite inú metódu obnovenia."
       ],
       "You can create public links for your own files only": [
         "Verejné odkazy môžete vytvárať iba na svoje vlastné súbory"
@@ -2667,9 +2680,6 @@
       " and ": [
         " a "
       ],
-      "${ deviceLabel } is available again": [
-        "${ deviceLabel } je opäť k dispozícii"
-      ],
       "${ maxParticipants } participant limit reached": [
         "Bol dosiahnutý limit ${ maxParticipants } účastníkov"
       ],
@@ -2682,8 +2692,14 @@
       "${ MEET_APP_NAME } needs microphone access so others can hear you during the call. You can turn it off at any time.": [
         "${ MEET_APP_NAME } potrebuje prístup k mikrofónu, aby vás ostatní počas hovoru počuli. Túto funkciu môžete kedykoľvek vypnúť."
       ],
+      "${ MEET_APP_NAME } needs screen recording access so you can share your screen during the call. After you allow it, macOS will ask you to reopen the app.": [
+        "${ MEET_APP_NAME } potrebuje prístup k nahrávaniu obrazovky, aby ste mohli počas hovoru zdieľať svoju obrazovku. Po udelení povolenia vás systém macOS vyzve, aby ste aplikáciu znovu otvorili."
+      ],
       "${ MEET_APP_NAME } needs WebRTC to run. Please update your browser or device to a version that supports WebRTC, try a different browser, or disable any extensions that might be blocking it.": [
         "${ MEET_APP_NAME } potrebuje na spustenie WebRTC. Aktualizujte, prosím, svoj prehliadač alebo zariadenie na verziu, ktorá podporuje WebRTC, vyskúšajte iný prehliadač alebo deaktivujte všetky rozšírenia, ktoré by mohli blokovať jeho fungovanie."
+      ],
+      "${ meetingName } has ended": [
+        "Schôdza ${ meetingName } skončila"
       ],
       "${ mlsMemberCount } member": [
         "${ mlsMemberCount } člen",
@@ -2775,6 +2791,9 @@
       "Anyone with the link can join immediately": [
         "Každý, kto má tento odkaz, sa môže ihneď pripojiť"
       ],
+      "App didn't open?": [
+        "Aplikácia sa neotvorila?"
+      ],
       "Approve participants before they can join": [
         "Schváliť účastníkov, aby sa mohli pripojiť"
       ],
@@ -2817,8 +2836,8 @@
       "Camera permission denied": [
         "Povolenie kamery zamietnuté"
       ],
-      "Captions are on": [
-        "Titulky sú zapnuté"
+      "Captions on": [
+        "Titulky zapnuté"
       ],
       "Changes are staged. Apply to rebuild the preview with the new constants.": [
         "Zmeny sú rozdelené do fáz. Použite príkaz na prekreslenie náhľadu s novými konštantami."
@@ -2910,6 +2929,9 @@
       "End the meeting for everyone?": [
         "Ukončiť schôdzu pre všetkých?"
       ],
+      "End to end encrypted chat": [
+        "End-to-end šifrovaný chat."
+      ],
       "End-to-end encryption is active for audio and video.": [
         "End-to-end šifrovanie je aktívne pre audio a video."
       ],
@@ -2970,14 +2992,14 @@
       "Get a secure meeting link then add it to your calendar": [
         "Získajte bezpečný odkaz na schôdzu a potom ho pridajte do svojho kalendára"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Získajte ten najlepší zážitok s desktopovou aplikáciou ${ protonMeet }."
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Prejdite na about:config, vyhľadajte media.peerconnection.enabled a nastavte ho na true."
       ],
       "Host": [
         "Hostiteľ"
+      ],
+      "Host has another meeting in progress": [
+        "Hostiteľ má práve prebiehajúcu ďalšiu schôdzku"
       ],
       "Host has disabled live captions for this meeting.": [
         "Hostiteľ deaktivoval živé titulky pre túto schôdzu."
@@ -3036,6 +3058,9 @@
       "Loading calendar, please wait. You will be redirected to our scheduling platform Calendly in a new tab.": [
         "Načítanie kalendára, počkajte, prosím. V novej karte budete presmerovaní na našu plánovaciu platformu Calendly."
       ],
+      "Loading captions…": [
+        "Načítavanie titulkov…"
+      ],
       "Loading meeting details...": [
         "Načítavanie podrobnosti o schôdzi..."
       ],
@@ -3087,6 +3112,9 @@
       "Meeting recordings aren’t supported in Firefox.": [
         "Nahrávanie schôdzí nie je v prehliadači Firefox podporované."
       ],
+      "Meeting recordings aren’t supported in Safari private mode.": [
+        "V súkromnom režime prehliadača Safari nie je možné schôdze zaznamenávať."
+      ],
       "Meeting time is up": [
         "Čas schôdzky vypršal"
       ],
@@ -3116,6 +3144,9 @@
       ],
       "Microphone permission denied": [
         "Prístup k mikrofónu zamietnutý"
+      ],
+      "More options": [
+        "Ďalšie možnosti"
       ],
       "Mute microphone": [
         "Stlmiť mikrofón"
@@ -3168,11 +3199,26 @@
       "No speaker detected": [
         "Nebol zistený žiadny reproduktor"
       ],
+      "Noise cancellation was turned off because your device is experiencing performance issues. You can turn it back on in audio settings.": [
+        "Funkcia potlačenia hluku bola vypnutá, pretože vaše zariadenie má problémy s výkonom. Môžete ju opäť zapnúť v nastaveniach zvuku."
+      ],
       "Not sent, check your connection.": [
         "Neodoslané, skontrolujte pripojenie."
       ],
       "notify everyone here": [
         "informovať všetkých prítomných"
+      ],
+      "Now using ${ first } and ${ second }.": [
+        "Teraz používate ${ first } a ${ second }."
+      ],
+      "Now using ${ first }, ${ second } and ${ third }.": [
+        "Teraz používate ${ first }, ${ second } a ${ third }."
+      ],
+      "Now using ${ first }.": [
+        "Teraz používate ${ first }."
+      ],
+      "Only a partial meeting recording was available.": [
+        "K dispozícii bol len čiastočný záznam zo schôdze."
       ],
       "Only meetings you created appear here": [
         "Tu sa zobrazia len vami vytvorené schôdzky"
@@ -3297,6 +3343,27 @@
       "Select a speaker": [
         "Vyberte reproduktor"
       ],
+      "Selected camera has disconnected.": [
+        "Vybraná kamera sa odpojila."
+      ],
+      "Selected devices have disconnected.": [
+        "Vybrané zariadenia sa odpojili."
+      ],
+      "Selected microphone and camera have disconnected.": [
+        "Vybraný mikrofón a kamera sa odpojili."
+      ],
+      "Selected microphone and speaker have disconnected.": [
+        "Vybraný mikrofón a reproduktor sa odpojili."
+      ],
+      "Selected microphone has disconnected.": [
+        "Vybraná mikrofón sa odpojil."
+      ],
+      "Selected speaker and camera have disconnected.": [
+        "Vybraný reproduktor a kamera sa odpojili."
+      ],
+      "Selected speaker has disconnected.": [
+        "Vybraná reproduktor sa odpojil."
+      ],
       "Servers are unreachable. Please try again in a few minutes": [
         "Servery sú nedostupné. Skúste to prosím o pár minút"
       ],
@@ -3309,8 +3376,11 @@
       "Share screen": [
         "Zdieľať obrazovku"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Zdieľajte tento odkaz, aby ste pozvali ďalších. Kedykoľvek ho nájdete aj kliknutím na ikonu informácií na paneli nástrojov."
+      "Share this link to invite others. You can also find it anytime under Meeting info in the More options menu.": [
+        "Zdieľajte tento odkaz a pozvite ďalších účastníkov. Odkaz nájdete kedykoľvek aj v časti „Informácie o schôdzi“ v ponuke „Ďalšie možnosti“."
+      ],
+      "Show live captions?": [
+        "Zobraziť titulky v reálnom čase?"
       ],
       "Sign in": [
         "Prihlásiť sa"
@@ -3320,9 +3390,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "Výber reproduktora nie je v tomto prehliadači k dispozícii. Použite nastavenia systému na výber iného reproduktora."
-      ],
-      "Start recording": [
-        "Spustiť nahrávanie"
       ],
       "Starting camera…": [
         "Spúšťanie kamery…"
@@ -3342,6 +3409,9 @@
       "Thank you for joining.": [
         "Ďakujeme, že ste sa pripojili."
       ],
+      "The captioning service uses meeting audio. Captions are visible only to you and aren’t saved.": [
+        "Služba titulkovania využíva zvukový záznam zo stretnutia. Titulky sú viditeľné len pre vás a neukladajú sa."
+      ],
       "The host has removed you from this meeting. If this was a mistake, ask the host to invite you again.": [
         "Hostiteľ vás odstránil z tejto schôdze. Ak to bola chyba, požiadajte hostiteľa, aby vás pozval znova."
       ],
@@ -3353,6 +3423,9 @@
       ],
       "This is an end to end encrypted chat with ephemeral messages, which disappear at the end of the call.": [
         "Toto je end-to-end šifrovaný chat s dočasnými správami, ktoré zmiznú po ukončení hovoru."
+      ],
+      "This meeting has a time limit. This call will disconnect soon.": [
+        "Táto schôdzka má časové obmedzenie. Hovor sa čoskoro ukončí."
       ],
       "This meeting has a waiting room": [
         "Táto schôdza má čakáreň"
@@ -3366,8 +3439,8 @@
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "Táto schôdzka dosiahla časový limit bezplatného balíka. Prejdite na vyšší balík, aby ste si v budúcnosti mohli predĺžiť dĺžku schôdzí."
       ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "Táto schôdza bola otvorená v desktopovej aplikácii ${ MEET_APP_NAME }."
+      "This meeting reached the time limit.": [
+        "Táto schôdza dosiahla časový limit."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "Táto nahrávka bude z tohto zariadenia natrvalo vymazaná. Túto akciu nie je možné vrátiť späť."
@@ -3381,11 +3454,11 @@
       "This will sign you out of all accounts currently logged in.": [
         "Týmto sa odhlásite zo všetkých aktuálne prihlásených účtov."
       ],
+      "Time is up for ${ meetingName }": [
+        "Čas schôdze ${ meetingName } vypršal"
+      ],
       "To create a room, you'll need **a free ${ BRAND_NAME } Account** so we can save the room. This only takes a few seconds.": [
         "Na vytvorenie miestnosti budete potrebovať **bezplatný účet ${ BRAND_NAME }**, aby sme ju mohli uložiť. Zaberie to len pár sekúnd."
-      ],
-      "To create live captions, the captioning service needs access to the meeting audio. Captions are only visible to you and are not saved.": [
-        "Na vytvorenie titulkov v reálnom čase potrebuje služba titulkovania prístup k zvukovému záznamu stretnutia. Titulky sú viditeľné len pre vás a neukladajú sa."
       ],
       "To fight spam and abuse, please verify you are human.": [
         "Aby ste zamedzili spamu a obťažovaniu, potvrďte, že ste človek."
@@ -3407,9 +3480,6 @@
       ],
       "Turn on camera": [
         "Zapnúť kameru"
-      ],
-      "Turn on live captions?": [
-        "Zapnúť titulky v reálnom čase?"
       ],
       "Unable to reconnect to the meeting. Please rejoin or leave.": [
         "Nie je možné opätovne sa pripojiť k stretnutiu. Prihláste sa znova alebo stretnutie opustite, prosím."
@@ -3437,6 +3507,9 @@
       ],
       "Virtual background initializing": [
         "Inicializácia virtuálneho pozadia"
+      ],
+      "Waiting for speech…": [
+        "Čakám na rozprávanie…"
       ],
       "Waiting for the host to admit you. The host has been notified that you're waiting.": [
         "Čakáte, kým vás hostiteľ prijme. Hostiteľ bol informovaný, že čakáte."
@@ -3471,11 +3544,11 @@
       "Yesterday — ${ absoluteDate }": [
         "Včera — ${ absoluteDate }"
       ],
+      "You": [
+        "Vy"
+      ],
       "You are almost there": [
         "Už ste takmer tam"
-      ],
-      "You can close this tab.": [
-        "Túto kartu môžete zavrieť."
       ],
       "You can now return to the application to continue": [
         "Teraz sa môžete vrátiť do aplikácie a pokračovať"
@@ -3486,11 +3559,20 @@
       "You can still turn off your microphone and camera anytime in the meeting": [
         "Mikrofón a kameru môžete kedykoľvek počas stretnutia vypnúť."
       ],
+      "You have too many meetings in progress": [
+        "Máte príliš veľa prebiehajúcich schôdzí"
+      ],
+      "You left ${ meetingName }": [
+        "Opustili ste ${ meetingName }"
+      ],
       "You left the meeting": [
         "Odišli ste zo schôdzky"
       ],
       "You need a paid ${ MEET_SHORT_APP_NAME } or Workspace plan for this feature. Contact your organization admin to upgrade.": [
         "Na túto funkciu potrebujete platený plán ${ MEET_SHORT_APP_NAME } alebo Workspace. Ak chcete inovovať, kontaktujte správcu svojej organizácie."
+      ],
+      "You were removed from ${ meetingName }": [
+        "Boli ste vylúčení zo schôdze ${ meetingName }."
       ],
       "You were removed from the meeting": [
         "Boli ste vylúčení zo schôdze."
@@ -3528,38 +3610,14 @@
       "Your browser or device isn’t supported": [
         "Váš prehliadač alebo zariadenie nie je podporované."
       ],
-      "Your camera was disconnected. Now using ${ deviceLabel }.": [
-        "Vaša kamera bola.odpojená Teraz sa používa ${ deviceLabel }."
-      ],
-      "Your device was disconnected. Now using ${ deviceLabel }.": [
-        "Vaše zariadenie bolo odpojené. Teraz sa používa ${ deviceLabel }."
-      ],
       "Your email will only be used for this one-time verification.": [
         "Váš email bude použitý iba pre toto jednorazové overenie."
       ],
       "Your meeting is ready": [
         "Vaša schôdza je pripravená."
       ],
-      "Your microphone and camera were disconnected. Now using other devices.": [
-        "Váš mikrofón a kamera boli odpojené. Teraz sa používajú iné zariadenia."
-      ],
-      "Your microphone and speaker were disconnected. Now using other devices.": [
-        "Váš mikrofón a reproduktor boli odpojené. Teraz sa používajú iné zariadenia."
-      ],
-      "Your microphone was disconnected. Now using ${ deviceLabel }.": [
-        "Váš mikrofón bol odpojený. Teraz sa používa ${ deviceLabel }."
-      ],
-      "Your microphone, speaker and camera were disconnected. Now using other devices.": [
-        "Váš mikrofón, reproduktor a kamera boli odpojené. Teraz sa používajú iné zariadenia."
-      ],
       "Your phone number will only be used for this one-time verification.": [
         "Vaše telefónne číslo bude použité iba pre toto jednorazové overenie."
-      ],
-      "Your speaker and camera were disconnected. Now using other devices.": [
-        "Váš reproduktor a kamera boli odpojené. Teraz sa používajú iné zariadenia."
-      ],
-      "Your speaker was disconnected. Now using ${ deviceLabel }.": [
-        "Váš reproduktor bol odpojený. Teraz sa používa ${ deviceLabel }."
       ],
       "You’re about to open a link in a new tab. Make sure you trust the website before continuing.": [
         "Chystáte sa otvoriť odkaz v novej karte. Pred pokračovaním sa uistite, že danej webovej stránke dôverujete."
@@ -3665,6 +3723,9 @@
       "Does not repeat": [
         "Neopakuje sa"
       ],
+      "Don’t show this message again": [
+        "Túto správu už nezobrazovať"
+      ],
       "Download .ics": [
         "Stiahnuť .ics"
       ],
@@ -3734,6 +3795,9 @@
       "Live caption agent": [
         "Agent živých titulkov"
       ],
+      "Live captions": [
+        "Živé titulky"
+      ],
       "Manage recordings": [
         "Spravovať nahrávky"
       ],
@@ -3754,6 +3818,9 @@
       ],
       "Monday to Friday": [
         "Pondelok až piatok"
+      ],
+      "More options": [
+        "Ďalšie možnosti"
       ],
       "Mountain landscape background": [
         "Pozadie s horskou scenériou"
@@ -3885,6 +3952,110 @@
       ],
       "What’s this?": [
         "Čo je to?"
+      ]
+    },
+    "Lumo emoji name": {
+      "Alert": [
+        "Upozornenie"
+      ],
+      "Browse folders": [
+        "Prehliadať priečinky"
+      ],
+      "Cash": [
+        "Hotovosť"
+      ],
+      "Celebrate": [
+        "Oslavovanie"
+      ],
+      "Cheers": [
+        "Na zdravie"
+      ],
+      "Chef's kiss": [
+        "Šéfkuchárov bozk"
+      ],
+      "Coffee": [
+        "Káva"
+      ],
+      "Cowboy": [
+        "Kovboj"
+      ],
+      "Encrypt": [
+        "Šifrovanie"
+      ],
+      "Gaming": [
+        "Hranie"
+      ],
+      "Halo": [
+        "Haló"
+      ],
+      "Happy": [
+        "Šťastný"
+      ],
+      "Love": [
+        "Láska"
+      ],
+      "Mild panic": [
+        "Jemná panika"
+      ],
+      "Mind blown": [
+        "To ma ohromilo"
+      ],
+      "Nine lives": [
+        "Deväť životov"
+      ],
+      "Party": [
+        "Párty"
+      ],
+      "Perk": [
+        "Perk"
+      ],
+      "Popcorn": [
+        "Pukance"
+      ],
+      "Rocket": [
+        "Raketa"
+      ],
+      "Sad": [
+        "Smutný"
+      ],
+      "Schrödinger in a box": [
+        "Schrödinger v škatuli"
+      ],
+      "Schrödinger out of the box": [
+        "Schrödinger vonku zo škatule"
+      ],
+      "Search": [
+        "Hľadať"
+      ],
+      "Sit": [
+        "Sadnúť"
+      ],
+      "Slay": [
+        "Zabijak"
+      ],
+      "Sleepy": [
+        "Ospalý"
+      ],
+      "Sweep": [
+        "Zametanie"
+      ],
+      "Thank you": [
+        "Ďakujem"
+      ],
+      "Think": [
+        "Premýšľanie"
+      ],
+      "This is fine": [
+        "Toto je fajn"
+      ],
+      "Watch left": [
+        "Pozri vľavo"
+      ],
+      "Watch right": [
+        "Pozri vpravo"
+      ],
+      "Write": [
+        "Písať"
       ]
     },
     "meet": {
@@ -4234,6 +4405,9 @@
       "Allow microphone": [
         "Povoliť mikrofón"
       ],
+      "Allow screen recording": [
+        "Povoliť nahrávanie obrazovky"
+      ],
       "Are you sure?": [
         "Ste si istí?"
       ],
@@ -4360,6 +4534,9 @@
       "Meeting": [
         "Schôdzka"
       ],
+      "Meeting actions": [
+        "Akcie schôdze"
+      ],
       "Meeting created": [
         "Schôdza bola vytvorená"
       ],
@@ -4407,6 +4584,9 @@
       ],
       "Publications": [
         "Publikácie"
+      ],
+      "Quick reactions": [
+        "Rýchle reakcie"
       ],
       "Reconnection Testing": [
         "Testovanie opätovného pripojenia"

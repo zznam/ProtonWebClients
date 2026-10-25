@@ -4,7 +4,8 @@ import { c } from 'ttag';
 
 import { Href } from '@proton/atoms/Href/Href';
 import { getStaticURL } from '@proton/shared/lib/helpers/url';
-import type { Api, HumanVerificationMethodType } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { HumanVerificationMethodType } from '@proton/shared/lib/interfaces/HumanVerification';
 
 import Alert from '../../../components/alert/Alert';
 import { Tabs } from '../../../components/tabs/Tabs';
@@ -18,7 +19,7 @@ import { HumanVerificationSteps } from './interface';
 
 import './HumanVerificationModal.scss';
 
-export interface HumanVerificationFormProps {
+interface HumanVerificationFormProps {
     // The api of the session that got challenged, which is not necessarily the one the app provides
     api: Api;
     onSubmit: (token: string, tokenType: HumanVerificationMethodType, verificationModel?: VerificationModel) => void;

@@ -4,11 +4,15 @@ import { PasswordError, TOTPError } from '@proton/shared/lib/authentication/erro
 import type { SSOInfoResponse } from '@proton/shared/lib/authentication/interface';
 import { ExternalSSOError } from '@proton/shared/lib/authentication/ssoExternalLogin';
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors';
-import type { Address, KeySalt, User } from '@proton/shared/lib/interfaces';
-import { getRequiresPasswordSetup } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { KeySalt } from '@proton/shared/lib/interfaces/KeySalt';
+import type { User } from '@proton/shared/lib/interfaces/User';
+import { getRequiresPasswordSetup } from '@proton/shared/lib/keys/accountType';
+import { ClaimableAddressType } from '@proton/shared/lib/keys/setupAddress';
 import type { OrganizationData } from '@proton/shared/lib/keys/unprivatization/helper';
 
 import type { AuthSession } from '../../content/authSession';
+import { type ClaimedAddressSetup, UnavailableUsernameError } from '../auth/claimedAddress';
 import {
     AuthType,
     type AuthTypeData,
@@ -26,13 +30,19 @@ import type {
 } from '../steps/credentials/state-machine/credentialsActors';
 import {
     InvalidLoginError,
+    SSOSignInRejectedError,
     SwitchToSRPError,
     SwitchToSSOError,
 } from '../steps/credentials/state-machine/credentialsErrors';
-import { credentialsStateMachine, selectAuthType } from '../steps/credentials/state-machine/credentialsStateMachine';
+import {
+    credentialsStateMachine,
+    selectCredentialsForm,
+    selectSubmitting,
+} from '../steps/credentials/state-machine/credentialsStateMachine';
 import { lost2FAStateMachine } from '../steps/password-account/screens/lost-two-factor/state-machine/lost2FAStateMachine';
 import {
     passwordAccountStateMachine,
+    selectClaimedAddressGeneration,
     selectScreenActor,
 } from '../steps/password-account/state-machine/passwordAccountStateMachine';
 import { type SSODeviceEvent, SSOStateMachineTags, ssoStateMachine } from '../steps/sso/state-machine/ssoStateMachine';
@@ -40,8 +50,8 @@ import { type SignInMachineEmitted, type SignInMachineInput, SignInStateMachine 
 import type { CreatedAuth } from './signInActors';
 import type { SignInAuthState } from './signInAuthState';
 
-jest.mock('@proton/shared/lib/keys', () => ({
-    ...jest.requireActual('@proton/shared/lib/keys'),
+jest.mock('@proton/shared/lib/keys/accountType', () => ({
+    ...jest.requireActual('@proton/shared/lib/keys/accountType'),
     getRequiresPasswordSetup: jest.fn(() => false),
 }));
 
@@ -62,6 +72,8 @@ interface AuthOptions {
     keys?: number;
     temporaryPassword?: boolean;
     authType?: AuthType;
+    /** Reached through the claimed-address recovery. */
+    claimedAddress?: boolean;
 }
 
 /** What `createAuthState` builds for an account like this. */
@@ -72,12 +84,14 @@ const makeCreatedAuth = ({
     keys = 1,
     temporaryPassword = false,
     authType = AuthType.Srp,
+    claimedAddress = false,
 }: AuthOptions = {}): CreatedAuth => ({
     auth: {
         credentials: {
             authType,
             username: 'member@example.com',
             loginPassword: 'secret',
+            claimedAddress: claimedAddress ? { id: 'a1x9k2' } : undefined,
             authResponse: {
                 TemporaryPassword: temporaryPassword ? 1 : 0,
                 SSOBackupPasswordDisabled: sso?.backupPasswordDisabled,
@@ -112,12 +126,16 @@ const deferred = <T>() => {
 interface Overrides {
     /** The lost-2FA flow with its verifications' requests; without it they aren't provided. */
     lostTwoFactorFlow?: typeof lost2FAStateMachine;
+    /** The claimed-address recovery's request. */
+    authenticateWithClaimedAddress?: (input: unknown) => Promise<PrimaryAuthResult>;
     prepareSignIn?: () => Promise<void>;
     startAuthSession?: () => Promise<void>;
     fetchAccountType?: () => Promise<AccountType>;
     fetchSSOInfo?: () => Promise<SSOInfoResponse>;
     authenticateWithPassword?: (values: CredentialsFormValues) => Promise<PrimaryAuthResult>;
-    authorizeWithSSOProvider?: () => Promise<SSOProviderResult>;
+    authorizeWithSSOProvider?: (args: {
+        input: { token: string | undefined; persistent: boolean };
+    }) => Promise<SSOProviderResult>;
     authenticateWithSSOToken?: (input: unknown) => Promise<PrimaryAuthResult>;
     created?: CreatedAuth;
     /** What the SSO flow's preparation returns, unless `prepareSSO` is overridden. */
@@ -130,6 +148,9 @@ interface Overrides {
     unlockWithBackupPassword?: () => Promise<SSOSignInResult>;
     setupSSOKeys?: () => Promise<AuthSession>;
     completeSignIn?: () => Promise<void>;
+    /** How the claimed-address recovery finishes; by default the account needs a new address. */
+    loadClaimedAddressSetup?: () => Promise<ClaimedAddressSetup>;
+    createClaimedAddress?: (input: unknown) => Promise<{ session: AuthSession; address: string }>;
 }
 
 function startActor(overrides: Overrides = {}, input: Partial<SignInMachineInput> = {}) {
@@ -140,6 +161,9 @@ function startActor(overrides: Overrides = {}, input: Partial<SignInMachineInput
         completeSignIn: jest.fn(overrides.completeSignIn ?? (() => Promise.resolve())),
         prepareSignIn: jest.fn(overrides.prepareSignIn ?? (() => Promise.resolve())),
         startAuthSession: jest.fn(overrides.startAuthSession ?? (() => Promise.resolve())),
+        authenticateWithClaimedAddress: jest.fn(
+            overrides.authenticateWithClaimedAddress ?? ((_input: unknown) => Promise.resolve(primaryAuth))
+        ),
         authenticateWithPassword: jest.fn(
             overrides.authenticateWithPassword ?? ((_values: CredentialsFormValues) => Promise.resolve(primaryAuth))
         ),
@@ -150,6 +174,30 @@ function startActor(overrides: Overrides = {}, input: Partial<SignInMachineInput
         finalize: jest.fn(() => Promise.resolve(session)),
         setupPassword: jest.fn(() => Promise.resolve(session)),
         unlockKeys: jest.fn(overrides.unlockKeys ?? (() => Promise.resolve(session))),
+        loadClaimedAddressSetup: jest.fn(
+            overrides.loadClaimedAddressSetup ??
+                (() =>
+                    Promise.resolve<ClaimedAddressSetup>({
+                        type: 'create',
+                        generation: { availableDomains: ['proton.me'], claimableAddress: undefined },
+                    }))
+        ),
+        unlockKeyPassword: jest.fn((input: { password: string; isOnePasswordMode: boolean }) =>
+            input.password === 'wrong'
+                ? Promise.reject(new PasswordError('Wrong password'))
+                : Promise.resolve({
+                      keyPassword: 'key-password',
+                      clearKeyPassword: input.password,
+                      isOnePasswordMode: input.isOnePasswordMode,
+                  })
+        ),
+        createClaimedAddress: jest.fn(
+            overrides.createClaimedAddress ??
+                ((input: unknown) => {
+                    const { username, domain } = input as { username: string; domain: string };
+                    return Promise.resolve({ session, address: `${username}@${domain}` });
+                })
+        ),
         setupSSOKeys: jest.fn((_input: unknown) => (overrides.setupSSOKeys ?? (() => Promise.resolve(session)))()),
         changeBackupPassword: jest.fn((_input: unknown) => Promise.resolve(session)),
         unlockWithBackupPassword: jest.fn(
@@ -183,6 +231,10 @@ function startActor(overrides: Overrides = {}, input: Partial<SignInMachineInput
                         overrides.authorizeWithSSOProvider ?? (() => Promise.resolve({ uid: 'uid', token: 'token' }))
                     ),
                     authenticateWithSSOToken: fromPromise(({ input }) => spies.authenticateWithSSOToken(input)),
+                    // The recovery signs in with the claimed address IDs, like `authenticateWithPassword`
+                    authenticateWithClaimedAddress: fromPromise(({ input }) =>
+                        spies.authenticateWithClaimedAddress(input)
+                    ),
                 },
                 actions: {
                     navigateBack: spies.navigateBack,
@@ -197,6 +249,9 @@ function startActor(overrides: Overrides = {}, input: Partial<SignInMachineInput
                     setupPassword: fromPromise(() => spies.setupPassword()),
                     finalize: fromPromise(() => spies.finalize()),
                     unlockKeys: fromPromise(() => spies.unlockKeys()),
+                    loadClaimedAddressSetup: fromPromise(() => spies.loadClaimedAddressSetup()),
+                    unlockKeyPassword: fromPromise(({ input }) => spies.unlockKeyPassword(input)),
+                    createClaimedAddress: fromPromise(({ input }) => spies.createClaimedAddress(input)),
                     completeSignIn: fromPromise(() => spies.completeSignIn()),
                     // The flow checks backup codes as the second factor, like `verifyTwoFactor`
                     lostTwoFactorFlow:
@@ -348,7 +403,11 @@ describe('SignInStateMachine', () => {
             [{ type: AuthType.ExternalSSO }, 'externalSSO'],
         ] as const)('starts on the form for %o', (authTypeData, mode) => {
             const { actor } = startWith(authTypeData);
-            expect(credentialsFlow(actor).getSnapshot().matches({ form: mode })).toBe(true);
+            expect(
+                credentialsFlow(actor)
+                    .getSnapshot()
+                    .matches({ form: { signIn: mode } })
+            ).toBe(true);
             expect(actor.getSnapshot().context.step).toBe('credentials');
         });
 
@@ -367,7 +426,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'signingIn' } })
+                    .matches({ form: { signIn: { srp: 'signingIn' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().hasTag('submitting')).toBe(true);
             // One-password mode: the flow completes without a screen of its own, so the form stays up
@@ -377,11 +436,314 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'submitted' } })
+                    .matches({ form: { signIn: { srp: 'submitted' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().hasTag('submitting')).toBe(true);
             pending.resolve();
             await waitUntilSettled(actor);
+        });
+
+        describe('a claimed address', () => {
+            const claimedScreen = (actor: Actor) => selectCredentialsForm(credentialsFlow(actor).getSnapshot());
+            /** The username step, for an SSO account whose address the organization also claimed. */
+            const claimedSSOAccount = () =>
+                Promise.resolve<AccountType>({
+                    type: 'sso',
+                    ssoInfo: {
+                        SSOChallengeToken: 'challenge',
+                        ClaimedAddresses: ['a1x9k2', 'b7q4m0'],
+                    } as SSOInfoResponse,
+                });
+            /** From the choice, the password screen for the account the address belonged to. */
+            const startRecovery = async (overrides: Overrides = {}) => {
+                const started = startWith(
+                    { type: AuthType.Auto },
+                    { fetchAccountType: claimedSSOAccount, ...overrides }
+                );
+                await submitUsername(started.actor);
+                credentialsFlow(started.actor).send({ type: 'claimed.recoveryChosen' });
+                return started;
+            };
+
+            it('signs in with the claimed address and hands it to the sign-in like any other', async () => {
+                const { actor, spies } = await startRecovery();
+
+                credentialsFlow(actor).send({
+                    type: 'claimed.submitted',
+                    payload: { password: 'old-password', payload: {} },
+                });
+                await waitUntil(() => spies.authenticateWithClaimedAddress.mock.calls.length === 1);
+                expect(spies.authenticateWithClaimedAddress).toHaveBeenCalledWith(
+                    expect.objectContaining({ claimedAddresses: ['a1x9k2', 'b7q4m0'], email: usernameForm.username })
+                );
+
+                // It goes on through the account flow like any other sign-in, with no second factor here
+                await waitUntilSettled(actor);
+                expect(isSignedIn(actor)).toBe(true);
+                expect(spies.completeSignIn).toHaveBeenCalled();
+            });
+
+            it('shows a failed recovery request, and stays on its password screen', async () => {
+                const error = new Error('network');
+                const { actor, errors } = await startRecovery({
+                    authenticateWithClaimedAddress: () => Promise.reject(error),
+                });
+
+                credentialsFlow(actor).send({
+                    type: 'claimed.submitted',
+                    payload: { password: 'old-password', payload: {} },
+                });
+
+                // The credentials step passes the error on to the sign-in
+                await waitUntil(() => errors().length > 0);
+                expect(errors()).toEqual([error]);
+                expect(claimedScreen(actor)).toBe('claimedVerify');
+            });
+
+            it('shows a password that matches none of the candidates inline, and clears it on edit', async () => {
+                const { actor, errors } = await startRecovery({
+                    authenticateWithClaimedAddress: () =>
+                        Promise.reject(new InvalidLoginError(apiError(API_CUSTOM_ERROR_CODES.INVALID_LOGIN))),
+                });
+
+                credentialsFlow(actor).send({
+                    type: 'claimed.submitted',
+                    payload: { password: 'wrong', payload: {} },
+                });
+                await waitUntil(() => credentialsFlow(actor).getSnapshot().context.errorMessage !== undefined);
+
+                expect(credentialsFlow(actor).getSnapshot().context.errorMessage).toBe(
+                    `error ${API_CUSTOM_ERROR_CODES.INVALID_LOGIN}`
+                );
+                expect(claimedScreen(actor)).toBe('claimedVerify');
+                // A wrong password is the form's to show, not the sign-in's
+                expect(errors()).toEqual([]);
+                credentialsFlow(actor).send({ type: 'credentials.edited' });
+                expect(credentialsFlow(actor).getSnapshot().context.errorMessage).toBeUndefined();
+            });
+
+            it('returns from its password screen to the form the recovery was reached from', async () => {
+                const { actor } = await startRecovery();
+
+                credentialsFlow(actor).send({ type: 'decision.back' });
+
+                expect(
+                    credentialsFlow(actor)
+                        .getSnapshot()
+                        .matches({ form: { signIn: { auto: 'idle' } } })
+                ).toBe(true);
+            });
+
+            it('waits for the password check before going back, as it may have signed in already', async () => {
+                const { actor } = await startRecovery({ authenticateWithClaimedAddress: () => new Promise(() => {}) });
+
+                credentialsFlow(actor).send({
+                    type: 'claimed.submitted',
+                    payload: { password: 'old-password', payload: {} },
+                });
+                expect(credentialsFlow(actor).getSnapshot().can({ type: 'decision.back' })).toBe(false);
+                credentialsFlow(actor).send({ type: 'decision.back' });
+
+                expect(claimedScreen(actor)).toBe('claimedVerify');
+                expect(selectSubmitting(credentialsFlow(actor).getSnapshot())).toBe(true);
+            });
+
+            it('moves on to proving ownership when the user recovers instead of using the identity provider', async () => {
+                const { actor } = startWith({ type: AuthType.Auto }, { fetchAccountType: claimedSSOAccount });
+                await submitUsername(actor);
+
+                credentialsFlow(actor).send({ type: 'claimed.recoveryChosen' });
+
+                expect(claimedScreen(actor)).toBe('claimedVerify');
+            });
+
+            it('asks which way to go in when the domain also has an identity provider', async () => {
+                const { actor } = startWith(
+                    { type: AuthType.Auto },
+                    {
+                        fetchAccountType: () =>
+                            Promise.resolve<AccountType>({
+                                type: 'sso',
+                                ssoInfo: {
+                                    SSOChallengeToken: 'challenge',
+                                    ClaimedAddresses: ['a1x9k2'],
+                                } as SSOInfoResponse,
+                            }),
+                    }
+                );
+
+                await submitUsername(actor);
+
+                expect(credentialsFlow(actor).getSnapshot().matches({ form: 'claimedAddress' })).toBe(true);
+                expect(claimedScreen(actor)).toBe('claimedChoice');
+            });
+
+            it('returns to the username form when the recovery was reached from it', async () => {
+                const { actor } = startWith(
+                    { type: AuthType.Auto },
+                    {
+                        fetchAccountType: () =>
+                            Promise.resolve<AccountType>({
+                                type: 'sso',
+                                ssoInfo: {
+                                    SSOChallengeToken: 'challenge',
+                                    ClaimedAddresses: ['a1x9k2'],
+                                } as SSOInfoResponse,
+                            }),
+                    }
+                );
+                await submitUsername(actor);
+
+                credentialsFlow(actor).send({ type: 'decision.back' });
+
+                expect(
+                    credentialsFlow(actor)
+                        .getSnapshot()
+                        .matches({ form: { signIn: { auto: 'idle' } } })
+                ).toBe(true);
+            });
+
+            it('opens the identity provider when the user picks it from the choice', async () => {
+                const { actor } = startWith(
+                    { type: AuthType.Auto },
+                    {
+                        fetchAccountType: () =>
+                            Promise.resolve<AccountType>({
+                                type: 'sso',
+                                ssoInfo: {
+                                    SSOChallengeToken: 'challenge',
+                                    ClaimedAddresses: ['a1x9k2'],
+                                } as SSOInfoResponse,
+                            }),
+                        authorizeWithSSOProvider: () => new Promise(() => {}),
+                    }
+                );
+                await submitUsername(actor);
+
+                credentialsFlow(actor).send({ type: 'claimed.ssoRequested' });
+
+                await waitUntil(() =>
+                    credentialsFlow(actor)
+                        .getSnapshot()
+                        .matches({ form: { claimedAddress: { ssoProvider: 'awaitingProvider' } } })
+                );
+                // The choice stays up, loading, while the window is open
+                expect(claimedScreen(actor)).toBe('claimedChoice');
+            });
+            /** The first window opens with the token the choice was reached with; the user closes it, and reopens. */
+            const openTwice = async (overrides: Overrides = {}) => {
+                const tokens: (string | undefined)[] = [];
+                const fetchSSOInfo = jest.fn(() =>
+                    Promise.resolve({ SSOChallengeToken: 'fresh', ClaimedAddresses: [] } as unknown as SSOInfoResponse)
+                );
+                const started = startWith(
+                    { type: AuthType.Auto },
+                    {
+                        fetchAccountType: claimedSSOAccount,
+                        fetchSSOInfo,
+                        // The user closes each window
+                        authorizeWithSSOProvider: ({ input }) => {
+                            tokens.push(input.token);
+                            return Promise.reject(new ExternalSSOError('closed'));
+                        },
+                        ...overrides,
+                    }
+                );
+                await submitUsername(started.actor);
+                for (const opened of [1, 2]) {
+                    credentialsFlow(started.actor).send({ type: 'claimed.ssoRequested' });
+                    await waitUntil(
+                        () =>
+                            tokens.length === opened &&
+                            credentialsFlow(started.actor)
+                                .getSnapshot()
+                                .matches({ form: { claimedAddress: 'choice' } })
+                    );
+                }
+                return { ...started, tokens, fetchSSOInfo };
+            };
+
+            it('opens the first window with the token it has, and fetches a fresh one for the next', async () => {
+                const { actor, tokens, fetchSSOInfo } = await openTwice();
+
+                // Opening the window uses up the token, so only the second opening needs a new one
+                expect(tokens).toEqual(['challenge', 'fresh']);
+                expect(fetchSSOInfo).toHaveBeenCalledTimes(1);
+                expect(claimedScreen(actor)).toBe('claimedChoice');
+            });
+
+            it('recovers with the candidates it was entered with, whatever SSO info loads after', async () => {
+                const { actor, spies } = await openTwice();
+
+                credentialsFlow(actor).send({ type: 'claimed.recoveryChosen' });
+                credentialsFlow(actor).send({
+                    type: 'claimed.submitted',
+                    payload: { password: 'old-password', payload: {} },
+                });
+                await waitUntil(() => spies.authenticateWithClaimedAddress.mock.calls.length === 1);
+
+                expect(spies.authenticateWithClaimedAddress).toHaveBeenCalledWith(
+                    expect.objectContaining({ claimedAddresses: ['a1x9k2', 'b7q4m0'] })
+                );
+            });
+
+            it('cancels the identity provider back to the choice, and goes back to the form while it is open', async () => {
+                const { actor } = startWith(
+                    { type: AuthType.Auto },
+                    { fetchAccountType: claimedSSOAccount, authorizeWithSSOProvider: () => new Promise(() => {}) }
+                );
+                await submitUsername(actor);
+                const awaitingProvider = () =>
+                    credentialsFlow(actor)
+                        .getSnapshot()
+                        .matches({ form: { claimedAddress: { ssoProvider: 'awaitingProvider' } } });
+
+                credentialsFlow(actor).send({ type: 'claimed.ssoRequested' });
+                await waitUntil(awaitingProvider);
+                credentialsFlow(actor).send({ type: 'externalSSO.cancelled' });
+                expect(
+                    credentialsFlow(actor)
+                        .getSnapshot()
+                        .matches({ form: { claimedAddress: 'choice' } })
+                ).toBe(true);
+
+                credentialsFlow(actor).send({ type: 'claimed.ssoRequested' });
+                await waitUntil(awaitingProvider);
+                expect(credentialsFlow(actor).getSnapshot().can({ type: 'decision.back' })).toBe(true);
+                credentialsFlow(actor).send({ type: 'decision.back' });
+                expect(
+                    credentialsFlow(actor)
+                        .getSnapshot()
+                        .matches({ form: { signIn: { auto: 'idle' } } })
+                ).toBe(true);
+            });
+
+            it('starts a new attempt when the SSO form switches to the password form', async () => {
+                const { actor } = startWith(
+                    { type: AuthType.ExternalSSO },
+                    {
+                        fetchSSOInfo: () =>
+                            Promise.resolve({
+                                SSOChallengeToken: 'challenge',
+                                ClaimedAddresses: ['a1x9k2'],
+                            } as SSOInfoResponse),
+                    }
+                );
+                await submitUsername(actor);
+                expect(claimedScreen(actor)).toBe('claimedChoice');
+                credentialsFlow(actor).send({ type: 'decision.back' });
+
+                credentialsFlow(actor).send({
+                    type: 'credentials.passwordSignInRequested',
+                    payload: { username: 'other@example.com' },
+                });
+
+                const { context } = credentialsFlow(actor).getSnapshot();
+                expect(claimedScreen(actor)).toBe('srp');
+                expect(context.username).toBe('other@example.com');
+                // The SSO info, with the claimed address's candidates, doesn't carry over
+                expect(context.ssoInfo).toBeUndefined();
+            });
         });
 
         it('shows a wrong password inline and clears it on edit', async () => {
@@ -393,7 +755,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().context.errorMessage).toBe(
                 `error ${API_CUSTOM_ERROR_CODES.INVALID_LOGIN}`
@@ -412,9 +774,9 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { externalSSO: 'idle' } })
+                    .matches({ form: { signIn: { externalSSO: 'idle' } } })
             ).toBe(true);
-            expect(selectAuthType(credentialsFlow(actor).getSnapshot())).toBe(AuthType.ExternalSSO);
+            expect(selectCredentialsForm(credentialsFlow(actor).getSnapshot())).toBe('externalSSO');
             expect(notices()).toHaveLength(1);
         });
 
@@ -430,7 +792,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(spies.redirectToAccountSSO).toHaveBeenCalledWith({ username: form.username });
         });
@@ -442,7 +804,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(errors()).toEqual([error]);
         });
@@ -454,7 +816,7 @@ describe('SignInStateMachine', () => {
             await waitUntil(() =>
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'signingIn' } })
+                    .matches({ form: { signIn: { srp: 'signingIn' } } })
             );
             expect(JSON.stringify(credentialsFlow(actor).getSnapshot().context)).not.toContain(form.password);
             login.resolve(primaryAuth);
@@ -462,7 +824,7 @@ describe('SignInStateMachine', () => {
             await waitUntil(() =>
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'submitted' } })
+                    .matches({ form: { signIn: { srp: 'submitted' } } })
             );
             expect(JSON.stringify(credentialsFlow(actor).getSnapshot().context)).not.toContain(form.password);
         });
@@ -487,7 +849,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             // The new step works: a sign-in goes through it
             spies.redirectToAccountSSO.mockReset();
@@ -516,7 +878,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'signingIn' } })
+                    .matches({ form: { signIn: { srp: 'signingIn' } } })
             ).toBe(true);
         });
 
@@ -569,17 +931,17 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { autoSrp: 'idle' } })
+                    .matches({ form: { signIn: { autoSrp: 'idle' } } })
             ).toBe(true);
-            expect(selectAuthType(credentialsFlow(actor).getSnapshot())).toBe(AuthType.AutoSrp);
+            expect(selectCredentialsForm(credentialsFlow(actor).getSnapshot())).toBe('autoSrp');
             expect(credentialsFlow(actor).getSnapshot().context.username).toBe(form.username);
             credentialsFlow(actor).send({ type: 'decision.back' });
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { auto: 'idle' } })
+                    .matches({ form: { signIn: { auto: 'idle' } } })
             ).toBe(true);
-            expect(selectAuthType(credentialsFlow(actor).getSnapshot())).toBe(AuthType.Auto);
+            expect(selectCredentialsForm(credentialsFlow(actor).getSnapshot())).toBe('auto');
         });
 
         it('goes back to the username while the password is checked, dropping that attempt', async () => {
@@ -593,14 +955,14 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { autoSrp: 'signingIn' } })
+                    .matches({ form: { signIn: { autoSrp: 'signingIn' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().can({ type: 'decision.back' })).toBe(true);
             credentialsFlow(actor).send({ type: 'decision.back' });
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { auto: 'idle' } })
+                    .matches({ form: { signIn: { auto: 'idle' } } })
             ).toBe(true);
             // The login finishing late must not sign in
             login.resolve(primaryAuth);
@@ -609,7 +971,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { auto: 'idle' } })
+                    .matches({ form: { signIn: { auto: 'idle' } } })
             ).toBe(true);
             expect(spies.completeSignIn).not.toHaveBeenCalled();
         });
@@ -622,14 +984,14 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { autoSrp: 'submitted' } })
+                    .matches({ form: { signIn: { autoSrp: 'submitted' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().can({ type: 'decision.back' })).toBe(false);
             credentialsFlow(actor).send({ type: 'decision.back' });
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { autoSrp: 'submitted' } })
+                    .matches({ form: { signIn: { autoSrp: 'submitted' } } })
             ).toBe(true);
         });
 
@@ -645,7 +1007,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'signingIn' } })
+                    .matches({ form: { signIn: { srp: 'signingIn' } } })
             ).toBe(true);
         });
 
@@ -666,7 +1028,7 @@ describe('SignInStateMachine', () => {
             await waitFor(credentialsFlow(actor), (snap) => snap.hasTag('awaitingProvider'), {
                 timeout: 1_000,
             });
-            expect(selectAuthType(credentialsFlow(actor).getSnapshot())).toBe(AuthType.Auto);
+            expect(selectCredentialsForm(credentialsFlow(actor).getSnapshot())).toBe('auto');
             provider.resolve({ uid: 'uid', token: 'token' });
             await waitUntilSettled(actor);
             expect(spies.authenticateWithSSOToken).toHaveBeenCalledWith(
@@ -694,7 +1056,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { auto: 'idle' } })
+                    .matches({ form: { signIn: { auto: 'idle' } } })
             ).toBe(true);
             expect(errors()).toEqual([]);
         });
@@ -712,7 +1074,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { auto: 'idle' } })
+                    .matches({ form: { signIn: { auto: 'idle' } } })
             ).toBe(true);
             expect(spies.redirectToAccountSSO).toHaveBeenCalledWith({ username: usernameForm.username });
             expect(errors()).toEqual([]);
@@ -729,7 +1091,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { externalSSO: 'idle' } })
+                    .matches({ form: { signIn: { externalSSO: 'idle' } } })
             ).toBe(true);
             expect(errors()).toEqual([]);
         });
@@ -744,8 +1106,61 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
+            expect(errors()).toEqual([error]);
+        });
+
+        it("shows the API's refusal of the SSO sign-in on the form, without reporting it", async () => {
+            const error = new SSOSignInRejectedError({ status: 422, data: { Code: 2011, Error: 'SSO misconfigured' } });
+            const { actor, errors } = startWith(
+                { type: AuthType.ExternalSSO },
+                { authenticateWithSSOToken: () => Promise.reject(error) }
+            );
+            await submitUsername(actor);
+            const credentials = credentialsFlow(actor);
+            expect(credentials.getSnapshot().matches({ form: { signIn: { externalSSO: 'idle' } } })).toBe(true);
+            expect(credentials.getSnapshot().context.errorMessage).toBe('SSO misconfigured');
+            expect(errors()).toEqual([]);
+
+            // Editing the email clears it
+            credentials.send({ type: 'credentials.edited' });
+            expect(credentials.getSnapshot().context.errorMessage).toBeUndefined();
+        });
+
+        it("doesn't carry the API's refusal of the SSO sign-in over to the password form", async () => {
+            const error = new SSOSignInRejectedError({ status: 422, data: { Code: 2011, Error: 'SSO misconfigured' } });
+            const { actor } = startWith(
+                { type: AuthType.ExternalSSO },
+                { authenticateWithSSOToken: () => Promise.reject(error) }
+            );
+            await submitUsername(actor);
+            const credentials = credentialsFlow(actor);
+            expect(credentials.getSnapshot().context.errorMessage).toBe('SSO misconfigured');
+
+            credentials.send({
+                type: 'credentials.passwordSignInRequested',
+                payload: { username: 'typed@example.com' },
+            });
+            expect(credentials.getSnapshot().matches({ form: { signIn: { srp: 'idle' } } })).toBe(true);
+            expect(credentials.getSnapshot().context.errorMessage).toBeUndefined();
+        });
+
+        it("reports the API's refusal of the SSO sign-in from the auto form, which has no room for it", async () => {
+            const error = new SSOSignInRejectedError({ status: 422, data: { Code: 2011, Error: 'SSO misconfigured' } });
+            const { actor, errors } = startWith(
+                { type: AuthType.Auto },
+                {
+                    fetchAccountType: () =>
+                        Promise.resolve<AccountType>({
+                            type: 'sso',
+                            ssoInfo: { SSOChallengeToken: 'challenge' } as SSOInfoResponse,
+                        }),
+                    authenticateWithSSOToken: () => Promise.reject(error),
+                }
+            );
+            await submitUsername(actor);
+            expect(credentialsFlow(actor).getSnapshot().context.errorMessage).toBeUndefined();
             expect(errors()).toEqual([error]);
         });
 
@@ -758,16 +1173,27 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().context.username).toBe('typed@example.com');
+        });
+
+        it.each([
+            [{ token: 'redirect-token', persistent: false }, false],
+            [{ token: 'redirect-token' }, true],
+        ])('exchanges the token with the "Keep me signed in" the opener saved: %o', async (externalSSO, persistent) => {
+            const { actor, spies } = startWith({ type: AuthType.ExternalSSO }, {}, { externalSSO });
+            await waitUntilSettled(actor);
+            expect(spies.authenticateWithSSOToken).toHaveBeenCalledWith(
+                expect.objectContaining({ token: 'redirect-token', persistent })
+            );
         });
 
         it('exchanges the token from the identity provider redirect once, on its own', async () => {
             const { actor, spies } = startWith(
                 { type: AuthType.ExternalSSO },
                 { authenticateWithSSOToken: () => Promise.reject(new Error('used')) },
-                { externalSSO: { token: 'redirect-token', persistent: true } }
+                { externalSSO: { token: 'redirect-token' } }
             );
             await waitUntilSettled(actor);
             expect(spies.authenticateWithSSOToken).toHaveBeenCalledWith(
@@ -777,7 +1203,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { externalSSO: 'idle' } })
+                    .matches({ form: { signIn: { externalSSO: 'idle' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().context.externalSSO).toBeUndefined();
             expect(spies.authenticateWithSSOToken).toHaveBeenCalledTimes(1);
@@ -866,7 +1292,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             // The reopened form keeps what was submitted
             expect(credentialsFlow(actor).getSnapshot().context.username).toBe(form.username);
@@ -886,7 +1312,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(spies.completeSignIn).not.toHaveBeenCalled();
         });
@@ -1060,7 +1486,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
         });
 
@@ -1078,7 +1504,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
         });
 
@@ -1094,7 +1520,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
         });
 
@@ -1160,7 +1586,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(credentialsFlow(actor).getSnapshot().context.username).toBe(form.username);
             // The next attempt gets a fresh auth session
@@ -1365,7 +1791,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(errors()).toEqual([error]);
             expect(polls[0].stopped).toBe(true);
@@ -1380,7 +1806,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(ssoData?.organizationData.logo?.cleanup).toHaveBeenCalledTimes(1);
         });
@@ -1576,7 +2002,7 @@ describe('SignInStateMachine', () => {
             await waitUntilSignedIn(actor);
         });
 
-        it('lets the user retry a wrong backup password', async () => {
+        it('shows a wrong backup password in the form, and lets the user retry', async () => {
             let attempt = 0;
             const { actor, errors } = await startOnSSO(
                 { step: SSOLoginCapabilites.ENTER_BACKUP_PASSWORD },
@@ -1590,7 +2016,12 @@ describe('SignInStateMachine', () => {
             sso(actor).send({ type: 'sso.backupPassword.submitted', payload: { password: 'wrong' } });
             await waitUntilSSOSettled(actor);
             expect(ssoScreen(actor)).toBe('backupPassword');
-            expect(errors()).toHaveLength(1);
+            expect(sso(actor).getSnapshot().context.backupPasswordError).toBe('Wrong password');
+            expect(errors()).toEqual([]);
+
+            // Typing a new password clears it
+            sso(actor).send({ type: 'sso.backupPassword.edited' });
+            expect(sso(actor).getSnapshot().context.backupPasswordError).toBeUndefined();
             sso(actor).send({ type: 'sso.backupPassword.submitted', payload: { password: 'right' } });
             await waitUntilSignedIn(actor);
         });
@@ -1780,6 +2211,269 @@ describe('SignInStateMachine', () => {
             expect(isSignedIn(actor)).toBe(true);
         });
 
+        describe('an account recovered through a claimed address', () => {
+            const claimed = (options: AuthOptions = {}) => makeCreatedAuth({ claimedAddress: true, ...options });
+            const submitAddress = (actor: Actor) => {
+                passwordAccount(actor).send({
+                    type: 'claimedAddress.submitted',
+                    payload: { username: 'new', domain: 'proton.me' },
+                });
+                return waitUntilSettled(actor);
+            };
+
+            it('creates a new address before the session, and hands it over after showing where the data went', async () => {
+                const { actor, spies } = startActor({ created: claimed() });
+                await submitCredentials(actor);
+                expect(passwordAccount(actor).getSnapshot().context.screen).toBe('claimedAddressCreate');
+                // The keys are unlocked for the new address's key, but nothing is signed in yet
+                expect(spies.unlockKeyPassword).toHaveBeenCalledWith(expect.objectContaining({ password: 'secret' }));
+                expect(spies.unlockKeys).not.toHaveBeenCalled();
+                expect(spies.finalize).not.toHaveBeenCalled();
+
+                await submitAddress(actor);
+                expect(spies.createClaimedAddress).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        username: 'new',
+                        domain: 'proton.me',
+                        // Unlocked with the login password, which the key upgrade at sign-in has to know
+                        unlocked: { keyPassword: 'key-password', clearKeyPassword: 'secret', isOnePasswordMode: true },
+                        checkAvailability: true,
+                    })
+                );
+                const flow = passwordAccount(actor).getSnapshot();
+                expect(flow.context.screen).toBe('claimedAddressDone');
+                expect(flow.context.createdAddress).toBe('new@proton.me');
+                expect(flow.context.unlocked).toBeUndefined();
+                expect(flow.can({ type: 'decision.back' })).toBe(false);
+                expect(spies.completeSignIn).not.toHaveBeenCalled();
+
+                passwordAccount(actor).send({ type: 'claimedAddress.continued' });
+                await waitUntilSettled(actor);
+                expect(isSignedIn(actor)).toBe(true);
+            });
+
+            it('creates keys with the address for an account that has none', async () => {
+                const { actor, spies } = startActor({ created: claimed({ keys: 0 }) });
+                await submitCredentials(actor);
+                expect(spies.unlockKeyPassword).not.toHaveBeenCalled();
+                await submitAddress(actor);
+                expect(spies.createClaimedAddress).toHaveBeenCalledWith(
+                    expect.objectContaining({ unlocked: undefined })
+                );
+                expect(spies.setupPassword).not.toHaveBeenCalled();
+            });
+
+            it('replaces a temporary password first, and creates the keys with the new one', async () => {
+                const { actor, spies } = startActor({ created: claimed({ keys: 0, temporaryPassword: true }) });
+                await submitCredentials(actor);
+                expect(passwordAccount(actor).getSnapshot().matches({ newPassword: 'idle' })).toBe(true);
+                expect(spies.loadClaimedAddressSetup).toHaveBeenCalledTimes(1);
+
+                passwordAccount(actor).send({ type: 'newPassword.submitted', payload: { password: 'new-password' } });
+                await waitUntilSettled(actor);
+                // Setting it up alone would create the session, and keys for no address
+                expect(spies.setupPassword).not.toHaveBeenCalled();
+                expect(passwordAccount(actor).getSnapshot().context.screen).toBe('claimedAddressCreate');
+
+                await submitAddress(actor);
+                expect(spies.createClaimedAddress).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        unlocked: undefined,
+                        auth: expect.objectContaining({
+                            credentials: expect.objectContaining({ loginPassword: 'new-password' }),
+                        }),
+                    })
+                );
+            });
+
+            it('replaces a temporary password after telling where the data lives', async () => {
+                const { actor, spies } = startActor({
+                    created: claimed({ keys: 0, temporaryPassword: true }),
+                    loadClaimedAddressSetup: () => Promise.resolve({ type: 'migrated', address: 'me@proton.me' }),
+                });
+                await submitCredentials(actor);
+                expect(passwordAccount(actor).getSnapshot().context.screen).toBe('claimedAddressDone');
+
+                passwordAccount(actor).send({ type: 'claimedAddress.continued' });
+                await waitUntilSettled(actor);
+                expect(passwordAccount(actor).getSnapshot().matches({ newPassword: 'idle' })).toBe(true);
+                expect(spies.finalize).not.toHaveBeenCalled();
+
+                passwordAccount(actor).send({ type: 'newPassword.submitted', payload: { password: 'new-password' } });
+                await waitUntilSettled(actor);
+                expect(spies.setupPassword).toHaveBeenCalledTimes(1);
+                expect(isSignedIn(actor)).toBe(true);
+            });
+
+            it('asks for the second password first in two-password mode, only to unlock', async () => {
+                const { actor, spies } = startActor({ created: claimed({ secondPassword: true }) });
+                await submitCredentials(actor);
+                expect(passwordAccount(actor).getSnapshot().matches({ unlock: 'idle' })).toBe(true);
+
+                passwordAccount(actor).send({ type: 'unlock.submitted', payload: { password: 'wrong' } });
+                await waitUntilSettled(actor);
+                expect(passwordAccount(actor).getSnapshot().context.unlockError).toBe('Wrong password');
+
+                passwordAccount(actor).send({ type: 'unlock.submitted', payload: { password: 'second' } });
+                await waitUntilSettled(actor);
+                expect(passwordAccount(actor).getSnapshot().context.screen).toBe('claimedAddressCreate');
+                expect(spies.unlockKeys).not.toHaveBeenCalled();
+                await submitAddress(actor);
+                expect(spies.createClaimedAddress).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        unlocked: { keyPassword: 'key-password', clearKeyPassword: 'second', isOnePasswordMode: false },
+                    })
+                );
+            });
+
+            it('shows a taken username in the form, without signing in, clears it on edit, and takes another', async () => {
+                const error = new UnavailableUsernameError(apiError(API_CUSTOM_ERROR_CODES.USERNAME_ALREADY_USED), {
+                    username: 'new',
+                    domain: 'proton.me',
+                });
+                let attempt = 0;
+                const { actor, spies, errors } = startActor({
+                    created: claimed(),
+                    createClaimedAddress: (input) =>
+                        attempt++ === 0
+                            ? Promise.reject(error)
+                            : Promise.resolve({
+                                  session,
+                                  address: `${(input as { username: string }).username}@proton.me`,
+                              }),
+                });
+                await submitCredentials(actor);
+                await submitAddress(actor);
+                expect(errors()).toEqual([]);
+                expect(
+                    passwordAccount(actor)
+                        .getSnapshot()
+                        .matches({ claimedAddress: { create: 'idle' } })
+                ).toBe(true);
+                expect(passwordAccount(actor).getSnapshot().context.claimedAddressError).toBe(error.message);
+                expect(spies.completeSignIn).not.toHaveBeenCalled();
+
+                // Typing another username clears it, and that one is created
+                passwordAccount(actor).send({ type: 'claimedAddress.usernameEdited' });
+                expect(passwordAccount(actor).getSnapshot().context.claimedAddressError).toBeUndefined();
+                passwordAccount(actor).send({
+                    type: 'claimedAddress.submitted',
+                    payload: { username: 'another', domain: 'proton.me' },
+                });
+                await waitUntilSettled(actor);
+                expect(spies.createClaimedAddress).toHaveBeenCalledTimes(2);
+                expect(passwordAccount(actor).getSnapshot().context.screen).toBe('claimedAddressDone');
+                expect(passwordAccount(actor).getSnapshot().context.createdAddress).toBe('another@proton.me');
+                passwordAccount(actor).send({ type: 'claimedAddress.continued' });
+                await waitUntilSettled(actor);
+                expect(isSignedIn(actor)).toBe(true);
+            });
+
+            it.each([
+                ['the address offered', 'new', undefined],
+                [
+                    'a username of their own',
+                    'mine',
+                    { username: 'new', domain: 'proton.me', type: ClaimableAddressType.Any },
+                ],
+            ])('stops offering an address once it was taken, when the user picked %s', async (_, taken, offered) => {
+                const claimableAddress = { username: 'new', domain: 'proton.me', type: ClaimableAddressType.Any };
+                const { actor } = startActor({
+                    created: claimed(),
+                    loadClaimedAddressSetup: () =>
+                        Promise.resolve({
+                            type: 'create',
+                            generation: { availableDomains: ['proton.me'], claimableAddress },
+                        }),
+                    createClaimedAddress: () =>
+                        Promise.reject(
+                            new UnavailableUsernameError(apiError(API_CUSTOM_ERROR_CODES.USERNAME_ALREADY_USED), {
+                                username: taken,
+                                domain: 'proton.me',
+                            })
+                        ),
+                });
+                await submitCredentials(actor);
+                passwordAccount(actor).send({
+                    type: 'claimedAddress.submitted',
+                    payload: { username: taken, domain: 'proton.me' },
+                });
+                await waitUntilSettled(actor);
+                expect(selectClaimedAddressGeneration(passwordAccount(actor).getSnapshot())?.claimableAddress).toEqual(
+                    offered
+                );
+            });
+
+            it('signs in again after any other failed creation, which may have created the address', async () => {
+                const error = new Error('Network error');
+                const { actor, spies, errors } = startActor({
+                    created: claimed(),
+                    createClaimedAddress: () => Promise.reject(error),
+                });
+                await submitCredentials(actor);
+                await submitAddress(actor);
+                expect(errors()).toEqual([error]);
+                expect(actor.getSnapshot().context.step).toBe('credentials');
+                expect(spies.completeSignIn).not.toHaveBeenCalled();
+            });
+
+            it('goes back to the credentials form from the create screen, with nothing signed in', async () => {
+                const { actor, spies } = startActor({ created: claimed() });
+                await submitCredentials(actor);
+                passwordAccount(actor).send({ type: 'decision.back' });
+                await waitUntilSettled(actor);
+                expect(actor.getSnapshot().context.step).toBe('credentials');
+                expect(spies.createClaimedAddress).not.toHaveBeenCalled();
+                expect(spies.completeSignIn).not.toHaveBeenCalled();
+            });
+
+            it('tells an organization member its administrator gives it addresses, then signs in without one', async () => {
+                const { actor, spies } = startActor({
+                    created: claimed(),
+                    loadClaimedAddressSetup: () => Promise.resolve({ type: 'managed' }),
+                });
+                await submitCredentials(actor);
+                expect(passwordAccount(actor).getSnapshot().context.screen).toBe('claimedAddressManaged');
+
+                passwordAccount(actor).send({ type: 'claimedAddress.continued' });
+                await waitUntilSettled(actor);
+                expect(isSignedIn(actor)).toBe(true);
+                expect(spies.unlockKeys).toHaveBeenCalledTimes(1);
+                expect(spies.unlockKeyPassword).not.toHaveBeenCalled();
+                expect(spies.createClaimedAddress).not.toHaveBeenCalled();
+            });
+
+            it('goes back to the credentials form from the organization member notice, with nothing signed in', async () => {
+                const { actor, spies } = startActor({
+                    created: claimed(),
+                    loadClaimedAddressSetup: () => Promise.resolve({ type: 'managed' }),
+                });
+                await submitCredentials(actor);
+                passwordAccount(actor).send({ type: 'decision.back' });
+                await waitUntilSettled(actor);
+                expect(actor.getSnapshot().context.step).toBe('credentials');
+                expect(spies.completeSignIn).not.toHaveBeenCalled();
+            });
+
+            it('only tells where the data lives when the account still has an enabled address, then signs in', async () => {
+                const { actor, spies } = startActor({
+                    created: claimed(),
+                    loadClaimedAddressSetup: () => Promise.resolve({ type: 'migrated', address: 'me@proton.me' }),
+                });
+                await submitCredentials(actor);
+                expect(passwordAccount(actor).getSnapshot().context.screen).toBe('claimedAddressDone');
+                expect(spies.unlockKeyPassword).not.toHaveBeenCalled();
+                // The API cleared the claim with this sign-in, so there's nothing to go back to
+                expect(passwordAccount(actor).getSnapshot().can({ type: 'decision.back' })).toBe(false);
+
+                passwordAccount(actor).send({ type: 'claimedAddress.continued' });
+                await waitUntilSettled(actor);
+                expect(isSignedIn(actor)).toBe(true);
+                expect(spies.unlockKeys).toHaveBeenCalledTimes(1);
+                expect(spies.createClaimedAddress).not.toHaveBeenCalled();
+            });
+        });
+
         it('returns to credentials and reports the error when onLogin fails', async () => {
             const error = new Error('boom');
             const { actor, errors } = startActor({ completeSignIn: () => Promise.reject(error) });
@@ -1787,7 +2481,7 @@ describe('SignInStateMachine', () => {
             expect(
                 credentialsFlow(actor)
                     .getSnapshot()
-                    .matches({ form: { srp: 'idle' } })
+                    .matches({ form: { signIn: { srp: 'idle' } } })
             ).toBe(true);
             expect(errors()).toEqual([error]);
         });

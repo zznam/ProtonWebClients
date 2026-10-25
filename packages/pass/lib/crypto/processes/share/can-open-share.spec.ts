@@ -1,15 +1,11 @@
-import type { Address, AddressKey, DecryptedKey } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { AddressKey, DecryptedKey } from '@proton/shared/lib/interfaces/Key';
 
 import { exposePassCrypto } from '../..';
-import type {
-    PassCryptoManagerContext,
-    PassCryptoWorker,
-    ShareGetResponse,
-    ShareKeyResponse,
-    ShareManager,
-} from '../../../../types';
+import type { ShareGetResponse, ShareKeyResponse } from '../../../../types/api/pass';
+import type { PassCryptoManagerContext, PassCryptoWorker, ShareManager } from '../../../../types/crypto/pass-crypto';
+import { releaseCryptoProxy, setupCryptoProxyForTesting } from '../../../../utils/tests/fixtures/crypto';
 import { PassCryptoShareError } from '../../utils/errors';
-import { releaseCryptoProxy, setupCryptoProxyForTesting } from '../../utils/testing';
 import { canOpenShare } from './can-open-share';
 
 describe('canOpenShare', () => {

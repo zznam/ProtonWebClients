@@ -2,12 +2,12 @@ import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { useUserKeys } from '@proton/account/userKeys/hooks';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useGetContact } from '@proton/mail/store/contacts/contactHooks';
 import { processApiRequestsSafe } from '@proton/shared/lib/api/helpers/safeApiRequests';
 import { prepareVCardContact } from '@proton/shared/lib/contacts/decrypt';
 import { merge } from '@proton/shared/lib/contacts/helpers/merge';
-import type { ContactMergeModel } from '@proton/shared/lib/interfaces/contacts';
+import type { ContactMergeModel } from '@proton/shared/lib/interfaces/contacts/Contact';
 import type { VCardContact } from '@proton/shared/lib/interfaces/contacts/VCard';
 import { splitKeys } from '@proton/shared/lib/keys/keys';
 

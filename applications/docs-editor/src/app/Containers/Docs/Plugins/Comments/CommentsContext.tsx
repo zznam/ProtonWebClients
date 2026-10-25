@@ -1,8 +1,10 @@
-import type { CommentInterface, CommentThreadInterface, SafeDocsUserState } from '@proton/docs-shared'
+import type { DocsComment, DocsCommentThread } from '../../contract/DocsCommentThread'
+import type { SafeDocsUserState } from '../../contract/Awareness'
 import { createContext, useContext } from 'react'
 import type { LexicalNode, NodeKey, RangeSelection } from 'lexical'
-import type { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal'
 import type { DocsLogger } from '../../contract/DocsLogger'
+import type { DeleteCommentDialogOptions } from './DeleteCommentDialog'
+import type { DocsDateFormat } from '../../contract/DocsDateFormat'
 
 type CommentsContextValue = {
   userName: string
@@ -11,6 +13,7 @@ type CommentsContextValue = {
   canComment: boolean
   suggestionsEnabled: boolean
   languageCode: Intl.LocalesArgument
+  dateFormat: DocsDateFormat
   logger: DocsLogger
   getDisplayNameForEmail: (email: string | undefined) => string
 
@@ -25,7 +28,7 @@ type CommentsContextValue = {
     content: string,
     markID?: string,
     createMarkNode?: boolean,
-  ) => Promise<CommentThreadInterface | undefined>
+  ) => Promise<DocsCommentThread | undefined>
   resolveThread: (threadId: string) => Promise<boolean>
   unresolveThread: (threadId: string) => Promise<boolean>
   deleteThread(id: string): Promise<boolean>
@@ -36,12 +39,12 @@ type CommentsContextValue = {
 
   awarenessStates: SafeDocsUserState[]
 
-  showConfirmModal: ReturnType<typeof useConfirmActionModal>[1]
+  showDeleteDialog: (options: DeleteCommentDialogOptions) => void
 
   commentInputSelection: RangeSelection | undefined
   cancelAddComment: () => void
   setCurrentCommentDraft: (draft: string | undefined) => void
-  createComment: (content: string, threadID: string) => Promise<CommentInterface | undefined>
+  createComment: (content: string, threadID: string) => Promise<DocsComment | undefined>
   editComment: (threadId: string, commentId: string, content: string) => Promise<boolean>
   deleteComment: (threadId: string, commentId: string) => Promise<boolean>
 

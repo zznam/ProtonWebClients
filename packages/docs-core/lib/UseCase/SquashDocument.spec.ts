@@ -1,5 +1,6 @@
-import type { InternalEventBusInterface } from '@proton/docs-shared'
-import { ApiResult, Result } from '@proton/docs-shared'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import { ApiResult } from '@proton/docs-shared/ApiResult'
+import { Result } from '@proton/docs-shared/Result'
 import type { DocsApi } from '../Api/DocsApi'
 import type { DecryptCommit } from './DecryptCommit'
 import type { EncryptMessage } from './EncryptMessage'
@@ -12,8 +13,8 @@ import type { LoggerInterface } from '@proton/shared/lib/logs'
 import type { UnleashClient } from '@proton/unleash/UnleashClient'
 import type { CacheService } from '../Services/CacheService'
 
-jest.mock('@proton/docs-proto', () => ({
-  ...jest.requireActual('@proton/docs-proto'),
+jest.mock('@proton/docs-proto/Generated/Squash', () => ({
+  ...jest.requireActual('@proton/docs-proto/Generated/Squash'),
   SquashLock: {
     deserializeBinary: jest.fn().mockReturnValue({
       commit: {

@@ -1,0 +1,52 @@
+import { app } from "electron";
+
+import { isHostAllowed } from "../urls/urlTests";
+import { ALLOWED_PERMISSIONS } from "../../constants";
+import { mainLogger } from "../log";
+import { getFeatureFlagManager } from "../flags/manager";
+import { FeatureFlag } from "../flags/flags";
+import { updateTrackedUID } from "./uidTracker";
+import { appSession } from "./partitions";
+
+export const setRequestPermission = () => {
+    // Security addition, reject all permissions except notifications
+    appSession().setPermissionRequestHandler((webContents, permission, callback) => {
+        try {
+            const { host, protocol } = new URL(webContents.getURL());
+            if (!isHostAllowed(host) || protocol !== "https:") {
+                return callback(false);
+            }
+
+            if (ALLOWED_PERMISSIONS.includes(permission)) {
+                return callback(true);
+            }
+
+            mainLogger.info("Permission request rejected", permission);
+            callback(false);
+        } catch (error) {
+            mainLogger.error("Permission request error", error);
+            callback(false);
+        }
+    });
+};
+
+export const extendAppVersionHeader = () => {
+    const ffManager = getFeatureFlagManager();
+    appSession().webRequest.onBeforeSendHeaders((details, change) => {
+        const uid = details.requestHeaders["x-pm-uid"];
+        if (uid !== undefined && details.webContentsId !== undefined) {
+            updateTrackedUID(details.webContentsId, uid);
+        }
+
+        if (
+            ffManager.isEnabled(FeatureFlag.APPVERSION_EXTENSION_DISABLED) ||
+            !details.requestHeaders["x-pm-appversion"]
+        ) {
+            change({});
+            return;
+        }
+
+        details.requestHeaders["x-pm-appversion"] += `+id${app.getVersion()}`;
+        change({ requestHeaders: details.requestHeaders });
+    });
+};

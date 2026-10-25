@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import useFormErrors from '@proton/components/components/v2/useFormErrors';
-import useLoading from '@proton/hooks/useLoading';
 import {
     requiredValidator,
     usernameCharacterValidator,
@@ -14,16 +13,26 @@ import {
     usernameNoEmailValidator,
     usernameStartCharacterValidator,
 } from '@proton/shared/lib/helpers/formValidators';
-import noop from '@proton/utils/noop';
 
 interface Props {
-    onSubmit: (username: string, domain: string) => Promise<void>;
+    onSubmit: (username: string, domain: string) => void;
+    loading?: boolean;
     availableDomains?: string[];
     defaultUsername?: string;
+    /** Why the last username was rejected, shown under the field. */
+    error?: string;
+    /** The user changed the username. */
+    onChange?: () => void;
 }
 
-const GenerateAddressForm = ({ defaultUsername = '', onSubmit, availableDomains }: Props) => {
-    const [loading, withLoading] = useLoading();
+const GenerateAddressForm = ({
+    defaultUsername = '',
+    onSubmit,
+    loading = false,
+    availableDomains,
+    error,
+    onChange,
+}: Props) => {
     const [username, setUsername] = useState(defaultUsername);
 
     const { validator, onFormSubmit } = useFormErrors();
@@ -39,7 +48,7 @@ const GenerateAddressForm = ({ defaultUsername = '', onSubmit, availableDomains 
                 if (loading || !onFormSubmit()) {
                     return;
                 }
-                withLoading(onSubmit(trimmedUsername, domain)).catch(noop);
+                onSubmit(trimmedUsername, domain);
             }}
             method="post"
         >
@@ -47,18 +56,23 @@ const GenerateAddressForm = ({ defaultUsername = '', onSubmit, availableDomains 
                 bigger
                 id="username"
                 label={c('Label').t`Username`}
-                error={validator([
-                    requiredValidator(trimmedUsername),
-                    usernameLengthValidator(trimmedUsername),
-                    usernameNoEmailValidator(trimmedUsername),
-                    usernameStartCharacterValidator(trimmedUsername),
-                    usernameEndCharacterValidator(trimmedUsername),
-                    usernameCharacterValidator(trimmedUsername),
-                ])}
+                error={
+                    validator([
+                        requiredValidator(trimmedUsername),
+                        usernameLengthValidator(trimmedUsername),
+                        usernameNoEmailValidator(trimmedUsername),
+                        usernameStartCharacterValidator(trimmedUsername),
+                        usernameEndCharacterValidator(trimmedUsername),
+                        usernameCharacterValidator(trimmedUsername),
+                    ]) || error
+                }
                 autoFocus
                 disableChange={loading}
                 value={username}
-                onValue={setUsername}
+                onValue={(value: string) => {
+                    setUsername(value);
+                    onChange?.();
+                }}
                 suffix={`@${domain}`}
             />
             <Button size="large" color="norm" type="submit" fullWidth loading={loading} className="mt-6">

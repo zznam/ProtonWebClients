@@ -1,7 +1,7 @@
 import { getFirstEncodableAudioCodec } from 'mediabunny';
 
+import { createWorkerLogger } from '../../../../utils/workerLogger';
 import { EncoderPipeline } from '../../mediaEncoder/encoderPipeline';
-import { createWorkerLogger } from '../../workerLogger';
 import { RECORDING_FPS } from '../constants';
 import { selectLayout } from '../layouts/selectLayout';
 import { type SceneState, VideoMixerMessageType, type VideoMixerWorkerMessage } from '../types';
@@ -99,12 +99,15 @@ async function startEncoder() {
         state.canvas,
         RECORDING_FPS,
         audioCodec,
-        (data, position) => {
-            self.postMessage({ type: 'encoderChunk', data, position }, [data.buffer]);
+        (data) => {
+            self.postMessage({ type: 'encoderChunk', data }, [data.buffer]);
         },
-        (error) => logger.error('audio sample add failed:', error)
+        (error) => {
+            logger.error('audio sample add failed:', error);
+        }
     );
     await state.encoder.start();
+    self.postMessage({ type: 'encoderStarted', audioCodec });
 }
 
 async function stopEncoder() {

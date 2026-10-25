@@ -10,13 +10,16 @@ import { useProtonDomains } from '@proton/account/protonDomains/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
-import { DropdownSizeUnit, type ModalOwnProps, Option, SelectTwo } from '@proton/components';
+import { DropdownSizeUnit } from '@proton/components/components/dropdown/utils';
+import type { ModalOwnProps } from '@proton/components/components/modalTwo/Modal';
+import Option from '@proton/components/components/option/Option';
+import SelectTwo from '@proton/components/components/selectTwo/SelectTwo';
 import useErrorHandler from '@proton/components/hooks/useErrorHandler';
 import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { getAvailableAddressDomains } from '@proton/shared/lib/helpers/address';
 import { validateEmailAddress } from '@proton/shared/lib/helpers/email';
-import type { Address } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
 
 import { Button, Input, Modal } from '../../atoms';
 

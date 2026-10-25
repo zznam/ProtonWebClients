@@ -1,12 +1,13 @@
-import type { CommentInterface, CommentThreadInterface } from '@proton/docs-shared'
+import { clsx } from 'clsx'
 import type { LexicalEditor } from 'lexical'
+import type { DocsComment, DocsCommentThread } from '../../contract/DocsCommentThread'
 import { useState, useEffect, Fragment } from 'react'
 import debounce from 'lodash/debounce'
 import { useMarkNodesContext } from '../MarkNodesContext'
 import { type SuggestionSummaryContent, generateSuggestionSummary } from '../Suggestions/generateSuggestionSummary'
 import { Icon } from '../../Components/Icon'
 import * as Icons from '../../Components/icons'
-import { c } from 'ttag'
+import { useDocsMessages } from '../../DocsDependenciesProvider'
 
 const icon = <Icon data={Icons.speechBubblePen} className="inline h-4 w-4 align-middle" />
 
@@ -16,12 +17,13 @@ const icon = <Icon data={Icons.speechBubblePen} className="inline h-4 w-4 align-
  * suggestion is accepted or rejected, then it will try to parse and display existing content.
  */
 export function useSuggestionCommentContent(
-  comment: CommentInterface,
-  thread: CommentThreadInterface,
+  comment: DocsComment,
+  thread: DocsCommentThread,
   suggestionID: string | null,
   editor: LexicalEditor,
 ) {
   const { markNodeMap } = useMarkNodesContext()
+  const messages = useDocsMessages().comments.suggestionSummary
   const [suggestionContent, setSuggestionContent] = useState<SuggestionSummaryContent | null>(null)
 
   useEffect(() => {
@@ -73,65 +75,65 @@ export function useSuggestionCommentContent(
     let title = ''
     let color: 'success' | 'weak' = 'success'
     if (type === 'insert') {
-      title = c('Label').t`Insert`
+      title = messages.insert
     } else if (type === 'delete') {
-      title = c('Label').t`Delete`
+      title = messages.delete
       color = 'weak'
     } else if (type === 'replace') {
-      title = c('Label').t`Replace`
+      title = messages.replace
     } else if (type === 'property-change' || type === 'style-change') {
-      title = c('Label').t`Format`
+      title = messages.format
     } else if (type === 'split') {
-      title = c('Label').t`Insert paragraph`
+      title = messages.insertParagraph
     } else if (type === 'join') {
-      title = c('Label').t`Delete paragraph`
+      title = messages.deleteParagraph
       color = 'weak'
     } else if (type === 'add-link') {
-      title = c('Label').t`Add link`
+      title = messages.addLink
     } else if (type === 'link-change') {
-      title = c('Label').t`Replace link`
+      title = messages.replaceLink
     } else if (type === 'delete-link') {
-      title = c('Label').t`Delete link`
+      title = messages.deleteLink
       color = 'weak'
     } else if (type === 'insert-image') {
-      title = c('Label').t`Insert image`
+      title = messages.insertImage
     } else if (type === 'delete-image') {
-      title = c('Label').t`Delete image`
+      title = messages.deleteImage
       color = 'weak'
     } else if (type === 'image-change') {
-      title = c('Label').t`Change image size`
+      title = messages.changeImageSize
     } else if (type === 'indent-change') {
-      title = c('Label').t`Change indent level`
+      title = messages.changeIndentLevel
     } else if (type === 'insert-table') {
-      title = c('Label').t`Insert table`
+      title = messages.insertTable
     } else if (type === 'insert-table-row') {
-      title = c('Label').t`Insert table row`
+      title = messages.insertTableRow
     } else if (type === 'duplicate-table-row') {
-      title = c('Label').t`Duplicate table row`
+      title = messages.duplicateTableRow
     } else if (type === 'insert-table-column') {
-      title = c('Label').t`Insert table column`
+      title = messages.insertTableColumn
     } else if (type === 'duplicate-table-column') {
-      title = c('Label').t`Duplicate table column`
+      title = messages.duplicateTableColumn
     } else if (type === 'delete-table') {
-      title = c('Label').t`Delete table`
+      title = messages.deleteTable
       color = 'weak'
     } else if (type === 'delete-table-row') {
-      title = c('Label').t`Delete table row`
+      title = messages.deleteTableRow
       color = 'weak'
     } else if (type === 'delete-table-column') {
-      title = c('Label').t`Delete table column`
+      title = messages.deleteTableColumn
       color = 'weak'
     } else if (type === 'block-type-change') {
-      title = c('Label').t`Format`
+      title = messages.format
     } else if (type === 'insert-divider') {
-      title = c('Label').t`Insert divider`
+      title = messages.insertDivider
     } else if (type === 'delete-divider') {
-      title = c('Label').t`Delete divider`
+      title = messages.deleteDivider
       color = 'weak'
     } else if (type === 'clear-formatting') {
-      title = c('Label').t`Clear formatting`
+      title = messages.clearFormatting
     } else if (type === 'align-change') {
-      title = c('Label').t`Align`
+      title = messages.align
     }
     if (!!replaceWith || type === 'delete' || type === 'insert') {
       content = `"${content}"`
@@ -142,13 +144,13 @@ export function useSuggestionCommentContent(
         .map((property) => {
           switch (property) {
             case 'background-color':
-              return c('Info').t`Highlight`
+              return messages.highlight
             case 'color':
-              return c('Info').t`Text color`
+              return messages.textColor
             case 'font-size':
-              return c('Info').t`Font size`
+              return messages.fontSize
             case 'font-family':
-              return c('Info').t`Font`
+              return messages.font
           }
         })
         .join(', ')
@@ -156,11 +158,11 @@ export function useSuggestionCommentContent(
     return (
       <Fragment key={index}>
         <div className="line-clamp-2">
-          <span className={`color-${color} font-medium`}>
+          <span className={clsx('font-medium', color === 'success' ? 'text-[--signal-success]' : 'text-[--text-weak]')}>
             {icon} {title}
             {content.length > 0 && ':'}
           </span>{' '}
-          {content} {replaceWith && <>{c('Label').t`with "${replaceWith}"`}</>}
+          {content} {replaceWith && <>{messages.replaceWith(replaceWith)}</>}
         </div>
       </Fragment>
     )

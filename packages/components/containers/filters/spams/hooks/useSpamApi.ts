@@ -12,7 +12,7 @@ import {
     updateOrgIncomingDefault,
 } from '@proton/shared/lib/api/orgIncomingDefaults';
 import { INCOMING_DEFAULTS_LOCATION } from '@proton/shared/lib/constants';
-import type { IncomingDefault } from '@proton/shared/lib/interfaces';
+import type { IncomingDefault } from '@proton/shared/lib/interfaces/IncomingDefault';
 
 import type { SpamItem, SpamLocation, SpamNavItem } from '../Spams.interfaces';
 
@@ -54,7 +54,7 @@ const getHumanReadableLocation = (location: INCOMING_DEFAULTS_LOCATION): SpamLoc
     throw new Error('location is not valid');
 };
 
-export type FetchSpams = (
+type FetchSpams = (
     location: SpamNavItem,
     search: string | undefined,
     page: number,

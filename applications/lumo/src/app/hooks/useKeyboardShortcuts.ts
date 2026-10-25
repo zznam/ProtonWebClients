@@ -1,8 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { type HotkeyTuple, useHotkeys } from '@proton/components';
-import { KeyboardKey } from '@proton/shared/lib/interfaces';
+import type { HotkeyTuple } from '@proton/hooks/useHotkeys';
+import { useHotkeys } from '@proton/hooks/useHotkeys';
+import { KeyboardKey } from '@proton/shared/lib/interfaces/Hotkeys';
 
 import { useGhostChat } from '../providers/GhostChatProvider';
 import { useIsGuest } from '../providers/IsGuestProvider';

@@ -1,9 +1,9 @@
 import type { PrivateKeyReference } from '@protontech/crypto';
 import { CryptoProxy } from '@protontech/crypto';
 
-import { usePreventLeave } from '@proton/components';
+import usePreventLeave from '@proton/components/hooks/usePreventLeave';
 import { EnrichedError, ValidationError, is4xx, is5xx, sendErrorReport } from '@proton/drive/legacy/errorHandling';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import type { HttpsProtonMeDrivePhotosTransferToPhotoStreamHistogramV1SchemaJson } from '@proton/metrics/types/drive_photos_transfer_to_photo_stream_histogram_v1.schema';
 import {
     queryDeleteChildrenLinks,

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import type { AlgorithmInfo } from '@protontech/crypto';
 import { c } from 'ttag';
 
-import { useUserSettings } from '@proton/account';
 import { addAddressKeyAction } from '@proton/account/addressKeys/addAddressKeyAction';
 import { addUserKeyAction } from '@proton/account/userKeys/addUserKeyAction';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import useLoading from '@proton/hooks/useLoading';
@@ -13,7 +13,7 @@ import { IcExclamationCircleFilled } from '@proton/icons/icons/IcExclamationCirc
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { DEFAULT_KEYGEN_TYPE, KEYGEN_CONFIGS, KEYGEN_TYPES } from '@proton/shared/lib/constants';
 import type { Address } from '@proton/shared/lib/interfaces/Address';
-import { getAlgorithmExists } from '@proton/shared/lib/keys';
+import { getAlgorithmExists } from '@proton/shared/lib/keys/keyAlgorithm';
 import noop from '@proton/utils/noop';
 
 import type { ModalProps } from '../../../components/modalTwo/Modal';

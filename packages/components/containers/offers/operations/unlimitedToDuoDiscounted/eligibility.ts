@@ -4,7 +4,8 @@ import type { Subscription } from '@proton/payments/core/subscription/interface'
 import { getAppFromPathnameSafe } from '@proton/shared/lib/apps/slugHelper';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS } from '@proton/shared/lib/constants';
-import type { ProtonConfig, UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { hasPassLifetime } from '@proton/shared/lib/user/helpers';
 
 import { hasIntentionalScheduledModification } from '../../helpers/hasIntentionalScheduledModification';
@@ -16,7 +17,7 @@ import { getDaysSincePeriodStart, isInOfferWindow } from './offerWindow';
 
 const ELIGIBLE_CYCLES: CYCLE[] = [CYCLE.YEARLY, CYCLE.TWO_YEARS];
 
-const ELIGIBLE_APPS = new Set<APP_NAMES>([APPS.PROTONMAIL, APPS.PROTONCALENDAR, APPS.PROTONDRIVE]);
+const ELIGIBLE_APPS = new Set<APP_NAMES>([APPS.PROTONMAIL]);
 
 const isEligibleApp = (protonConfig: ProtonConfig, pathname: string): boolean => {
     const { APP_NAME } = protonConfig;
@@ -32,7 +33,7 @@ const isEligibleApp = (protonConfig: ProtonConfig, pathname: string): boolean =>
 
 /**
  * Targets Unlimited subscribers on a yearly or two-yearly web plan who are approaching renewal,
- * offering Duo 12M at a discount. Runs in Mail, Calendar and Drive.
+ * offering Duo 12M at a discount. Runs in Mail only.
  */
 export function getIsEligible({
     user,

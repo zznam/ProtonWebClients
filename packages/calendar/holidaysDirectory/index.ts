@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { UserSettingsState } from '@proton/account';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { UserSettingsState } from '@proton/account/userSettings';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import { getDirectoryCalendars } from '@proton/shared/lib/api/calendars';
 import { CALENDAR_TYPE } from '@proton/shared/lib/calendar/constants';
-import type { HolidaysDirectoryCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { HolidaysDirectoryCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
 
 const name = 'holidaysDirectory' as const;
 

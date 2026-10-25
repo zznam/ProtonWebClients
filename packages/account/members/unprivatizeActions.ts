@@ -1,8 +1,8 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
-import { createEntitlementResolver } from '@proton/payments/core/entitlements/resolver';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import { createEntitlementResolverForOrgAndUser } from '@proton/payments/core/entitlements/resolver';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import {
     deleteUnprivatizationRequest,
@@ -10,11 +10,16 @@ import {
     unprivatizeMemberKeysRoute,
 } from '@proton/shared/lib/api/members';
 import { MEMBER_PRIVATE, MEMBER_ROLE } from '@proton/shared/lib/constants';
+import { getIsAddressEnabled } from '@proton/shared/lib/helpers/address';
 import { captureMessage, getSentryError } from '@proton/shared/lib/helpers/sentry';
-import type { Api, KTUserContext, Member, MemberReadyForAutomaticUnprivatization } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { KTUserContext } from '@proton/shared/lib/interfaces/KeyTransparency';
+import type { Member, MemberReadyForAutomaticUnprivatization } from '@proton/shared/lib/interfaces/Member';
 import { getIsMemberSetup } from '@proton/shared/lib/keys/memberHelper';
 import noop from '@proton/utils/noop';
 
+import { allSubscriptionsThunk } from '../allSubscriptions';
+import { type EntitlementCatalogState, entitlementCatalogThunk } from '../entitlementCatalog';
 import { type EntitlementsState, entitlementsThunk } from '../entitlements';
 import type { KtState } from '../kt';
 import { getKTUserContext } from '../kt/actions';
@@ -22,9 +27,12 @@ import { type MemberState, memberThunk } from '../member';
 import { getPendingUnprivatizationRequest, memberAcceptUnprivatization } from '../member/actions';
 import { type OrganizationKeyState, organizationKeyThunk } from '../organizationKey';
 import type { OrganizationRolesState } from '../organizationRoles';
+import { isOrgKeyRequired } from '../organizationRoles/helpers';
+import type { SubscriptionState } from '../subscription';
 import { userThunk } from '../user';
 import { userKeysThunk } from '../userKeys';
-import { MemberCreationValidationError, type MembersState, getMemberAddresses } from './index';
+import MemberCreationValidationError from './errors/MemberCreationValidationError';
+import { type MembersState, getMemberAddresses, getMemberRoles } from './index';
 import {
     getIsMemberInAutomaticApproveState,
     getIsMemberInManualAcceptState,
@@ -65,7 +73,12 @@ export const unprivatizeMember = ({
             options,
         });
         if (getMemberUnprivatizationMode(member).makeAdmin) {
-            await dispatch(updateOwnerRole({ member, makeAdmin: true, api }));
+            const roles = await dispatch(getMemberRoles({ member, cache: CacheType.None }));
+            // Assigning a role requiring the org key asks for this promotion too, but holds that role already:
+            // only the legacy admin toggle relies on the owner role being assigned here
+            if (!roles.some(({ Role }) => isOrgKeyRequired(Role))) {
+                await dispatch(updateOwnerRole({ member, makeAdmin: true, api }));
+            }
         }
         await api(unprivatizeMemberKeysRoute(member.ID, payload));
         if (member.Self) {
@@ -93,7 +106,9 @@ export const requestUnprivatization = ({
             );
         }
         const memberAddresses = await dispatch(getMemberAddresses({ member, retry: true }));
-        const primaryEmailAddress = memberAddresses?.[0].Email;
+        // Disabled addresses can hold an obsolete signed key list (Data: null), which makes the member
+        // fail to accept the request. Pick the first enabled address instead of relying on ordering.
+        const primaryEmailAddress = memberAddresses?.find(getIsAddressEnabled)?.Email;
         if (!primaryEmailAddress) {
             throw new MemberCreationValidationError(
                 c('unprivatization').t`The user must have an address to request data access`
@@ -200,14 +215,30 @@ export const unprivatizeSelfForMsp = ({
     api: Api;
 }): ThunkAction<
     Promise<void>,
-    KtState & MemberState & MembersState & OrganizationKeyState & EntitlementsState & OrganizationRolesState,
+    KtState &
+        MemberState &
+        MembersState &
+        OrganizationKeyState &
+        EntitlementsState &
+        OrganizationRolesState &
+        SubscriptionState &
+        EntitlementCatalogState,
     ProtonThunkArguments,
     UnknownAction
 > => {
     return async (dispatch) => {
         try {
-            const entitlements = createEntitlementResolver(await dispatch(entitlementsThunk({ api })));
-            if (!entitlements.orgIsMspEligible) {
+            const [allEntitlements, allSubscriptions, entitlementCatalog] = await Promise.all([
+                dispatch(entitlementsThunk()),
+                dispatch(allSubscriptionsThunk()),
+                dispatch(entitlementCatalogThunk()),
+            ]);
+            const entitlements = createEntitlementResolverForOrgAndUser(
+                entitlementCatalog,
+                allEntitlements,
+                allSubscriptions
+            );
+            if (!entitlements.isMspEligible) {
                 return;
             }
             const member = await dispatch(memberThunk({ cache: CacheType.None }));

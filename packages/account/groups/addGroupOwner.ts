@@ -1,22 +1,19 @@
-import type { ThunkAction, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
-
 import { CryptoProxy } from '@protontech/crypto';
 import type { SessionKey } from '@protontech/crypto';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ThunkAction, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
+
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import {
     type InviteGroupOwnerParameters,
     addGroupOwner,
     inviteGroupOwner as inviteGroupOwnerApi,
 } from '@proton/shared/lib/api/groups';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
-import type {
-    Address,
-    AddressKey,
-    Api,
-    ApiKeysConfig,
-    DecryptedKey,
-    EnhancedMember,
-} from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { ApiKeysConfig } from '@proton/shared/lib/interfaces/EncryptionPreferences';
+import type { AddressKey, DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
 import { getDecryptedAddressKey } from '@proton/shared/lib/keys/addressKeys';
 import { getDecryptedUserKeys } from '@proton/shared/lib/keys/getDecryptedUserKeys';
 import {

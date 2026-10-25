@@ -8,11 +8,16 @@ import { Avatar } from '@proton/atoms/Avatar/Avatar';
 import { Button } from '@proton/atoms/Button/Button';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import type { ModalOwnProps } from '@proton/components/index';
-import { ModalTwo, ModalTwoContent, SettingsLink, Toggle } from '@proton/components/index';
+import SettingsLink from '@proton/components/components/link/SettingsLink';
+import type { ModalOwnProps } from '@proton/components/components/modalTwo/Modal';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import Toggle from '@proton/components/components/toggle/Toggle';
+import { isDesktopEnvironment } from '@proton/lumo-api-client/core/desktop-tools';
 import { LUMO_SHORT_APP_NAME } from '@proton/shared/lib/constants';
 
 import { useLumoUserSettings } from '../../../hooks';
+import { useDictationLanguage } from '../../../hooks/useDictationLanguage';
 import { useDriveFolderIndexing } from '../../../hooks/useDriveFolderIndexing';
 import { useLumoAnimatedBackground } from '../../../hooks/useLumoAnimatedBackground';
 import { useLumoAuthAction } from '../../../hooks/useLumoAuthAction';
@@ -29,8 +34,10 @@ import { selectSpaceMap } from '../../../redux/slices/core/spaces';
 import { SearchService } from '../../../services/search/searchService';
 import type { Conversation, Message, SpaceId } from '../../../types';
 import { LumoSettingsUpsellSection } from '../../../upsells/composed/LumoSettingsUpsellSection';
+import { sendArtifactCreationDefaultChangedEvent } from '../../../util/telemetry';
 import { getInitials } from '../../../util/username';
 import LumoThemeButton from '../../Buttons/LumoThemeButton';
+import { DictationLanguageSelect } from '../../Composer/DictationLanguageSelect';
 import { useNativeComposerVisibilityApi } from '../../Composer/hooks/useNativeComposerVisibilityApi';
 import { IndexingStatusBanner } from '../../Files/DriveBrowser/IndexingStatusBanner';
 import { CreateFreeAccountLink } from '../../Guest/CreateFreeAccountLink/CreateFreeAccountLink';
@@ -38,6 +45,7 @@ import { SignInButton } from '../../Guest/SignInLink';
 import { type IconName, LumoIcon } from '../../LumoIcon/LumoIcon';
 import AboutPanel from './AboutPanel';
 import DeleteAllButton from './DeleteAllButton';
+import DesktopSettingsPanel from './DesktopSettingsPanel';
 import { FontSizeSettingRow } from './FontSizeSettingRow';
 import MemoryPanel from './MemoryPanel';
 import MobileManageSubscriptionButton from './MobileManageSubscriptionButton';
@@ -82,6 +90,23 @@ const BASE_SETTINGS_ITEMS: SettingsItem[] = [
     },
     { id: 'about', icon: 'Info', getText: () => c('collider_2025: Settings Item').t`About`, guest: true },
 ];
+
+const DESKTOP_APP_SETTINGS_ITEM: SettingsItem = {
+    id: 'desktop',
+    icon: 'Blocks',
+    getText: () => c('collider_2025: Settings Item').t`Desktop app`,
+    guest: false,
+};
+
+function buildSettingsItems(memoryEnabled: boolean, desktopAppSettingsEnabled: boolean): SettingsItem[] {
+    const items = memoryEnabled ? BASE_SETTINGS_ITEMS : BASE_SETTINGS_ITEMS.filter((item) => item.id !== 'memory');
+    if (!desktopAppSettingsEnabled) {
+        return items;
+    }
+    const generalIndex = items.findIndex((item) => item.id === 'general');
+    const insertAt = generalIndex >= 0 ? generalIndex + 1 : items.length;
+    return [...items.slice(0, insertAt), DESKTOP_APP_SETTINGS_ITEM, ...items.slice(insertAt)];
+}
 
 const LumoSettingsSidebar = ({
     activePanel,
@@ -176,13 +201,18 @@ const AppearanceSettingsPanel = () => {
 
 /** General settings panel for authenticated users */
 const GeneralSettingsPanelAuth = ({ onClose }: { onClose?: () => void }) => {
-    const { externalTools: isLumoToolingEnabled, visualizationInstructions: isVisualizationInstructionsEnabled } =
-        useLumoFlags();
+    const {
+        externalTools: isLumoToolingEnabled,
+        artifactsView: isArtifactsViewEnabled,
+        visualizationInstructions: isVisualizationInstructionsEnabled,
+    } = useLumoFlags();
     const [user] = useUser();
     const userId = user?.ID;
     const { lumoUserSettings, updateSettings } = useLumoUserSettings();
+    const { language: dictationLanguage, setLanguage: setDictationLanguage } = useDictationLanguage();
     const showProjectConversationsInHistory = lumoUserSettings.showProjectConversationsInHistory ?? false;
     const automaticWebSearch = lumoUserSettings.automaticWebSearch ?? false;
+    const automaticArtifactCreation = lumoUserSettings.automaticArtifactCreation ?? true;
     const visualizationInstructionsEnabled = lumoUserSettings.isVisualizationInstructionsEnabled ?? true;
 
     // Index management state
@@ -267,8 +297,9 @@ const GeneralSettingsPanelAuth = ({ onClose }: { onClose?: () => void }) => {
             {/* Project conversations in history toggle */}
             <SettingsSectionItem
                 icon="Folder"
-                text={c('collider_2025: Title').t`Show project chats in history`}
-                subtext={c('collider_2025: Description').t`Include project conversations in the main chat history`}
+                text={c('collider_2025: Title').t`Project chats in Recent`}
+                subtext={c('collider_2025: Description')
+                    .t`Show chats from your projects alongside other chats in the Recent section of the sidebar.`}
                 button={
                     <Toggle
                         id="show-project-conversations-toggle"
@@ -287,8 +318,8 @@ const GeneralSettingsPanelAuth = ({ onClose }: { onClose?: () => void }) => {
             {isLumoToolingEnabled && (
                 <SettingsSectionItem
                     icon="Globe"
-                    text={c('collider_2025: Title').t`Automatic web search`}
-                    subtext={c('collider_2025: Description').t`Always enable web search for new conversations`}
+                    text={c('collider_2025: Title').t`Web search`}
+                    subtext={c('collider_2025: Description').t`Enable web search by default in new chats.`}
                     button={
                         <Toggle
                             id="automatic-web-search-toggle"
@@ -304,11 +335,35 @@ const GeneralSettingsPanelAuth = ({ onClose }: { onClose?: () => void }) => {
                 />
             )}
 
+            {isArtifactsViewEnabled && (
+                <SettingsSectionItem
+                    icon="FileText"
+                    text={c('collider_2025: Title').t`Creations`}
+                    subtext={c('collider_2025: Description')
+                        .t`Let ${LUMO_SHORT_APP_NAME} open documents, code, and web pages in a canvas beside your chat. Change this for individual chats in Tools.`}
+                    button={
+                        <Toggle
+                            id="automatic-artifact-creation-toggle"
+                            checked={automaticArtifactCreation}
+                            onChange={() => {
+                                const enabled = !automaticArtifactCreation;
+                                sendArtifactCreationDefaultChangedEvent(enabled);
+                                updateSettings({
+                                    automaticArtifactCreation: enabled,
+                                    _autoSave: true,
+                                });
+                            }}
+                        />
+                    }
+                />
+            )}
+
             {isVisualizationInstructionsEnabled && (
                 <SettingsSectionItem
                     icon="ChartLine"
-                    text={c('collider_2025: Title').t`Visualization mode`}
-                    subtext={c('collider_2025: Description').t`Let ${LUMO_SHORT_APP_NAME} visualize data with charts`}
+                    text={c('collider_2025: Title').t`Data visualizations`}
+                    subtext={c('collider_2025: Description')
+                        .t`Let ${LUMO_SHORT_APP_NAME} generate charts when they help explain an answer.`}
                     button={
                         <Toggle
                             id="visualization-instructions-toggle"
@@ -324,14 +379,29 @@ const GeneralSettingsPanelAuth = ({ onClose }: { onClose?: () => void }) => {
                 />
             )}
 
+            <SettingsSectionItem
+                icon="Mic"
+                text={c('collider_2025: Title').t`Dictation language`}
+                subtext={c('collider_2025: Description').t`Choose the language you speak when using dictation.`}
+                button={
+                    <div className="min-w-custom" style={{ '--min-w-custom': '10rem' }}>
+                        <DictationLanguageSelect
+                            id="dictation-language-select"
+                            value={dictationLanguage}
+                            onChange={setDictationLanguage}
+                        />
+                    </div>
+                }
+            />
+
             {/* Search Index Management */}
             <SettingsSectionItem
                 icon="Search"
-                text={c('collider_2025: Title').t`Search Index`}
+                text={c('collider_2025: Title').t`Search index`}
                 subtext={
                     <div className="flex flex-column gap-1">
                         <span className="color-weak">{c('collider_2025: Description')
-                            .t`Encrypted search index for chats and Drive files.`}</span>
+                            .t`Reset the encrypted search index for your chats and Drive files.`}</span>
 
                         {showIndexingProgress && (
                             <IndexingStatusBanner
@@ -350,9 +420,9 @@ const GeneralSettingsPanelAuth = ({ onClose }: { onClose?: () => void }) => {
 
             <SettingsSectionItem
                 icon="MessageSquare"
-                text={c('collider_2025: Title').t`Delete everything`}
+                text={c('collider_2025: Title').t`Delete all data`}
                 subtext={c('collider_2025: Description')
-                    .t`Permanently delete your projects, chats, and saved memories. This is irreversible.`}
+                    .t`Permanently delete your projects, chats, and saved memories. This cannot be undone.`}
                 button={<DeleteAllButton onClose={onClose} />}
             />
         </div>
@@ -446,16 +516,22 @@ interface SettingsModalProps extends ModalOwnProps {
 }
 
 const SettingsModal = ({ initialPanel = 'account', ...modalProps }: SettingsModalProps) => {
-    const { memory: isMemoryFeatureEnabled } = useLumoFlags();
-    const [activePanel, setActivePanel] = useState(
-        initialPanel === 'memory' && !isMemoryFeatureEnabled ? 'account' : initialPanel
-    );
+    const { memory: isMemoryFeatureEnabled, externalTools: isExternalToolsEnabled } = useLumoFlags();
+    const showDesktopAppSettings = isExternalToolsEnabled && isDesktopEnvironment();
+    const [activePanel, setActivePanel] = useState(() => {
+        if (initialPanel === 'memory' && !isMemoryFeatureEnabled) {
+            return 'account';
+        }
+        if (initialPanel === 'desktop' && !showDesktopAppSettings) {
+            return 'account';
+        }
+        return initialPanel;
+    });
     const isGuest = useIsGuest();
     const closeModal = modalProps.onClose;
     const SettingsItems = useMemo(
-        () =>
-            isMemoryFeatureEnabled ? BASE_SETTINGS_ITEMS : BASE_SETTINGS_ITEMS.filter((item) => item.id !== 'memory'),
-        [isMemoryFeatureEnabled]
+        () => buildSettingsItems(isMemoryFeatureEnabled, showDesktopAppSettings),
+        [isMemoryFeatureEnabled, showDesktopAppSettings]
     );
 
     useNativeComposerVisibilityApi({ hideComposer: true });
@@ -495,7 +571,10 @@ const SettingsModal = ({ initialPanel = 'account', ...modalProps }: SettingsModa
                         <div className="flex flex-column flex-nowrap flex-1 content-container">
                             {/* Mobile: settings title */}
                             <div className="mobile-section-header md:hidden">
-                                <h1 className="text-2xl text-bold m-0">Settings</h1>
+                                <h1 className="text-2xl text-bold m-0">{
+                                    // translator: Heading of the app settings panel.
+                                    c('collider_2025:Label').t`Settings`
+                                }</h1>
                             </div>
 
                             {/* Desktop: top bar with active panel name */}
@@ -543,6 +622,9 @@ const SettingsModal = ({ initialPanel = 'account', ...modalProps }: SettingsModa
                                 )}
                                 {activePanel === 'general' && !isGuest && (
                                     <GeneralSettingsPanelAuth onClose={closeModal} />
+                                )}
+                                {activePanel === 'desktop' && showDesktopAppSettings && (
+                                    <DesktopSettingsPanel onClose={closeModal} />
                                 )}
                                 {activePanel === 'appearance' && <AppearanceSettingsPanel />}
                                 {activePanel === 'about' && <AboutPanel />}

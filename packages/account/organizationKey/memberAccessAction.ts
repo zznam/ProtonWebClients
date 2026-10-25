@@ -1,6 +1,6 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { revoke } from '@proton/shared/lib/api/auth';
 import { getSilentApi, getUIDApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { authMember } from '@proton/shared/lib/api/members';
@@ -11,8 +11,8 @@ import {
     maybeResumeSessionByUser,
     persistSession,
 } from '@proton/shared/lib/authentication/persistedSessionHelper';
-import type { Member } from '@proton/shared/lib/interfaces';
-import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
+import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys/getDecryptedUserKeys';
 import noop from '@proton/utils/noop';
 
 import type { MembersState } from '../members';

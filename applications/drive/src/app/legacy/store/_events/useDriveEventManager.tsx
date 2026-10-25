@@ -1,15 +1,15 @@
 import { createContext, useContext, useMemo, useRef } from 'react';
 
 import { useApi } from '@proton/app-context/useApi';
-import { useEventManager } from '@proton/components';
+import useEventManager from '@proton/components/hooks/useEventManager';
 import { logError } from '@proton/drive/legacy/errorHandling';
-import metrics from '@proton/metrics';
 import { eventLoopTimingTracker } from '@proton/metrics/eventLoopMetrics';
+import metrics from '@proton/metrics/metricsInstance';
 import { queryLatestVolumeEvent, queryVolumeEvents } from '@proton/shared/lib/api/drive/volume';
 import type { EventManager } from '@proton/shared/lib/eventManager/eventManager';
 import createEventManager from '@proton/shared/lib/eventManager/eventManager';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import type { DriveEventsResult } from '@proton/shared/lib/interfaces/drive/events';
 import generateUID from '@proton/utils/generateUID';
 

@@ -18,7 +18,7 @@ import useModalState, { useModalStateWithData } from '../../../components/modalT
 import Prompt from '../../../components/prompt/Prompt';
 import useEventManager from '../../../hooks/useEventManager';
 
-export interface Props {
+interface Props {
     method: SavedPaymentMethod;
     methods: SavedPaymentMethod[];
     app: APP_NAMES;
@@ -36,13 +36,13 @@ const PaymentMethodActions = ({ method, methods, app }: Props) => {
 
     const deleteMethod = async () => {
         await api(deletePaymentMethod(method.ID));
-        await call();
+        await call().catch(noop);
         createNotification({ text: c('Success').t`Payment method deleted` });
     };
 
     const markAsDefault = async () => {
         await markPaymentMethodAsDefault(api, method.ID, methods);
-        await call();
+        await call().catch(noop);
         createNotification({ text: c('Success').t`Payment method updated` });
     };
 

@@ -61,9 +61,6 @@
       "A participant reacted with ${ emoji }": [
         "一名參與者以 ${ emoji } 做出反應"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "由於網路限制，已透過 TURN 中繼模式連線。這可能會增加延遲並影響通話品質。"
-      ],
       "Connection lost. Reconnecting…": [
         "連線中斷。正在重新連線…"
       ],
@@ -276,9 +273,6 @@
       "Download": [
         "下載"
       ],
-      "Download app": [
-        "下載應用程式"
-      ],
       "Download local participant report": [
         "下載本地參與者報告"
       ],
@@ -381,6 +375,9 @@
       "Minimize preview": [
         "最小化預覽"
       ],
+      "More info": [
+        "更多資訊"
+      ],
       "More info: ${ safeTitle }": [
         "更多資訊：${ safeTitle }"
       ],
@@ -399,8 +396,8 @@
       "Noise cancellation": [
         "噪音抑制"
       ],
-      "Open app": [
-        "開啟應用程式"
+      "Not now": [
+        "現在不要"
       ],
       "Open link": [
         "開啟檢視"
@@ -567,9 +564,6 @@
       "Stay in meeting": [
         "留在會議中"
       ],
-      "Stop opening meetings in the desktop app": [
-        "停止在桌面應用程式中開啟會議"
-      ],
       "Stop receiving video": [
         "停止接收視訊"
       ],
@@ -581,6 +575,9 @@
       ],
       "Stop Recording Track Stats": [
         "停止錄製軌道統計資料"
+      ],
+      "Stop sharing": [
+        "停止分享"
       ],
       "Submit": [
         "送出"
@@ -653,9 +650,6 @@
       "Blur background": [
         "模糊背景"
       ],
-      "Chat": [
-        "聊天"
-      ],
       "Close": [
         "關閉"
       ],
@@ -668,9 +662,6 @@
       "Copy meeting link": [
         "複製會議連結"
       ],
-      "Debug overlay": [
-        "偵錯覆疊"
-      ],
       "Go to dashboard": [
         "前往儀表板"
       ],
@@ -679,12 +670,6 @@
       ],
       "Lock meeting": [
         "鎖定會議"
-      ],
-      "Lower hand": [
-        "取消舉手"
-      ],
-      "Meeting details": [
-        "會議詳細資料"
       ],
       "More options": [
         "更多選項"
@@ -701,23 +686,11 @@
       "Participant host control options": [
         "參與者主持人控制選項"
       ],
-      "Participants": [
-        "參與者"
-      ],
-      "Raise hand": [
-        "舉手"
-      ],
       "Rotate camera": [
         "旋轉相機"
       ],
       "Save my name on this device": [
         "在此裝置上儲存我的名稱"
-      ],
-      "Screen share": [
-        "螢幕共享"
-      ],
-      "Settings": [
-        "設定"
       ],
       "Stop recording and download.": [
         "停止錄製並下載。"
@@ -728,17 +701,11 @@
       "Toggle emoji reactions": [
         "切換表情符號回應"
       ],
-      "Toggle meeting details": [
-        "切換顯示會議詳細資料"
-      ],
       "Toggle participants": [
         "移除參與者"
       ],
       "Toggle screen share": [
         "切換螢幕共享"
-      ],
-      "Toggle settings": [
-        "切換設定"
       ],
       "Video settings": [
         "視頻設定"
@@ -793,16 +760,6 @@
     "Badge": {
       "Active": [
         "生效"
-      ]
-    },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "由於您的網路限制，已透過 TURN 轉送模式連線。這可能會增加延遲並影響通話品質。"
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME }桌面應用程式"
       ]
     },
     "Bug category": {
@@ -1890,6 +1847,9 @@
       "Incorrect backup password. Please try again.": [
         "備份密碼錯誤。請重新再試。"
       ],
+      "Incorrect password. Please try again.": [
+        "密碼不正確。請再試一次。"
+      ],
       "Incorrect second password. Please try again.": [
         "第二密碼錯誤。請重新再試。"
       ],
@@ -1971,6 +1931,9 @@
       "Signature verification for ${ signatureType } failed": [
         "失敗替 ${ signatureType } 簽名驗證"
       ],
+      "Signature verification for ${ signatureType } failed: ${ errorMessage }": [
+        "失敗替 ${ signatureType } 簽名驗證: ${ errorMessage }"
+      ],
       "Some file data failed to upload. Please try again.": [
         "部分檔案上載失敗。請稍後再試。"
       ],
@@ -2046,8 +2009,14 @@
       "Username must end with a letter or digit": [
         "使用者名稱的結尾必須為字母或數字"
       ],
+      "Verification keys for ${ signatureType } are not available": [
+        "無可用於 ${ signatureType } 種類的金鑰驗證"
+      ],
       "We couldn’t send a verification code using this method.": [
         "我們無法使用此方法傳送驗證碼。"
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "錯誤的恢復短語。重試或使用其它復原方法。"
       ],
       "You can update a public link for your own files only": [
         "您只能更新您的檔案公開連結"
@@ -2451,9 +2420,6 @@
       "Get a secure meeting link then add it to your calendar": [
         "取得安全會議連結，然後將其新增至您的行事曆"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "使用 ${ protonMeet } 桌面應用程式取得最佳體驗"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "前往 about:config，搜尋 media.peerconnection.enabled，並將其設定為 true。"
       ],
@@ -2739,9 +2705,6 @@
       "Share screen": [
         "分享畫面"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "共享此連結以邀請他人。您也可以在工具列中點擊資訊圖示隨時找到它。"
-      ],
       "Sign in": [
         "登入"
       ],
@@ -2750,9 +2713,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "在此瀏覽器中無法選取揚聲器。請使用您的系統設定來選擇不同的揚聲器。"
-      ],
-      "Start recording": [
-        "開始記錄"
       ],
       "Starting camera…": [
         "正在啟動相機…"
@@ -2792,9 +2752,6 @@
       ],
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "此會議已達到免費方案的時間限制。升級方案可在未來的通話中延長您的會議長度。"
-      ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "此會議已在 ${ MEET_APP_NAME } 桌面應用程式中開啟。"
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "此錄影將從此裝置中永久刪除。此操作無法復原。"
@@ -2879,9 +2836,6 @@
       ],
       "You are almost there": [
         "快完成了。"
-      ],
-      "You can close this tab.": [
-        "您可以關閉此分頁了。"
       ],
       "You can now return to the application to continue": [
         "您現在可以返回應用程式並繼續"
@@ -3082,6 +3036,9 @@
       ],
       "Monday to Friday": [
         "週一至週五"
+      ],
+      "More options": [
+        "更多選項"
       ],
       "Muted": [
         "已靜音"

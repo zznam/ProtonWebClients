@@ -83,9 +83,6 @@
       "Blurred office background applied": [
         "Sløret kontor-baggrund anvendt"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Forbundet via TURN-relætilstand på grund af dine netværksbegrænsninger. Dette kan øge latenstiden og påvirke opkaldskvaliteten."
-      ],
       "Connection lost. Reconnecting…": [
         "Forbindelsen blev afbrudt. Genopretter forbindelse..."
       ],
@@ -240,11 +237,11 @@
       "Cancel": [
         "Annullér"
       ],
-      "Change layout": [
-        "Skift layout"
-      ],
       "Change password": [
         "Skift adgangskode"
+      ],
+      "Chat": [
+        "Chat"
       ],
       "Chat with us": [
         "Chat med os"
@@ -303,6 +300,9 @@
       "Create meeting": [
         "Opret møde"
       ],
+      "Debug overlay": [
+        "Debug overlay"
+      ],
       "Delete": [
         "Slet"
       ],
@@ -342,9 +342,6 @@
       "Download": [
         "Download"
       ],
-      "Download app": [
-        "Download app"
-      ],
       "Download local participant report": [
         "Download lokal-deltagerrapport"
       ],
@@ -374,9 +371,6 @@
       ],
       "Enable camera": [
         "Slå kamera til"
-      ],
-      "Enable captions": [
-        "Aktivér undertekster"
       ],
       "Enable waiting room": [
         "Aktivér venteværelse"
@@ -435,6 +429,15 @@
       "Join": [
         "Deltag"
       ],
+      "Join and leave sounds": [
+        "Lyde ved til- og fraslutning"
+      ],
+      "Join from ${ MEET_APP_NAME } app": [
+        "Deltag fra ${ MEET_APP_NAME }-appen"
+      ],
+      "Join in browser": [
+        "Tilslut via browseren"
+      ],
       "Join meeting": [
         "Deltag i mødet"
       ],
@@ -446,6 +449,9 @@
       ],
       "Kick out ${ participantName }": [
         "Fjern ${ participantName }"
+      ],
+      "Layout": [
+        "Layout"
       ],
       "Leave": [
         "Forlad"
@@ -465,11 +471,20 @@
       "Lower hand": [
         "Sænk hånden"
       ],
+      "Meeting debug": [
+        "Debug møde"
+      ],
+      "Meeting info": [
+        "Mødeinfo"
+      ],
       "Meeting timer": [
         "Mødetimer"
       ],
       "Minimize preview": [
         "Minimér forhåndsvisning"
+      ],
+      "More info": [
+        "Mere info"
       ],
       "More info: ${ safeTitle }": [
         "Yderligere information: ${ safeTitle }"
@@ -492,14 +507,17 @@
       "Noise cancellation": [
         "Støjreduktion"
       ],
-      "Open app": [
-        "Åbn app"
+      "Not now": [
+        "Ikke nu"
       ],
       "Open link": [
         "Åbn link"
       ],
       "Open mention from ${ senderName } in chat": [
         "Åbn omtale fra ${ senderName } i chatten"
+      ],
+      "Participants": [
+        "Deltagere"
       ],
       "Participants join after you approve them": [
         "Deltagere tilslutter sig efter du har godkendt dem"
@@ -546,6 +564,9 @@
       ],
       "Record": [
         "Optag"
+      ],
+      "Recording": [
+        "Optager"
       ],
       "Recording your microphone...": [
         "Optager din mikrofon..."
@@ -641,6 +662,12 @@
       "Settings": [
         "Indstillinger"
       ],
+      "Share screen": [
+        "Del skærm"
+      ],
+      "Show captions": [
+        "Vis undertekster"
+      ],
       "Show options": [
         "Vis valgmuligheder"
       ],
@@ -680,6 +707,9 @@
       "Start meeting": [
         "Start møde"
       ],
+      "Start meeting in browser": [
+        "Start mødet i browseren"
+      ],
       "Start new meeting": [
         "Start et nyt møde"
       ],
@@ -698,9 +728,6 @@
       "Stay in meeting": [
         "Bliv i møde"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Stop åbning af møder i desktop-appen"
-      ],
       "Stop receiving video": [
         "Stop indgående video"
       ],
@@ -712,6 +739,9 @@
       ],
       "Stop Recording Track Stats": [
         "Stop optagelse af sporingsstatistik"
+      ],
+      "Stop sharing": [
+        "Stop deling"
       ],
       "Submit": [
         "Indsend"
@@ -730,6 +760,9 @@
       ],
       "The current link will stop working.": [
         "Det nuværende link vil holde op med at virke."
+      ],
+      "Transcription": [
+        "Transskription"
       ],
       "Try again": [
         "Prøv igen"
@@ -760,9 +793,6 @@
       ],
       "Use camera": [
         "Brug kamera"
-      ],
-      "Use it": [
-        "Brug denne"
       ],
       "Use microphone": [
         "Brug mikrofon"
@@ -811,9 +841,6 @@
       "Blur background": [
         "Slør baggrund"
       ],
-      "Chat": [
-        "Chat"
-      ],
       "Close": [
         "Luk"
       ],
@@ -826,23 +853,14 @@
       "Copy meeting link": [
         "Kopier mødelink"
       ],
-      "Debug devices": [
-        "Fejlfind enheder"
-      ],
-      "Debug overlay": [
-        "Fejldebug-overlay"
-      ],
-      "Device Debugger": [
-        "Fejlfinder for enheder"
-      ],
       "Go to dashboard": [
         "Gå til kontrolpanel"
       ],
       "Incoming video": [
         "Indgående video"
       ],
-      "Layout: ${ selectedLabel }": [
-        "Layout: ${ selectedLabel }"
+      "Join and leave sounds": [
+        "Lyde ved til- og fraslutning"
       ],
       "Leave Meeting": [
         "Forlad møde"
@@ -852,12 +870,6 @@
       ],
       "Lock meeting": [
         "Lås møde"
-      ],
-      "Lower hand": [
-        "Sænk hånden"
-      ],
-      "Meeting details": [
-        "Mødedetaljer"
       ],
       "Meeting timer": [
         "Mødetimer"
@@ -877,14 +889,8 @@
       "Participant host control options": [
         "Deltagerværts kontrolindstillinger"
       ],
-      "Participants": [
-        "Deltagere"
-      ],
       "Picture-in-picture while sharing": [
         "Billede-i-billede-tilstand mens du deler"
-      ],
-      "Raise hand": [
-        "Ræk hånden op"
       ],
       "Rotate camera": [
         "Rotér kamera"
@@ -892,14 +898,8 @@
       "Save my name on this device": [
         "Gem mit navn på denne enhed"
       ],
-      "Screen share": [
-        "Skærmdeling"
-      ],
       "Self view": [
         "Selvvisning"
-      ],
-      "Settings": [
-        "Indstillinger"
       ],
       "Stop recording and download.": [
         "Stop optagelse og download."
@@ -910,17 +910,11 @@
       "Toggle emoji reactions": [
         "Slå emoji-reaktioner til/fra"
       ],
-      "Toggle meeting details": [
-        "Vis/skjul mødedetaljer"
-      ],
       "Toggle participants": [
         "Vis/skjul deltagere"
       ],
       "Toggle screen share": [
         "Slå skærmdeling til/fra"
-      ],
-      "Toggle settings": [
-        "Åbn/luk indstillinger"
       ],
       "Video settings": [
         "Videoindstillinger"
@@ -992,14 +986,9 @@
         "Aktiv"
       ]
     },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Forbundet via TURN-relætilstand på grund af dine netværksbegrænsninger. Dette kan øge latenstiden og påvirke opkaldskvaliteten."
-      ]
-    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } skrivebordsapp"
+      "${ appName } Desktop application": [
+        "${ appName } skrivebordsapp"
       ]
     },
     "Bug category": {
@@ -1988,6 +1977,12 @@
       "Cannot verify who uploaded this file": [
         "Kan ikke bekræfte hvem, der uploadede filen"
       ],
+      "Check your audio settings and try again": [
+        "Tjek din lydindstillinger og prøv igen"
+      ],
+      "Connection lost — captions will resume when reconnected": [
+        "Forbindelse tabt – undertekster genoptages så snart forbindelsen genoprettes"
+      ],
       "Copy operation aborted": [
         "Kopiering afbrudt"
       ],
@@ -2189,6 +2184,9 @@
       "Incorrect backup password. Please try again.": [
         "Forkert backupadgangskode. Prøv igen."
       ],
+      "Incorrect password. Please try again.": [
+        "Forkert adgangskode. Prøv venligst igen."
+      ],
       "Incorrect second password. Please try again.": [
         "Forkert anden adgangskode. Prøv igen."
       ],
@@ -2209,9 +2207,6 @@
       ],
       "Legacy public link cannot be updated. Please re-create a new public link.": [
         "Legacy offentlige links kan ikke opdateres. Opret et nyt offentligt link."
-      ],
-      "Live captions aren't working. Try turning them off and on again.": [
-        "Live undertekster virker ikke. Prøv at slå dem fra og til igen."
       ],
       "Live captions couldn't be started.": [
         "Live undertekster kunne ikke startes."
@@ -2256,6 +2251,9 @@
       "Not a valid number": [
         "Ikke et gyldigt nummer"
       ],
+      "Not enough storage space to record. Free up space and try again.": [
+        "Der er ikke nok lagerplads til at optage. Frigør plads og prøv igen."
+      ],
       "Only admins can convert external invitations": [
         "Kun admins kan konvertere eksterne invitationer"
       ],
@@ -2285,6 +2283,9 @@
       ],
       "Please allow screen sharing in your system permissions, then try again": [
         "Tillad skærmdeling i dine systemtilladelser og prøv så igen"
+      ],
+      "Recording stopped because it could not be saved. We kept it up to this point.": [
+        "Optagelsen blev stoppet, fordi den ikke kunne gemmes. Vi har gemt den hidtidige optagelse."
       ],
       "Renaming root item is not allowed": [
         "Omdøbning af rodelementet er ikke tilladt"
@@ -2339,6 +2340,9 @@
       ],
       "The email addresses do not match": [
         "E-mailadresserne stemmer ikke overens"
+      ],
+      "The emoji could not be added because the message is at its character limit": [
+        "Emojien kunne ikke tilføjes fordi beskeden har nået dens maksimale antal tegn"
       ],
       "The meeting password is incorrect": [
         "Mødeadgangskoden er forkert"
@@ -2409,8 +2413,14 @@
       "Too many server requests, please try again later": [
         "For mange serverforespørgsler, prøv igen senere"
       ],
+      "Try turning live captions off and on again.": [
+        "Prøv at slå live undertekster fra og til igen."
+      ],
       "Try using only letters, numerals, and _.-": [
         "Prøv kun at bruge bogstaver, tal og _.-"
+      ],
+      "Unable to generate captions": [
+        "Kunne ikke generere undertekster"
       ],
       "Unknown error": [
         "Ukendt fejl"
@@ -2432,6 +2442,9 @@
       ],
       "We couldn’t send a verification code using this method.": [
         "Vi kunne ikke sende en bekræftelseskode ved hjælp af denne metode."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Forkert gendannelsessætning. Prøv igen eller brug en anden gendannelsesmetode."
       ],
       "You can create public links for your own files only": [
         "Du kan kun oprette et offentligt link for dine egne filer"
@@ -2643,9 +2656,6 @@
       " and ": [
         " og "
       ],
-      "${ deviceLabel } is available again": [
-        "${ deviceLabel } er tilgængelig igen"
-      ],
       "${ maxParticipants } participant limit reached": [
         "${ maxParticipants }-deltagergrænsen er nået"
       ],
@@ -2658,8 +2668,14 @@
       "${ MEET_APP_NAME } needs microphone access so others can hear you during the call. You can turn it off at any time.": [
         "${ MEET_APP_NAME } skal bruge adgang til mikrofonen så andre kan høre dig i opkaldet. Du kan slå det fra når som helst."
       ],
+      "${ MEET_APP_NAME } needs screen recording access so you can share your screen during the call. After you allow it, macOS will ask you to reopen the app.": [
+        "${ MEET_APP_NAME } skal have tilladelse til at optage skærmen, så du kan dele din skærm under opkaldet. Efter du har givet tilladelse vil macOS bede dig om at åbne appen igen."
+      ],
       "${ MEET_APP_NAME } needs WebRTC to run. Please update your browser or device to a version that supports WebRTC, try a different browser, or disable any extensions that might be blocking it.": [
         "${ MEET_APP_NAME } kræver WebRTC for at køre. Opdatér din browser eller enhed til en version, der understøtter WebRTC, prøv en anden browser, eller deaktivér eventuelle udvidelser, der måtte blokere det."
+      ],
+      "${ meetingName } has ended": [
+        "${ meetingName } er slut"
       ],
       "${ mlsMemberCount } member": [
         "${ mlsMemberCount } medlem",
@@ -2741,6 +2757,9 @@
       "Anyone with the link can join immediately": [
         "Enhver med linket kan tilslutte sig øjeblikkeligt"
       ],
+      "App didn't open?": [
+        "Åbnede appen ikke?"
+      ],
       "Approve participants before they can join": [
         "Godkend deltagere før de kan deltage"
       ],
@@ -2783,8 +2802,8 @@
       "Camera permission denied": [
         "Kameratilladelse nægtet"
       ],
-      "Captions are on": [
-        "Undertekster er slået til"
+      "Captions on": [
+        "Undertekster slået til"
       ],
       "Changes are staged. Apply to rebuild the preview with the new constants.": [
         "Ændringerne er klar. Anvend dem for at oprette forhåndsvisningen igen med de nye konstanter."
@@ -2876,6 +2895,9 @@
       "End the meeting for everyone?": [
         "Afslut mødet for alle?"
       ],
+      "End to end encrypted chat": [
+        "End-to-end-krypteret chat"
+      ],
       "End-to-end encryption is active for audio and video.": [
         "End-to-end kryptering er aktiv for lyd og video."
       ],
@@ -2936,14 +2958,14 @@
       "Get a secure meeting link then add it to your calendar": [
         "Få et sikkert mødelink, og tilføj det derefter til din kalender"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Få den bedste oplevelse med desktop-appen ${ protonMeet }"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Gå til about:config, søg efter media.peerconnection.enabled, og sæt den til true."
       ],
       "Host": [
         "Vært"
+      ],
+      "Host has another meeting in progress": [
+        "Værten er i gang med et andet møde"
       ],
       "Host has disabled live captions for this meeting.": [
         "Værten har slået live undertekster fra i dette møde."
@@ -3002,6 +3024,9 @@
       "Loading calendar, please wait. You will be redirected to our scheduling platform Calendly in a new tab.": [
         "Indlæser kalender, vent venligst. Du vil blive omdirigeret til vores planlægningsplatform Calendly i en ny fane."
       ],
+      "Loading captions…": [
+        "Indlæser undertekster..."
+      ],
       "Loading meeting details...": [
         "Indlæser mødedetaljer..."
       ],
@@ -3053,6 +3078,9 @@
       "Meeting recordings aren’t supported in Firefox.": [
         "Mødeoptagelser understøttes ikke i Firefox."
       ],
+      "Meeting recordings aren’t supported in Safari private mode.": [
+        "Mødeoptagelser understøttes ikke i privattilstand i Safari."
+      ],
       "Meeting time is up": [
         "Mødetiden er opbrugt"
       ],
@@ -3082,6 +3110,9 @@
       ],
       "Microphone permission denied": [
         "Mikrofontilladelse nægtet"
+      ],
+      "More options": [
+        "Flere muligheder"
       ],
       "Mute microphone": [
         "Slå mikrofonen fra"
@@ -3134,11 +3165,26 @@
       "No speaker detected": [
         "Ingen højttaler registreret"
       ],
+      "Noise cancellation was turned off because your device is experiencing performance issues. You can turn it back on in audio settings.": [
+        "Støjreduktion blev slået fra, da din enhed oplever problemer med ydeevnen. Du kan slå den til igen i lydindstillinger."
+      ],
       "Not sent, check your connection.": [
         "Ikke sendt, tjek din forbindelse."
       ],
       "notify everyone here": [
         "giv besked til alle"
+      ],
+      "Now using ${ first } and ${ second }.": [
+        "Bruger nu ${ first } og ${ second }."
+      ],
+      "Now using ${ first }, ${ second } and ${ third }.": [
+        "Bruger nu ${ first }, ${ second } og ${ third }."
+      ],
+      "Now using ${ first }.": [
+        "Bruger nu ${ first }."
+      ],
+      "Only a partial meeting recording was available.": [
+        "Kun en del af mødeoptagelsen var tilgængelig."
       ],
       "Only meetings you created appear here": [
         "Kun møder oprettet af dig vises her"
@@ -3175,6 +3221,9 @@
       ],
       "Permissions not given.": [
         "Tilladelser ikke givet."
+      ],
+      "Please ${ downloadLink } and install the app, then click Join in the ${ MEET_APP_NAME } app again.": [
+        "${ downloadLink } og installer appen, og klik derefter på Deltag i ${ MEET_APP_NAME }-appen igen."
       ],
       "Please enable access to your ${ microphoneLinkButton }${ andString }${ cameraLinkButton } for the best experience.": [
         "Aktivér adgang til din ${ microphoneLinkButton }${ andString }${ cameraLinkButton } for den bedste oplevelse."
@@ -3263,6 +3312,27 @@
       "Select a speaker": [
         "Vælg en højttaler"
       ],
+      "Selected camera has disconnected.": [
+        "Det valgte kamera er blevet frakoblet."
+      ],
+      "Selected devices have disconnected.": [
+        "De valgte enheder er blevet frakoblet."
+      ],
+      "Selected microphone and camera have disconnected.": [
+        "Den valgte mikrofon og det valgte kamera er blevet frakoblet."
+      ],
+      "Selected microphone and speaker have disconnected.": [
+        "Den valgte mikrofon og højtaler er blevet frakoblet."
+      ],
+      "Selected microphone has disconnected.": [
+        "Den valgte mikrofon er blevet frakoblet."
+      ],
+      "Selected speaker and camera have disconnected.": [
+        "Den valgte højtaler og det valgte kamera er blevet frakoblet."
+      ],
+      "Selected speaker has disconnected.": [
+        "Den valgte højtaler er blevet frakoblet."
+      ],
       "Servers are unreachable. Please try again in a few minutes": [
         "Servere er utilgængelige. Prøv igen om nogle få minutter"
       ],
@@ -3275,8 +3345,11 @@
       "Share screen": [
         "Del skærm"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Del dette link for at invitere andre. De kan også finde det når som helst ved at klikke på infoikonet på værktøjslinjen."
+      "Share this link to invite others. You can also find it anytime under Meeting info in the More options menu.": [
+        "Del dette link for at invitere andre. Du kan også finde det under \"Mødeinfo\" i menuen \"Flere muligheder\" når som helst."
+      ],
+      "Show live captions?": [
+        "Vis live undertekster?"
       ],
       "Sign in": [
         "Log ind"
@@ -3286,9 +3359,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "Du kan ikke vælge højtalere i denne browser. Brug dine systemindstillinger til at vælge en anden højtaler."
-      ],
-      "Start recording": [
-        "Start optagelse"
       ],
       "Starting camera…": [
         "Starter kamera…"
@@ -3308,6 +3378,9 @@
       "Thank you for joining.": [
         "Tak for at deltage."
       ],
+      "The captioning service uses meeting audio. Captions are visible only to you and aren’t saved.": [
+        "Tjenesten, der genererer undertekster, anvender mødelyden. Undertekster er kun synlige for dig, og gemmes ikke."
+      ],
       "The host has removed you from this meeting. If this was a mistake, ask the host to invite you again.": [
         "Værten har fjernet dig fra dette møde. Hvis det var en fejl, kan du bede værten om at invitere dig igen."
       ],
@@ -3319,6 +3392,9 @@
       ],
       "This is an end to end encrypted chat with ephemeral messages, which disappear at the end of the call.": [
         "Denne chat er end-to-end krypteret, og beskeder forsvinder når opkaldet afsluttes."
+      ],
+      "This meeting has a time limit. This call will disconnect soon.": [
+        "Dette møde er tidsbegrænset. Opkaldet afbrydes snart."
       ],
       "This meeting has a waiting room": [
         "Dette møde har et venteværelse"
@@ -3332,8 +3408,8 @@
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "Dette møde har nået tidsgrænsen for det gratis abonnement. Opgrader for at forlænge mødetiden i fremtidige møder."
       ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "Dette møde blev åbnet i desktop-appen ${ MEET_APP_NAME }"
+      "This meeting reached the time limit.": [
+        "Dette mødet har nået tidsgrænsen."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "Denne optagelse slettes permanent fra denne enhed. Handlingen kan ikke fortrydes."
@@ -3347,11 +3423,11 @@
       "This will sign you out of all accounts currently logged in.": [
         "Dette vil logge dig ud af alle kontoer, der i øjeblikket er logget ind."
       ],
+      "Time is up for ${ meetingName }": [
+        "Tiden er gået for ${ meetingName }"
+      ],
       "To create a room, you'll need **a free ${ BRAND_NAME } Account** so we can save the room. This only takes a few seconds.": [
         "For at oprette et møderum, skal du bruge **en gratis ${ BRAND_NAME }-konto** så vi kan gemme rummet. Det tager kun et nogle sekunder."
-      ],
-      "To create live captions, the captioning service needs access to the meeting audio. Captions are only visible to you and are not saved.": [
-        "Tjenesten skal kunne tilgå mødelyden for at skrive live undertekster. Undertekster er kun synlige for dig, og bliver ikke delt."
       ],
       "To fight spam and abuse, please verify you are human.": [
         "For at bekæmpe spam og misbrug bedes du bekræfte, at du er et menneske."
@@ -3373,9 +3449,6 @@
       ],
       "Turn on camera": [
         "Slå kamera til"
-      ],
-      "Turn on live captions?": [
-        "Slå live undertekster til?"
       ],
       "Unable to reconnect to the meeting. Please rejoin or leave.": [
         "Kunne ikke genoprette forbindelsen til mødet. Tilslut dig igen eller forlad mødet."
@@ -3403,6 +3476,9 @@
       ],
       "Virtual background initializing": [
         "Aktiverer virtuel baggrund"
+      ],
+      "Waiting for speech…": [
+        "Venter på at der bliver talt..."
       ],
       "Waiting for the host to admit you. The host has been notified that you're waiting.": [
         "Venter på at værten giver dig adgang. Værten er blevet underrettet om at du venter."
@@ -3440,9 +3516,6 @@
       "You are almost there": [
         "Du er der næsten"
       ],
-      "You can close this tab.": [
-        "Du kan lukke denne fane."
-      ],
       "You can now return to the application to continue": [
         "Du kan nu vende tilbage til applikationen for at fortsætte"
       ],
@@ -3452,11 +3525,20 @@
       "You can still turn off your microphone and camera anytime in the meeting": [
         "Du kan stadig slå din mikrofon og dit kamera fra når som helst under mødet"
       ],
+      "You have too many meetings in progress": [
+        "Du har for mange igangværende møder"
+      ],
+      "You left ${ meetingName }": [
+        "Du forlod ${ meetingName }"
+      ],
       "You left the meeting": [
         "Du forlod mødet"
       ],
       "You need a paid ${ MEET_SHORT_APP_NAME } or Workspace plan for this feature. Contact your organization admin to upgrade.": [
         "Du skal bruge en betalt ${ MEET_SHORT_APP_NAME } eller et Workspace-abonnement for at bruge denne funktion. Kontakt din organisationsadministrator for at opgradere."
+      ],
+      "You were removed from ${ meetingName }": [
+        "Du blev fjernet fra ${ meetingName }"
       ],
       "You were removed from the meeting": [
         "Du blev fjernet fra mødet"
@@ -3494,38 +3576,14 @@
       "Your browser or device isn’t supported": [
         "Din browser eller enhed understøttes ikke"
       ],
-      "Your camera was disconnected. Now using ${ deviceLabel }.": [
-        "Dit kamera blev afbrudt. Bruger nu ${ deviceLabel }."
-      ],
-      "Your device was disconnected. Now using ${ deviceLabel }.": [
-        "Din enhed blev afbrudt. Bruger nu ${ deviceLabel }."
-      ],
       "Your email will only be used for this one-time verification.": [
         "Din e-mail vil kun blive brugt til denne engangsbekræftelse."
       ],
       "Your meeting is ready": [
         "Dit møde er klar"
       ],
-      "Your microphone and camera were disconnected. Now using other devices.": [
-        "Din mikrofon og dit kamera blev afbrudt. Der bruges nu andre enheder."
-      ],
-      "Your microphone and speaker were disconnected. Now using other devices.": [
-        "Din mikrofon og højtaler blev afbrudt. Der bruges nu andre enheder."
-      ],
-      "Your microphone was disconnected. Now using ${ deviceLabel }.": [
-        "Din mikrofon blev afbrudt. Bruger nu ${ deviceLabel }."
-      ],
-      "Your microphone, speaker and camera were disconnected. Now using other devices.": [
-        "Din mikrofon, højtaler og dit kamera blev afbrudt. Der bruges nu andre enheder."
-      ],
       "Your phone number will only be used for this one-time verification.": [
         "Dit telefonnummer vil kun blive anvendt til denne engangsbekræftelse."
-      ],
-      "Your speaker and camera were disconnected. Now using other devices.": [
-        "Din højtaler og dit kamera blev afbrudt. Der bruges nu andre enheder."
-      ],
-      "Your speaker was disconnected. Now using ${ deviceLabel }.": [
-        "Din højtaler blev afbrudt. Bruger nu ${ deviceLabel }."
       ],
       "You’re about to open a link in a new tab. Make sure you trust the website before continuing.": [
         "Du er ved at åbne et link i en ny fane. Vær sikker på, at webstedet er troværdigt, før du fortsætter."
@@ -3629,6 +3687,9 @@
       "Does not repeat": [
         "Gentages ikke"
       ],
+      "Don’t show this message again": [
+        "Vis ikke igen"
+      ],
       "Download .ics": [
         "Download .ics"
       ],
@@ -3698,6 +3759,9 @@
       "Live caption agent": [
         "Agent til live undertekster"
       ],
+      "Live captions": [
+        "Live undertekster"
+      ],
       "Manage recordings": [
         "Administrer optagelser"
       ],
@@ -3718,6 +3782,9 @@
       ],
       "Monday to Friday": [
         "Mandag til fredag"
+      ],
+      "More options": [
+        "Flere muligheder"
       ],
       "Mountain landscape background": [
         "Bjerg-baggrund"
@@ -3832,6 +3899,9 @@
       "clearing your browser cache": [
         "rydder din browser-cache"
       ],
+      "download": [
+        "download"
+      ],
       "Learn more": [
         "Få mere at vide"
       ],
@@ -3849,6 +3919,110 @@
       ],
       "What’s this?": [
         "Hvad er dette?"
+      ]
+    },
+    "Lumo emoji name": {
+      "Alert": [
+        "Advarsel"
+      ],
+      "Browse folders": [
+        "Søg i mapper"
+      ],
+      "Cash": [
+        "Kontanter"
+      ],
+      "Celebrate": [
+        "Fejring"
+      ],
+      "Cheers": [
+        "Jubel"
+      ],
+      "Chef's kiss": [
+        "Perfektion"
+      ],
+      "Coffee": [
+        "Kaffe"
+      ],
+      "Cowboy": [
+        "Cowboy"
+      ],
+      "Encrypt": [
+        "Kryptér"
+      ],
+      "Gaming": [
+        "Gaming"
+      ],
+      "Halo": [
+        "Glorie"
+      ],
+      "Happy": [
+        "Glad"
+      ],
+      "Love": [
+        "Kærlighed"
+      ],
+      "Mild panic": [
+        "Mild panik"
+      ],
+      "Mind blown": [
+        "Mind blown"
+      ],
+      "Nine lives": [
+        "Ni liv"
+      ],
+      "Party": [
+        "Fest"
+      ],
+      "Perk": [
+        "Fordel"
+      ],
+      "Popcorn": [
+        "Popcorn"
+      ],
+      "Rocket": [
+        "Raket"
+      ],
+      "Sad": [
+        "Trist"
+      ],
+      "Schrödinger in a box": [
+        "Schrödinger inden i rummet"
+      ],
+      "Schrödinger out of the box": [
+        "Schrödinger udenfor rummet"
+      ],
+      "Search": [
+        "Søg"
+      ],
+      "Sit": [
+        "Sidde"
+      ],
+      "Slay": [
+        "Slay"
+      ],
+      "Sleepy": [
+        "Træt"
+      ],
+      "Sweep": [
+        "Feje"
+      ],
+      "Thank you": [
+        "Tak"
+      ],
+      "Think": [
+        "Tænke"
+      ],
+      "This is fine": [
+        "\"This is fine\""
+      ],
+      "Watch left": [
+        "Se til venstre"
+      ],
+      "Watch right": [
+        "Se til højre"
+      ],
+      "Write": [
+        "Skrive"
       ]
     },
     "meet": {
@@ -4196,6 +4370,9 @@
       "Allow microphone": [
         "Tillad mikrofon"
       ],
+      "Allow screen recording": [
+        "Tillad skærmoptagelse"
+      ],
       "Are you sure?": [
         "Er du sikker?"
       ],
@@ -4320,6 +4497,9 @@
       "Meeting": [
         "Møde"
       ],
+      "Meeting actions": [
+        "Mødehandlinger"
+      ],
       "Meeting created": [
         "Møde oprettet"
       ],
@@ -4367,6 +4547,9 @@
       ],
       "Publications": [
         "Publikationer"
+      ],
+      "Quick reactions": [
+        "Hurtige reaktioner"
       ],
       "Reconnection Testing": [
         "Test af genoprettelse af forbindelsen"

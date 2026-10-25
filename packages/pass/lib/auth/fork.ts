@@ -1,5 +1,6 @@
 import { ARGON2_PARAMS } from '@protontech/crypto';
 import { importKey } from '@protontech/crypto/subtle/aesGcm.ts';
+import { computeSHA256 } from '@protontech/crypto/subtle/hash.ts';
 import { c } from 'ttag';
 
 import { pullForkSession, setRefreshCookies as refreshTokens, setCookies } from '@proton/shared/lib/api/auth';
@@ -16,21 +17,20 @@ import {
 import { getValidatedForkType, getValidatedRawKey } from '@proton/shared/lib/authentication/fork/validation';
 import type { PullForkResponse, RefreshSessionResponse } from '@proton/shared/lib/authentication/interface';
 import type { OfflineKey } from '@proton/shared/lib/authentication/offlineKey';
-import type { APP_NAMES } from '@proton/shared/lib/constants';
-import { APPS, MAIL_APP_NAME, PASS_APP_NAME, SSO_PATHS } from '@proton/shared/lib/constants';
+import { APPS, type APP_NAMES, MAIL_APP_NAME, PASS_APP_NAME, SSO_PATHS } from '@proton/shared/lib/constants';
 import { withAuthHeaders, withUIDHeaders } from '@proton/shared/lib/fetch/headers';
 import { binaryStringToUint8Array } from '@proton/shared/lib/helpers/encoding';
-import type { User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
 import getRandomString from '@proton/utils/getRandomString';
 
-import type { Maybe, TabId } from '../../types';
-import { type Api, AuthMode, type MaybeNull } from '../../types';
+import { type Api, AuthMode } from '../../types/api/api';
+import type { Maybe, MaybeNull } from '../../types/utils';
+import type { TabId } from '../../types/worker/runtime';
 import { getErrorMessage } from '../../utils/errors/get-error-message';
 import { logger } from '../../utils/logger';
 import { isObject } from '../../utils/object/is-object';
 import { getEpoch } from '../../utils/time/epoch';
-import type { OfflineComponents } from '../cache/crypto';
-import { getOfflineVerifier } from '../cache/crypto';
+import { type OfflineComponents, getOfflineVerifier } from '../cache/crypto';
 import { QA_SERVICE } from '../qa/service';
 import { AUTH_MODE } from './flags';
 import { LockMode } from './lock/types';
@@ -41,6 +41,7 @@ import { encodeUserData } from './store.utils';
 export type RequestForkOptions = {
     app: APP_NAMES;
     email?: string;
+    forkChallenge?: string;
     forkType?: ForkType;
     host?: string;
     localID?: number;
@@ -72,14 +73,22 @@ type BaseSessionKeys = 'keyPassword' | 'payloadVersion' | 'offlineConfig' | 'off
 type BaseSession = Pick<AuthSession, BaseSessionKeys>;
 
 export const getStateKey = (state: string) => `f${state}`;
+export const getForkSecretKey = (state: string) => `fs:${state}`;
 const generateForkState = () =>
     crypto.getRandomValues(new Uint8Array(32)).toBase64({ alphabet: 'base64url', omitPadding: true });
+
+/** The secret never leaves the client until the fork is pulled: `/authorize`
+ * only gets its digest, so a leaked selector can't be redeemed on its own. */
+export const generateForkSecret = () => crypto.getRandomValues(new Uint8Array(32)).toHex();
+export const getForkChallenge = async (forkSecret: string) =>
+    (await computeSHA256(binaryStringToUint8Array(forkSecret))).toHex();
 
 /** Will compute offline params by default. Only allows by-pass for web.
  * Extension does not support password locking yet, as such force re-auth. */
 export const requestFork = ({
     app,
     email,
+    forkChallenge,
     host = getAppHref('/', APPS.PROTONACCOUNT),
     forkType,
     localID,
@@ -113,6 +122,7 @@ export const requestFork = ({
     if (localID === undefined && email) searchParams.append(ExtraSessionForkSearchParameters.Email, email);
     if (forkType) searchParams.append(ForkSearchParameters.ForkType, forkType);
     if (plan !== undefined) searchParams.append(ForkSearchParameters.Plan, plan);
+    if (forkChallenge) searchParams.append(ForkSearchParameters.ForkChallenge, forkChallenge);
 
     return { state, url: `${host}${SSO_PATHS.AUTHORIZE}?${searchParams.toString()}` };
 };
@@ -129,6 +139,7 @@ export type ConsumeForkOptions = {
 
 export type ConsumeForkPayload =
     | {
+          forkSecret: MaybeNull<string>;
           key?: Uint8Array<ArrayBuffer>;
           localState: MaybeNull<string>;
           mode: 'web';
@@ -160,11 +171,13 @@ export const pullFork = async (options: ConsumeForkOptions): Promise<PullForkRes
 
     return (
         options.pullFork ??
-        (({ selector }) => {
-            const pullForkParams = pullForkSession(selector);
+        ((payload) => {
+            const pullForkParams = pullForkSession(payload.selector);
             pullForkParams.url = apiUrl ? `${apiUrl}/${pullForkParams.url}` : pullForkParams.url;
+            const forkSecret = payload.mode === 'web' ? payload.forkSecret : null;
+            const headers = forkSecret ? { 'x-pm-fork-secret': forkSecret } : undefined;
             /** `unauthenticated` to not be blocked by API error state */
-            return api<PullForkResponse>({ ...pullForkParams, unauthenticated: true });
+            return api<PullForkResponse>({ ...pullForkParams, headers, unauthenticated: true });
         })
     )(payload);
 };

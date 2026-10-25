@@ -1,8 +1,10 @@
 import { $generateNodesFromSerializedNodes, $insertGeneratedNodes } from '@lexical/clipboard'
 import { $findMatchingParent, $insertFirst } from '@lexical/utils'
-import { GenerateUUID } from '@proton/docs-shared'
+import { v4 as uuidv4 } from 'uuid'
 import type { LexicalEditor, ElementNode, RangeSelection, LexicalNode } from 'lexical'
 import {
+  $addUpdateTag,
+  PASTE_TAG,
   $isDecoratorNode,
   $isParagraphNode,
   OUTDENT_CONTENT_COMMAND,
@@ -43,10 +45,10 @@ import { SuggestionTypesThatCanBeEmpty, TextEditingSuggestionTypes } from './Typ
 import type { ListItemNode } from '@lexical/list'
 import { $handleListInsertParagraph, $isListItemNode } from '@lexical/list'
 import { $getListInfo } from '../CustomList/$getListInfo'
-import { c } from 'ttag'
+import { suggestionsMessages } from './suggestionsMessages'
 import { $removeSuggestionNodeAndResolveIfNeeded } from './removeSuggestionNodeAndResolveIfNeeded'
 import { $setBlocksTypeAsSuggestion } from './setBlocksTypeAsSuggestion'
-import { sanitizeUrl } from '../../../../Utils/sanitizeUrl'
+import { sanitizeUrl } from '../../Utils/sanitizeUrl'
 import { LINK_CHANGE_COMMAND } from '../Link/LinkPlugin'
 
 /**
@@ -60,8 +62,13 @@ export function $handleBeforeInputEvent(
   onSuggestionCreation: (id: string) => void,
   logger: DocsLogger,
   createWarningNotification?: (message: string) => void,
+  codeBlocksNotSupportedMessage = suggestionsMessages.suggestions.codeBlocksNotSupported,
 ): boolean {
   const inputType = event.inputType
+
+  if (inputType === 'insertFromPaste' || inputType === 'insertFromPasteAsQuotation') {
+    $addUpdateTag(PASTE_TAG)
+  }
 
   logger.info('suggestion-mode: handleBeforeInput', inputType)
 
@@ -81,11 +88,11 @@ export function $handleBeforeInputEvent(
     return true
   }
 
-  const suggestionID = GenerateUUID()
+  const suggestionID = uuidv4()
 
   if ($isAnyPartOfSelectionInCodeNode(selection)) {
     logger.info('suggestion-mode: Aborting beforeinput because selection is inside a code-block')
-    createWarningNotification?.(c('Warning').t`Making suggestions inside code blocks is not supported`)
+    createWarningNotification?.(codeBlocksNotSupportedMessage)
     return true
   }
 
@@ -276,6 +283,16 @@ function $handleInsertInput(
     `Has targetRange: ${!!targetRange}`,
   )
 
+  // Replace text within a pending insertion before deletion can detach its text node.
+  if (
+    inputType === 'insertReplacementText' &&
+    !selection.isCollapsed() &&
+    existingParentSuggestion?.getSuggestionTypeOrThrow() === 'insert' &&
+    $isWholeSelectionInsideSuggestion(selection)
+  ) {
+    return $handleReplacementTextInsideInsertSuggestion(selection, data, dataTransfer, logger)
+  }
+
   /**
    * When inserting nodes generated from a dataTransfer, we want to let the `selectionInsertClipboardNodes`
    * handle wrapping any existing non-collapsed selection in a "delete" suggestion instead of doing it
@@ -329,14 +346,7 @@ function $handleInsertInput(
   }
 
   if (data !== null && dataTransfer === null) {
-    return $handleInsertTextData(
-      data,
-      latestSelection,
-      existingParentSuggestion,
-      onSuggestionCreation,
-      suggestionID,
-      logger,
-    )
+    return $handleInsertTextData(data, latestSelection, onSuggestionCreation, suggestionID, logger)
   }
 
   return true
@@ -472,23 +482,9 @@ function $handleInsertParagraphOnEmptyListItem(
   return true
 }
 
-function $canTextDataBeInsertedDirectlyIntoSuggestion(suggestion: ProtonNode | null): boolean {
-  if (!suggestion) {
-    return false
-  }
-
-  const type = suggestion.getSuggestionTypeOrThrow()
-  if (type === 'insert' || type === 'delete') {
-    return true
-  }
-
-  return false
-}
-
 function $handleInsertTextData(
   data: string,
   selection: RangeSelection,
-  existingParentSuggestion: ProtonNode | null,
   onSuggestionCreation: (id: string) => void,
   suggestionID: string,
   logger: DocsLogger,
@@ -496,12 +492,12 @@ function $handleInsertTextData(
   logger.info('suggestion-mode: Inserting text data: ', data)
 
   const focusNode = selection.focus.getNode()
+  const existingParentSuggestion = $findMatchingParent(focusNode, $isSuggestionNode)
+  const isInsideExistingInsertSuggestion = existingParentSuggestion?.getSuggestionTypeOrThrow() === 'insert'
 
   const textNode = $createTextNode(data)
   textNode.setFormat(selection.format)
   textNode.setStyle(selection.style)
-
-  const canInsertTextDataDirectly = $canTextDataBeInsertedDirectlyIntoSuggestion(existingParentSuggestion)
 
   const isExistingSuggestionEmpty =
     existingParentSuggestion &&
@@ -539,7 +535,7 @@ function $handleInsertTextData(
   }
 
   const shouldSplitExistingSuggestionBeforeInserting =
-    existingParentSuggestion && !canInsertTextDataDirectly && !isExistingSuggestionEmpty
+    existingParentSuggestion && !isInsideExistingInsertSuggestion && !isExistingSuggestionEmpty
   if (shouldSplitExistingSuggestionBeforeInserting) {
     logger.info('suggestion-mode: Will split existing non-insert suggestion and insert new insert suggestion')
     const focus = selection.focus
@@ -576,9 +572,6 @@ function $handleInsertTextData(
     return true
   }
 
-  const isInsideExistingInsertSuggestion =
-    existingParentSuggestion && existingParentSuggestion.getSuggestionTypeOrThrow() === 'insert'
-
   const isFocusNodeText = $isTextNode(focusNode)
   const isAtEndOfInlineCode =
     isFocusNodeText && focusNode.hasFormat('code') && selection.focus.offset === focusNode.getTextContentSize()
@@ -593,7 +586,7 @@ function $handleInsertTextData(
     return true
   }
 
-  if (existingParentSuggestion && canInsertTextDataDirectly) {
+  if (isInsideExistingInsertSuggestion) {
     logger.info('suggestion-mode: Will just insert text as already inside insert suggestion')
     if (isFocusNodeText) {
       const latestFocusOffset = selection.focus.offset
@@ -769,17 +762,26 @@ function $handleReplacementTextInsideInsertSuggestion(
     return true
   }
   logger.info('suggestion-mode: Will insert replacement text', newText)
-  const anchor = selection.anchor
-  const focusOffset = selection.focus.offset
-  const toDelete = focusOffset - anchor.offset
-  selection.focus.set(anchor.key, anchor.offset, anchor.type)
-  const node = anchor.getNode()
-  if (!$isTextNode(node)) {
-    logger.info('suggestion-mode: Current anchor node is not text node', node)
+  const start = selection.isBackward() ? selection.focus : selection.anchor
+  const end = selection.isBackward() ? selection.anchor : selection.focus
+  const first = start.getNode()
+  if (!$isTextNode(first)) {
     return true
   }
-  node.spliceText(anchor.offset, toDelete, newText)
-  const newOffset = anchor.offset + newText.length
-  node.select(newOffset, newOffset)
+  const selectedLeaves = selection.getNodes().filter((node) => !$isElementNode(node))
+  const toDelete = first.is(end.getNode()) ? end.offset - start.offset : first.getTextContentSize() - start.offset
+  first.spliceText(start.offset, toDelete, newText)
+  for (const node of selectedLeaves) {
+    if (node.is(first)) {
+      continue
+    }
+    if ($isTextNode(node) && node.is(end.getNode())) {
+      node.spliceText(0, end.offset, '')
+    } else {
+      node.remove()
+    }
+  }
+  const newOffset = start.offset + newText.length
+  first.select(newOffset, newOffset)
   return true
 }

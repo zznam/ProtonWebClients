@@ -1,7 +1,7 @@
 import browser from '@proton/pass/lib/globals/browser';
 import type { URLComponents } from '@proton/pass/lib/urls/types';
 import { urlEq } from '@proton/pass/lib/urls/utils/utils';
-import type { Maybe } from '@proton/pass/types/utils/index';
+import type { Maybe } from '@proton/pass/types/utils';
 import type { FormEntry, FormEntryBase, FormStatusPayload } from '@proton/pass/types/worker/form';
 import { FormEntryStatus } from '@proton/pass/types/worker/form';
 import type { FrameId, TabId } from '@proton/pass/types/worker/runtime';
@@ -63,6 +63,7 @@ export const createFormTrackerService = () => {
         const staging = ((): FormEntry => {
             if (pending && pending.status === FormEntryStatus.STAGING && pending.frameId === frameId) {
                 pending.action = submission.action;
+                pending.url = submission.url;
                 pending.data = merge(pending.data, submission.data, { excludeEmpty: true });
                 pending.type = submission.type;
                 pending.updatedAt = updatedAt;
@@ -158,10 +159,10 @@ export const createFormTrackerService = () => {
             const { reason, ...staging } = payload;
 
             if (ctx.getState().authorized) {
-                const { tabId, url, frameId } = await parseSender(sender);
+                const { tabId, url, href, frameId } = await parseSender(sender);
                 const { domain, protocol, port } = url;
-                const staged = stage(tabId, frameId, { domain, protocol, port, ...staging }, reason);
-                const autosave = ctx.service.autosave.resolve(staged, url);
+                const staged = stage(tabId, frameId, { domain, protocol, port, url: href, ...staging }, reason);
+                const autosave = ctx.service.autosave.resolve(staged);
 
                 return { submission: merge(staged, { autosave }) };
             }
@@ -194,7 +195,7 @@ export const createFormTrackerService = () => {
                     const committed = commit(tabId, url, reason);
 
                     if (committed) {
-                        const autosave = ctx.service.autosave.resolve(committed, url);
+                        const autosave = ctx.service.autosave.resolve(committed);
                         return {
                             submission: autosave.shouldPrompt
                                 ? merge(committed, { autosave })
@@ -232,7 +233,7 @@ export const createFormTrackerService = () => {
                     await waitUntil(() => !submission.loading, 100).catch(noop);
 
                     const autosave = isFormEntryCommitted(submission)
-                        ? ctx.service.autosave.resolve(submission, url)
+                        ? ctx.service.autosave.resolve(submission)
                         : { shouldPrompt: false as const };
 
                     return { submission: merge(submission, { autosave }) };

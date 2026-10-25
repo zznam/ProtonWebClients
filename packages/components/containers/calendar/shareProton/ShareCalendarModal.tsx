@@ -10,7 +10,7 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Href } from '@proton/atoms/Href/Href';
 import { useGetDecryptedPassphraseAndCalendarKeys } from '@proton/calendar/calendarBootstrap/keys';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcExclamationCircle } from '@proton/icons/icons/IcExclamationCircle';
 import { IcLockCheckFilled } from '@proton/icons/icons/IcLockCheckFilled';
 import { IcLockFilled } from '@proton/icons/icons/IcLockFilled';
@@ -24,12 +24,14 @@ import { BRAND_NAME } from '@proton/shared/lib/constants';
 import { getSelfSendAddresses } from '@proton/shared/lib/helpers/address';
 import { canonicalizeInternalEmail, validateEmailAddress } from '@proton/shared/lib/helpers/email';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Address, Recipient, RequireSome, SimpleMap } from '@proton/shared/lib/interfaces';
-import { KeyTransparencyActivation } from '@proton/shared/lib/interfaces';
-import type { CalendarMember, CalendarMemberInvitation, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
-import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts';
+import type { Address, Recipient } from '@proton/shared/lib/interfaces/Address';
+import { KeyTransparencyActivation } from '@proton/shared/lib/interfaces/KeyTransparency';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { CalendarMember, CalendarMemberInvitation } from '@proton/shared/lib/interfaces/calendar/CalendarMember';
+import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts/Contact';
 import type { GetEncryptionPreferences } from '@proton/shared/lib/interfaces/hooks/GetEncryptionPreferences';
-import { getPrimaryKey } from '@proton/shared/lib/keys';
+import type { RequireSome, SimpleMap } from '@proton/shared/lib/interfaces/utils';
+import { getPrimaryKey } from '@proton/shared/lib/keys/getPrimaryKey';
 import { EncryptionPreferencesError } from '@proton/shared/lib/mail/encryptionPreferences';
 import clsx from '@proton/utils/clsx';
 import isTruthy from '@proton/utils/isTruthy';
@@ -49,7 +51,7 @@ import useGetEncryptionPreferences from '../../../hooks/useGetEncryptionPreferen
 import { useContactEmailsCache } from '../../contacts/ContactEmailsProvider';
 import { useKeyTransparencyContext } from '../../keyTransparency/useKeyTransparencyContext';
 
-export enum VALIDATION_ERROR_TYPES {
+enum VALIDATION_ERROR_TYPES {
     INVALID_EMAIL = 0,
     NOT_PROTON_ACCOUNT = 1,
     SHARING_UNSUPPORTED = 2,

@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } til Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } til iOS"
-      ],
       "Accept": [
         "Accepter"
       ],
@@ -238,6 +232,9 @@
       "Create a ${ BRAND_NAME } account": [
         "Opret en ${ BRAND_NAME }-konto"
       ],
+      "Create a login": [
+        "Opret et login"
+      ],
       "Create a new vault": [
         "Opret en ny boks"
       ],
@@ -339,6 +336,15 @@
       ],
       "Do not suggest on this website": [
         "Foreslå ikke på dette websted"
+      ],
+      "Download for Linux": [
+        "Download til Linux"
+      ],
+      "Download for macOS": [
+        "Download til macOS"
+      ],
+      "Download for Windows": [
+        "Download til Windows"
       ],
       "Download this CSV template": [
         "Download denne CSV-skabelon"
@@ -493,6 +499,9 @@
       "Maximum views": [
         "Maks. visninger"
       ],
+      "More details about how to export": [
+        "Flere oplysninger om hvordan man eksporterer"
+      ],
       "More info": [
         "Mere info"
       ],
@@ -540,6 +549,9 @@
       ],
       "Open navigation": [
         "Åbn navigation"
+      ],
+      "Open platform selection dropdown": [
+        "Åbn platform-vælgeren"
       ],
       "Organize vaults": [
         "Organisér bokse"
@@ -700,6 +712,12 @@
       "Show Less": [
         "Vis færre"
       ],
+      "Show less": [
+        "Vis mindre"
+      ],
+      "Show more": [
+        "Vis mere"
+      ],
       "Sign back in": [
         "Log ind igen"
       ],
@@ -708,6 +726,9 @@
       ],
       "Sign out": [
         "Log ud"
+      ],
+      "Skip for now": [
+        "Spring over for nu"
       ],
       "Start from scratch": [
         "Start fra bunden"
@@ -843,9 +864,15 @@
         "Boks"
       ]
     },
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "${ hiddenResultsCount } til resultat ikke vist",
+        "${ hiddenResultsCount } flere resultater ikke vist"
+      ]
+    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } skrivebordsapp"
+      "${ appName } Desktop application": [
+        "${ appName } skrivebordsapp"
       ]
     },
     "Button": {
@@ -1025,6 +1052,9 @@
       "Authentication failure: ${ message }": [
         "Autentificeringsfejl: ${ message }"
       ],
+      "Biometric authentication cancelled.": [
+        "Biometrisk godkendelse annulleret."
+      ],
       "Biometric authentication failed.": [
         "Biometrisk godkendelse mislykkedes."
       ],
@@ -1108,6 +1138,9 @@
       "Editing item failed": [
         "Redigering af element mislykkedes"
       ],
+      "Email is not valid": [
+        "E-mail er ikke gyldig"
+      ],
       "Empty CSV file": [
         "Tom CSV-fil"
       ],
@@ -1119,6 +1152,9 @@
       ],
       "Encrypted JSON not supported": [
         "Krypteret JSON er ikke understøttet"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Indtast dit brugernavn uden domænet (@example.com)"
       ],
       "Error reporting problem": [
         "Problem med fejlrapportering"
@@ -1307,6 +1343,9 @@
       "Incorrect backup password. Please try again.": [
         "Forkert backupadgangskode. Prøv igen."
       ],
+      "Incorrect password. Please try again.": [
+        "Forkert adgangskode. Prøv venligst igen."
+      ],
       "Incorrect second password. Please try again.": [
         "Forkert anden adgangskode. Prøv igen."
       ],
@@ -1349,8 +1388,14 @@
       "Network error": [
         "Netværksfejl"
       ],
+      "Not a valid number": [
+        "Ikke et gyldigt nummer"
+      ],
       "Passphrase is incorrect": [
         "Adgangssætning er forkert"
+      ],
+      "Passwords do not match": [
+        "Adgangskoder stemmer ikke overens"
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "Adgang nægtet til webstedet ${ domainsJSX }."
@@ -1424,6 +1469,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME }-skrivebordsappen burde være logget in."
       ],
+      "The email addresses do not match": [
+        "E-mailadresserne stemmer ikke overens"
+      ],
       "The URL is in the list": [
         "URL'en er i listen"
       ],
@@ -1432,6 +1480,15 @@
       ],
       "This domain is already managed by your organization": [
         "Dette domæne håndteres allerede af din organisation"
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Dette felt overskrider det maksimale antal tegn på ${ maximumLength }."
+      ],
+      "This field is required": [
+        "Feltet er påkrævet"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Dette felt kræver minimum ${ minimumLength } tegn."
       ],
       "This invite is no longer available": [
         "Denne invitation findes ikke længere"
@@ -1444,6 +1501,9 @@
       ],
       "Trashing item failed": [
         "Kunne ikke flytte element til papirkurven"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Prøv kun at bruge bogstaver, tal og _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Kunne ikke generere en OTP-kode for dette element"
@@ -1481,6 +1541,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Opdatering af boksen \"${ payload.content.name }\" mislykkedes"
       ],
+      "Username must begin with a letter or digit": [
+        "Brugernavn skal begynde med et bogstav eller et tal"
+      ],
+      "Username must end with a letter or digit": [
+        "Brugernavn skal ende på et bogstav eller et tal"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Oprettelse af boksen \"${ payload.content.name }\" mislykkedes"
       ],
@@ -1504,6 +1570,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Forkert pinkode. Prøv igen."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Forkert gendannelsessætning. Prøv igen eller brug en anden gendannelsesmetode."
       ],
       "Wrong second password": [
         "Forkert anden adgangskode"
@@ -1594,6 +1663,182 @@
         "Brugernavn"
       ]
     },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Fandt ${ itemsCount } forslag, brug tastaturet til at navigere.",
+        "Fandt ${ itemsCount } forslag, brug tastaturet til at navigere."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "Brug op- og ned-tasterne til at få adgang til og gennemse forslag efter input. Tryk på Enter for at bekræfte dit valg eller Escape for at lukke forslagsfeltet."
+      ]
+    },
+    "Import Tutorial": {
+      "${ name } saves your passwords in the ${ passwords } app. Open it and go to ${ file } → ${ exportAll }.": [
+        "${ name } gemmer dine adgangskoder i ${ passwords }-appen. Åbn den og gå til ${ file } → ${ exportAll }."
+      ],
+      "Account & Data": [
+        "Konto og data"
+      ],
+      "Advanced Options": [
+        "Avancerede indstillinger"
+      ],
+      "As a security measure, LastPass will email you to confirm the request. Open the email and click ${ continueExport }.": [
+        "LastPass sender dig en e-mail for at bekræfte anmodningen, som en sikkerhedsforanstaltning. Åbn e-mailen og klik ${ continueExport }."
+      ],
+      "At the confirmation screen, log back into your ${ name } Vault and to ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel } again.": [
+        "På bekræftelsessiden, log ind på din ${ name }-boks igen, og gå til ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel } igen."
+      ],
+      "Autofill and passwords": [
+        "Autofyld og adgangskoder"
+      ],
+      "Choose ${ formatJson } as the file format, click ${ exportLabel } and confirm with your master password.": [
+        "Vælg ${ formatJson } som filformat, klik ${ exportLabel } og bekræft med din hovedadgangskode."
+      ],
+      "Choose JSON downloads": [
+        "Vælg JSON-download"
+      ],
+      "Choose the file format → Select ${ exportLabel }.": [
+        "Vælg filformattet → Vælg ${ exportLabel }."
+      ],
+      "Continue export": [
+        "Fortsæt eksport"
+      ],
+      "Download file": [
+        "Download fil"
+      ],
+      "Enter your 1Password master password, ensure ${ format1pux } is selected, and click ${ exportData }.": [
+        "Indtast din hovedadgangskode til 1Password, sørg for at ${ format1pux } er valgt, og klik ${ exportData }."
+      ],
+      "Export": [
+        "Eksportér"
+      ],
+      "Export All Passwords to File": [
+        "Eksportér alle adgangskoder til en fil"
+      ],
+      "Export Data": [
+        "Eksportér Data"
+      ],
+      "Export data": [
+        "Eksportér data"
+      ],
+      "Export file format: 1PUX": [
+        "Filformat for eksport: 1PUX"
+      ],
+      "Export items": [
+        "Eksportér elementer"
+      ],
+      "Export passwords": [
+        "Eksportér adgangskoder"
+      ],
+      "Export to CSV": [
+        "Eksportér til CSV"
+      ],
+      "Export to TXT": [
+        "Eksportér til TXT"
+      ],
+      "File": [
+        "Fil"
+      ],
+      "Go to ${ exportPasswords } and select ${ downloadFile }.": [
+        "Gå til ${ exportPasswords } og vælg ${ downloadFile }."
+      ],
+      "Go to ${ passwords }.": [
+        "Gå til ${ passwords }."
+      ],
+      "Go to the settings to locate the export action.": [
+        "Gå til indstillinger og find eksportér."
+      ],
+      "Go to ☰ → ⚙ ${ settings } → Click ${ downloadFile }.": [
+        "Gå til ☰ → ⚙ ${ settings } → Klik ${ downloadFile }."
+      ],
+      "Google Password Manager": [
+        "Google Password Manager"
+      ],
+      "Identify your password manager.": [
+        "Identificer din adgangskodeadministrator."
+      ],
+      "Manage your vault": [
+        "Administrerér din boks"
+      ],
+      "Microsoft password manager": [
+        "Microsoft password manager"
+      ],
+      "More actions": [
+        "Flere handlinger"
+      ],
+      "Navigate to ${ settings } tab.": [
+        "Gå til fanen ${ settings }."
+      ],
+      "Open ${ name } and go to ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel }.": [
+        "Åbn ${ name } og gå til ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel }."
+      ],
+      "Open ${ name } and go to ${ file } → ${ exportLabel } → your 1Password username.": [
+        "Åbn ${ name } og gå til ${ file } → ${ exportLabel } → dit 1Password-brugernavn."
+      ],
+      "Open ${ name } and go to ${ menu } → ${ option }.": [
+        "Åbn ${ name } og gå til ${ menu } → ${ option }."
+      ],
+      "Open ${ name } and go to ⋮ → ${ passwordsAndAutofill } → ${ googlePasswordManager }.": [
+        "Åbn ${ name } og gå til : → ${ passwordsAndAutofill } → ${ googlePasswordManager }"
+      ],
+      "Open ${ name } and go to ☰ → ${ settings } → ${ autoFill }.": [
+        "Åbn ${ name } og gå til ☰ → ${ settings } → ${ autoFill }"
+      ],
+      "Open ${ name } and select ${ menu } → ${ option }.": [
+        "Åbn ${ name } og vælg ${ menu } → ${ option }."
+      ],
+      "Open ${ name } and select ${ settings }.": [
+        "Åbn ${ name } og vælg ${ settings }."
+      ],
+      "Open ${ name } and select ⋯.": [
+        "Åbn ${ name } og vælg ⋯."
+      ],
+      "Open ${ name } and select ☰ → ${ passwords }.": [
+        "Åbn ${ name } og vælg ☰ → ${ passwords }."
+      ],
+      "Passwords": [
+        "Adgangskoder"
+      ],
+      "Passwords and Autofill": [
+        "Adgangskoder og autofyld"
+      ],
+      "Passwords and autofill": [
+        "Adgangskoder og autofyld"
+      ],
+      "Select ${ exportLabel } → ${ chooseJson } → ${ exportAgain }.": [
+        "Vælg ${ exportLabel } → ${ chooseJson } → ${ exportAgain }."
+      ],
+      "Select ${ menu } → ${ option }.": [
+        "Vælg ${ menu } → ${ option }."
+      ],
+      "Select ${ option }.": [
+        "Vælg ${ option }."
+      ],
+      "Select the export format CSV.": [
+        "Vælg eksportformattet CSV."
+      ],
+      "Select ⋯ → ${ exportPasswords }.": [
+        "Vølg ⋯ → ${ exportPasswords }."
+      ],
+      "Settings": [
+        "Indstillinger"
+      ],
+      "Submit": [
+        "Indsend"
+      ],
+      "This time, you’ll be asked to re-confirm your ${ name } username and password. Click ${ submit }.": [
+        "Denne gang vil du blive bedt om at bekræfte dit ${ name }-brugernavn og din adgangskode igen. Klik ${ submit }."
+      ],
+      "Vault": [
+        "Boks"
+      ],
+      "Vault options": [
+        "Boksindstillinger"
+      ],
+      "your username": [
+        "dit brugernavn"
+      ]
+    },
     "Info": {
       "\"${ payload.itemName }\" item was dismissed": [
         "\"${ payload.itemName }\" element blev afvist"
@@ -1620,6 +1865,9 @@
       "${ forwardedEmailsCount } forwarded": [
         "${ forwardedEmailsCount } videresendt",
         "${ forwardedEmailsCount } videresendte"
+      ],
+      "${ imported } of ${ total } (${ percentage }%)": [
+        "${ imported } ud af ${ total } (${ percentage }%)"
       ],
       "${ inviterEmail } wants to share an item with a group you administer.": [
         "${ inviterEmail } ønsker at dele et element med en gruppe, som du administrerer."
@@ -1898,9 +2146,6 @@
       "Can view this item.": [
         "Kan se dette element."
       ],
-      "Change your password": [
-        "Skift din adgangskode"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Tjekker ${ compromised.progress.completed } af ${ compromised.progress.total } adgangskoder"
       ],
@@ -1991,6 +2236,9 @@
       "Domain: ${ domainPath } or @": [
         "Domæne: ${ domainPath } eller @"
       ],
+      "Don’t close this tab": [
+        "Luk ikke denne fane"
+      ],
       "Download pass-cli from ${ passCliLink }.": [
         "Download pass-cli fra ${ passCliLink }."
       ],
@@ -2005,9 +2253,6 @@
       ],
       "Editor": [
         "Redaktør"
-      ],
-      "email": [
-        "e-mail"
       ],
       "Email address successfully deleted from monitoring": [
         "E-mail-adresse slettet fra monitorering"
@@ -2105,9 +2350,6 @@
       "Fill in the CSV with your data": [
         "Udfyld CSV-filen med dine data"
       ],
-      "finance": [
-        "finans"
-      ],
       "Folder \"${ payload.folder.name }\" created": [
         "Mappen \"${ payload.folder.name }\" blev oprettet"
       ],
@@ -2194,6 +2436,9 @@
       "invites you to access items in": [
         "inviterer dig til at tilgå elementer i"
       ],
+      "iOS and Android Apps": [
+        "iOS- og Android-apps"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Det ser ud til, at du allerede er logget ind på ${ PASS_APP_NAME }. Hvis du prøver at logge ind med en anden konto, bedes du logge ud af udvidelsen først."
       ],
@@ -2276,9 +2521,6 @@
       "Medium Priority": [
         "Mellem prioritet"
       ],
-      "Monitor accounts": [
-        "Overvåg konti"
-      ],
       "Monitoring settings successfully updated": [
         "Indstillinger for monitorering opdateret"
       ],
@@ -2296,7 +2538,8 @@
         "Flytter alle elementer fra \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Flyttes et element til en anden boks, slettes dets sikre links."
+        "Flyttes et element til en anden boks, slettes dets sikre links.",
+        "Flyttes elementer til en anden boks, slettes deres sikre links."
       ],
       "Moving items": [
         "Flytter elementer"
@@ -2336,6 +2579,9 @@
       ],
       "No login found": [
         "Intet login fundet"
+      ],
+      "No matching service. Try a different name.": [
+        "Ingen tjeneste fundet. Prøv et andet navn."
       ],
       "No network connection": [
         "Ingen internetforbindelse"
@@ -2384,6 +2630,12 @@
       "Open the ${ PASS_APP_NAME } popup": [
         "Åbn ${ PASS_APP_NAME } pop op"
       ],
+      "Open the extension here.": [
+        "Åbn udvidelsen her."
+      ],
+      "Open the extension to unlock it": [
+        "Åbn udvidelsen for at låse op for den"
+      ],
       "Open the Safari settings, find ${ PASS_APP_NAME }, go to \"Permissions\" and enable site permissions.": [
         "Åbn Safari-indstillingerne, find ${ PASS_APP_NAME }, gå til \"Tilladelser\", og aktivér webstedstilladelser."
       ],
@@ -2401,9 +2653,6 @@
       ],
       "Passkey sign-in": [
         "Login med adgangsnøgle"
-      ],
-      "password": [
-        "adgangskode"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Adgangskodelås er blevet registreret. Brug den til at oplåse ${ PASS_APP_NAME }."
@@ -2634,6 +2883,12 @@
       "Save passkey": [
         "Gem adgangsnøgle"
       ],
+      "Scan to download": [
+        "Skan for at downloade"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "Scan for at downloade ${ PASS_APP_NAME } til iOS og Android"
+      ],
       "Secure links": [
         "Sikre links"
       ],
@@ -2824,6 +3079,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "For at gennemgå dine importerede data skal du klikke på ${ PASS_APP_NAME } i din browsers værktøjslinje."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "${ PASS_APP_NAME } kræver en ny browsertilladelse for at aktivere adgang med biometri."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "${ PASS_APP_NAME } kræver en ny browsertilladelse for at aktivere adgang med biometri. Efter du har accepteret den genindlæser browserudvidelsen. Åbn denne side igen bagefter."
       ],
@@ -2895,9 +3153,6 @@
       ],
       "User's access successfully updated": [
         "Brugers adgang opdateret"
-      ],
-      "username": [
-        "brugernavn"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Boksen \"${ payload.content.name }\" blev slettet"
@@ -3115,6 +3370,9 @@
       "${ hours } hour": [
         "${ hours } time",
         "${ hours } timer"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } tegn"
       ],
       "${ minutes } minute": [
         "${ minutes } minut",
@@ -3728,6 +3986,9 @@
       "LinkedIn account": [
         "LinkedIn-konto"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Login"
       ],
@@ -3736,6 +3997,9 @@
       ],
       "Logins": [
         "Logins"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Postkasser"
@@ -4052,6 +4316,9 @@
       "Server": [
         "Server"
       ],
+      "Service": [
+        "Tjeneste"
+      ],
       "Settings": [
         "Indstillinger"
       ],
@@ -4270,6 +4537,9 @@
       ],
       "WiFi network": [
         "WiFi-netværk"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Arbejdsdetaljer"
@@ -4563,6 +4833,9 @@
       ],
       "E.g., ": [
         "F.eks., "
+      ],
+      "E.g.: Google": [
+        "F.eks. Google"
       ],
       "Email address": [
         "E-mail"
@@ -4867,6 +5140,9 @@
       "Add mailbox": [
         "Tilføj postkasse"
       ],
+      "Add one account": [
+        "Tilføj én konto"
+      ],
       "Adjust autofill behaviors to change where logins are suggested.": [
         "Juster adfærden for autofyld for at ændre, hvor logins foreslås."
       ],
@@ -4902,6 +5178,9 @@
       ],
       "Browser permission required": [
         "Browsertilladelse påkrævet"
+      ],
+      "Browsers": [
+        "Browsere"
       ],
       "Cancel changing your email?": [
         "Annuller ændring af din e-mail?"
@@ -4950,6 +5229,9 @@
       ],
       "Create subfolder in \"${ folderName }\"": [
         "Opret undermappe i \"${ folderName }\""
+      ],
+      "Create your first login": [
+        "Opret dit første login"
       ],
       "Created": [
         "Oprettet"
@@ -5048,14 +5330,35 @@
       "Excluded items": [
         "Ekskluderede elementer"
       ],
+      "Export": [
+        "Exportér"
+      ],
+      "Export from ${ provider.title }": [
+        "Eksportér fra ${ provider.title }"
+      ],
       "Fill & copy password": [
         "Udfyld og kopiér adgangskode"
+      ],
+      "Fill in your details": [
+        "Udfyld dine oplysninger"
       ],
       "Fill password": [
         "Udfyld adgangskode"
       ],
+      "First login created": [
+        "Første log-ind oprettet"
+      ],
       "Folder options": [
         "Mappeindstillinger"
+      ],
+      "For security purposes, delete your exported file.": [
+        "Af sikkerhedsmæssige årsager, så slet den eksporterede fil."
+      ],
+      "Get mobile and desktop apps": [
+        "Få mobil- og desktop-apps"
+      ],
+      "Get mobile apps": [
+        "Hent mobilapps"
       ],
       "Get Started": [
         "Kom i gang"
@@ -5084,8 +5387,29 @@
       "Import - ${ date }": [
         "Import - ${ date }"
       ],
+      "Import completed with warnings": [
+        "Importen blev gennemført med advarsler"
+      ],
+      "Import failed": [
+        "Import mislykkedes"
+      ],
+      "Import successful": [
+        "Importen lykkedes"
+      ],
       "Import to vault(s)": [
         "Importér til boks(e)"
+      ],
+      "Import your passwords in less than a minute": [
+        "Importér dine adgangskoder på mindre end et minut"
+      ],
+      "Important: Once your data has been imported, delete the exported file.": [
+        "OBS: slet den eksporterede fil så snart din data er blevet importeret."
+      ],
+      "Imported from:": [
+        "Importeret fra:"
+      ],
+      "Imported items:": [
+        "Importerede elementer:"
       ],
       "Importing your data": [
         "Importerer dine data"
@@ -5161,6 +5485,9 @@
       "Move all items?": [
         "Flyt alle elementer?"
       ],
+      "Move everything at once": [
+        "Flyt alting på én gang"
+      ],
       "Move item to \"${ target }\"": [
         "Flyt element til \"${ target }\""
       ],
@@ -5197,6 +5524,9 @@
       "No shared secure links": [
         "Ingen sikre links delt"
       ],
+      "None of your items could be imported. See the details below.": [
+        "Ingen af dine elementer kunne importeres. Se detaljerne nedenfor."
+      ],
       "Open pagination": [
         "Åbn sidenummerering"
       ],
@@ -5214,6 +5544,9 @@
       ],
       "Password Health": [
         "Adgangskode-sundhed"
+      ],
+      "Password managers": [
+        "Adgangskodeadministratorer"
       ],
       "Pause monitoring?": [
         "Sæt monitorering på pause?"
@@ -5289,6 +5622,9 @@
       "Select the default domain for aliases": [
         "Vælg standarddomænet for aliasser"
       ],
+      "Select your password manager": [
+        "Vælg din adgangskodeadministrator"
+      ],
       "Set access level": [
         "Angiv adgangsniveau"
       ],
@@ -5313,8 +5649,14 @@
       "Shared via": [
         "Delt via"
       ],
+      "Some of your items could not be imported. See the details below.": [
+        "Nogle af dine elementer kunne ikke importeres. Se detaljerne nedenfor."
+      ],
       "SPF (Optional)": [
         "SPF (Valgfri)"
+      ],
+      "Starting the extension": [
+        "Starter udvidelsen"
       ],
       "Status": [
         "Status"
@@ -5361,6 +5703,12 @@
       "Upgrade to check for compromised passwords": [
         "Opgrader for at tjekke for kompromitterede adgangskoder"
       ],
+      "Upload": [
+        "Upload"
+      ],
+      "Upload your data": [
+        "Upload din data"
+      ],
       "URL matching": [
         "URL-matching"
       ],
@@ -5382,6 +5730,9 @@
       "Want to learn more?": [
         "Vil du vide mere?"
       ],
+      "We'll guide you through the process. First choose where you currently store your passwords.": [
+        "Vi vejleder dig igennem processen. Vælg først hvor du opbevarer dine adgangskoder på nuværende tidspunkt."
+      ],
       "Weak password": [
         "Svag adgangskode"
       ],
@@ -5399,6 +5750,12 @@
       ],
       "What is the difference between ${ PASS_SHORT_APP_NAME } note and SimpleLogin note?": [
         "Hvad er forskellen mellem en ${ PASS_SHORT_APP_NAME } note og en SimpleLogin note?"
+      ],
+      "Which service do you want to create the login for?": [
+        "Hvilken tjeneste vil du oprette dette login til?"
+      ],
+      "You are ready to get the most out of ${ PASS_APP_NAME }.": [
+        "Du er klar til at få mest muligt ud af ${ PASS_APP_NAME }."
       ],
       "You don't have any vaults": [
         "Du har ikke nogen bokse"
@@ -5420,6 +5777,9 @@
       ],
       "Your welcome gift": [
         "Din velkomstgave"
+      ],
+      "You’re a step away from autofill magic!": [
+        "Du er ét skridt væk fra autofyld-magi!"
       ],
       "You’re about to permanently delete ${ aliasCount } alias.": [
         "Du er ved at slette ${ aliasCount } alias permanent.",
@@ -5457,8 +5817,16 @@
       "OTP secret or URI is invalid": [
         "OTP-hemmelighed eller URI er ugyldig"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Adgangskode skal indeholde mindst ${ MIN_PASSWORD_LENGTH } tegn",
+        "Adgangskode skal indeholde mindst ${ MIN_PASSWORD_LENGTH } tegn"
+      ],
       "Section name cannot be empty": [
         "Sektionsnavn kan ikke være tomt"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Prøv et kortere brugernavn (maks. ${ n } tegn)",
+        "Prøv et kortere brugernavn (maks. ${ n } tegn)"
       ],
       "URL already exists": [
         "URL findes allerede"
@@ -5479,6 +5847,22 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "Adgangskoden til ${ BRAND_NAME } kræves"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "${ count } mappe blev flettet ind i dens overordnede mappe, fordi det nåede det dybeste niveau for undermapper.",
+        "${ count } mapper blev flettet ind i dens overordnede mappe, fordi det nåede det dybeste niveau for undermapper."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "${ count } mappe blev ikke importeret, fordi der ikke kunne være flere undermapper i dens overordnede mappe. Dens elementer blev importeret til den nærmeste ledige mappe.",
+        "${ count } mapper blev ikke importeret, fordi der ikke kunne være flere undermapper i deres overordnede mappe. Deres elementer blev importeret til den nærmeste ledige mappe."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "${ count } mappe blev ikke importeret, fordi der ikke kan være flere mapper i denne boks. Dens elementer blev importeret til den nærmeste ledige mappe.",
+        "${ count } mapper blev ikke importeret, fordi der ikke kan være flere mapper i denne boks. Deres elementer blev importeret til den nærmeste ledige mappe."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "${ failed } mappe kunne ikke oprettes. Dens elementer blev importeret til den nærmeste ledige mappe.",
+        "${ failed } mapper kunne ikke oprettes. Deres elementer blev importeret til den nærmeste ledige mappe."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } giver stærk kontrol, men en enkelt fejl kan få autofyld til at matche og udfylde data på svindel- eller phishing-websteder."
@@ -5623,9 +6007,6 @@
       ],
       "Move to trash": [
         "Flyt til papirkurv"
-      ],
-      "Name is required": [
-        "Navn er påkrævet"
       ],
       "No items": [
         "Ingen elementer"

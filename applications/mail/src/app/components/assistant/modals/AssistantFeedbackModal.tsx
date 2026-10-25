@@ -18,10 +18,10 @@ import TextArea from '@proton/components/components/v2/input/TextArea';
 import useLoading from '@proton/hooks/useLoading';
 import { IcThumbDown } from '@proton/icons/icons/IcThumbDown';
 import { IcThumbUp } from '@proton/icons/icons/IcThumbUp';
-import { useAssistant } from '@proton/llm/lib';
+import { useAssistant } from '@proton/llm/lib/hooks/useAssistant';
 import type { AssistantFeedback } from '@proton/shared/lib/api/feedback';
 import { sendAssistantFeedback } from '@proton/shared/lib/api/feedback';
-import { AI_ASSISTANT_ACCESS } from '@proton/shared/lib/interfaces';
+import { AI_ASSISTANT_ACCESS } from '@proton/shared/lib/interfaces/UserSettings';
 
 interface Props {
     result?: string;

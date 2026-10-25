@@ -1,8 +1,10 @@
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
 
 import type { ShareItem } from '../../store/reducers';
-import type { Share, ShareGetResponse, ShareId } from '../../types';
-import { ShareFlags, ShareRole, ShareType } from '../../types';
+import type { ShareGetResponse } from '../../types/api/pass';
+import type { ShareId } from '../../types/crypto/pass-types';
+import type { Share } from '../../types/data/shares';
+import { ShareFlags, ShareRole, ShareType } from '../../types/data/shares';
 
 /* overload for subtypes */
 export function isVaultShare(share: ShareItem): share is ShareItem<ShareType.Vault>;
@@ -23,6 +25,8 @@ export const isShareDeduped =
     <T extends Share>({ shareId }: T) =>
         shareIds.includes(shareId);
 export const isShareVisible = <T extends { flags: number }>(share: T) => !hasBit(share.flags, ShareFlags.HIDDEN);
+export const isShareHidingSensitiveContent = <T extends { flags: number }>(share: T) =>
+    hasBit(share.flags, ShareFlags.HIDE_SENSITIVE_CONTENT);
 export const isGroupShare = <T extends Share>(share: T): share is T & { groupId: string } => share.groupId !== null;
 
 /** If the `canAutofill` flag is not present on the share item, fallback to client

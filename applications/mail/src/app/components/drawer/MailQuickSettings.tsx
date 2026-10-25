@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import { logger } from '@protontech/logger';
 import { c } from 'ttag';
 
 import { userSettingsActions } from '@proton/account/userSettings';
@@ -18,7 +19,7 @@ import QuickSettingsSectionRow from '@proton/components/components/drawer/views/
 import type { QuickSettingsReminders } from '@proton/components/components/drawer/views/quickSettings/interface';
 import DrawerAppScrollContainer from '@proton/components/components/drawer/views/shared/DrawerAppScrollContainer';
 import DrawerAppSection from '@proton/components/components/drawer/views/shared/DrawerAppSection';
-import { KeyTransparencyDetailsModal } from '@proton/components/components/keyTransparency';
+import KeyTransparencyDetailsModal from '@proton/components/components/keyTransparency/KeyTransparencyDetailsModal';
 import Info from '@proton/components/components/link/Info';
 import useModalState from '@proton/components/components/modalTwo/useModalState';
 import Option from '@proton/components/components/option/Option';
@@ -31,7 +32,7 @@ import { useKeyTransparencyContext } from '@proton/components/containers/keyTran
 import MailShortcutsModal from '@proton/components/containers/mail/MailShortcutsModal';
 import useAssistantFeatureEnabled from '@proton/components/hooks/assistant/useAssistantFeatureEnabled';
 import useKeyTransparencyNotification from '@proton/components/hooks/useKeyTransparencyNotification';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import type { IconComponent } from '@proton/icons/component';
 import { IcColumnOne } from '@proton/icons/icons/IcColumnOne';
 import { IcColumnTwo } from '@proton/icons/icons/IcColumnTwo';
@@ -40,8 +41,7 @@ import { IcDensityLow } from '@proton/icons/icons/IcDensityLow';
 import { IcExclamationCircleFilled } from '@proton/icons/icons/IcExclamationCircleFilled';
 import { IcWindowMaximised } from '@proton/icons/icons/IcWindowMaximised';
 import { IcWindowSmall } from '@proton/icons/icons/IcWindowSmall';
-import { useAssistant } from '@proton/llm/lib';
-import { logger } from '@proton/logger';
+import { useAssistant } from '@proton/llm/lib/hooks/useAssistant';
 import { mailSettingsActions } from '@proton/mail/store/mailSettings';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
@@ -53,13 +53,11 @@ import { KEY_TRANSPARENCY_REMINDER_UPDATE } from '@proton/shared/lib/drawer/inte
 import { isChromiumBased, isFirefox, openNewTab } from '@proton/shared/lib/helpers/browser';
 import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import {
-    AI_ASSISTANT_ACCESS,
-    KeyTransparencyActivation,
-    type MailSettings,
-    type UserSettings,
-} from '@proton/shared/lib/interfaces';
+import { KeyTransparencyActivation } from '@proton/shared/lib/interfaces/KeyTransparency';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import { AI_ASSISTANT_ACCESS, type UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import { COMPOSER_MODE, VIEW_LAYOUT } from '@proton/shared/lib/mail/mailSettings';
+import { MailFeatureFlag } from '@proton/unleash/Flags';
 import { useFlag } from '@proton/unleash/useFlag';
 import isTruthy from '@proton/utils/isTruthy';
 
@@ -68,6 +66,7 @@ import { CategoriesQuickSettings } from '../categoryView/CategoriesQuickSettings
 import { MailDebugButton } from '../debug/MailDebugButton';
 import ClearBrowserDataModal from '../header/ClearBrowserDataModal';
 import MailDefaultHandlerModal from '../header/MailDefaultHandlerModal';
+import LumoInMailToggle from './LumoInMailToggle';
 
 interface QuickSettingsSelectOption {
     value: any;
@@ -102,6 +101,7 @@ const MailQuickSettings = () => {
     const [loadingDownloadLogs, withLoadingDownloadLogs] = useLoading();
     const collectLogs = useFlag('CollectLogs');
     const scribeToLumo = useFlag('ScribeToLumo');
+    const isLumoInMailFlagOn = useFlag(MailFeatureFlag.LumoInMail);
     const [clearBrowserDataProps, setClearBrowserDataModalOpen] = useModalState();
     const [mailDefaultHandlerProps, setDefaultHandlerModalOpen] = useModalState();
     const [mailShortcutsProps, setMailShortcutsModalOpen] = useModalState();
@@ -374,6 +374,16 @@ const MailQuickSettings = () => {
                     }
                 />
             </DrawerAppSection>
+
+            {isLumoInMailFlagOn && (
+                <DrawerAppSection>
+                    <QuickSettingsSectionRow
+                        label={c('Label').t`${LUMO_SHORT_APP_NAME} assistant`}
+                        labelProps={{ htmlFor: 'toggle-lumo-in-mail' }}
+                        action={<LumoInMailToggle id="toggle-lumo-in-mail" />}
+                    />
+                </DrawerAppSection>
+            )}
 
             {assistantFeatureEnabled.enabled && (
                 <DrawerAppSection>

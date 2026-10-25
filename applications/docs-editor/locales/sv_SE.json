@@ -119,9 +119,6 @@
       "Fit table to page width": [
         "Passa tabell till sidbredd"
       ],
-      "Go to label": [
-        "Gå till etikett"
-      ],
       "Indent": [
         "Indrag"
       ],
@@ -133,6 +130,9 @@
       ],
       "Insert comment": [
         "Infoga kommentar"
+      ],
+      "Insert emoji": [
+        "Infoga emoji"
       ],
       "Insert image": [
         "Infoga bild"
@@ -191,9 +191,6 @@
       "Refresh the page": [
         "Uppdatera sidan"
       ],
-      "Remove": [
-        "Ta bort"
-      ],
       "Remove link": [
         "Ta bort länk"
       ],
@@ -221,9 +218,6 @@
       "Strike-through": [
         "Genomstruken"
       ],
-      "Submit": [
-        "Skicka"
-      ],
       "Subscript": [
         "Nedsänkt text"
       ],
@@ -241,143 +235,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "äpple"
-      ],
-      "azureish white": [
-        "azurblått vitt"
-      ],
       "black": [
         "svart"
-      ],
-      "blanched almond": [
-        "blancherad mandel"
-      ],
-      "blue-gray": [
-        "blågrå"
-      ],
-      "caramel": [
-        "karamell"
       ],
       "carrot": [
         "morot"
       ],
-      "cerise": [
-        "körsbär"
-      ],
-      "cinnabar": [
-        "cinnober"
-      ],
-      "cobalt": [
-        "kobolt"
-      ],
-      "copper": [
-        "koppar"
-      ],
-      "cyan-blue azure": [
-        "cyan"
-      ],
-      "dandelion": [
-        "maskros"
-      ],
-      "dark cerulean": [
-        "mörk cerulean"
-      ],
-      "dark midnight blue": [
-        "mörk midnattsblå"
-      ],
-      "dim gray": [
-        "svagt grått"
-      ],
-      "enzian": [
-        "lila"
-      ],
-      "fern": [
-        "ormbunke"
-      ],
-      "field drab": [
-        "brun"
-      ],
-      "forest": [
-        "skog"
-      ],
-      "gainsboro": [
-        "grå"
-      ],
       "gray": [
         "grå"
-      ],
-      "japanese laurel": [
-        "japansk lagerblad"
-      ],
-      "kiwi": [
-        "kiwi"
-      ],
-      "lemon yellow": [
-        "citrongul"
-      ],
-      "light carmine pink": [
-        "ljus karminrosa"
-      ],
-      "light moss green": [
-        "ljus mossgrön"
-      ],
-      "light red": [
-        "ljusröd"
-      ],
-      "maize": [
-        "majs"
-      ],
-      "mughal green": [
-        "mogulgrön"
-      ],
-      "ocean": [
-        "hav"
       ],
       "olive": [
         "oliv"
       ],
-      "outer space": [
-        "yttre rymden"
-      ],
       "pacific": [
         "stilla havet"
       ],
-      "palatinate blue": [
-        "blå"
-      ],
-      "pale cerulean": [
-        "blek azurblå"
-      ],
-      "pastel gray": [
-        "pastellgrå"
-      ],
-      "persian plum": [
-        "persiskt plommon"
-      ],
-      "persian red": [
-        "persisk röd"
-      ],
-      "philippine gray": [
-        "filippinsk grå"
-      ],
-      "philippine silver": [
-        "filippinskt silver"
-      ],
-      "pickle": [
-        "gurka"
-      ],
-      "pine": [
-        "tall"
-      ],
       "pink": [
         "rosa"
-      ],
-      "pistachio": [
-        "pistasch"
-      ],
-      "plum": [
-        "plommon"
       ],
       "purple": [
         "lila"
@@ -388,29 +262,8 @@
       "reef": [
         "rev"
       ],
-      "ruddy pink": [
-        "rödblommig rosa"
-      ],
-      "sahara": [
-        "sahara"
-      ],
-      "satin sheen gold": [
-        "satin glänsande guld"
-      ],
       "slateblue": [
         "skifferblå"
-      ],
-      "soil": [
-        "jord"
-      ],
-      "strawberry": [
-        "jordgubb"
-      ],
-      "vivid auburn": [
-        "intensiv kastanjebrun"
-      ],
-      "white": [
-        "vit"
       ]
     },
     "Confirm": {
@@ -427,9 +280,32 @@
       ],
       "Read or print final document": [
         "Läs eller skriv ut slutdokument"
+      ]
+    },
+    "Emoji category": {
+      "Activities": [
+        "Aktiviteter"
       ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "Använd rullgardinsmenyn ovan för att byta och börja ge förslag."
+      "Animals and nature": [
+        "Djur och natur"
+      ],
+      "Flags": [
+        "Flaggor"
+      ],
+      "Food and drink": [
+        "Mat och dryck"
+      ],
+      "Objects": [
+        "Objekt"
+      ],
+      "Smileys and people": [
+        "Smileys och människor"
+      ],
+      "Symbols": [
+        "Symboler"
+      ],
+      "Travel and places": [
+        "Resor och platser"
       ]
     },
     "Error": {
@@ -459,9 +335,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "Detta kalkylblad är inkompatibelt med den nuvarande klientversionen. Försök att ladda om klienten. Om felet kvarstår, kontakta support."
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "Försökte importera arkdata till Lexical"
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "Kan inte konvertera Word-dokument. Är det lösenordsskyddat? Ta i så fall bort lösenordet och försök igen."
@@ -538,11 +411,11 @@
       "Just now": [
         "Just nu"
       ],
-      "Labels:": [
-        "Etiketter:"
-      ],
       "Loading": [
         "Laddar"
+      ],
+      "Loading emoji…": [
+        "Laddar emoji …"
       ],
       "NEW": [
         "NYTT"
@@ -609,6 +482,9 @@
       "Clear formatting": [
         "Rensa formatering"
       ],
+      "Comments": [
+        "Kommentarer"
+      ],
       "Delete": [
         "Ta bort"
       ],
@@ -638,6 +514,9 @@
       ],
       "Duplicate table row": [
         "Duplicera tabellrad"
+      ],
+      "Emoji": [
+        "Emoji"
       ],
       "Format": [
         "Format"
@@ -678,11 +557,23 @@
       "Page break": [
         "Sidbrytning"
       ],
+      "Recent": [
+        "Senaste"
+      ],
       "Replace": [
         "Ersätt"
       ],
       "Replace link": [
         "Ersätt länk"
+      ],
+      "Search emoji": [
+        "Sök emoji"
+      ],
+      "Search results": [
+        "Sökresultat"
+      ],
+      "Table": [
+        "Tabell"
       ],
       "Text and highlight color": [
         "Text- och markeringsfärg"
@@ -836,6 +727,250 @@
       ],
       "Note": [
         "Anteckning"
+      ]
+    },
+    "sheets_2025:Spreadsheet cellFormatOptions": {
+      "Bottom": [
+        "Bottom"
+      ],
+      "Center": [
+        "Centrerat"
+      ],
+      "Currency": [
+        "Valuta"
+      ],
+      "Custom": [
+        "Anpassad"
+      ],
+      "Date": [
+        "Datum"
+      ],
+      "General": [
+        "Allmänt"
+      ],
+      "Left": [
+        "Vänster"
+      ],
+      "Number": [
+        "Nummer"
+      ],
+      "Percentage": [
+        "Procent"
+      ],
+      "Right": [
+        "Höger"
+      ],
+      "Text": [
+        "Text"
+      ],
+      "Time": [
+        "Tid"
+      ],
+      "Top": [
+        "Toppen"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartAggregates": {
+      "Average": [
+        "Genomsnittlig"
+      ],
+      "Max": [
+        "Max"
+      ],
+      "Median": [
+        "Median"
+      ],
+      "Min": [
+        "Min"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartEditorDialog": {
+      "None": [
+        "Ingen"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartTypes": {
+      "Column": [
+        "Kolumn"
+      ],
+      "Hierarchy": [
+        "Hierarki"
+      ],
+      "Stacked column": [
+        "Staplad kolumn"
+      ],
+      "Treemap": [
+        "Trädkarta"
+      ]
+    },
+    "sheets_2025:Spreadsheet conditions": {
+      "Above average": [
+        "Över genomsnitt"
+      ],
+      "April": [
+        "April"
+      ],
+      "August": [
+        "Augusti"
+      ],
+      "Below average": [
+        "Under genomsnitt"
+      ],
+      "Between": [
+        "Mellan"
+      ],
+      "Checkbox": [
+        "Kryssruta"
+      ],
+      "Date is after": [
+        "Datum är efter"
+      ],
+      "Date is between": [
+        "Datum är mellan"
+      ],
+      "Date is not between": [
+        "Datum är inte mellan"
+      ],
+      "Date is valid": [
+        "Datum är giltigt"
+      ],
+      "December": [
+        "December"
+      ],
+      "Dropdown": [
+        "Rullgardinsmeny"
+      ],
+      "Errors": [
+        "Fel"
+      ],
+      "February": [
+        "Februari"
+      ],
+      "Is empty": [
+        "Är tom"
+      ],
+      "Is not empty": [
+        "Är inte tom"
+      ],
+      "January": [
+        "Januari"
+      ],
+      "July": [
+        "Juli"
+      ],
+      "June": [
+        "Juni"
+      ],
+      "Last 7 days": [
+        "Senaste 7 dagarna"
+      ],
+      "Last month": [
+        "Förra månaden"
+      ],
+      "Last quarter": [
+        "Sista kvarteret"
+      ],
+      "Last week": [
+        "Förra veckan"
+      ],
+      "Last year": [
+        "Förra året"
+      ],
+      "March": [
+        "Mars"
+      ],
+      "May": [
+        "Maj"
+      ],
+      "Next month": [
+        "Nästa månad"
+      ],
+      "Next quarter": [
+        "Nästa kvartal"
+      ],
+      "Next week": [
+        "Nästa vecka"
+      ],
+      "Next year": [
+        "Nästa år"
+      ],
+      "No errors": [
+        "Inga fel"
+      ],
+      "Not between": [
+        "Inte mellan"
+      ],
+      "Not equal to": [
+        "Inte lika med"
+      ],
+      "November": [
+        "November"
+      ],
+      "October": [
+        "Oktober"
+      ],
+      "Quarter 1": [
+        "Kvartal 1"
+      ],
+      "Quarter 2": [
+        "Kvartal 2"
+      ],
+      "Quarter 3": [
+        "Kvartal 3"
+      ],
+      "Quarter 4": [
+        "Kvartal 4"
+      ],
+      "September": [
+        "September"
+      ],
+      "Text contains": [
+        "Text innehåller"
+      ],
+      "Text does not contain": [
+        "Text innehåller inte"
+      ],
+      "Text ends with": [
+        "Text slutar med"
+      ],
+      "Text is email": [
+        "Text är e-post"
+      ],
+      "Text is exactly": [
+        "Text är exakt"
+      ],
+      "Text is not equal": [
+        "Text är inte lika"
+      ],
+      "Text is URL": [
+        "Text är URL"
+      ],
+      "Text starts with": [
+        "Text börjar med"
+      ],
+      "This month": [
+        "Denna månad"
+      ],
+      "This quarter": [
+        "Detta kvartal"
+      ],
+      "This week": [
+        "Denna vecka"
+      ],
+      "This year": [
+        "Detta år"
+      ],
+      "Today": [
+        "Idag"
+      ],
+      "Tomorrow": [
+        "Imorgon"
+      ],
+      "Year to date": [
+        "År till datum"
+      ],
+      "Yesterday": [
+        "Igår"
       ]
     },
     "sheets_2025:Spreadsheet context menu": {
@@ -1184,6 +1319,14 @@
         "År"
       ]
     },
+    "sheets_2025:Spreadsheet customCurrencyFormatDialog": {
+      "Format": [
+        "Format"
+      ],
+      "Symbol": [
+        "Symbol"
+      ]
+    },
     "sheets_2025:Spreadsheet delete sheet dialog": {
       "Are you sure you want to delete ${ sheetName }?": [
         "Är du säker på att du vill ta bort ${ sheetName }?"
@@ -1210,6 +1353,11 @@
       ],
       "Your screen is too small to edit this spreadsheet. You’re in view-only mode. To make changes, please open this spreadsheet on a larger screen or expand your browser window.": [
         "Din skärm är för liten för att redigera detta kalkylblad. Du är i visningsläge. För att göra ändringar öppnar du kalkylbladet på en större skärm eller förstorar ditt webbläsarfönster."
+      ]
+    },
+    "sheets_2025:Spreadsheet editingDisabledButton": {
+      "Edit": [
+        "Redigera"
       ]
     },
     "sheets_2025:Spreadsheet editor": {
@@ -1646,6 +1794,9 @@
       ]
     },
     "sheets_2025:Spreadsheet editor search dialog": {
+      "${ current } of ${ total }": [
+        "${ current } av ${ total }"
+      ],
       "Close": [
         "Stäng"
       ],
@@ -1677,11 +1828,23 @@
       ]
     },
     "sheets_2025:Spreadsheet editor toolbar": {
+      "Apply border": [
+        "Tillämpa ram"
+      ],
+      "Apply text color": [
+        "Tillämpa textfärg"
+      ],
       "Bold": [
         "Fet"
       ],
       "Border": [
         "Ram"
+      ],
+      "Choose border": [
+        "Välj ram"
+      ],
+      "Choose text color": [
+        "Välj textfärg"
       ],
       "Clear formatting": [
         "Rensa formatering"
@@ -1830,6 +1993,29 @@
         "Sortera Ö → A"
       ]
     },
+    "sheets_2025:Spreadsheet filterByCondition": {
+      "None": [
+        "Ingen"
+      ]
+    },
+    "sheets_2025:Spreadsheet formatMenu": {
+      "Coming soon...": [
+        "Kommer snart …"
+      ]
+    },
+    "sheets_2025:Spreadsheet formulaBar": {
+      "Edit": [
+        "Redigera"
+      ],
+      "Remove": [
+        "Ta bort"
+      ]
+    },
+    "sheets_2025:Spreadsheet gridFooter": {
+      "Add": [
+        "Lägg till"
+      ]
+    },
     "sheets_2025:Spreadsheet insert link dialog": {
       "Apply": [
         "Tillämpa"
@@ -1865,23 +2051,11 @@
       "Cancel": [
         "Avbryt"
       ],
-      "column": [
-        "kolumn"
-      ],
-      "column width": [
-        "kolumnbredd"
-      ],
-      "Default": [
-        "Standard"
+      "Default ${ size }": [
+        "Standard ${ size }"
       ],
       "OK": [
         "OK"
-      ],
-      "row": [
-        "rad"
-      ],
-      "row height": [
-        "radhöjd"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2321,15 +2495,32 @@
         "Tabellrubrik"
       ]
     },
+    "sheets_2025:Spreadsheet viewMenu": {
+      "1 column": [
+        "1 kolumn"
+      ],
+      "1 row": [
+        "1 rad"
+      ],
+      "2 columns": [
+        "2 kolumner"
+      ],
+      "2 rows": [
+        "2 rader"
+      ],
+      "No columns": [
+        "Inga kolumner"
+      ],
+      "No rows": [
+        "Inga rader"
+      ]
+    },
     "Title": {
       "Delete comment": [
         "Ta bort kommentar"
       ],
       "Delete thread": [
         "Ta bort tråd"
-      ],
-      "Explore the New Suggestion Mode": [
-        "Utforska det nya förslagsläget"
       ],
       "Language not supported": [
         "Språk stöds inte"

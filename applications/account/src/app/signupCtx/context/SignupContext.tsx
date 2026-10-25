@@ -6,7 +6,7 @@ import { useConfig } from '@proton/app-context/useConfig';
 import StandardErrorPage from '@proton/components/containers/app/StandardErrorPage';
 import { shouldTraceError, useNotifyErrorHandler } from '@proton/components/hooks/useErrorHandler';
 import { useSilentApi } from '@proton/components/hooks/useSilentApi';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import { observeError } from '@proton/metrics/observeApiError';
 import type { OnChargeable } from '@proton/payments-ui/client-extensions/usePaymentFacade';
 import {
@@ -30,8 +30,8 @@ import {
 } from '@proton/shared/lib/authentication/persistedSessionHelper';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { captureMessage, traceError } from '@proton/shared/lib/helpers/sentry';
-import type { Optional, ReferralData } from '@proton/shared/lib/interfaces';
-import type { Unwrap } from '@proton/shared/lib/interfaces/utils';
+import type { ReferralData } from '@proton/shared/lib/interfaces/referral';
+import type { Optional, Unwrap } from '@proton/shared/lib/interfaces/utils';
 import noop from '@proton/utils/noop';
 
 import sendRecoveryPhrasePayloadHelper from '../../containers/recoveryPhrase/sendRecoveryPhrasePayload';

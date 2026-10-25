@@ -1,10 +1,11 @@
-import type { Api } from '@proton/shared/lib/interfaces'
+import type { Api } from '@proton/shared/lib/interfaces/Api'
 import { App_TYPES } from './Dependencies/Types'
-import { AppDependencies } from './Dependencies/AppDependencies'
+import { AppDependencies, type AppDependenciesOptions } from './Dependencies/AppDependencies'
 import type { CreateEmptyDocumentForConversion } from '../UseCase/CreateEmptyDocumentForConversion'
 import type { DocLoader } from '../Services/DocumentLoader/DocLoader'
 import type { DocLoaderInterface } from '../Services/DocumentLoader/DocLoaderInterface'
-import { SyncedEditorState, type InternalEventBusInterface } from '@proton/docs-shared'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import { SyncedEditorState } from '@proton/docs-shared/State/SyncedEditorState'
 import type { ApplicationInterface } from './ApplicationInterface'
 import type { WebsocketServiceInterface } from '../Services/Websockets/WebsocketServiceInterface'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
@@ -19,10 +20,10 @@ import type { DuplicateDocument } from '../UseCase/DuplicateDocument'
 import type { UnleashClient } from '@proton/unleash/UnleashClient'
 import { UserState } from '../State/UserState'
 import type { DocumentState, PublicDocumentState } from '../State/DocumentState'
-import type { DriveCompat, PublicDriveCompat } from '@proton/drive-store/lib'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
+import type { PublicDriveCompat } from '@proton/drive-store/lib/usePublicDriveCompat'
 import type { APP_NAMES } from '@proton/shared/lib/constants'
 import type { DocsApi } from '../Api/DocsApi'
-import type { CacheConfig } from '@proton/drive-store/lib/CacheConfig'
 
 declare const window: CustomWindow
 
@@ -39,7 +40,7 @@ export class Application implements ApplicationInterface {
     this.appVersion,
     this.unleashClient,
     this.syncedEditorState,
-    this.cacheConfig,
+    this.options,
   )
 
   constructor(
@@ -50,7 +51,7 @@ export class Application implements ApplicationInterface {
     private appName: APP_NAMES,
     private appVersion: string,
     private unleashClient: UnleashClient,
-    private cacheConfig?: CacheConfig,
+    private options?: AppDependenciesOptions,
   ) {
     this.deps.get<MetricService>(App_TYPES.MetricService).initialize()
   }

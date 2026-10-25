@@ -1,24 +1,29 @@
 import { EditorController } from './EditorController'
 import type { Logger } from '@proton/shared/lib/logs'
-import { BroadcastSource, DocumentRole, DocUpdateOrigin } from '@proton/docs-shared'
-import type { ConnectionCloseReason } from '@proton/docs-proto'
-import { EventType, EventTypeEnum } from '@proton/docs-proto'
-import metrics from '@proton/metrics'
+import { BroadcastSource } from '@proton/docs-shared/Bridge/BroadcastSource'
+import { DocUpdateOrigin } from '@proton/docs-shared/Doc/DocState'
+import { DocumentRole } from '@proton/docs-shared/Doc/DocumentRole'
+import type { ConnectionCloseReason } from '@proton/docs-proto/ConnectionCloseReason/ConnectionCloseReason'
+import { EventType } from '@proton/docs-proto/Event/EventType'
+import { EventTypeEnum } from '@proton/docs-proto/Event/EventTypeEnum'
+import metrics from '@proton/metrics/metricsInstance'
 import type { DocumentStateValues } from '../State/DocumentState'
 import { DocumentState } from '../State/DocumentState'
-import type { ClientRequiresEditorMethods, DecryptedMessage, InternalEventBusInterface } from '@proton/docs-shared'
+import type { ClientRequiresEditorMethods } from '@proton/docs-shared/Bridge/ClientRequiresEditorMethods'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { DecryptedMessage } from '@proton/docs-shared/Realtime/DecryptedMessage'
 import type { SerializedEditorState } from 'lexical'
 import type { DecryptedCommit } from '../Models/DecryptedCommit'
 import { LoadLogger } from '../LoadLogger/LoadLogger'
 import { downloadExport } from '../UseCase/ExportAndDownload'
 
-jest.mock('@proton/metrics', () => ({
+jest.mock('@proton/metrics/metricsInstance', () => ({
   docs_readonly_mode_documents_total: {
     increment: jest.fn(),
   },
 }))
 
-jest.mock('@proton/docs-core/lib/UseCase/ExportAndDownload', () => ({
+jest.mock('@proton/docs-core/UseCase/ExportAndDownload', () => ({
   downloadExport: jest.fn(),
 }))
 
@@ -59,6 +64,7 @@ describe('EditorController', () => {
       getDocumentState: jest.fn(),
       getClientId: jest.fn(),
       replaceEditorState: jest.fn(),
+      getEditorBuildInfo: jest.fn(),
     } as unknown as jest.Mocked<ClientRequiresEditorMethods>
 
     eventBus = {} as InternalEventBusInterface
@@ -501,6 +507,18 @@ describe('EditorController', () => {
 
       const result = await controller.getDocumentState()
       expect(result).toEqual(mockState)
+    })
+
+    it('should handle getEditorBuildInfo', async () => {
+      const buildInfo = { appVersion: '5.0.1', commit: 'editor-commit' }
+      editorInvoker.getEditorBuildInfo.mockResolvedValue(buildInfo)
+
+      await expect(controller.getEditorBuildInfo()).resolves.toEqual(buildInfo)
+    })
+
+    it('should throw when calling getEditorBuildInfo without editor', async () => {
+      const controller = new EditorController(logger, sharedState, eventBus)
+      await expect(controller.getEditorBuildInfo()).rejects.toThrow('Editor invoker not initialized')
     })
   })
 

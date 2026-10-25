@@ -7,22 +7,22 @@ import {
     selectShouldBreachAlertsRefresh,
     selectUnreadBreachesCount,
     setUnreadBreachesCount,
-} from '@proton/account';
+} from '@proton/account/breaches/breachNotificationsSlice';
 import { useUser } from '@proton/account/user/hooks';
 import { userSettingsActions } from '@proton/account/userSettings';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Href } from '@proton/atoms/Href/Href';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcCheckmarkCircleFilled } from '@proton/icons/icons/IcCheckmarkCircleFilled';
-import { baseUseDispatch, baseUseSelector } from '@proton/react-redux-store';
+import { baseUseDispatch, baseUseSelector } from '@proton/react-redux-store/ProtonStoreContext';
 import { getBreaches, updateBreachState } from '@proton/shared/lib/api/breaches';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { enableBreachAlert } from '@proton/shared/lib/api/settings';
 import { APP_UPSELL_REF_PATH, DARK_WEB_MONITORING_NAME, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import { DARK_WEB_MONITORING_STATE } from '@proton/shared/lib/interfaces';
+import { DARK_WEB_MONITORING_STATE } from '@proton/shared/lib/interfaces/UserSettings';
 import ProtonSentinelPlusLogo from '@proton/styles/assets/img/illustrations/sentinel-shield-bolt-breach-alert.svg';
 import { useFlag } from '@proton/unleash/useFlag';
 import noop from '@proton/utils/noop';

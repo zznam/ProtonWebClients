@@ -6,6 +6,7 @@ import type {
 } from 'proton-account/src/app/content/router-params';
 import { c } from 'ttag';
 
+import { getCanShowSignInRestriction } from '@proton/account/signInRestriction/helpers';
 import type { ThemeColor } from '@proton/colors/types';
 import type { SectionConfig } from '@proton/components/containers/layout/interface';
 import { SettingsLayoutVariant } from '@proton/components/containers/layout/interface';
@@ -26,13 +27,19 @@ import {
     isManagedExternally,
 } from '@proton/payments/core/subscription/helpers';
 import { BRAND_NAME, DARK_WEB_MONITORING_NAME, PROTON_SENTINEL_NAME, VPN_APP_NAME } from '@proton/shared/lib/constants';
-import type { UserModel } from '@proton/shared/lib/interfaces';
-import { getIsExternalAccount, getIsGlobalSSOAccount, getIsSSOVPNOnlyAccount } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import {
+    getIsExternalAccount,
+    getIsGlobalSSOAccount,
+    getIsSSOVPNOnlyAccount,
+} from '@proton/shared/lib/keys/accountType';
 import { isSubscriptionRenewEnabled } from '@proton/shared/lib/payments/subscription/helpers/renew';
 import type { VPNDashboardVariant } from '@proton/unleash/UnleashFeatureFlagsVariants';
 
 interface Arguments {
     user: UserModel;
+    addresses: Address[] | undefined;
     subscription: MaybeFreeSubscription;
     showVPNDashboard: boolean;
     showVPNDashboardVariant: VPNDashboardVariant | 'disabled' | undefined;
@@ -49,6 +56,7 @@ interface Arguments {
 
 export const getRoutes = ({
     user,
+    addresses,
     subscription,
     showVPNDashboard,
     showVPNDashboardVariant,
@@ -166,21 +174,6 @@ export const getRoutes = ({
                     variant: SettingsLayoutVariant.Card,
                 },
                 {
-                    text: c('Title').t`Downgrade account`,
-                    id: 'downgrade-account',
-                    // The !!subscritpion check is essential here to make sure that all the boolean variables
-                    // that depend on subscription are correctly computed before the first rendering.
-                    // Otherwise the component will be mounted and immediately unmounted which can cause memory leaks due
-                    // to async calls that started in a rendering cycle.
-                    available:
-                        !!subscription &&
-                        user.isPaid &&
-                        !cancellablePlan &&
-                        !hasVpnB2BPlan &&
-                        !cancellableOnlyViaSupport,
-                    variant: SettingsLayoutVariant.Card,
-                },
-                {
                     text: c('Title').t`Cancel subscription`,
                     id: 'cancel-via-support',
                     // B2B cancellation has a different flow, so we don't consider it a classic cancellable plan
@@ -238,20 +231,6 @@ export const getRoutes = ({
                         user.isPaid &&
                         cancellablePlan &&
                         isSubscriptionRenewEnabled(subscription) &&
-                        !cancellableOnlyViaSupport,
-                },
-                {
-                    text: c('Title').t`Downgrade account`,
-                    id: 'downgrade-account',
-                    // The !!subscritpion check is essential here to make sure that all the boolean variables
-                    // that depend on subscription are correctly computed before the first rendering.
-                    // Otherwise the component will be mounted and immediately unmounted which can cause memory leaks due
-                    // to async calls that started in a rendering cycle.
-                    available:
-                        !!subscription &&
-                        user.isPaid &&
-                        !cancellablePlan &&
-                        !hasVpnB2BPlan &&
                         !cancellableOnlyViaSupport,
                 },
                 {
@@ -338,6 +317,12 @@ export const getRoutes = ({
                     text: DARK_WEB_MONITORING_NAME,
                     id: 'breaches',
                     available: !isSSOUser,
+                    variant: SettingsLayoutVariant.Card,
+                },
+                {
+                    text: c('Title').t`Sign-in protection`,
+                    id: 'sign-in-protection',
+                    available: flags.showSignInRestrictionToggle && getCanShowSignInRestriction({ user, addresses }),
                     variant: SettingsLayoutVariant.Card,
                 },
                 {

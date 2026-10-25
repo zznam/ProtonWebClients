@@ -4,22 +4,21 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTheme } from '@proton/components/containers/themes/ThemeProvider';
 import { useLinkHandler } from '@proton/components/hooks/useLinkHandler';
 import MessageBodyIframe from '@proton/mail-renderer/components/MessageBodyIframe';
+import { getPlainTextToRender } from '@proton/mail-renderer/helpers/transforms/transforms';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import type { MessageState } from '@proton/mail/store/messages/messagesTypes';
 import { scrollIntoView } from '@proton/shared/lib/helpers/dom';
-import { isAutoFlaggedPhishing, isPlainText, isSuspicious } from '@proton/shared/lib/mail/messages';
-import iframeSVG from '@proton/styles/assets/img/icons/email-sprite-icons.source.svg';
+import { isAutoFlaggedPhishing, isDraft, isPlainText, isSuspicious } from '@proton/shared/lib/mail/messages';
 import clsx from '@proton/utils/clsx';
-
-import MessageBodyPlaceholder from './MessageBodyPlaceholder';
-import MessageBodyPrint from './MessageBodyPrint';
-import useMessageImagesLoadError from './hooks/useMessageImagesLoadError';
-import { useMailboxContainerContext } from '../../containers/mailbox/MailboxContainerProvider';
-import { isMessageContentEmpty } from '../../helpers/message/messageContent';
 
 import { useOnMailTo } from '../../containers/ComposeProvider';
 import { useEncryptedSearchContext } from '../../containers/EncryptedSearchProvider';
+import { useMailboxContainerContext } from '../../containers/mailbox/MailboxContainerProvider';
 import { locateBlockquote } from '../../helpers/message/messageBlockquote';
+import { isMessageContentEmpty } from '../../helpers/message/messageContent';
+import MessageBodyPlaceholder from './MessageBodyPlaceholder';
+import MessageBodyPrint from './MessageBodyPrint';
+import useMessageImagesLoadError from './hooks/useMessageImagesLoadError';
 
 import iframeCSSStyles from '@proton/mail-renderer/helpers/MessageIframe.raw.scss';
 
@@ -71,13 +70,18 @@ const MessageBody = ({
         localID: message.localID,
         useProxy: !!mailSettings.ImageProxy,
     });
+    const draft = isDraft(message.data);
     const [content, blockquote, afterBlockquote] = useMemo(
         () =>
             plain
-                ? ([message.messageDocument?.plainText as string, '', ''] as [string, string, string])
+                ? ([getPlainTextToRender(message.messageDocument?.plainText, draft), '', ''] as [
+                      string,
+                      string,
+                      string,
+                  ])
                 : locateBlockquote(message.messageDocument?.document),
         // eslint-disable-next-line react-hooks/exhaustive-deps -- autofix-eslint-6B18F7
-        [message.messageDocument?.document?.innerHTML, message.messageDocument?.plainText, plain]
+        [message.messageDocument?.document?.innerHTML, message.messageDocument?.plainText, plain, draft]
     );
 
     const isContentEmpty = useMemo(() => isMessageContentEmpty(content, plain), [content, plain]);
@@ -175,7 +179,6 @@ const MessageBody = ({
                         onMessageImageLoadError={handleMessageImageLoadError}
                         theme={theme}
                         iframeCSSStyles={iframeCSSStyles}
-                        iframeSVG={iframeSVG}
                     />
                     <MessageBodyPrint isPrint={isPrint} iframeRef={iframeRef} message={message} labelID={labelID} />
                     {linkModal}

@@ -1,9 +1,9 @@
 import { fireEvent, screen } from '@testing-library/react';
 import loudRejection from 'loud-rejection';
 
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import { addApiMock } from '../../helpers/tests/api';
 import { minimalCache } from '../../helpers/tests/cache';
@@ -46,7 +46,7 @@ const user = {
 } as UserModel;
 
 // Mock offer config file because it is supposed to change a lot
-jest.mock('@proton/components/containers/offers/hooks/useOfferConfig.ts', () => ({
+jest.mock('@proton/components/containers/offers/hooks/useOfferConfig', () => ({
     __esModule: true,
     default: jest.fn(() => [undefined, false]),
 }));

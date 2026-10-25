@@ -70,9 +70,6 @@
       "Background removed": [
         "Bakgrund borttagen"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Ansluten via TURN-reläläge på grund av dina nätverksbegränsningar. Detta kan öka latensen och påverka samtalskvaliteten."
-      ],
       "Connection lost. Reconnecting…": [
         "Anslutning förlorad. Återansluter …"
       ],
@@ -81,6 +78,9 @@
       ],
       "Library background applied": [
         "Biblioteksbakgrund tillämpad"
+      ],
+      "Light ${ BRAND_NAME } background applied": [
+        "Ljus ${ BRAND_NAME }-bakgrund tillämpad"
       ],
       "New chat message: ${ message }": [
         "Nytt chattmeddelande: ${ message }"
@@ -214,11 +214,11 @@
       "Cancel": [
         "Avbryt"
       ],
-      "Change layout": [
-        "Ändra layout"
-      ],
       "Change password": [
         "Ändra lösenord"
+      ],
+      "Chat": [
+        "Chatt"
       ],
       "Chat with us": [
         "Chatta med oss"
@@ -277,6 +277,9 @@
       "Create meeting": [
         "Skapa möte"
       ],
+      "Debug overlay": [
+        "Felsökningsöverlägg"
+      ],
       "Delete": [
         "Ta bort"
       ],
@@ -312,9 +315,6 @@
       ],
       "Download": [
         "Ladda ner"
-      ],
-      "Download app": [
-        "Ladda ner app"
       ],
       "Download local participant report": [
         "Ladda ner lokal deltagarrapport"
@@ -412,6 +412,9 @@
       "Kick out ${ participantName }": [
         "Kasta ut ${ participantName }"
       ],
+      "Layout": [
+        "Layout"
+      ],
       "Leave": [
         "Lämna"
       ],
@@ -424,11 +427,17 @@
       "Lower hand": [
         "Sänk handen"
       ],
+      "Meeting info": [
+        "Mötesinfo"
+      ],
       "Meeting timer": [
         "Mötestimer"
       ],
       "Minimize preview": [
         "Minimera förhandsgranskning"
+      ],
+      "More info": [
+        "Mer info"
       ],
       "More info: ${ safeTitle }": [
         "Mer information: ${ safeTitle }"
@@ -451,11 +460,14 @@
       "Noise cancellation": [
         "Brusreducering"
       ],
-      "Open app": [
-        "Öppna app"
+      "Not now": [
+        "Inte nu"
       ],
       "Open link": [
         "Öppna länk"
+      ],
+      "Participants": [
+        "Deltagare"
       ],
       "Participants join after you approve them": [
         "Deltagare går med efter att du har godkänt dem"
@@ -496,6 +508,9 @@
       ],
       "Record": [
         "Spela in"
+      ],
+      "Recording": [
+        "Spelar in"
       ],
       "Recording your microphone...": [
         "Spelar in din mikrofon …"
@@ -588,6 +603,9 @@
       "Settings": [
         "Inställningar"
       ],
+      "Share screen": [
+        "Dela skärm"
+      ],
       "Show options": [
         "Visa alternativ"
       ],
@@ -621,6 +639,9 @@
       "Start meeting": [
         "Starta möte"
       ],
+      "Start meeting in browser": [
+        "Starta möte i webbläsare"
+      ],
       "Start new meeting": [
         "Starta nytt möte"
       ],
@@ -639,9 +660,6 @@
       "Stay in meeting": [
         "Stanna i möte"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Sluta öppna möten i appen för stationär dator"
-      ],
       "Stop receiving video": [
         "Stoppa mottagning av video"
       ],
@@ -653,6 +671,9 @@
       ],
       "Stop Recording Track Stats": [
         "Sluta spela in spårningsstatistik"
+      ],
+      "Stop sharing": [
+        "Sluta dela"
       ],
       "Submit": [
         "Skicka"
@@ -671,6 +692,9 @@
       ],
       "The current link will stop working.": [
         "Nuvarande länken kommer sluta fungera."
+      ],
+      "Transcription": [
+        "Transkription"
       ],
       "Try again": [
         "Försök igen"
@@ -702,9 +726,6 @@
       "Use camera": [
         "Använd kamera"
       ],
-      "Use it": [
-        "Använd den"
-      ],
       "Use microphone": [
         "Använd mikrofon"
       ],
@@ -722,6 +743,9 @@
       ],
       "View invoice": [
         "Visa faktura"
+      ],
+      "View security details": [
+        "Visa säkerhetsdetaljer"
       ],
       "Virtual backgrounds": [
         "Virtuella bakgrunder"
@@ -746,9 +770,6 @@
       "Blur background": [
         "Bakgrundsoskärpa"
       ],
-      "Chat": [
-        "Chatt"
-      ],
       "Close": [
         "Stäng"
       ],
@@ -761,32 +782,17 @@
       "Copy meeting link": [
         "Kopiera möteslänk"
       ],
-      "Debug devices": [
-        "Felsök enheter"
-      ],
-      "Debug overlay": [
-        "Felsökningsöverlägg"
-      ],
       "Go to dashboard": [
         "Gå till adminpanel"
       ],
       "Incoming video": [
         "Inkommande video"
       ],
-      "Layout: ${ selectedLabel }": [
-        "Layout: ${ selectedLabel }"
-      ],
       "Leave Meeting": [
         "Lämna möte"
       ],
       "Lock meeting": [
         "Lås möte"
-      ],
-      "Lower hand": [
-        "Sänk handen"
-      ],
-      "Meeting details": [
-        "Mötesdetaljer"
       ],
       "Meeting timer": [
         "Mötestimer"
@@ -806,26 +812,14 @@
       "Participant host control options": [
         "Kontrollalternativ för deltagarvärd"
       ],
-      "Participants": [
-        "Deltagare"
-      ],
       "Picture-in-picture while sharing": [
         "Bild-i-bild vid delning"
-      ],
-      "Raise hand": [
-        "Räck upp handen"
       ],
       "Rotate camera": [
         "Rotera kamera"
       ],
       "Save my name on this device": [
         "Spara mitt namn på denna enhet"
-      ],
-      "Screen share": [
-        "Skärmdelning"
-      ],
-      "Settings": [
-        "Inställningar"
       ],
       "Stop recording and download.": [
         "Stoppa inspelning och ladda ner."
@@ -836,17 +830,11 @@
       "Toggle emoji reactions": [
         "Slå på/av emoji-reaktioner"
       ],
-      "Toggle meeting details": [
-        "Slå på/av mötesdetaljer"
-      ],
       "Toggle participants": [
         "Slå på/av deltagare"
       ],
       "Toggle screen share": [
         "Slå på/av skärmdelning"
-      ],
-      "Toggle settings": [
-        "Slå på/av inställningar"
       ],
       "Video settings": [
         "Videoinställningar"
@@ -915,14 +903,9 @@
         "Aktiv"
       ]
     },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Ansluten via TURN-reläläge på grund av dina nätverksbegränsningar. Detta kan öka latensen och påverka samtalskvaliteten."
-      ]
-    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Applikation för stationär dator ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Applikation för stationär dator ${ appName }"
       ]
     },
     "Bug category": {
@@ -2073,6 +2056,9 @@
       "Incorrect backup password. Please try again.": [
         "Felaktigt reservlösenord. Försök igen."
       ],
+      "Incorrect password. Please try again.": [
+        "Felaktigt lösenord. Försök igen."
+      ],
       "Incorrect second password. Please try again.": [
         "Felaktigt andra lösenord. Försök igen."
       ],
@@ -2287,6 +2273,9 @@
       "We couldn’t send a verification code using this method.": [
         "Vi kunde inte skicka en verifieringskod med den här metoden."
       ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Fel återställningsfras. Försök igen eller använd en annan återställningsmetod."
+      ],
       "You can create public links for your own files only": [
         "Du kan endast skapa offentliga länkar för dina egna filer"
       ],
@@ -2360,6 +2349,9 @@
       ],
       "Security key": [
         "Säkerhetsnyckel"
+      ],
+      "Still waiting?": [
+        "Väntar du fortfarande?"
       ]
     },
     "fido2: Label": {
@@ -2491,9 +2483,6 @@
       " and ": [
         " och "
       ],
-      "${ deviceLabel } is available again": [
-        "${ deviceLabel } är tillgänglig igen"
-      ],
       "${ maxParticipants } participant limit reached": [
         "Gränsen på ${ maxParticipants } deltagare har uppnåtts"
       ],
@@ -2508,6 +2497,13 @@
       ],
       "${ MEET_APP_NAME } needs WebRTC to run. Please update your browser or device to a version that supports WebRTC, try a different browser, or disable any extensions that might be blocking it.": [
         "${ MEET_APP_NAME } behöver WebRTC för att köras. Uppdatera din webbläsare eller enhet till en version som stöder WebRTC, prova en annan webbläsare eller inaktivera eventuella tillägg som kan blockera det."
+      ],
+      "${ meetingName } has ended": [
+        "${ meetingName } har slutat"
+      ],
+      "${ mlsMemberCount } member": [
+        "${ mlsMemberCount } medlem",
+        "${ mlsMemberCount } medlemmar"
       ],
       "${ participantName } and ${ otherParticipantsCount } others are recording": [
         "${ participantName } och ${ otherParticipantsCount } andra spelar in"
@@ -2571,6 +2567,9 @@
       ],
       "Anyone with the link can join immediately": [
         "Alla med länken kan gå med direkt"
+      ],
+      "App didn't open?": [
+        "Öppnades inte appen?"
       ],
       "Approve participants before they can join": [
         "Godkänn deltagare innan de kan gå med"
@@ -2701,6 +2700,9 @@
       "End the meeting for everyone?": [
         "Avsluta mötet för alla?"
       ],
+      "End to end encrypted chat": [
+        "End-to-end-krypterat chatt"
+      ],
       "End-to-end encryption is active for audio and video.": [
         "End-to-end-kryptering är aktiv för ljud och video."
       ],
@@ -2758,14 +2760,14 @@
       "Get a secure meeting link then add it to your calendar": [
         "Skaffa en säker möteslänk och lägg sedan till den i din kalender"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Få den bästa upplevelsen med ${ protonMeet }-appen för stationär dator"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Gå till about:config, sök efter media.peerconnection.enabled och ställ in det på true."
       ],
       "Host": [
         "Värd"
+      ],
+      "Host has another meeting in progress": [
+        "Värden har ett annat möte som pågår"
       ],
       "Host your own secure meeting. Start a call in ${ MEET_APP_NAME } and share the link to invite anyone to join. Simple, secure, and free.": [
         "Håll ditt eget säkra möte. Starta ett samtal i ${ MEET_APP_NAME } och dela länken för att bjuda in vem som helst att gå med. Enkelt, säkert och gratis."
@@ -2896,6 +2898,9 @@
       "Microphone permission denied": [
         "Mikrofonbehörighet nekad"
       ],
+      "More options": [
+        "Fler alternativ"
+      ],
       "Mute microphone": [
         "Stäng av mikrofon"
       ],
@@ -2953,6 +2958,15 @@
       "notify everyone here": [
         "avisera alla här"
       ],
+      "Now using ${ first } and ${ second }.": [
+        "Använder nu ${ first } och ${ second }."
+      ],
+      "Now using ${ first }, ${ second } and ${ third }.": [
+        "Använder nu ${ first }, ${ second } och ${ third }."
+      ],
+      "Now using ${ first }.": [
+        "Använder nu ${ first }."
+      ],
       "Only meetings you created appear here": [
         "Endast möten du skapat visas här"
       ],
@@ -2970,6 +2984,9 @@
       ],
       "Participant": [
         "Deltagare"
+      ],
+      "Participant counts don’t match": [
+        "Deltagarantal matchar inte"
       ],
       "Paste your ${ MEET_APP_NAME } link to join a secure meeting": [
         "Klistra in din ${ MEET_APP_NAME }-länk för att gå med i ett säkert möte."
@@ -3061,6 +3078,21 @@
       "Select a speaker": [
         "Välj en högtalare"
       ],
+      "Selected camera has disconnected.": [
+        "Vald kamera har kopplats från."
+      ],
+      "Selected devices have disconnected.": [
+        "Valda enheter har kopplats från."
+      ],
+      "Selected microphone and camera have disconnected.": [
+        "Vald mikrofon och kamera har kopplats från."
+      ],
+      "Selected microphone has disconnected.": [
+        "Vald mikrofon har kopplats från."
+      ],
+      "Selected speaker has disconnected.": [
+        "Vald högtalare har kopplats från."
+      ],
       "Servers are unreachable. Please try again in a few minutes": [
         "Servrarna kan inte nås. Försök igen om några minuter"
       ],
@@ -3073,9 +3105,6 @@
       "Share screen": [
         "Dela skärm"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Dela denna länk för att bjuda in andra. Du kan också hitta den när som helst genom att klicka på informationsikonen i verktygsfältet."
-      ],
       "Sign in": [
         "Logga in"
       ],
@@ -3084,9 +3113,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "Val av högtalare är inte tillgängligt i denna webbläsare. Använd dina systeminställningar för att välja en annan högtalare."
-      ],
-      "Start recording": [
-        "Starta inspelning"
       ],
       "Starting camera…": [
         "Startar kamera …"
@@ -3130,9 +3156,6 @@
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "Det här mötet har nått tidsgränsen för ett kostnadsfritt paket. Uppgradera för att förlänga din möteslängd i framtida samtal."
       ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "Detta möte öppnades i ${ MEET_APP_NAME }-appen för stationär dator."
-      ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "Denna inspelning kommer att tas bort permanent från denna enhet. Denna åtgärd kan inte ångras."
       ],
@@ -3144,6 +3167,9 @@
       ],
       "This will sign you out of all accounts currently logged in.": [
         "Detta kommer logga ut dig på alla konton som du för närvarande är inloggad på."
+      ],
+      "Time is up for ${ meetingName }": [
+        "Tid är slut för ${ meetingName }"
       ],
       "To create a room, you'll need **a free ${ BRAND_NAME } Account** so we can save the room. This only takes a few seconds.": [
         "För att skapa ett rum behöver du **ett gratis ${ BRAND_NAME }-konto** så vi kan spara rummet. Detta tar bara några sekunder."
@@ -3223,11 +3249,11 @@
       "Yesterday — ${ absoluteDate }": [
         "Igår – ${ absoluteDate }"
       ],
+      "You": [
+        "Du"
+      ],
       "You are almost there": [
         "Du är nästan där"
-      ],
-      "You can close this tab.": [
-        "Du kan stänga denna flik."
       ],
       "You can now return to the application to continue": [
         "Du kan nu gå tillbaka till applikationen för att fortsätta"
@@ -3237,6 +3263,12 @@
       ],
       "You can still turn off your microphone and camera anytime in the meeting": [
         "Du kan fortfarande stänga av din mikrofon och kamera när som helst under mötet."
+      ],
+      "You have too many meetings in progress": [
+        "Du har för många pågående möten"
+      ],
+      "You left ${ meetingName }": [
+        "Du lämnade ${ meetingName }"
       ],
       "You left the meeting": [
         "Du lämnade mötet"
@@ -3280,38 +3312,14 @@
       "Your browser or device isn’t supported": [
         "Din webbläsare eller enhet stöds inte"
       ],
-      "Your camera was disconnected. Now using ${ deviceLabel }.": [
-        "Din kamera kopplades från. Använder nu ${ deviceLabel }."
-      ],
-      "Your device was disconnected. Now using ${ deviceLabel }.": [
-        "Din enhet kopplades från. Använder nu ${ deviceLabel }."
-      ],
       "Your email will only be used for this one-time verification.": [
         "Din e-post kommer endast användas för denna engångsverifiering."
       ],
       "Your meeting is ready": [
         "Ditt möte är redo"
       ],
-      "Your microphone and camera were disconnected. Now using other devices.": [
-        "Din mikrofon och kamera kopplades från. Andra enheter används nu."
-      ],
-      "Your microphone and speaker were disconnected. Now using other devices.": [
-        "Din mikrofon och högtalare kopplades från. Andra enheter används nu."
-      ],
-      "Your microphone was disconnected. Now using ${ deviceLabel }.": [
-        "Din mikrofon kopplades från. Använder nu ${ deviceLabel }."
-      ],
-      "Your microphone, speaker and camera were disconnected. Now using other devices.": [
-        "Din mikrofon, högtalare och kamera kopplades från. Andra enheter används nu."
-      ],
       "Your phone number will only be used for this one-time verification.": [
         "Ditt telefonnummer kommer endast att användas för denna engångsverifiering."
-      ],
-      "Your speaker and camera were disconnected. Now using other devices.": [
-        "Din högtalare och kamera kopplades från. Andra enheter används nu."
-      ],
-      "Your speaker was disconnected. Now using ${ deviceLabel }.": [
-        "Din högtalare kopplades från. Använder nu ${ deviceLabel }."
       ],
       "You’re about to open a link in a new tab. Make sure you trust the website before continuing.": [
         "Du är på väg att öppna en länk i en ny flik. Se till att du litar på webbplatsen innan du fortsätter."
@@ -3409,6 +3417,9 @@
       "Does not repeat": [
         "Upprepas inte"
       ],
+      "Don’t show this message again": [
+        "Visa inte detta meddelande igen"
+      ],
       "Download .ics": [
         "Ladda ner .ics"
       ],
@@ -3472,6 +3483,9 @@
       "Library background": [
         "Biblioteksbakgrund"
       ],
+      "Light ${ BRAND_NAME } background": [
+        "Ljus ${ BRAND_NAME }-bakgrund"
+      ],
       "Manage recordings": [
         "Hantera inspelningar"
       ],
@@ -3492,6 +3506,9 @@
       ],
       "Monday to Friday": [
         "Måndag till fredag"
+      ],
+      "More options": [
+        "Fler alternativ"
       ],
       "Muted": [
         "Ljud av"
@@ -3620,6 +3637,77 @@
       ],
       "What’s this?": [
         "Vad är detta?"
+      ]
+    },
+    "Lumo emoji name": {
+      "Alert": [
+        "Varning"
+      ],
+      "Browse folders": [
+        "Bläddra bland mappar"
+      ],
+      "Cash": [
+        "Kontant"
+      ],
+      "Celebrate": [
+        "Fira"
+      ],
+      "Coffee": [
+        "Kaffe"
+      ],
+      "Cowboy": [
+        "Cowboy"
+      ],
+      "Encrypt": [
+        "Krypterad"
+      ],
+      "Gaming": [
+        "Spel"
+      ],
+      "Happy": [
+        "Glad"
+      ],
+      "Love": [
+        "Kärlek"
+      ],
+      "Nine lives": [
+        "Nio liv"
+      ],
+      "Party": [
+        "Party"
+      ],
+      "Popcorn": [
+        "Popcorn"
+      ],
+      "Rocket": [
+        "Raket"
+      ],
+      "Sad": [
+        "Ledsen"
+      ],
+      "Search": [
+        "Sök"
+      ],
+      "Sit": [
+        "Sitt"
+      ],
+      "Sleepy": [
+        "Sömnig"
+      ],
+      "Sweep": [
+        "Svep"
+      ],
+      "Thank you": [
+        "Tack"
+      ],
+      "Watch left": [
+        "Titta vänster"
+      ],
+      "Watch right": [
+        "Titta höger"
+      ],
+      "Write": [
+        "Skriv"
       ]
     },
     "meet": {
@@ -3959,6 +4047,9 @@
       "Allow microphone": [
         "Tillåt mikrofon"
       ],
+      "Allow screen recording": [
+        "Tillåt skärminspelning"
+      ],
       "Are you sure?": [
         "Är du säker?"
       ],
@@ -4031,6 +4122,9 @@
       "Help center": [
         "Hjälpcenter"
       ],
+      "Host settings": [
+        "Värdinställningar"
+      ],
       "Human verification": [
         "Mänsklig verifiering"
       ],
@@ -4068,6 +4162,9 @@
       "Meeting": [
         "Möte"
       ],
+      "Meeting actions": [
+        "Mötesåtgärder"
+      ],
       "Meeting created": [
         "Möte skapat"
       ],
@@ -4086,11 +4183,17 @@
       "Minicalendar": [
         "Minikalender"
       ],
+      "MLS members": [
+        "MLS-medlemmar"
+      ],
       "No one is waiting": [
         "Ingen väntar"
       ],
       "No results found": [
         "Inga resultat hittades"
+      ],
+      "Participant counts don’t match": [
+        "Deltagarantal matchar inte"
       ],
       "Participants": [
         "Deltagare"

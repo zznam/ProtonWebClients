@@ -1,9 +1,9 @@
 import { runSaga } from 'redux-saga';
 
-import { AppStatus } from '../../../types';
-import { updatePauseListItem } from '../../actions';
+import { AppStatus } from '../../../types/worker/state';
+import { sagaSetup } from '../../../utils/tests/saga';
+import { updatePauseListItem } from '../../actions/creators/settings';
 import type { RootSagaOptions } from '../../types';
-import { sagaSetup } from '../testing';
 import watcher from './settings.saga';
 
 describe('settings saga', () => {

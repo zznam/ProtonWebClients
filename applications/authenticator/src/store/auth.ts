@@ -2,14 +2,15 @@ import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
 import { type RequestForkOptions, requestFork as getRequest } from '@proton/pass/lib/auth/fork';
-import type { Maybe } from '@proton/pass/types';
+import type { Maybe } from '@proton/pass/types/utils';
 import { revoke } from '@proton/shared/lib/api/auth';
 import { getApiError, getIs401Error, getIsConnectionIssue } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { getUIDApi } from '@proton/shared/lib/api/helpers/customConfig';
 import type { PersistedSession } from '@proton/shared/lib/authentication/SessionInterface';
 import { InvalidPersistentSessionError } from '@proton/shared/lib/authentication/error';
-import { type ConsumeForkParameters, consumeFork } from '@proton/shared/lib/authentication/fork';
 import { ForkType } from '@proton/shared/lib/authentication/fork/constants';
+import { consumeFork } from '@proton/shared/lib/authentication/fork/consume';
+import type { ConsumeForkParameters } from '@proton/shared/lib/authentication/fork/getConsumeForkParameters';
 import type { ResumedSessionResult } from '@proton/shared/lib/authentication/persistedSessionHelper';
 import { resumeSession as coreResumeSession } from '@proton/shared/lib/authentication/persistedSessionHelper';
 import { getPersistedSessions } from '@proton/shared/lib/authentication/persistedSessionStorage';

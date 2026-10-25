@@ -1,35 +1,35 @@
 import type { Location } from 'history';
 
 import { ES_MAX_CONCURRENT, ES_MAX_ITEMS_PER_BATCH, ES_SYNC_ACTIONS } from '@proton/encrypted-search/constants';
-import { apiHelper, decryptFromDB, normalizeKeyword } from '@proton/encrypted-search/esHelpers';
-import { readAllLastEvents, readMetadataBatch, readMetadataItem, readSortedIDs } from '@proton/encrypted-search/esIDB';
+import { apiHelper } from '@proton/encrypted-search/esHelpers/esAPI';
+import { decryptFromDB } from '@proton/encrypted-search/esHelpers/esDecrypt';
+import { normalizeKeyword } from '@proton/encrypted-search/esHelpers/esSearch';
+import { readAllLastEvents } from '@proton/encrypted-search/esIDB/events';
+import { readMetadataBatch, readMetadataItem, readSortedIDs } from '@proton/encrypted-search/esIDB/metadata';
+import type { ESCalendarSearchParams } from '@proton/encrypted-search/models/calendar';
 import type {
     CachedItem,
-    ESCalendarSearchParams,
     ESEvent,
     ESItemEvent,
     EncryptedItemWithInfo,
     EventsObject,
-} from '@proton/encrypted-search/models';
+} from '@proton/encrypted-search/models/interfaces';
 import { getEvent, queryEventsIDs, queryLatestModelEventID } from '@proton/shared/lib/api/calendars';
 import { EVENT_ACTIONS } from '@proton/shared/lib/constants';
 import runInQueue from '@proton/shared/lib/helpers/runInQueue';
 import { getHashCode } from '@proton/shared/lib/helpers/string';
 import { getSearchParams as getSearchParamsFromURL, stringifySearchParams } from '@proton/shared/lib/helpers/url';
 import { isNumber } from '@proton/shared/lib/helpers/validators';
-import type { Api, SimpleMap } from '@proton/shared/lib/interfaces';
-import type {
-    CalendarEvent,
-    CalendarEventWithoutBlob,
-    CalendarEventsIDsQuery,
-    VcalAttendeeProperty,
-    VcalOrganizerProperty,
-} from '@proton/shared/lib/interfaces/calendar';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { CalendarEventsIDsQuery } from '@proton/shared/lib/interfaces/calendar/Api';
+import type { CalendarEvent, CalendarEventWithoutBlob } from '@proton/shared/lib/interfaces/calendar/Event';
 import type {
     CalendarEventManager,
     CalendarEventsEventManager,
 } from '@proton/shared/lib/interfaces/calendar/EventManager';
+import type { VcalAttendeeProperty, VcalOrganizerProperty } from '@proton/shared/lib/interfaces/calendar/VcalModel';
 import type { GetCalendarEventRaw } from '@proton/shared/lib/interfaces/hooks/GetCalendarEventRaw';
+import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 import unique from '@proton/utils/unique';
 
 import { propertiesToAttendeeModel } from '../../components/eventModal/eventForm/propertiesToAttendeeModel';
@@ -208,11 +208,7 @@ export const getESEvent = async (
     };
 };
 
-const getAllESEventsFromCalendar = async (
-    calendarID: string,
-    api: Api,
-    getCalendarEventRaw: GetCalendarEventRaw
-) => {
+const getAllESEventsFromCalendar = async (calendarID: string, api: Api, getCalendarEventRaw: GetCalendarEventRaw) => {
     const eventIDs = await getAllEventsIDs(calendarID, api, 1000);
     return runInQueue(
         eventIDs.map((eventID) => () => getESEvent(eventID, calendarID, api, getCalendarEventRaw)),

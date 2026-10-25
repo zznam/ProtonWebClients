@@ -6,25 +6,24 @@ import { c, msgid } from 'ttag';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { DENSITY } from '@proton/shared/lib/constants';
 import { toValidHtmlId } from '@proton/shared/lib/dom/toValidHtmlId';
-import type { UserSettings } from '@proton/shared/lib/interfaces';
 import type { Label } from '@proton/shared/lib/interfaces/Label';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import type { AttachmentsMetadata } from '@proton/shared/lib/interfaces/mail/Message';
 import { getHasOnlyIcsAttachments } from '@proton/shared/lib/mail/messages';
 import clsx from '@proton/utils/clsx';
 
-import ItemAttachmentThumbnails from './ItemAttachmentThumbnails';
-import { canShowAttachmentThumbnails } from '../../helpers/attachment/attachmentThumbnails';
-import { useMailSelector } from '../../store/hooks';
-
 import { useEncryptedSearchContext } from '../../containers/EncryptedSearchProvider';
+import { canShowAttachmentThumbnails } from '../../helpers/attachment/attachmentThumbnails';
 import { getLabelIDs, isStarred as testIsStarred } from '../../helpers/elements';
 import { useExpiringElement } from '../../hooks/useExpiringElement';
 import type { Element } from '../../models/element';
 import type { ESMessage } from '../../models/encryptedSearch';
+import { useMailSelector } from '../../store/hooks';
 import { selectSnoozeDropdownState, selectSnoozeElement } from '../../store/snooze/snoozeSliceSelectors';
 import NumMessages from '../conversation/NumMessages';
 import ItemAction from './ItemAction';
 import ItemAttachmentIcon from './ItemAttachmentIcon';
+import ItemAttachmentThumbnails from './ItemAttachmentThumbnails';
 import ItemDate from './ItemDate';
 import ItemHoverButtons from './ItemHoverButtons';
 import ItemLabels from './ItemLabels';
@@ -81,6 +80,11 @@ const ItemColumnLayout = ({
     const subjectContent = useMemo(
         () => (highlightData && Subject ? highlightMetadata(Subject, unread, true).resultJSX : Subject),
         [Subject, highlightData, highlightMetadata, unread]
+    );
+
+    const oneTimeCodeContent = useMemo(
+        () => (highlightData && oneTimeCode ? highlightMetadata(oneTimeCode, unread, false).resultJSX : oneTimeCode),
+        [oneTimeCode, highlightData, highlightMetadata, unread]
     );
 
     const { resultJSX, numOccurrences } = useMemo(
@@ -162,6 +166,15 @@ const ItemColumnLayout = ({
                                 unread && 'text-semibold'
                             )}
                         >
+                            {oneTimeCode && (
+                                <ItemOneTimeCode
+                                    code={oneTimeCode}
+                                    codeContent={oneTimeCodeContent}
+                                    element={element}
+                                    compact
+                                    className="shrink-0 mr-2"
+                                />
+                            )}
                             {showIcon && (
                                 <span className="flex shrink-0">
                                     <ItemLocation element={element} labelID={labelID} />
@@ -179,10 +192,6 @@ const ItemColumnLayout = ({
                             >
                                 {subjectContent}
                             </span>
-                            {/* Placed inline right after the subject so it sits with the text and does not shift when the hover action buttons appear. */}
-                            {oneTimeCode && (
-                                <ItemOneTimeCode code={oneTimeCode} element={element} className="ml-2 shrink-0" />
-                            )}
                         </div>
 
                         <div className="item-icons shrink-0 flex-nowrap hidden md:flex">
@@ -206,7 +215,7 @@ const ItemColumnLayout = ({
                                 )}
                                 {!isSnoozeDropdownOpen && (
                                     <ItemAttachmentIcon
-                                        icon={hasOnlyIcsAttachments ? 'calendar-grid' : undefined}
+                                        hasOnlyIcsAttachments={hasOnlyIcsAttachments}
                                         element={element}
                                         className="self-center"
                                     />
@@ -228,7 +237,7 @@ const ItemColumnLayout = ({
                                 />
                             )}
                             <ItemAttachmentIcon
-                                icon={hasOnlyIcsAttachments ? 'calendar-grid' : undefined}
+                                hasOnlyIcsAttachments={hasOnlyIcsAttachments}
                                 element={element}
                                 className="ml-1 self-center"
                             />

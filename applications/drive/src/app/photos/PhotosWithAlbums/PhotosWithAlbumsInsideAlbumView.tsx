@@ -6,9 +6,10 @@ import { c } from 'ttag';
 import { useShallow } from 'zustand/react/shallow';
 
 import { useConfig } from '@proton/app-context/useConfig';
-import { Loader, useAppTitle } from '@proton/components';
-import { getDriveForPhotos } from '@proton/drive/index';
+import Loader from '@proton/components/components/loader/Loader';
+import useAppTitle from '@proton/components/hooks/useAppTitle';
 import { loadThumbnail } from '@proton/drive/modules/thumbnails';
+import { getDriveForPhotos } from '@proton/drive/sdk';
 import { getAppName } from '@proton/shared/lib/apps/helper';
 
 import useNavigate from '../../legacy/hooks/drive/useNavigate';

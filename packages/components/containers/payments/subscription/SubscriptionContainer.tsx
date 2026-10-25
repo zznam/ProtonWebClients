@@ -13,12 +13,13 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
 import { useGetCalendars } from '@proton/calendar/calendars/hooks';
-import { useLoading } from '@proton/hooks';
+import { useHandler } from '@proton/hooks/useHandler';
+import useLoading from '@proton/hooks/useLoading';
 import { IcGift } from '@proton/icons/icons/IcGift';
 import { useCurrencies } from '@proton/payments-ui/client-extensions/useCurrencies';
 import { usePaymentFacade } from '@proton/payments-ui/client-extensions/usePaymentFacade';
 import type { TelemetryPaymentFlow } from '@proton/payments-ui/client-extensions/usePaymentsTelemetry';
-import type { Operations, OperationsSubscriptionData } from '@proton/payments-ui/react-extensions/index';
+import type { Operations, OperationsSubscriptionData } from '@proton/payments-ui/react-extensions/usePaymentFacade';
 import { usePaymentsApi } from '@proton/payments-ui/react-extensions/usePaymentsApi';
 import { useSubscriptionModificationChangeStepTelemetry } from '@proton/payments-ui/telemetry/useSubscriptionModificationChangeStepTelemetry';
 import { VatReverseChargeErrorModal } from '@proton/payments-ui/ui/billing-address/containers/VatReverseChargeErrorModal';
@@ -33,6 +34,7 @@ import { getCheckoutModifiers } from '@proton/payments/core/checkout-modifiers';
 import { ADDON_PREFIXES, PLANS } from '@proton/payments/core/constants';
 import { getStaticCouponConfig } from '@proton/payments/core/coupon-config/get-static-coupon-config';
 import { isCSCoupon } from '@proton/payments/core/coupon-config/helpers';
+import type { EntitlementCatalog } from '@proton/payments/core/entitlements/interface';
 import { DisplayablePaymentError } from '@proton/payments/core/errors';
 import { captureWrongPlanIDs, captureWrongPlanName } from '@proton/payments/core/helpers';
 import type {
@@ -82,7 +84,8 @@ import type { ProductParam } from '@proton/shared/lib/apps/product';
 import { getShouldCalendarPreventSubscripitionChange } from '@proton/shared/lib/calendar/plans';
 import { APPS } from '@proton/shared/lib/constants';
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors';
-import type { Organization, UserModel } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import isTruthy from '@proton/utils/isTruthy';
 import noop from '@proton/utils/noop';
 
@@ -90,7 +93,6 @@ import useModalState from '../../../components/modalTwo/useModalState';
 import { useModalTwoPromise } from '../../../components/modalTwo/useModalTwo';
 import useAssistantFeatureEnabled from '../../../hooks/assistant/useAssistantFeatureEnabled';
 import useEventManager from '../../../hooks/useEventManager';
-import { useHandler } from '../../../hooks/useHandler';
 import GenericError from '../../error/GenericError';
 import { changeDefaultPaymentMethodBeforePayment } from '../DefaultPaymentMethodMessage';
 import PaymentGiftCode from '../PaymentGiftCode';
@@ -108,11 +110,12 @@ import { SubscriptionConfirmButton } from './confirm-button/SubscriptionConfirmB
 import { SUBSCRIPTION_STEPS } from './constants';
 import SubscriptionCheckoutCycleItem from './cycle-selector/SubscriptionCheckoutCycleItem';
 import SubscriptionCycleSelector from './cycle-selector/SubscriptionCycleSelector';
-import { type SelectedProductPlans, getDefaultSelectedProductPlans } from './helpers';
 import { getAllowedCycles } from './helpers/getAllowedCycles';
 import { getInitialCycle } from './helpers/getInitialCycle';
 import { getInitialCheckoutStep } from './helpers/initialCheckoutStep';
+import { type SelectedProductPlans, getDefaultSelectedProductPlans } from './helpers/payment';
 import { getCommonTelemetryPayload, reportChangeTelemetry, telemetryContext } from './helpers/subscriptionTelemetry';
+import { useCheckoutCondensedAddons } from './helpers/useCheckoutCondensedAddons';
 import { useVpn2024AddonsExperiment } from './helpers/useVpn2024AddonsExperiment';
 import SubscriptionCheckout from './modal-components/SubscriptionCheckout';
 import SubscriptionThanks from './modal-components/SubscriptionThanks';
@@ -248,6 +251,7 @@ export interface SubscriptionContainerProps {
     // Skip plan transition check if they are handled externally
     skipPlanTransitionChecks?: boolean;
     initialBillingAddress: BillingAddress;
+    entitlementCatalog: EntitlementCatalog;
 }
 
 type SubscriptionContainerOpenCallbackPropKeys =
@@ -320,6 +324,7 @@ const SubscriptionContainerInner = ({
     skipPlanTransitionChecks,
     initialBillingAddress,
     trial,
+    entitlementCatalog,
 }: SubscriptionContainerProps) => {
     const defaultMaximumCycle = getMaximumCycleForApp(app);
     const maximumCycle = maybeMaximumCycle ?? defaultMaximumCycle;
@@ -757,14 +762,13 @@ const SubscriptionContainerInner = ({
             });
 
             const uniqueCodes = [...new Set([...(checkPayload.Codes ?? []), autoCoupon].filter(isTruthy))];
+            const { ValidateGuards, ...checkPayloadWithoutGuards } = checkPayload;
 
-            const payload: CheckSubscriptionData = {
-                ...checkPayload,
+            return {
+                ...checkPayloadWithoutGuards,
                 Cycle,
                 Codes: uniqueCodes,
             };
-
-            return payload;
         });
 
         const noCoupons = additionalPayloads.every((payload) => !payload.Codes || payload.Codes.length === 0);
@@ -820,6 +824,7 @@ const SubscriptionContainerInner = ({
             newCycle,
             downgradeIsTrial,
             subscription,
+            entitlementCatalog,
         });
     };
 
@@ -856,6 +861,9 @@ const SubscriptionContainerInner = ({
         },
         telemetry: { APP_NAME, app, paymentFacade, user, context: telemetryContext },
     });
+
+    const guardErrors = checkResult.GuardResult ?? [];
+    const isGuardBlocked = guardErrors.length > 0;
 
     useEffect(() => {
         captureWrongPlanIDs(maybePlanIDs, { source: 'SubscriptionModal/PlanIDs' });
@@ -1092,7 +1100,7 @@ const SubscriptionContainerInner = ({
             loading={loading || subscribing || paymentFacade.bitcoinChargebee.bitcoinLoading}
             checkResult={checkResult}
             className="w-full"
-            disabled={isFreeUserWithFreePlanSelected}
+            disabled={isFreeUserWithFreePlanSelected || isGuardBlocked}
             paymentForbiddenReason={model.paymentForbiddenReason}
             subscription={subscription}
             hasPaymentMethod={hasPaymentMethod}
@@ -1103,6 +1111,7 @@ const SubscriptionContainerInner = ({
             showVisionaryWarning={renderVisionaryDowngradeWarningText}
             onSubmit={onSubmit}
             app={app}
+            showIdealAuthorizationNote={false}
         />
     );
 
@@ -1135,6 +1144,12 @@ const SubscriptionContainerInner = ({
 
     const [optimisticPlanIDs, setOptimisticPlanIDs] = useState<PlanIDs | null>(null);
     const vpn2024AddonsExperiment = useVpn2024AddonsExperiment(optimisticPlanIDs ?? model.planIDs);
+    const condensedAddons = useCheckoutCondensedAddons({
+        selectedPlanIDs: optimisticPlanIDs ?? model.planIDs,
+        latestSubscription,
+        user,
+        isLiteApp: isAccountLiteApp,
+    });
     const optimisticPlanIDsRef = useRef<any | undefined>();
 
     const handleChangePlanIDs = useHandler(
@@ -1178,15 +1193,15 @@ const SubscriptionContainerInner = ({
                     mode={modeType}
                     hasFreePlan={showFreePlan}
                     subscription={subscription}
-                    onChangePlanIDs={(planIDs, cycle, currency) =>
-                        check({
+                    onChangePlanIDs={(planIDs, cycle, currency) => {
+                        return check({
                             ...model,
                             planIDs,
                             cycle,
                             currency,
                             step: SUBSCRIPTION_STEPS.CHECKOUT,
-                        })
-                    }
+                        });
+                    }}
                     onChangeCycle={handleChangeCycle}
                     onChangeCurrency={handleChangeCurrency}
                     onChangeAudience={setAudience}
@@ -1252,6 +1267,8 @@ const SubscriptionContainerInner = ({
                                                 allowedAddonTypes={allowedAddonTypes}
                                                 className="subscription-container-plan-customizer"
                                                 telemetryContext={telemetryContext}
+                                                app={app}
+                                                condensedAddons={condensedAddons}
                                             />
                                         )}
                                         {displayPassAsFakeAddon && (

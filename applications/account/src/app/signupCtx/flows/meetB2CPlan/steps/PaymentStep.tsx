@@ -5,7 +5,8 @@ import { c } from 'ttag';
 import { Button } from '@proton/atoms/Button/Button';
 import Alert3ds from '@proton/components/containers/payments/Alert3ds';
 import PaymentWrapper from '@proton/components/containers/payments/PaymentWrapper';
-import { ProtonPlanCustomizer, getHasPlanCustomizer } from '@proton/components/containers/payments/planCustomizer';
+import { ProtonPlanCustomizer } from '@proton/components/containers/payments/planCustomizer/ProtonPlanCustomizer';
+import { getHasPlanCustomizer } from '@proton/components/containers/payments/planCustomizer/helpers';
 import useLoading from '@proton/hooks/useLoading';
 import { IcArrowLeft } from '@proton/icons/icons/IcArrowLeft';
 import { usePaymentFacade } from '@proton/payments-ui/client-extensions/usePaymentFacade';
@@ -18,7 +19,7 @@ import type { PaymentProcessorHook } from '@proton/payments/core/payment-process
 import { getPlanFromPlanIDs } from '@proton/payments/core/plan/helpers';
 import { tracePaymentError } from '@proton/payments/sentry/capture';
 import { APPS } from '@proton/shared/lib/constants';
-import { Audience } from '@proton/shared/lib/interfaces';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
 import noop from '@proton/utils/noop';
 
 import { useSignup } from '../../../context/SignupContext';

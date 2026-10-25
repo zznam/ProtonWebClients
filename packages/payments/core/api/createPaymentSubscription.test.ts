@@ -1,5 +1,5 @@
 import type { APP_NAMES } from '@proton/shared/lib/constants';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 import { capturePaymentMessage } from '../../sentry/capture';
 import { PLANS } from '../constants';
@@ -77,7 +77,7 @@ describe('createPaymentSubscription', () => {
         const api = jest.fn().mockResolvedValue({
             Subscription: {},
             GuardResult: 'refusal',
-            GuardResultCode: 8010505,
+            GuardResultCode: 801005005,
         }) as unknown as Api;
 
         const response = await createPaymentSubscription(api, buildData({ [PLANS.VPN2024]: 1 }), {
@@ -90,7 +90,32 @@ describe('createPaymentSubscription', () => {
             paymentMethodValue: undefined,
         } as any);
 
-        expect(response?.GuardResult).toEqual([{ Code: 8010505, Message: 'refusal' }]);
+        expect(response?.GuardResult).toEqual([{ Code: 801005005, Message: 'refusal' }]);
         expect(response).not.toHaveProperty('GuardResultCode');
+    });
+
+    it('should pass the provisioning token through to the backend', async () => {
+        const api = jest.fn().mockResolvedValue({ Subscription: {} });
+
+        await createPaymentSubscription(
+            api as unknown as Api,
+            { ...buildData({ [PLANS.BUNDLE_PRO_2024]: 1 }), ProvisioningToken: 'prov-token' },
+            {
+                build: 'proton-account' as APP_NAMES,
+                telemetryContext: undefined,
+                userCurrency: 'USD',
+                subscription: undefined,
+                product: 'generic',
+                paymentMethodType: undefined,
+                paymentMethodValue: undefined,
+            } as any
+        );
+
+        expect(api).toHaveBeenCalledWith(
+            expect.objectContaining({
+                url: 'payments/v5/subscription',
+                data: expect.objectContaining({ ProvisioningToken: 'prov-token' }),
+            })
+        );
     });
 });

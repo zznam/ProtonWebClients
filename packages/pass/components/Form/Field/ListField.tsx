@@ -7,14 +7,14 @@ import debounce from 'lodash/debounce';
 
 import type { Input } from '@proton/atoms/Input/Input';
 import type { InputFieldProps } from '@proton/components/components/v2/field/InputField';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import useCombinedRefs from '@proton/hooks/useCombinedRefs';
 import type { IconComponent } from '@proton/icons/component';
 import { IcExclamationCircleFilled } from '@proton/icons/icons/IcExclamationCircleFilled';
 import clsx from '@proton/utils/clsx';
 
 import { useStatefulRef } from '../../../hooks/useStatefulRef';
-import type { Unpack } from '../../../types';
+import type { Unpack } from '../../../types/utils';
 import { truthy } from '../../../utils/fp/predicates';
 import { isEmptyString } from '../../../utils/string/is-empty-string';
 import { FieldBox } from './Layout/FieldBox';

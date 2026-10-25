@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { usePlans } from '@proton/account/plans/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
@@ -48,7 +49,7 @@ import {
     VPN_APP_NAME,
 } from '@proton/shared/lib/constants';
 import { replaceUrl } from '@proton/shared/lib/helpers/browser';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { canPay } from '@proton/shared/lib/user/helpers';
 import type { FeatureFlagVariant } from '@proton/unleash/UnleashFeatureFlagsVariants';
 import { useVariant } from '@proton/unleash/useVariant';
@@ -129,6 +130,7 @@ const SubscribeAccount = ({
 
     const [subscription, loadingSubscription] = useSubscription();
     const [plansResult, loadingPlans] = usePlans();
+    const [entitlementCatalog, loadingEntitlementCatalog] = useEntitlementCatalog();
     const plans = plansResult?.plans || [];
     const freePlan = plansResult?.freePlan || FREE_PLAN;
     const [organization, loadingOrganization] = useOrganization();
@@ -163,8 +165,10 @@ const SubscribeAccount = ({
         loadingSubscription ||
         loadingPlans ||
         loadingOrganization ||
+        loadingEntitlementCatalog ||
         !paymentStatus ||
-        !initialBillingAddress
+        !initialBillingAddress ||
+        !entitlementCatalog
     ) {
         return loader;
     }
@@ -388,6 +392,7 @@ const SubscribeAccount = ({
                                     onUnsubscribed={handleSuccess}
                                     onCancel={handleClose}
                                     paymentStatus={paymentStatus}
+                                    entitlementCatalog={entitlementCatalog}
                                     initialBillingAddress={initialBillingAddress}
                                     trial={trial}
                                     onCheck={(data) => {

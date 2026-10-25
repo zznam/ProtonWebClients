@@ -6,10 +6,9 @@ import { useUser } from '@proton/account/user/hooks';
 import type { CustomNotificationProps } from '@proton/app-context/notifications/interfaces';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import Icon from '@proton/components/components/icon/Icon';
 import NotificationButton from '@proton/components/containers/notifications/NotificationButton';
-import { FeatureCode, useFeature } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 import { IcCross } from '@proton/icons/icons/IcCross';
 
 import type { TipData } from '../../../models/tip';
@@ -80,7 +79,7 @@ const TipBox = ({ tips, isDismissed, setIsDismissed }: Props) => {
                         backgroundColor: 'var(--primary-minor-1)',
                     }}
                 >
-                    <Icon className="m-auto color-primary" size={5} name={randomOption.icon} />
+                    <randomOption.icon className="m-auto color-primary" size={5} />
                 </span>
                 <p className="m-0">
                     <span className="mr-1">{randomOption.message}</span>

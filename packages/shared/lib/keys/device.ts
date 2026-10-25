@@ -11,7 +11,9 @@ import {
     addAuthDeviceConfig,
     associateAuthDeviceConfig,
     deleteAuthDeviceConfig,
+    getAuthDeviceConfig,
     getAuthDevicesConfig,
+    getMemberAuthDeviceConfig,
     getPendingMemberAuthDevicesConfig,
 } from '../api/authDevice';
 import { getApiError } from '../api/helpers/apiErrorHelper';
@@ -20,8 +22,11 @@ import { API_CODES } from '../constants';
 import { HTTP_ERROR_CODES } from '../errors';
 import { getBrowser, getOs } from '../helpers/browser';
 import { getItem, removeItem, setItem } from '../helpers/storage';
-import type { Address, AddressKey, Api, User, User as tsUser } from '../interfaces';
-import { getIsGlobalSSOAccount } from './setupAddress';
+import type { Address } from '../interfaces/Address';
+import type { Api } from '../interfaces/Api';
+import type { AddressKey } from '../interfaces/Key';
+import type { User, User as tsUser } from '../interfaces/User';
+import { getIsGlobalSSOAccount } from './accountType';
 
 const AesContext = {
     deviceSecret: 'account.device-secret',
@@ -509,6 +514,13 @@ export const getPendingMemberAuthDevices = async ({ api }: { api: Api }) => {
     return MemberAuthDevices;
 };
 
+export const getMemberAuthDevice = async ({ api, deviceID }: { api: Api; deviceID: string }) => {
+    const { MemberAuthDevice } = await api<{
+        MemberAuthDevice: MemberAuthDeviceOutput;
+    }>(getMemberAuthDeviceConfig(deviceID));
+    return MemberAuthDevice;
+};
+
 export const getValidActivation = ({
     addresses,
     pendingAuthDevice,
@@ -551,9 +563,12 @@ export const getLocalizedDeviceState = (state: AuthDeviceState) => {
 export const getAllAuthDevices = async ({
     user,
     api,
+    throwOnError = false,
 }: {
     user: User | null | undefined;
     api: Api;
+    /** Rejects when the request fails, instead of listing no devices. */
+    throwOnError?: boolean;
 }): Promise<AuthDeviceOutput[]> => {
     if (user && getIsGlobalSSOAccount(user)) {
         try {
@@ -562,11 +577,19 @@ export const getAllAuthDevices = async ({
                 ...getAuthDevicesConfig(),
             });
             return AuthDevices;
-        } catch {
+        } catch (e) {
+            if (throwOnError) {
+                throw e;
+            }
             return [];
         }
     }
     return [];
+};
+
+export const getAuthDevice = async ({ api, deviceID }: { api: Api; deviceID: string }) => {
+    const { AuthDevice } = await api<{ AuthDevice: AuthDeviceOutput }>(getAuthDeviceConfig(deviceID));
+    return AuthDevice;
 };
 
 export const deleteAuthDevice = async ({

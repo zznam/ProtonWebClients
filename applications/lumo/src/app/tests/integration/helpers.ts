@@ -8,7 +8,8 @@ import * as bootstrap from '@proton/account/bootstrap';
 import { createUnleash } from '@proton/account/bootstrap';
 import createApi from '@proton/shared/lib/api/createApi';
 import type { EventManager } from '@proton/shared/lib/eventManager/eventManager';
-import type { ProtonConfig, User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 
 import { base64ToMasterKey, generateMasterKeyBase64, generateSpaceKeyBase64 } from '../../crypto';
 import type { AesKwCryptoKey } from '../../crypto/types';
@@ -77,7 +78,7 @@ function createActionHistoryMiddleware(tracker: ActionHistoryTracker): Middlewar
 // Generic polling helper that waits for a condition to be met
 export async function waitForCondition(checkFn: () => Promise<boolean>, opts?: WaitOpts): Promise<void> {
     const timeout = opts?.timeout ?? 10000;
-    const pollInterval = opts?.pollInterval ?? 500;
+    const pollInterval = opts?.pollInterval ?? 25;
     const message = opts?.message;
 
     const startTime = Date.now();
@@ -98,7 +99,7 @@ export async function waitForCondition(checkFn: () => Promise<boolean>, opts?: W
 // Generic polling helper that waits for a condition to be met
 export async function waitForValue<T>(checkFn: () => Promise<T | undefined>, opts?: WaitOpts): Promise<NonNullable<T>> {
     const timeout = opts?.timeout ?? 10000;
-    const pollInterval = opts?.pollInterval ?? 500;
+    const pollInterval = opts?.pollInterval ?? 25;
     const message = opts?.message;
 
     const startTime = Date.now();

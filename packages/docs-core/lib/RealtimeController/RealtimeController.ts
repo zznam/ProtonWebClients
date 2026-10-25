@@ -1,21 +1,22 @@
 import { c } from 'ttag'
-import type { SyncedEditorState, WebsocketConnectionInterface, DocumentType } from '@proton/docs-shared'
-import {
-  assertUnreachableAndLog,
-  DecryptedMessage,
-  ProcessedIncomingRealtimeEventMessage,
-  Result,
-  type BroadcastSource,
-  type InternalEventBusInterface,
-  type InternalEventHandlerInterface,
-  type InternalEventInterface,
-  type RtsMessagePayload,
-} from '@proton/docs-shared'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { WebsocketConnectionInterface } from '@proton/docs-shared/Realtime/WebsocketConnectionInterface'
+import type { SyncedEditorState } from '@proton/docs-shared/State/SyncedEditorState'
+import { assertUnreachableAndLog } from '@proton/docs-shared/AssertUnreachable'
+import type { BroadcastSource } from '@proton/docs-shared/Bridge/BroadcastSource'
+import type { RtsMessagePayload } from '@proton/docs-shared/Doc/RtsMessagePayload'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { InternalEventHandlerInterface } from '@proton/docs-shared/Events/InternalEventHandlerInterface'
+import type { InternalEventInterface } from '@proton/docs-shared/Events/InternalEventInterface'
+import { DecryptedMessage } from '@proton/docs-shared/Realtime/DecryptedMessage'
+import { ProcessedIncomingRealtimeEventMessage } from '@proton/docs-shared/Realtime/ProcessedIncomingRealtimeMessage'
+import { Result } from '@proton/docs-shared/Result'
 import type { WebsocketServiceInterface } from '../Services/Websockets/WebsocketServiceInterface'
 import type { DocumentEntitlements } from '../Types/DocumentEntitlements'
 import { WebsocketConnectionEvent } from '../Realtime/WebsocketEvent/WebsocketConnectionEvent'
 import type { WebsocketConnectionEventPayloads } from '../Realtime/WebsocketEvent/WebsocketConnectionEventPayloads'
-import { ConnectionCloseReason, EventTypeEnum } from '@proton/docs-proto'
+import { ConnectionCloseReason } from '@proton/docs-proto/ConnectionCloseReason/ConnectionCloseReason'
+import { EventTypeEnum } from '@proton/docs-proto/Event/EventTypeEnum'
 import { uint8ArrayToUtf8String } from '@protontech/crypto/utils'
 import type { DocSizeTrackerEventPayload, DocSizeTracker } from '../SizeTracker/SizeTracker'
 import { DocSizeTrackerEvent } from '../SizeTracker/SizeTracker'
@@ -23,7 +24,7 @@ import { PostApplicationError } from '../Application/ApplicationEvent'
 import type { RealtimeControllerInterface } from './RealtimeControllerInterface'
 import type { DocumentState, PublicDocumentState } from '../State/DocumentState'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
-import metrics from '@proton/metrics'
+import metrics from '@proton/metrics/metricsInstance'
 import type { DocControllerEventPayloads } from '../AuthenticatedDocController/AuthenticatedDocControllerEvent'
 import { DocControllerEvent } from '../AuthenticatedDocController/AuthenticatedDocControllerEvent'
 import type { GetDocumentMeta } from '../UseCase/GetDocumentMeta'

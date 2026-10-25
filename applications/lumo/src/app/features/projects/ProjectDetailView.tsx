@@ -5,8 +5,8 @@ import { c } from 'ttag';
 
 import { useApi } from '@proton/app-context/useApi';
 import { Button } from '@proton/atoms/Button/Button';
-import { useModalStateObject } from '@proton/components';
 import Loader from '@proton/components/components/loader/Loader';
+import { useModalStateObject } from '@proton/components/components/modalTwo/useModalState';
 import { LUMO_SHORT_APP_NAME } from '@proton/shared/lib/constants';
 import lumoProjects from '@proton/styles/assets/img/lumo/lumo-projects.svg';
 
@@ -23,8 +23,9 @@ import { useLumoFlags } from '../../hooks/useLumoFlags';
 import { useLumoPlan } from '../../hooks/useLumoPlan';
 import { LumoLayoutWithDrawer } from '../../layouts/LumoLayout';
 import { applyRetentionPolicy, groupConversationsByDate } from '../../layouts/sidepanel/helpers';
+import { ArtifactCreationProvider } from '../../providers/ArtifactCreationProvider';
 import { ModelTierProvider } from '../../providers/ModelTierProvider';
-import { WebSearchProvider, useWebSearch } from '../../providers/WebSearchProvider';
+import { WebSearchProvider } from '../../providers/WebSearchProvider';
 import { useLumoDispatch, useLumoSelector } from '../../redux/hooks';
 import {
     selectAttachmentsBySpaceId,
@@ -87,6 +88,7 @@ const ProjectDetailViewInner = () => {
         imageTools: ffImageTools,
         visualizationInstructions: ffVisualizationInstructions,
         artifactsView: ffArtifactsView,
+        artifactSlides: ffArtifactSlides,
     } = useLumoFlags();
 
     const space = useLumoSelector(selectSpaceById(projectId));
@@ -98,7 +100,8 @@ const ProjectDetailViewInner = () => {
 
     // Project data
     const { project } = getProjectInfo(space);
-    const projectName = project?.projectName || 'Untitled Project';
+    // translator: Fallback title for a project without a name.
+    const projectName = project?.projectName || c('collider_2025:Title').t`Untitled Project`;
     const projectInstructions = project?.projectInstructions || '';
     const category = getProjectCategory(project?.projectIcon);
 
@@ -110,7 +113,6 @@ const ProjectDetailViewInner = () => {
     const provisionalAttachments = useLumoSelector(selectProvisionalAttachments);
 
     const { createConversationInProject, deleteProject } = useProjectActions();
-    const { isWebSearchButtonToggled } = useWebSearch();
 
     // Sync space data when navigating to a project to ensure we have the latest state
     // This ensures project-level data (files, settings, linked folders) stays in sync across browsers
@@ -127,7 +129,7 @@ const ProjectDetailViewInner = () => {
     }, [driveBrowserModal]);
 
     const handleSendInProject = useCallback<HandleSendMessage>(
-        async (content, webSearchEnabled, imageOptions, artifactModeActive) => {
+        async (content, webSearchEnabled, imageOptions) => {
             try {
                 if (!content.trim() && provisionalAttachments.length === 0) {
                     console.log('Empty content, skipping send');
@@ -183,11 +185,12 @@ const ProjectDetailViewInner = () => {
                             enableImageTools: ffImageTools,
                             enableSmoothing: ffSmoothRendering,
                             imageAspectRatio: imageOptions?.aspectRatio,
-                            canvasModeActive: artifactModeActive ?? false,
+                            canvasModeActive: false,
                         },
                         settingsContext: {
                             personalization,
                             isArtifactsViewFeatureEnabled: ffArtifactsView,
+                            isArtifactSlidesFeatureEnabled: ffArtifactSlides,
                             isVisualizationInstructionsFeatureEnabled: ffVisualizationInstructions,
                         },
                     })
@@ -210,7 +213,13 @@ const ProjectDetailViewInner = () => {
             provisionalAttachments,
             createConversationInProject,
             history,
-            isWebSearchButtonToggled,
+            ffExternalTools,
+            ffImageTools,
+            ffSmoothRendering,
+            ffArtifactsView,
+            ffArtifactSlides,
+            ffVisualizationInstructions,
+            personalization,
         ]
     );
 
@@ -251,7 +260,14 @@ const ProjectDetailViewInner = () => {
 
         return (
             <div className="project-detail-not-found flex flex-column items-center justify-center">
-                <img src={lumoProjects} alt="Projects" width={200} />
+                <img
+                    src={lumoProjects}
+                    alt={
+                        // translator: Accessible description of the project illustration. Projects organize chats, instructions, and files.
+                        c('collider_2025:Label').t`Projects`
+                    }
+                    width={200}
+                />
                 <h2 className="text-lg">{c('collider_2025:Error').t`Project not found`}</h2>
                 <Button onClick={() => history.push('/projects')}>
                     {c('collider_2025:Button').t`Back to projects`}
@@ -459,9 +475,11 @@ const ProjectDetailViewInner = () => {
 export const ProjectDetailView = () => {
     return (
         <WebSearchProvider>
-            <ModelTierProvider>
-                <ProjectDetailViewInner />
-            </ModelTierProvider>
+            <ArtifactCreationProvider>
+                <ModelTierProvider>
+                    <ProjectDetailViewInner />
+                </ModelTierProvider>
+            </ArtifactCreationProvider>
         </WebSearchProvider>
     );
 };

@@ -1,12 +1,18 @@
 import type { LexicalEditor } from 'lexical'
 import { $getRoot, $createParagraphNode, $getSelection } from 'lexical'
-import type { EditorInitializationConfig } from '@proton/docs-shared'
-import { TranslatedResult, DocWillInitializeWithEmptyNodeEvent } from '@proton/docs-shared'
+import type { EditorInitializationConfig } from '../../contract/EditorInitialization'
+import { TranslatedResult } from '../../Utils/TranslatedResult'
 import { $importDataIntoEditor } from '../../Conversion/ImportDataIntoEditor'
 import type { Binding } from '@lexical/yjs'
 import { CLEAR_HISTORY_COMMAND } from './useYjsHistory'
 import type { DocsDependencies } from '../../DocsDependenciesProvider'
-import { c } from 'ttag'
+import type { DocsMessages } from '../../messages/DocsMessages'
+
+/**
+ * Emitted on the Yjs doc before it is initialized with an empty node.
+ * The host's `DocState` in `@proton/docs-shared` listens for it, so the value must match its copy.
+ */
+const DocWillInitializeWithEmptyNodeEvent = 'sync'
 
 /**
  * When a completely new document is created, the lexical editor state
@@ -23,6 +29,7 @@ export async function initializeEditorAccordingToConfigIfRootIsEmpty(
   binding: Binding,
   editorInitializationConfig: EditorInitializationConfig,
   reportError: DocsDependencies['reportError'],
+  getMessages: () => DocsMessages['editorLoad'],
 ): Promise<TranslatedResult<void>> {
   const yjsRoot = binding.root
   const isYjsRootEmpty = yjsRoot.isEmpty() && yjsRoot._xmlText.length === 0
@@ -64,9 +71,7 @@ export async function initializeEditorAccordingToConfigIfRootIsEmpty(
       )
     } catch (error) {
       reportError(error)
-      return TranslatedResult.failWithTranslatedError<void>(
-        c('Error').t`Failed to initialize editor due to unknown error.`,
-      )
+      return TranslatedResult.failWithTranslatedError<void>(getMessages().initializeFailed)
     }
   } else if (editorInitializationConfig.mode === 'conversion' && editorInitializationConfig.type.docType === 'doc') {
     result = await $importDataIntoEditor(
@@ -74,6 +79,7 @@ export async function initializeEditorAccordingToConfigIfRootIsEmpty(
       editorInitializationConfig.data,
       editorInitializationConfig.type,
       reportError,
+      getMessages,
     )
   }
 

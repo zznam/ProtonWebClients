@@ -1,13 +1,14 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import merge from 'lodash/merge';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import { getSettings } from '@proton/shared/lib/api/settings';
 import updateObject from '@proton/shared/lib/helpers/updateObject';
-import type { DeepPartial, UserSettings } from '@proton/shared/lib/interfaces';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
+import type { DeepPartial } from '@proton/shared/lib/interfaces/utils';
 
 import { serverEvent } from '../eventLoop';
 import { initEvent } from '../init';

@@ -3,14 +3,14 @@ import { useState } from 'react';
 
 import { c } from 'ttag';
 
-import { signoutAction } from '@proton/account/authenticationService';
+import { signoutAction } from '@proton/account/authenticationService/authenticationListener';
 import { useGetOrganization } from '@proton/account/organization/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Href } from '@proton/atoms/Href/Href';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { leaveOrganisation } from '@proton/shared/lib/api/organization';
 import { canDelete, deleteUser, unlockPasswordChanges } from '@proton/shared/lib/api/user';
@@ -33,7 +33,7 @@ import Option from '../../components/option/Option';
 import SelectTwo from '../../components/selectTwo/SelectTwo';
 import StepDot from '../../components/stepDot/StepDot';
 import StepDots from '../../components/stepDots/StepDots';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import TextAreaTwo from '../../components/v2/input/TextArea';
 import useFormErrors from '../../components/v2/useFormErrors';
 import useEventManager from '../../hooks/useEventManager';
@@ -90,6 +90,11 @@ const DeleteAccountModal = (props: Props) => {
             value={DIFFERENT_ACCOUNT}
             key={DIFFERENT_ACCOUNT}
         />,
+        <Option
+            title={c('Option').t`I'd like to merge this account into another one`}
+            value={MERGE_ACCOUNT}
+            key={MERGE_ACCOUNT}
+        />,
         isAdmin && <Option title={c('Option').t`It's too expensive`} value={TOO_EXPENSIVE} key={TOO_EXPENSIVE} />,
         <Option
             title={c('Option').t`It's missing a key feature that I need`}
@@ -100,11 +105,6 @@ const DeleteAccountModal = (props: Props) => {
             title={c('Option').t`I found another service that I like better`}
             value={USE_OTHER_SERVICE}
             key={USE_OTHER_SERVICE}
-        />,
-        <Option
-            title={c('Option').t`I'd like to merge this account into another one`}
-            value={MERGE_ACCOUNT}
-            key={MERGE_ACCOUNT}
         />,
         <Option title={c('Option').t`My reason isn't listed`} value={OTHER} key={OTHER} />,
     ].filter(isTruthy);

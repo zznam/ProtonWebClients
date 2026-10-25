@@ -8,12 +8,13 @@ import { useCustomDomains } from '@proton/account/domains/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcCheckmark } from '@proton/icons/icons/IcCheckmark';
 import { IcCross } from '@proton/icons/icons/IcCross';
 import { IcExclamationCircleFilled } from '@proton/icons/icons/IcExclamationCircleFilled';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
-import type { Domain, DomainAddress } from '@proton/shared/lib/interfaces';
+import type { DomainAddress } from '@proton/shared/lib/interfaces/Address';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
 import {
     DKIM_STATE,
     DMARC_STATE,
@@ -21,7 +22,7 @@ import {
     MX_STATE,
     SPF_STATE,
     VERIFY_STATE,
-} from '@proton/shared/lib/interfaces';
+} from '@proton/shared/lib/interfaces/Domain';
 import clsx from '@proton/utils/clsx';
 
 import { ButtonGroup } from '../../components/button/ButtonGroup';

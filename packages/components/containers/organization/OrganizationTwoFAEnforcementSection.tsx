@@ -10,12 +10,13 @@ import { queryEnforceTwoFA, queryRemoveTwoFA } from '@proton/shared/lib/api/orga
 import { APPS, ORGANIZATION_TWOFA_SETTING } from '@proton/shared/lib/constants';
 import { hasTwoFARequiredForAdminOnly, hasTwoFARequiredForAll } from '@proton/shared/lib/helpers/organization';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Organization } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 import { getOrganizationDenomination } from '@proton/shared/lib/organization/helper';
 
 import Info from '../../components/link/Info';
 import Loader from '../../components/loader/Loader';
-import { PermissionBanner, PermissionTooltip } from '../../components/orgPermissions/index';
+import PermissionBanner from '../../components/orgPermissions/PermissionBanner';
+import PermissionTooltip from '../../components/orgPermissions/PermissionTooltip';
 import Toggle from '../../components/toggle/Toggle';
 import SettingsLayout from '../account/SettingsLayout';
 import SettingsLayoutLeft from '../account/SettingsLayoutLeft';

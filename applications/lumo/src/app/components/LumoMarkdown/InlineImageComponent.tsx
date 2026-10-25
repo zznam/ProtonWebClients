@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 
 import { c } from 'ttag';
 
+import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
 
@@ -13,11 +14,11 @@ import { useLumoDispatch } from '../../redux/hooks';
 import { clearAttachmentLoading } from '../../redux/slices/attachmentLoadingState';
 import { setPendingPrefill } from '../../redux/slices/composerActions';
 import { pullAttachmentRequest } from '../../redux/slices/core/attachments';
-import { downloadImage } from '../../remote/lumoImageDownload';
 import { injectNativeImageGenerationHelper } from '../../remote/nativeComposerBridgeHelpers';
 import { attachmentDataCache } from '../../services/attachmentDataCache';
 import type { AttachmentId } from '../../types';
 import { base64ToFile } from '../../util/imageHelpers';
+import { triggerFileDownload } from '../../util/triggerFileDownload';
 import { useFileHandling } from '../Composer/hooks/useFileHandling';
 import { LumoIcon } from '../LumoIcon/LumoIcon';
 
@@ -35,6 +36,7 @@ export const InlineImageComponent: React.FC<InlineImageComponentProps> = ({ atta
     const [overlayOpen, setOverlayOpen] = useState(false);
     const [overlayDefaultMode, setOverlayDefaultMode] = useState<'preview' | 'edit'>('preview');
 
+    const { createNotification } = useNotifications();
     const { handleFilesSelected } = useFileHandling({ messageChain: [] });
 
     // The overlay covers the viewport, so hide the native composer while it's
@@ -66,9 +68,13 @@ export const InlineImageComponent: React.FC<InlineImageComponentProps> = ({ atta
         async (e?: React.MouseEvent) => {
             e?.stopPropagation();
             if (!attachment || !imageDataUrl) return;
-            await downloadImage(imageDataUrl, attachment.filename);
+            try {
+                await triggerFileDownload(imageDataUrl, attachment.filename, 'image');
+            } catch {
+                createNotification({ type: 'error', text: c('Error').t`Failed to download image. Please try again.` });
+            }
         },
-        [attachment, imageDataUrl]
+        [attachment, imageDataUrl, createNotification]
     );
 
     const handleSketchExport = useCallback(

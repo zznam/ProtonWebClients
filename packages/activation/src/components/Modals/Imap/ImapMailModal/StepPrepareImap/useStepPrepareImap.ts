@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import cloneDeep from 'lodash/cloneDeep';
 import isDeepEqual from 'lodash/isEqual';
 
 import { useFolders, useLabels } from '@proton/mail/store/labels/hooks';
-import type { Address, Label, UserModel } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import { GMAIL_CATEGORIES, IMAPS } from '../../../../../constants';
 import type { MailImportFolder } from '../../../../../helpers/MailImportFoldersParser/MailImportFoldersParser';
@@ -12,14 +14,18 @@ import { getDefaultTimePeriod } from '../../../../../helpers/getDefaultTimePerio
 import { getMailMappingErrors } from '../../../../../helpers/getMailMappingErrors';
 import useAvailableAddresses from '../../../../../hooks/useAvailableAddresses';
 import type { TIME_PERIOD } from '../../../../../interface';
-import { MailImportDestinationFolder, OAUTH_PROVIDER } from '../../../../../interface';
+import { ImportType, MailImportDestinationFolder, OAUTH_PROVIDER } from '../../../../../interface';
 import {
     displayConfirmLeaveModal,
     saveImapMailFields,
     startImapMailImport,
 } from '../../../../../logic/draft/imapDraft/imapDraft.actions';
-import { selectImapDraftMailImport } from '../../../../../logic/draft/imapDraft/imapDraft.selector';
+import {
+    selectImapDraftMailImport,
+    selectImapDraftProvider,
+} from '../../../../../logic/draft/imapDraft/imapDraft.selector';
 import { useEasySwitchDispatch, useEasySwitchSelector } from '../../../../../logic/store';
+import { trackEasySwitchPrepareImportViewed } from '../../../../../telemetry/easySwitchCreationFunnel';
 import type { MailImportFields } from '../../../CustomizeMailImportModal/CustomizeMailImportModal.interface';
 import { formatPrepareStepPayload } from './StepPrepareImap.helpers';
 import getDefaultLabel from './useStepPrepareImap.helpers';
@@ -66,6 +72,7 @@ const useStepPrepare = ({ user, handleCloseCustomizeModal }: Props) => {
     const [labels = []] = useLabels();
     const [folders = []] = useFolders();
     const data = useEasySwitchSelector(selectImapDraftMailImport);
+    const importProvider = useEasySwitchSelector(selectImapDraftProvider);
     if (!data) {
         throw new Error('Data should be defined');
     }
@@ -123,6 +130,14 @@ const useStepPrepare = ({ user, handleCloseCustomizeModal }: Props) => {
 
         return fields;
     });
+
+    useEffect(() => {
+        trackEasySwitchPrepareImportViewed({
+            provider: importProvider,
+            products: [ImportType.MAIL],
+            importPeriod: customFields.importPeriod.initialValue,
+        });
+    }, []);
 
     const mailMappingErrors = getMailMappingErrors(customFields.mapping.value, isLabelMapping, labels, folders);
     const hasErrors = mailMappingErrors.errors.length > 0;

@@ -5,9 +5,8 @@ import { useRoomContext } from '@livekit/components-react';
 import { RejoinReasonInfo } from '@proton-meet/proton-meet-core';
 import { Track } from 'livekit-client';
 
-import LoaderPage from '@proton/components/containers/app/LoaderPage';
 import { useMeetErrorReporting } from '@proton/meet/hooks/useMeetErrorReporting';
-import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
+import { useMeetDispatch, useMeetSelector, useMeetStore } from '@proton/meet/store/hooks';
 import { resetMeetingState } from '@proton/meet/store/resetMeetingState';
 import {
     selectIsReconnecting,
@@ -19,8 +18,8 @@ import {
 } from '@proton/meet/store/slices/connectionSlice';
 import { selectMeetingLinkName, selectMeetingPassword } from '@proton/meet/store/slices/currentMeeting';
 import {
+    savePreviousMeeting,
     setMeetingEndedReason,
-    setPreviousMeetingLink,
     setUpsellModalType,
 } from '@proton/meet/store/slices/meetAppStateSlice';
 import {
@@ -31,6 +30,8 @@ import {
 import { toggleMeetingLockThunk } from '@proton/meet/store/slices/settings';
 import { PopUpControls, setPopupStateValue } from '@proton/meet/store/slices/uiStateSlice';
 import { selectIsGuest, selectSubscriptionStatus, selectUserId } from '@proton/meet/store/slices/userSlice';
+import { toToggleState } from '@proton/meet/telemetry/dimensions';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { MeetingEndedReasons, UpsellModalTypes } from '@proton/meet/types/types';
 import { isFirefox } from '@proton/shared/lib/helpers/browser';
 import type { UserModel } from '@proton/shared/lib/interfaces/User';
@@ -39,7 +40,6 @@ import { useFlag } from '@proton/unleash/useFlag';
 import { ConnectionFailedModal } from '../../components/ConnectionFailedModal/ConnectionFailedModal';
 import { ConnectionLostModal } from '../../components/ConnectionLostModal/ConnectionLostModal';
 import { MeetingLockedModal } from '../../components/MeetingLockedModal/MeetingLockedModal';
-import { MeetingOpenedInDesktopApp } from '../../components/MeetingOpenedInDesktopApp/MeetingOpenedInDesktopApp';
 import { PiPPreviewVideo } from '../../components/PiPPreviewVideo/PiPPreviewVideo';
 import { WebRtcUnsupportedModal } from '../../components/WebRtcUnsupportedModal/WebRtcUnsupportedModal';
 import { useMediaManagementContext } from '../../contexts/MediaManagementProvider/MediaManagementContext';
@@ -47,7 +47,6 @@ import { useMeetCoreClient } from '../../contexts/MeetCoreClientContext';
 import { MeetingRecorderProvider } from '../../contexts/MeetingRecorderContext';
 import { WaitingRoomProvider } from '../../contexts/WaitingRoomContext';
 import { useIsRecordingInProgressReceiver } from '../../hooks/bridges/useIsRecordingInProgressReceiver';
-import { useDesktopAppRedirect } from '../../hooks/protonMeetContainer/useDesktopAppRedirect';
 import { useJoinFlow } from '../../hooks/protonMeetContainer/useJoinFlow';
 import { useMeetingCleanup } from '../../hooks/protonMeetContainer/useMeetingCleanup';
 import { useMeetingConnection } from '../../hooks/protonMeetContainer/useMeetingConnection';
@@ -65,6 +64,9 @@ import { useParticipantNameMap } from '../../hooks/useParticipantNameMap';
 import { usePictureInPicture } from '../../hooks/usePictureInPicture/usePictureInPicture';
 import { useStableCallback } from '../../hooks/useStableCallback';
 import { useWakeLock } from '../../hooks/useWakeLock';
+import { TrackedLoaderPage } from '../../telemetry/TrackedLoaderPage';
+import { markPrejoinLoaderUnmount } from '../../telemetry/loadPerformance';
+import { useJoinTelemetryDimensions } from '../../telemetry/useJoinTelemetryDimensions';
 import type { JoinLocationState } from '../../types';
 import type { ProtonMeetKeyProvider } from '../../utils/ProtonMeetKeyProvider';
 import { cleanupWasmDependencies } from '../../utils/wasmUtils';
@@ -114,15 +116,18 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
     const [isWebRtcUnsupportedModalOpen, setIsWebRtcUnsupportedModalOpen] = useState(false);
     const [isConnectionFailedModalOpen, setIsConnectionFailedModalOpen] = useState(false);
 
-    const { token, urlPassword } = useMeetingSetup();
+    const { urlMeetingLinkName, urlMeetingPassword } = useMeetingSetup();
 
-    const instantMeetingRef = useRef(!token);
+    const instantMeetingRef = useRef(!urlMeetingLinkName);
 
-    const { openedInDesktopApp } = useDesktopAppRedirect({ token, isInstantJoin });
+    const joinTelemetryDimensions = useJoinTelemetryDimensions({
+        meetingLinkName: urlMeetingLinkName,
+        isInstant: instantMeetingRef.current,
+    });
 
     const { isReadyToDecrypt } = useMeetingInfoHydration({
-        meetingLinkName: token,
-        meetingPassword: urlPassword,
+        meetingLinkName: urlMeetingLinkName,
+        meetingPassword: urlMeetingPassword,
         instantMeeting: instantMeetingRef.current,
     });
 
@@ -131,6 +136,7 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
     const joinedRoom = useMeetSelector(selectJoinedRoom);
     const isReconnecting = useMeetSelector(selectIsReconnecting);
     const reconnectionFailed = useMeetSelector(selectReconnectionFailed);
+    const store = useMeetStore();
     const mlsRetrying = useMeetSelector(selectMlsRetrying);
     const prejoinParticipantCount = useMeetSelector(selectPrejoinParticipantCount);
 
@@ -228,7 +234,7 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
         isPipActive,
     });
 
-    const assignHost = useAssignHost(accessTokenRef.current as string, token);
+    const assignHost = useAssignHost(accessTokenRef.current as string, urlMeetingLinkName);
 
     const { isReconnectingRef, websocketUrlRef, performFullReconnection, connectWithMls } = useMeetingConnection({
         meetingLinkNameRef,
@@ -270,8 +276,8 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
         });
 
     const { joinMeeting, joinInstantMeeting, waitingRoomProviderProps } = useJoinFlow({
-        token,
-        urlPassword,
+        urlMeetingLinkName,
+        urlMeetingPassword,
         isInstantJoin,
         setDisplayName,
         connectWithMls,
@@ -290,6 +296,7 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
         displayName,
         cleanupMlsState,
         disallowHealthCheck,
+        joinTelemetryDimensions,
     });
 
     useEffect(() => {
@@ -312,7 +319,7 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
             return;
         }
 
-        dispatch(setPreviousMeetingLink(meetingLinkRef.current));
+        dispatch(savePreviousMeeting(meetingLinkRef.current));
 
         if (isGuest) {
             dispatch(setUpsellModalType(UpsellModalTypes.GuestAccount));
@@ -359,7 +366,7 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
     };
 
     const handleMeetingExpired = async () => {
-        dispatch(setPreviousMeetingLink(meetingLinkRef.current));
+        dispatch(savePreviousMeeting(meetingLinkRef.current));
         if (isLocalParticipantAdminOrHost || isGuestAdmin) {
             isExpiringRef.current = true;
             dispatch(
@@ -381,9 +388,17 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
     };
 
     const handleMeetingLockToggle = useStableCallback(async () => {
-        await dispatch(
-            toggleMeetingLockThunk({ meetingLinkName: token, accessToken: accessTokenRef.current as string })
+        const result = await dispatch(
+            toggleMeetingLockThunk({
+                meetingLinkName: urlMeetingLinkName,
+                accessToken: accessTokenRef.current as string,
+            })
         );
+        if (toggleMeetingLockThunk.fulfilled.match(result)) {
+            sendMeetActionsEvent(TelemetryMeetActionsEvents.meeting_lock_toggled, {
+                state: toToggleState(result.payload),
+            });
+        }
     });
 
     // Warn user before leaving if in a meeting
@@ -483,13 +498,9 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
         return keyProvider.getKeychainIndexInformation() ?? [];
     }, [keyProvider]);
 
-    if (openedInDesktopApp) {
-        return <MeetingOpenedInDesktopApp />;
-    }
-
     if (!isReadyToDecrypt) {
         // Same loader as the bootstrap one, so the SRP handshake reads as a continuation of app startup
-        return <LoaderPage />;
+        return <TrackedLoaderPage onUnmount={markPrejoinLoaderUnmount} />;
     }
 
     return (
@@ -513,7 +524,6 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
                             instantMeeting={instantMeetingRef.current}
                             assignHost={assignHost}
                             getKeychainIndexInformation={getKeychainIndexInformation}
-                            isUsingTurnRelay={isUsingTurnRelay}
                             liveKitConnectionState={liveKitConnectionState}
                             showReconnectedMessage={showReconnectedMessage}
                             setShowReconnectedMessage={setShowReconnectedMessage}
@@ -527,7 +537,7 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
                 ) : (
                     <PrejoinContainer
                         handleJoin={instantMeetingRef.current ? joinInstantMeeting : joinMeeting}
-                        roomId={token}
+                        meetingLinkName={urlMeetingLinkName}
                         instantMeeting={instantMeetingRef.current}
                         participantsCount={prejoinParticipantCount}
                         displayName={displayName}
@@ -535,6 +545,7 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
                         isInstantJoin={isInstantJoin}
                         joiningLoaderHeader={joiningLoaderHeader}
                         joiningLoaderSubtitle={joiningLoaderSubtitle}
+                        joinTelemetryDimensions={joinTelemetryDimensions}
                     />
                 )}
             </WaitingRoomProvider>
@@ -546,9 +557,18 @@ export const ProtonMeetContainer = ({ keyProvider }: ProtonMeetContainerProps) =
                 <ConnectionLostModal
                     onRejoin={() => {
                         dispatch(setReconnectionFailed(false));
-                        void performFullReconnection(RejoinReasonInfo.Other);
+                        void performFullReconnection(RejoinReasonInfo.Other).then(() =>
+                            sendMeetActionsEvent(TelemetryMeetActionsEvents.connection_lost_modal_answered, {
+                                action: 'rejoin',
+                                outcome: selectReconnectionFailed(store.getState()) ? 'failed' : 'success',
+                            })
+                        );
                     }}
                     onLeave={() => {
+                        sendMeetActionsEvent(TelemetryMeetActionsEvents.connection_lost_modal_answered, {
+                            action: 'leave',
+                            outcome: 'success',
+                        });
                         dispatch(setReconnectionFailed(false));
                         handleUngracefulLeave();
                     }}

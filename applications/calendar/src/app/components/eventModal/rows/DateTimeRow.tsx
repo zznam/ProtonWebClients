@@ -6,13 +6,13 @@ import { Button } from '@proton/atoms/Button/Button';
 import IconRow from '@proton/components/components/iconRow/IconRow';
 import DateInput from '@proton/components/components/input/DateInput';
 import TimeInput from '@proton/components/components/input/TimeInput';
-import TimeZoneSelector from '@proton/components/components/timezoneSelector/TimeZoneSelector';
+import { TimeZoneSelector } from '@proton/components/components/timezoneSelector/TimeZoneSelector';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { IcClock } from '@proton/icons/icons/IcClock';
 import { DATE_INPUT_ID, MAXIMUM_DATE, MINIMUM_DATE } from '@proton/shared/lib/calendar/constants';
 import type { WeekStartsOn } from '@proton/shared/lib/date-fns-utc/interface';
 import { fromUTCDateToTimezone } from '@proton/shared/lib/date/timezone';
-import type { EventModel } from '@proton/shared/lib/interfaces/calendar';
+import type { EventModel } from '@proton/shared/lib/interfaces/calendar/Event';
 import clsx from '@proton/utils/clsx';
 
 import getFrequencyModelChange from '../eventForm/getFrequencyModelChange';

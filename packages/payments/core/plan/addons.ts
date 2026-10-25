@@ -1,5 +1,7 @@
 import { ADDON_NAMES, ADDON_PREFIXES, PLANS } from '../constants';
 import type { PlanIDs } from '../interface';
+import { getPlanIDs } from '../subscription/helpers/plan-ids';
+import type { Subscription } from '../subscription/interface';
 import { getPlanNameFromIDs } from './helpers';
 import type { Addon } from './interface';
 
@@ -51,8 +53,14 @@ export const getPlansWithAddons = (): PLANS[] => {
     return Object.values(PLANS).filter((plan) => Object.keys(getSupportedAddons({ [plan]: 1 })).length > 0);
 };
 
-export const supportsMemberAddon = (planIDs: PlanIDs): boolean => {
-    return (Object.keys(getSupportedAddons(planIDs)) as ADDON_NAMES[]).some((name) =>
-        isAddonType(name, ADDON_PREFIXES.MEMBER)
-    );
+export const supportsAddonType = (planIDs: PlanIDs, addonPrefix: ADDON_PREFIXES): boolean => {
+    return (Object.keys(getSupportedAddons(planIDs)) as ADDON_NAMES[]).some((name) => isAddonType(name, addonPrefix));
 };
+
+export const supportsMemberAddon = (planIDs: PlanIDs): boolean => supportsAddonType(planIDs, ADDON_PREFIXES.MEMBER);
+
+export const getSubscriptionSupportingAddon = (
+    subscriptions: Subscription[],
+    addonPrefix: ADDON_PREFIXES
+): Subscription | undefined =>
+    subscriptions.find((subscription) => supportsAddonType(getPlanIDs(subscription), addonPrefix));

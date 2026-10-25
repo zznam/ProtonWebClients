@@ -1,10 +1,8 @@
-import { Suspense, lazy } from 'react';
-
 import { c } from 'ttag';
 
-import { userSettingsActions } from '@proton/account';
 import { useUpdateAccountRecovery } from '@proton/account/recovery/useUpdateAccountRecovery';
 import { useUser } from '@proton/account/user/hooks';
+import { userSettingsActions } from '@proton/account/userSettings';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
@@ -12,14 +10,13 @@ import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { patchNews } from '@proton/shared/lib/api/settings';
 import { APPS, MAIL_APP_NAME } from '@proton/shared/lib/constants';
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
-import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
 import {
     NEWSLETTER_SUBSCRIPTIONS,
     NEWSLETTER_SUBSCRIPTIONS_BITS,
     getUpdatedNewsBitmap,
 } from '@proton/shared/lib/helpers/newsletter';
 import { getStaticURL } from '@proton/shared/lib/helpers/url';
-import { SETTINGS_STATUS } from '@proton/shared/lib/interfaces';
+import { SETTINGS_STATUS } from '@proton/shared/lib/interfaces/UserSettings';
 
 import Info from '../../components/link/Info';
 import SettingsLink from '../../components/link/SettingsLink';
@@ -30,8 +27,6 @@ import SettingsSection from '../account/SettingsSection';
 import ToggleAssistantContainer from '../general/ToggleAssistant/ToggleAssistantContainer';
 import DailyEmailNotificationToggle from '../recovery/DailyEmailNotificationToggle';
 import RecoveryEmail from '../recovery/email/RecoveryEmail';
-
-const LazyInboxDesktopDefaultAppSettings = lazy(() => import('../desktop/defaultApp/InboxDesktopDefaultAppSettings'));
 
 const MessagesGeneralSection = () => {
     const [userSettings] = useUserSettings();
@@ -107,11 +102,6 @@ const MessagesGeneralSection = () => {
                     </SettingsLayoutRight>
                 </SettingsLayout>
                 <ToggleAssistantContainer />
-                {isElectronMail && (
-                    <Suspense fallback="">
-                        <LazyInboxDesktopDefaultAppSettings />
-                    </Suspense>
-                )}
             </SettingsSection>
         </>
     );

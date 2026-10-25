@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 
 import { c } from 'ttag';
 
-import { useUserSettings, userSettingsActions } from '@proton/account';
+import { userSettingsActions } from '@proton/account/userSettings';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { enableBreachAlert } from '@proton/shared/lib/api/settings';
 import { DARK_WEB_MONITORING_NAME } from '@proton/shared/lib/constants';
-import { DARK_WEB_MONITORING_STATE } from '@proton/shared/lib/interfaces';
+import { DARK_WEB_MONITORING_STATE } from '@proton/shared/lib/interfaces/UserSettings';
 import illustration from '@proton/styles/assets/img/illustrations/check.svg';
 
 import { SUBSCRIPTION_STEPS } from '../../constants';

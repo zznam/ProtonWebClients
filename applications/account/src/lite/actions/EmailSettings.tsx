@@ -22,7 +22,7 @@ import {
     updateSwipeRight,
     updateViewMode,
 } from '@proton/shared/lib/api/mailSettings';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import type {
     AUTO_DELETE_SPAM_AND_TRASH_DAYS,
     NEXT_MESSAGE_ON_MOVE,
@@ -202,7 +202,7 @@ const EmailSettings = ({
                             htmlFor="autoDelete"
                             description={c('Info')
                                 .t`Delete trash and spam messages after 30 days. Turning on auto-delete gives messages already in trash/spam a deletion date based on the date they were moved there.`}
-                        >{c('Label').t`Auto-delete unwanted messages`}</MobileSectionLabel>
+                        >{c('Label').t`Auto-delete trash and spam`}</MobileSectionLabel>
                         <AutoDeleteSpamAndTrashDaysToggle
                             id="autoDelete"
                             loading={loadingAutoDeleteSpamAndTrashDays}

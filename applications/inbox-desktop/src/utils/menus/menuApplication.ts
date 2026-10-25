@@ -19,9 +19,8 @@ import { profiler } from "../profiler/profiler";
 import { restartApp } from "../restartApp";
 import { getIconResourcePath } from "../../constants/resources";
 import pkg from "../../../package.json";
-import { getFeatureFlagManager } from "../flags/manager";
-import { FeatureFlag } from "../flags/flags";
 import { isWindowValid } from "../view/windowUtils";
+import { setDefaultMailtoApp } from "../protocol/default";
 
 type MenuKey = "app" | "file" | "edit" | "view" | "window" | "help";
 interface MenuProps extends MenuItemConstructorOptions {
@@ -70,12 +69,21 @@ const showAboutDialog = () => {
 export const setApplicationMenu = () => {
     const quitMenuProps: MenuProps["submenu"] = isMac ? [] : [{ role: "quit", label: c("App menu").t`Quit` }];
     const hardwareAccelerationDisabled = getSettings().disableHardwareAcceleration;
+    const setDefaultMailtoMenuItem: MenuItemConstructorOptions = {
+        label: c("App menu").t`Set as default email app`,
+        type: "normal",
+        click: () => setDefaultMailtoApp(),
+    };
+    const fileMenuDefaultMailtoItems: MenuItemConstructorOptions[] = isMac
+        ? []
+        : [setDefaultMailtoMenuItem, { type: "separator" }];
 
     const temp: MenuProps[] = [
         {
             label: c("Menu").t`File`,
             key: "file",
             submenu: [
+                ...fileMenuDefaultMailtoItems,
                 {
                     label: c("App menu").t`Clear application data`,
                     type: "normal",
@@ -219,25 +227,21 @@ export const setApplicationMenu = () => {
             label: c("Menu").t`View`,
             key: "view",
             submenu: [
-                ...(getFeatureFlagManager().isEnabled(FeatureFlag.AUTH_GATED_SHORTCUTS_ENABLED)
-                    ? ([
-                          {
-                              id: "switch-to-mail",
-                              label: switchToAppLabel(MAIL_APP_NAME),
-                              accelerator: "CmdOrCtrl+1",
-                              enabled: false,
-                              click: openMailWithoutReload,
-                          },
-                          {
-                              id: "switch-to-calendar",
-                              label: switchToAppLabel(CALENDAR_APP_NAME),
-                              accelerator: "CmdOrCtrl+2",
-                              enabled: false,
-                              click: openCalendarWithoutReload,
-                          },
-                          { type: "separator" },
-                      ] satisfies MenuItemConstructorOptions[])
-                    : []),
+                {
+                    id: "switch-to-mail",
+                    label: switchToAppLabel(MAIL_APP_NAME),
+                    accelerator: "CmdOrCtrl+1",
+                    enabled: false,
+                    click: openMailWithoutReload,
+                },
+                {
+                    id: "switch-to-calendar",
+                    label: switchToAppLabel(CALENDAR_APP_NAME),
+                    accelerator: "CmdOrCtrl+2",
+                    enabled: false,
+                    click: openCalendarWithoutReload,
+                },
+                { type: "separator" },
                 {
                     label: c("App menu").t`Reload`,
                     accelerator: "CmdOrCtrl+R",
@@ -316,19 +320,15 @@ export const setApplicationMenu = () => {
           ];
 
     const helpSubmenuItems: MenuItemConstructorOptions[] = [
-        ...(getFeatureFlagManager().isEnabled(FeatureFlag.AUTH_GATED_SHORTCUTS_ENABLED)
-            ? ([
-                  {
-                      id: "help-and-feedback",
-                      label: c("App menu").t`Help and feedback`,
-                      type: "normal",
-                      enabled: false,
-                      click: () => {
-                          getCurrentView()?.webContents.send("hostUpdate", { type: "openHelpAndFeedback" });
-                      },
-                  },
-              ] satisfies MenuItemConstructorOptions[])
-            : []),
+        {
+            id: "help-and-feedback",
+            label: c("App menu").t`Help and feedback`,
+            type: "normal",
+            enabled: false,
+            click: () => {
+                getCurrentView()?.webContents.send("hostUpdate", { type: "openHelpAndFeedback" });
+            },
+        },
         ...aboutSubmenuItems,
     ];
 
@@ -374,6 +374,7 @@ export const setApplicationMenu = () => {
                         });
                     },
                 },
+                setDefaultMailtoMenuItem,
                 {
                     label: c("App menu").t`Uninstall ${MAIL_APP_NAME}`,
                     type: "normal",

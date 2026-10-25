@@ -2,11 +2,11 @@ import type { KeyboardEvent, RefObject } from 'react';
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
 
 import type { Input } from '@proton/atoms/Input/Input';
-import { useCombinedRefs } from '@proton/hooks';
+import useCombinedRefs from '@proton/hooks/useCombinedRefs';
 import { IcCircleFilled } from '@proton/icons/icons/IcCircleFilled';
 import { canonicalizeEmail } from '@proton/shared/lib/helpers/email';
-import type { Recipient } from '@proton/shared/lib/interfaces';
-import type { ContactEmail, ContactGroup } from '@proton/shared/lib/interfaces/contacts';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
+import type { ContactEmail, ContactGroup } from '@proton/shared/lib/interfaces/contacts/Contact';
 import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 import { handleRecipientInputChange, inputToRecipient, splitBySeparator } from '@proton/shared/lib/mail/recipient';
 import clsx from '@proton/utils/clsx';

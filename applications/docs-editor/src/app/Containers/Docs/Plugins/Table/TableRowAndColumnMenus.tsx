@@ -1,16 +1,10 @@
-import Dropdown from '@proton/components/components/dropdown/Dropdown'
-import DropdownButton from '@proton/components/components/dropdown/DropdownButton'
-import DropdownMenu from '@proton/components/components/dropdown/DropdownMenu'
-import DropdownMenuButton from '@proton/components/components/dropdown/DropdownMenuButton'
-import SimpleDropdown from '@proton/components/components/dropdown/SimpleDropdown'
-import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor'
+import { Dropdown, DropdownButton, DropdownMenu, DropdownMenuButton, SimpleDropdown } from '../../Components/Dropdown'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import type { TableNode } from '@lexical/table'
 import { $isTableCellNode, $isTableRowNode } from '@lexical/table'
 import { Icon } from '../../Components/Icon'
 import * as Icons from '../../Components/icons'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { c } from 'ttag'
 import debounce from 'lodash/debounce'
 import { isHTMLElement } from '../../Utils/guard'
 import type { NodeKey } from 'lexical'
@@ -20,7 +14,7 @@ import { setColorForSelection } from './TableUtils/setColorForSelection'
 import { $clearCellsInTableSelection } from './TableUtils/clearCellsInTableSelection'
 import { selectColumn } from './TableUtils/selectColumn'
 import { selectRow } from './TableUtils/selectRow'
-import { FontColorMenu } from '../../../../Components/ColorMenu'
+import { FontColorMenu } from '../../Components/ColorMenu'
 import {
   DELETE_TABLE_COLUMN_AT_SELECTION_COMMAND,
   DELETE_TABLE_ROW_AT_SELECTION_COMMAND,
@@ -29,15 +23,15 @@ import {
   INSERT_TABLE_COLUMN_COMMAND,
   INSERT_TABLE_ROW_COMMAND,
 } from './Commands'
-import { useCombinedRefs } from '@proton/hooks'
-import { useStore } from 'zustand'
-import { useEditorState } from '../../../EditorStateProvider'
-import { EditorUserMode } from '../../../../Lib/EditorUserMode'
+import { useDocsUserMode } from '../../DocsPresentationProvider'
+import { useDocsMessages } from '../../DocsDependenciesProvider'
+import { EditorUserMode } from '../../contract/EditorUserMode'
 
 export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) {
   const [editor] = useLexicalComposerContext()
+  const messages = useDocsMessages().table
 
-  const userMode = useStore(useEditorState(), (state) => state.userMode)
+  const userMode = useDocsUserMode()
   const isSuggestionMode = userMode === EditorUserMode.Suggest
 
   const tableRowNodeKey = useRef<NodeKey | null>(null)
@@ -68,12 +62,9 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
 
   const rowMenuButtonRef = useRef<HTMLButtonElement>(null)
   const [tableRowElement, setTableRowElement] = useState<HTMLTableRowElement | null>(null)
-  const {
-    anchorRef: rowMenuAnchorRef,
-    isOpen: isRowMenuOpen,
-    toggle: toggleRowMenu,
-    close: closeRowMenu,
-  } = usePopperAnchor<HTMLButtonElement>()
+  const [isRowMenuOpen, setIsRowMenuOpen] = useState(false)
+  const toggleRowMenu = () => setIsRowMenuOpen((isOpen) => !isOpen)
+  const closeRowMenu = () => setIsRowMenuOpen(false)
   useEffect(
     function selectRowIfMenuIsOpen() {
       if (!isRowMenuOpen) {
@@ -90,12 +81,9 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
 
   const columnMenuButtonRef = useRef<HTMLButtonElement>(null)
   const [tableCellElement, setTableCellElement] = useState<HTMLTableCellElement | null>(null)
-  const {
-    anchorRef: columnMenuAnchorRef,
-    isOpen: isColumnMenuOpen,
-    toggle: toggleColumnMenu,
-    close: closeColumnMenu,
-  } = usePopperAnchor<HTMLButtonElement>()
+  const [isColumnMenuOpen, setIsColumnMenuOpen] = useState(false)
+  const toggleColumnMenu = () => setIsColumnMenuOpen((isOpen) => !isOpen)
+  const closeColumnMenu = () => setIsColumnMenuOpen(false)
   useEffect(
     function selectColumnIfMenuIsOpen() {
       if (!isColumnMenuOpen) {
@@ -236,18 +224,18 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
     <>
       <DropdownButton
         as="button"
-        className="bg-norm border-weak absolute left-0 top-0 z-0 flex items-center justify-center rounded border py-0.5 [opacity:0] hover:bg-[--background-weak] hover:opacity-100"
+        className="absolute left-0 top-0 z-0 flex items-center justify-center rounded border border-[--border-weak] bg-[--background-norm] py-0.5 [opacity:0] hover:bg-[--background-weak] hover:opacity-100 focus-visible:opacity-100"
         style={{
           transform: `translate3d(var(--x), var(--y), 0)`,
           opacity: isRowMenuOpen || !!tableRowElement ? 1 : undefined,
           backgroundColor: isRowMenuOpen ? 'var(--background-weak)' : undefined,
         }}
-        ref={useCombinedRefs(rowMenuButtonRef, rowMenuAnchorRef)}
+        ref={rowMenuButtonRef}
         onClick={toggleRowMenu}
         hasCaret={false}
       >
         <Icon data={Icons.dots} />
-        <div className="sr-only">{c('Action').t`Click to open row menu`}</div>
+        <div className="sr-only">{messages.openRowMenu}</div>
       </DropdownButton>
       <Dropdown
         anchorRef={rowMenuButtonRef}
@@ -265,7 +253,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
               content={
                 <>
                   <Icon data={Icons.palette} />
-                  {c('Action').t`Color`}
+                  {messages.color}
                   <Icon data={Icons.chevronRight} className="ml-auto" />
                 </>
               }
@@ -301,7 +289,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.arrowUp} />
-            {c('Action').t`Insert above`}
+            {messages.insertAbove}
           </DropdownMenuButton>
           <DropdownMenuButton
             className={menuButtonClassName}
@@ -314,7 +302,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.arrowDown} />
-            {c('Action').t`Insert below`}
+            {messages.insertBelow}
           </DropdownMenuButton>
           <DropdownMenuButton
             className={menuButtonClassName}
@@ -327,7 +315,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.squares} />
-            {c('Action').t`Duplicate`}
+            {messages.duplicate}
           </DropdownMenuButton>
           {!isSuggestionMode && (
             <DropdownMenuButton
@@ -343,7 +331,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
               }}
             >
               <Icon data={Icons.cross} />
-              {c('Action').t`Clear contents`}
+              {messages.clearContents}
             </DropdownMenuButton>
           )}
           <DropdownMenuButton
@@ -357,26 +345,24 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.trash} />
-            {c('Action').t`Delete row`}
+            {messages.deleteRow}
           </DropdownMenuButton>
         </DropdownMenu>
       </Dropdown>
       <DropdownButton
         as="button"
-        className="bg-norm border-weak absolute left-0 top-0 z-0 flex items-center justify-center rounded border py-0.5 [opacity:0] hover:bg-[--background-weak] hover:opacity-100"
+        className="absolute left-0 top-0 z-0 flex items-center justify-center rounded border border-[--border-weak] bg-[--background-norm] py-0.5 [opacity:0] hover:bg-[--background-weak] hover:opacity-100 focus-visible:opacity-100"
         style={{
           transform: `translate3d(var(--x), var(--y), 0) rotate(90deg)`,
           opacity: isColumnMenuOpen || !!tableCellElement ? 1 : undefined,
           backgroundColor: isColumnMenuOpen ? 'var(--background-weak)' : undefined,
         }}
-        ref={useCombinedRefs(columnMenuButtonRef, columnMenuAnchorRef)}
-        onClick={() => {
-          toggleColumnMenu()
-        }}
+        ref={columnMenuButtonRef}
+        onClick={toggleColumnMenu}
         hasCaret={false}
       >
         <Icon data={Icons.dots} />
-        <div className="sr-only">{c('Action').t`Click to open column menu`}</div>
+        <div className="sr-only">{messages.openColumnMenu}</div>
       </DropdownButton>
       <Dropdown
         anchorRef={columnMenuButtonRef}
@@ -402,7 +388,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
               content={
                 <>
                   <Icon data={Icons.palette} />
-                  {c('Action').t`Color`}
+                  {messages.color}
                   <Icon data={Icons.chevronRight} className="ml-auto" />
                 </>
               }
@@ -431,7 +417,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.arrowLeft} />
-            {c('Action').t`Insert left`}
+            {messages.insertLeft}
           </DropdownMenuButton>
           <DropdownMenuButton
             className={menuButtonClassName}
@@ -444,7 +430,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.arrowRight} />
-            {c('Action').t`Insert right`}
+            {messages.insertRight}
           </DropdownMenuButton>
           <DropdownMenuButton
             className={menuButtonClassName}
@@ -458,7 +444,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.squares} />
-            {c('Action').t`Duplicate`}
+            {messages.duplicate}
           </DropdownMenuButton>
           {!isSuggestionMode && (
             <DropdownMenuButton
@@ -474,7 +460,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
               }}
             >
               <Icon data={Icons.cross} size={4.5} />
-              {c('Action').t`Clear contents`}
+              {messages.clearContents}
             </DropdownMenuButton>
           )}
           <DropdownMenuButton
@@ -488,7 +474,7 @@ export function TableRowAndColumnMenus({ tableNode }: { tableNode: TableNode }) 
             }}
           >
             <Icon data={Icons.trash} />
-            {c('Action').t`Delete column`}
+            {messages.deleteColumn}
           </DropdownMenuButton>
         </DropdownMenu>
       </Dropdown>

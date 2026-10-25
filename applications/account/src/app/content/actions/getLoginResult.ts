@@ -8,12 +8,11 @@ import { getReturnUrl } from '@proton/shared/lib/authentication/returnUrl';
 import { APPS, type APP_NAMES, SETUP_ADDRESS_PATH } from '@proton/shared/lib/constants';
 import { invokeInboxDesktopIPC } from '@proton/shared/lib/desktop/ipcHelpers';
 import { joinPaths } from '@proton/shared/lib/helpers/url';
-import type { Api } from '@proton/shared/lib/interfaces';
-import { getEncryptedSetupBlob, getRequiresAddressSetup } from '@proton/shared/lib/keys';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import { getEncryptedSetupBlob, getRequiresAddressSetup } from '@proton/shared/lib/keys/setupAddress';
 import noop from '@proton/utils/noop';
 
-import type { AppSwitcherState } from '../../public/AppSwitcherContainer';
-import { getOrganization } from '../../public/organization';
+import { getAppSwitcherState } from '../../public/appSwitcherState';
 import type { AppIntent, AuthSession } from '../authSession';
 import type { Paths } from '../helper';
 import type { LocalRedirect } from '../localRedirect';
@@ -138,14 +137,10 @@ const goToAppSwitcher = async ({
     paths: Paths;
 }): Promise<LoginResult> => {
     const uidApi = getUIDApi(session.data.UID, api);
-    const organization = await getOrganization({ session, api: uidApi }).catch(noop);
-    const appSwitcherState: AppSwitcherState = {
-        session: { ...session, data: { ...session.data, Organization: organization } },
-    };
     return {
         type: 'app-switcher',
         location: paths.appSwitcher,
-        payload: appSwitcherState,
+        payload: await getAppSwitcherState({ session, api: uidApi }),
     };
 };
 

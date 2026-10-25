@@ -20,9 +20,11 @@ import { getExtensionLocalStorage } from '@proton/pass/lib/extension/storage';
 import { getWebStoreUrl } from '@proton/pass/lib/extension/utils/browser';
 import browser from '@proton/pass/lib/globals/browser';
 import { createI18nService } from '@proton/pass/lib/i18n/service';
+import { NativeMessageError } from '@proton/pass/lib/native-messaging/errors';
 import { createSettingsService } from '@proton/pass/lib/settings/service';
 import { NO_PAGE_CONTEXT_TELEMETRY_DIMENSIONS, TelemetryEventName } from '@proton/pass/types/data/telemetry';
-import type { MaybeNull } from '@proton/pass/types/utils/index';
+import { NativeMessageErrorType } from '@proton/pass/types/desktop/extension-unlock-with-desktop';
+import type { MaybeNull } from '@proton/pass/types/utils';
 import type { ClientEndpoint } from '@proton/pass/types/worker/runtime';
 import type { LocalStoreData } from '@proton/pass/types/worker/state';
 import { prop } from '@proton/pass/utils/fp/lens';
@@ -71,6 +73,10 @@ const getPassCoreProviderProps = (
     const onTelemetry = sendTelemetryEvent(messageFactory);
     const popupController = endpoint === 'popup' ? createPopupController() : undefined;
 
+    const themeManager = createPassThemeManager({
+        getTheme: async () => theme ?? (await settings.resolve().catch(noop))?.theme,
+    });
+
     return {
         config,
         connectivity: createConnectivityProxy(endpoint),
@@ -93,9 +99,10 @@ const getPassCoreProviderProps = (
                     .then((res) => res.type === 'success' && res.enabled)
                     .catch(() => false),
         },
-        theme: createPassThemeManager({
-            getTheme: async () => theme ?? (await settings.resolve().catch(noop))?.theme,
-        }),
+        /** A forced theme is applied once through `sync` (internal state update),
+         * external `setState` calls (eg: on worker settings updates) are ignored
+         * so the user's theme setting cannot override it */
+        theme: theme ? { ...themeManager, setState: noop } : themeManager,
 
         generateOTP: (payload) =>
             sendMessage.on(messageFactory({ type: WorkerMessageType.OTP_CODE_GENERATE, payload }), (response) =>
@@ -245,12 +252,6 @@ const getPassCoreProviderProps = (
         },
 
         popup: popupController,
-
-        getDesktopUnlockSecret: async () =>
-            sendMessage(messageFactory({ type: WorkerMessageType.DESKTOP_UNLOCK_SECRET })).then((res) => {
-                if (res.type === 'error') throw new Error(res.error);
-                return res.secret;
-            }),
     };
 };
 
@@ -263,8 +264,15 @@ export const ExtensionCore: FC<PropsWithChildren<ExtensionCoreProps>> = ({ child
     const unlock = useCallback(
         async (payload: UnlockDTO): Promise<void> =>
             sendMessage(message({ type: WorkerMessageType.AUTH_UNLOCK, payload })).then((res) => {
-                if (res.type === 'error') throw new Error();
-                if (!res.ok) throw new Error(res.error ?? '');
+                /** Broker transport failure carries no structured error — surface a localized
+                 * message so the notification is never blank (the popup can outlive the flow). */
+                if (res.type === 'error') throw new NativeMessageError(NativeMessageErrorType.UNKNOWN);
+                if (!res.ok) {
+                    /** Desktop unlock carries a typed `NativeMessageErrorType`: reconstruct the
+                     * error here so it is localized at this edge, in the popup's locale. */
+                    if (res.errorType) throw new NativeMessageError(res.errorType);
+                    throw new Error(res.error ?? '');
+                }
             }),
         []
     );

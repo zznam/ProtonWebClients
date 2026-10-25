@@ -1,9 +1,12 @@
 import type { MutableRefObject } from 'react';
 
+import { useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { AdminRolesUIState, useAdminRolesUI } from '@proton/account/userPermissions/hooks';
-import { FeatureCode, useFeature } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 import { APPS, type APP_NAMES } from '@proton/shared/lib/constants';
+import { localeCode } from '@proton/shared/lib/i18n';
 import { useFlag } from '@proton/unleash/useFlag';
 
 import useModalState from '../../../components/modalTwo/useModalState';
@@ -14,9 +17,11 @@ import ScimSetupBannerAndModal from '../../organization/ScimSetupBannerAndModal'
 import useOrganizationModals from '../../organization/useOrganizationModals';
 import useOrganizationUnprivatizationModals from '../../organization/useOrganizationUnprivatizationModals';
 import AdminRolesOnboardingModal from '../rolesAndPermissions/AdminRolesOnboardingModal';
+import AdminConsoleSurveyCard from './AdminConsoleSurveyCard';
 import { MembersLocal } from './MembersLocal';
 import { MembersRemote } from './MembersRemote';
 import UserAndAddressesSectionIntro from './UserAndAddressesSectionIntro';
+import { getIsAdminConsoleSurveyEligible } from './adminConsoleSurveyEligibility';
 import { planHasUsageColumns } from './planHasUsageColumns';
 
 const paginatedMemberThreshold = 250;
@@ -37,6 +42,16 @@ const UsersAndAddressesSection = ({ app, onceRef }: { app: APP_NAMES; onceRef: M
         hasVpnUserActivity &&
         planHasUsageColumns(organization?.PlanName) &&
         withinUsageBounds;
+    const hasAdminConsoleSurvey = useFlag('AdminConsoleSurvey');
+    const [entitlements, entitlementsLoading] = useEntitlementChecksForOrgAndUser();
+    const showAdminConsoleSurvey =
+        hasAdminConsoleSurvey &&
+        !entitlementsLoading &&
+        getIsAdminConsoleSurveyEligible({
+            entitlements,
+            usedMembers: organization?.UsedMembers ?? 0,
+            localeCode,
+        });
     const [adminRolesUIState] = useAdminRolesUI();
     const [newDomainModalProps, setNewDomainModalOpen, renderNewDomain] = useModalState();
     const {
@@ -60,6 +75,7 @@ const UsersAndAddressesSection = ({ app, onceRef }: { app: APP_NAMES; onceRef: M
             {organizationModals.modals}
 
             <ScimSetupBannerAndModal />
+            {showAdminConsoleSurvey && <AdminConsoleSurveyCard />}
 
             {organization && organization.UsedMembers > paginatedMemberThreshold && hasRemoteMembers ? (
                 <MembersRemote app={app} showUsage={showUsage} />

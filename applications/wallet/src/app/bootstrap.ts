@@ -1,17 +1,16 @@
-import {
-    addressesThunk,
-    initEvent,
-    serverEvent,
-    userSettingsThunk,
-    userThunk,
-    welcomeFlagsActions,
-} from '@proton/account';
+import { addressesThunk } from '@proton/account/addresses';
 import * as bootstrap from '@proton/account/bootstrap';
 import { bootstrapEvent } from '@proton/account/bootstrap/action';
+import { serverEvent } from '@proton/account/eventLoop';
+import { initEvent } from '@proton/account/init';
+import { userThunk } from '@proton/account/user';
+import { userSettingsThunk } from '@proton/account/userSettings';
+import { welcomeFlagsActions } from '@proton/account/welcomeFlags';
 import { WasmProtonWalletApiClient } from '@proton/andromeda';
 import type { NotificationsManager } from '@proton/app-context/notifications/manager';
 import { setupGuestCrossStorage } from '@proton/cross-storage/account/guest';
-import { FeatureCode, fetchFeatures } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import { fetchFeatures } from '@proton/features/reducer';
 import createApi from '@proton/shared/lib/api/createApi';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { getClientID } from '@proton/shared/lib/apps/helper';
@@ -25,7 +24,7 @@ import { getIsAuthorizedApp } from '@proton/shared/lib/drawer/helpers';
 import { getAppVersionStr } from '@proton/shared/lib/fetch/headers';
 import { getIsIframe } from '@proton/shared/lib/helpers/browser';
 import { initElectronClassnames } from '@proton/shared/lib/helpers/initElectronClassnames';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { appMode } from '@proton/shared/lib/webpack.constants';
 import noop from '@proton/utils/noop';
 import { extendStore, setupStore } from '@proton/wallet/store/store';

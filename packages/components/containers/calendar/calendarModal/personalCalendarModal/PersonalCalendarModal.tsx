@@ -4,14 +4,16 @@ import { useMemo, useState } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { dedupeNotifications, sortNotificationsByAscendingTrigger } from '@proton/shared/lib/calendar/alarms';
 import { getIsCalendarWritable, getIsSubscribedCalendar, getShowDuration } from '@proton/shared/lib/calendar/calendar';
 import { MAX_CHARS_API, MAX_DEFAULT_NOTIFICATIONS } from '@proton/shared/lib/calendar/constants';
 import { getCalendarEventDefaultDuration } from '@proton/shared/lib/calendar/eventDefaults';
 import { getSharedCalendarSubHeaderText } from '@proton/shared/lib/calendar/sharing/shareProton/shareProton';
-import type { Nullable } from '@proton/shared/lib/interfaces';
-import type { NotificationModel, SubscribedCalendar, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { NotificationModel } from '@proton/shared/lib/interfaces/calendar/Notification';
+import type { SubscribedCalendar } from '@proton/shared/lib/interfaces/calendar/Subscription';
+import type { Nullable } from '@proton/shared/lib/interfaces/utils';
 
 import Form from '../../../../components/form/Form';
 import ColorPicker from '../../../../components/input/ColorPicker';
@@ -24,7 +26,7 @@ import ModalTwoHeader from '../../../../components/modalTwo/ModalHeader';
 import Option from '../../../../components/option/Option';
 import SelectTwo from '../../../../components/selectTwo/SelectTwo';
 import TruncatedText from '../../../../components/truncatedText/TruncatedText';
-import InputFieldTwo from '../../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../../components/v2/field/InputField';
 import { useContactEmailsCache } from '../../../contacts/ContactEmailsProvider';
 import GenericError from '../../../error/GenericError';
 import useGetCalendarActions from '../../hooks/useGetCalendarActions';
@@ -403,5 +405,3 @@ export const PersonalCalendarModal = ({
         </ModalTwo>
     );
 };
-
-export default PersonalCalendarModal;

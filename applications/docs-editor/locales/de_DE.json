@@ -122,8 +122,11 @@
       "Fit table to page width": [
         "Tabelle an Seitenbreite anpassen"
       ],
-      "Go to label": [
-        "Zu Kategorie wechseln"
+      "Header column": [
+        "Kopfspalte"
+      ],
+      "Header row": [
+        "Kopfzeile"
       ],
       "Indent": [
         "Einrücken"
@@ -136,6 +139,9 @@
       ],
       "Insert comment": [
         "Kommentar einfügen"
+      ],
+      "Insert emoji": [
+        "Emoji einfügen"
       ],
       "Insert image": [
         "Bild einfügen"
@@ -197,9 +203,6 @@
       "Refresh the page": [
         "Seite aktualisieren"
       ],
-      "Remove": [
-        "Entfernen"
-      ],
       "Remove link": [
         "Link entfernen"
       ],
@@ -227,9 +230,6 @@
       "Strike-through": [
         "Durchgestrichen"
       ],
-      "Submit": [
-        "Senden"
-      ],
       "Subscript": [
         "Tiefgestellt"
       ],
@@ -247,143 +247,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "Apfel"
-      ],
-      "azureish white": [
-        "Azurblaues Weiß"
-      ],
       "black": [
         "schwarz"
-      ],
-      "blanched almond": [
-        "blanchierte Mandel"
-      ],
-      "blue-gray": [
-        "Blaugrau"
-      ],
-      "caramel": [
-        "Karamell"
       ],
       "carrot": [
         "Karotte"
       ],
-      "cerise": [
-        "Kirschrot"
-      ],
-      "cinnabar": [
-        "Zinnoberrot"
-      ],
-      "cobalt": [
-        "Kobaltblau"
-      ],
-      "copper": [
-        "Kupfer"
-      ],
-      "cyan-blue azure": [
-        "Azurblau"
-      ],
-      "dandelion": [
-        "Löwenzahn"
-      ],
-      "dark cerulean": [
-        "Dunkelblau"
-      ],
-      "dark midnight blue": [
-        "Dunkles Mitternachtsblau"
-      ],
-      "dim gray": [
-        "Mattgrau"
-      ],
-      "enzian": [
-        "Enzian"
-      ],
-      "fern": [
-        "Farn"
-      ],
-      "field drab": [
-        "Braun"
-      ],
-      "forest": [
-        "Waldgrün"
-      ],
-      "gainsboro": [
-        "Gainsborograu"
-      ],
       "gray": [
         "grau"
-      ],
-      "japanese laurel": [
-        "Japanischer Lorbeer"
-      ],
-      "kiwi": [
-        "Kiwi"
-      ],
-      "lemon yellow": [
-        "Zitronengelb"
-      ],
-      "light carmine pink": [
-        "Helles Karminrosa"
-      ],
-      "light moss green": [
-        "Helles Moosgrün"
-      ],
-      "light red": [
-        "Hellrot"
-      ],
-      "maize": [
-        "Mais"
-      ],
-      "mughal green": [
-        "Dunkelgrün"
-      ],
-      "ocean": [
-        "Ozeanblau"
       ],
       "olive": [
         "Olivgrün"
       ],
-      "outer space": [
-        "Weltall"
-      ],
       "pacific": [
         "Pazifikblau"
       ],
-      "palatinate blue": [
-        "Königsblau"
-      ],
-      "pale cerulean": [
-        "Himmelblau"
-      ],
-      "pastel gray": [
-        "Pastellgrau"
-      ],
-      "persian plum": [
-        "Kirschpflaume"
-      ],
-      "persian red": [
-        "Persisches Rot"
-      ],
-      "philippine gray": [
-        "Philippinisches Grau"
-      ],
-      "philippine silver": [
-        "Philippinisches Silber"
-      ],
-      "pickle": [
-        "Moosgrün"
-      ],
-      "pine": [
-        "Kiefernfarben"
-      ],
       "pink": [
         "Rosa"
-      ],
-      "pistachio": [
-        "Pistazie"
-      ],
-      "plum": [
-        "Pflaume"
       ],
       "purple": [
         "Violett"
@@ -394,29 +274,8 @@
       "reef": [
         "Koralle"
       ],
-      "ruddy pink": [
-        "Altrosa"
-      ],
-      "sahara": [
-        "Sahara"
-      ],
-      "satin sheen gold": [
-        "seidenglänzendes Gold"
-      ],
       "slateblue": [
         "Blaugrau"
-      ],
-      "soil": [
-        "Erdfarben"
-      ],
-      "strawberry": [
-        "Erdbeere"
-      ],
-      "vivid auburn": [
-        "Leuchtendes Rotbraun"
-      ],
-      "white": [
-        "Weiß"
       ]
     },
     "Confirm": {
@@ -433,17 +292,46 @@
       ],
       "Read or print final document": [
         "Endgültiges Dokument lesen oder drucken"
+      ]
+    },
+    "Emoji category": {
+      "Activities": [
+        "Aktivitäten"
       ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "Verwenden Sie das Dropdown-Menü oben, um umzuschalten und Vorschläge zu machen."
+      "Animals and nature": [
+        "Tiere und Natur"
+      ],
+      "Flags": [
+        "Flaggen"
+      ],
+      "Food and drink": [
+        "Essen und Trinken"
+      ],
+      "Objects": [
+        "Objekte"
+      ],
+      "Smileys and people": [
+        "Smileys und Personen"
+      ],
+      "Symbols": [
+        "Symbole"
+      ],
+      "Travel and places": [
+        "Reisen und Orte"
       ]
     },
     "Error": {
       "An error occurred while loading the document. To prevent document corruption, the editor has been locked. Please reload the page and try again. If the error persists, please open Version History from the menu options to attempt to restore your document to an earlier version.": [
         "Beim Laden des Dokuments ist ein Fehler aufgetreten. Um eine Beschädigung des Dokuments zu verhindern, wurde der Editor gesperrt. Bitte lade die Seite neu und versuche es erneut. Sollte der Fehler weiterhin auftreten, öffne bitte den Versionsverlauf über die Menüoptionen, um zu versuchen, dein Dokument auf eine frühere Version zurückzusetzen."
       ],
+      "Could not load emoji. Close the picker and try again.": [
+        "Das Emoji konnte nicht geladen werden. Schließe die Auswahl und versuche es erneut."
+      ],
       "Failed to export document.": [
         "Dokument konnte nicht exportiert werden."
+      ],
+      "Failed to import document due to unsupported file format.": [
+        "Das Dokument konnte aufgrund eines nicht unterstützten Dateiformats nicht importiert werden."
       ],
       "Failed to import HTML due to unknown error.": [
         "Fehler beim Importieren der HTML-Daten aufgrund eines unbekannten Fehlers."
@@ -468,9 +356,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "Diese Tabelle ist mit der aktuellen Client-Version inkompatibel. Bitte versuche, den Client neu zu laden. Wenn der Fehler weiterhin besteht, wende dich bitte an den Support."
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "Es wurde versucht, Sheet-Daten in Lexical zu importieren"
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "Fehler beim Konvertieren des Word-Dokumentes. Ist es passwortgeschützt? Wenn ja, entferne bitte das Passwort und versuche es erneut."
@@ -527,7 +412,7 @@
         "Kommentare"
       ],
       "Editing": [
-        "Bearbeitet"
+        "Bearbeiten"
       ],
       "Font": [
         "Schriftart"
@@ -547,11 +432,11 @@
       "Just now": [
         "Jetzt gerade"
       ],
-      "Labels:": [
-        "Kategorien:"
-      ],
       "Loading": [
         "Wird geladen"
+      ],
+      "Loading emoji…": [
+        "Emojis werden geladen …"
       ],
       "Loading spreadsheet content...": [
         "Inhalt der Tabelle wird geladen ..."
@@ -564,6 +449,9 @@
       ],
       "No comments": [
         "Keine Kommentare"
+      ],
+      "No emoji found": [
+        "Kein Emoji gefunden"
       ],
       "No title": [
         "Kein Titel"
@@ -624,6 +512,9 @@
       "Clear formatting": [
         "Formatierung entfernen"
       ],
+      "Comments": [
+        "Kommentare"
+      ],
       "Delete": [
         "Löschen"
       ],
@@ -653,6 +544,12 @@
       ],
       "Duplicate table row": [
         "Tabellenzeile duplizieren"
+      ],
+      "Emoji": [
+        "Emoji"
+      ],
+      "Emoji suggestions": [
+        "Emoji-Vorschläge"
       ],
       "Format": [
         "Formatieren"
@@ -693,11 +590,26 @@
       "Page break": [
         "Seitenumbruch"
       ],
+      "Recent": [
+        "Kürzlich"
+      ],
       "Replace": [
         "Ersetzen"
       ],
       "Replace link": [
         "Link ersetzen"
+      ],
+      "Resize outline": [
+        "Grösse der Kontur anpassen"
+      ],
+      "Search emoji": [
+        "Emoji suchen"
+      ],
+      "Search results": [
+        "Suchergebnisse"
+      ],
+      "Table": [
+        "Tabelle"
       ],
       "Text and highlight color": [
         "Schrift- und Hervorhebungsfarbe"
@@ -858,7 +770,377 @@
         "Notiz"
       ]
     },
+    "sheets_2025:Spreadsheet cellFormatOptions": {
+      "Accounting": [
+        "Buchhaltung"
+      ],
+      "Bottom": [
+        "Unten"
+      ],
+      "Center": [
+        "Zentrieren"
+      ],
+      "Clip": [
+        "Ausschneiden"
+      ],
+      "Currency": [
+        "Währung"
+      ],
+      "Currency formats are used for general monetary values.": [
+        "Währungsformate werden für allgemeine Geldbeträge verwendet."
+      ],
+      "Custom": [
+        "Benutzerdefiniert"
+      ],
+      "Date": [
+        "Datum"
+      ],
+      "Date formats display date and time serial numbers as date values.": [
+        "Datumsformate zeigen Datums- und Zeitseriennummern als Datumswerte an."
+      ],
+      "Fraction": [
+        "Bruch"
+      ],
+      "General": [
+        "Allgemein"
+      ],
+      "General format cells have no specific number format.": [
+        "Zellen im Standardformat haben kein bestimmtes Zahlenformat."
+      ],
+      "Left": [
+        "Links"
+      ],
+      "Number": [
+        "Zahl"
+      ],
+      "Number is used for general display of numbers.": [
+        "„Zahl“ dient zur allgemeinen Darstellung von Zahlen."
+      ],
+      "Overflow": [
+        "Überlauf"
+      ],
+      "Percentage": [
+        "Prozentsatz"
+      ],
+      "Right": [
+        "Rechts"
+      ],
+      "Scientific": [
+        "Wissenschaftlich"
+      ],
+      "Text": [
+        "Text"
+      ],
+      "Time": [
+        "Zeit"
+      ],
+      "Time formats display date and time serial numbers as date values.": [
+        "Zeitformate zeigen Datums- und Zeit-Seriennummern als Datumswerte an."
+      ],
+      "Top": [
+        "Oben"
+      ],
+      "Wrap": [
+        "Umbrechen"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartAggregates": {
+      "Average": [
+        "Durchschnitt"
+      ],
+      "Count": [
+        "Anzahl"
+      ],
+      "Max": [
+        "Max"
+      ],
+      "Median": [
+        "Median"
+      ],
+      "Min": [
+        "Min"
+      ],
+      "Sum": [
+        "Summe"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartEditorDialog": {
+      "None": [
+        "Keine"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartTypes": {
+      "2D Pie": [
+        "2D-Kreisdiagramm"
+      ],
+      "Clustered Column": [
+        "Gruppierte Spalte"
+      ],
+      "Column": [
+        "Spalte"
+      ],
+      "Doughnut": [
+        "Ringdiagramm"
+      ],
+      "Hierarchy": [
+        "Hierarchie"
+      ],
+      "Line": [
+        "Zeile"
+      ],
+      "Pie": [
+        "Kreisdiagramm"
+      ],
+      "Smooth line": [
+        "Linien glätten"
+      ],
+      "Stacked column": [
+        "Gestapeltes Säulendiagramm"
+      ],
+      "Stacked line": [
+        "Gestapeltes Liniendiagramm"
+      ],
+      "Sunburst": [
+        "Ringdiagramm mit Hierarchie"
+      ],
+      "Treemap": [
+        "Kacheldiagramm"
+      ]
+    },
+    "sheets_2025:Spreadsheet conditions": {
+      "Above average": [
+        "Über dem Durchschnitt"
+      ],
+      "April": [
+        "April"
+      ],
+      "August": [
+        "August"
+      ],
+      "Below average": [
+        "Unterdurchschnittlich"
+      ],
+      "Between": [
+        "Zwischen"
+      ],
+      "Bottom N items": [
+        "Letzte N Elemente"
+      ],
+      "Bottom N percent": [
+        "Die unteren n Prozent"
+      ],
+      "Checkbox": [
+        "Kontrollkästchen"
+      ],
+      "Custom formula": [
+        "Benutzerdefinierte Formel"
+      ],
+      "Date is after": [
+        "Datum liegt nach"
+      ],
+      "Date is before": [
+        "Datum liegt vor dem"
+      ],
+      "Date is between": [
+        "Datum liegt zwischen"
+      ],
+      "Date is equal to": [
+        "Datum entspricht"
+      ],
+      "Date is not between": [
+        "Datum liegt nicht zwischen"
+      ],
+      "Date is not equal to": [
+        "Datum ist ungleich zu"
+      ],
+      "Date is on or after": [
+        "Datum ist am oder nach dem"
+      ],
+      "Date is on or before": [
+        "Datum ist am oder vor dem"
+      ],
+      "Date is valid": [
+        "Datum ist gültig"
+      ],
+      "December": [
+        "Dezember"
+      ],
+      "Dropdown": [
+        "Auswahlmenü"
+      ],
+      "Dropdown (from a range)": [
+        "Auswahlmenü (aus einem Bereich)"
+      ],
+      "Equal to": [
+        "Ist gleich"
+      ],
+      "Errors": [
+        "Fehler"
+      ],
+      "February": [
+        "Februar"
+      ],
+      "Greater than": [
+        "Größer als"
+      ],
+      "Greater than or equal to": [
+        "Größer oder gleich"
+      ],
+      "Greater than or equal to previous": [
+        "Größer als oder gleich dem vorherigen Wert"
+      ],
+      "Greater than previous": [
+        "Größer als der vorherige Wert"
+      ],
+      "Is empty": [
+        "Ist leer"
+      ],
+      "Is not empty": [
+        "Ist nicht leer"
+      ],
+      "January": [
+        "Januar"
+      ],
+      "July": [
+        "Juli"
+      ],
+      "June": [
+        "Juni"
+      ],
+      "Last 7 days": [
+        "Letzte 7 Tage"
+      ],
+      "Last month": [
+        "Letzter Monat"
+      ],
+      "Last quarter": [
+        "Letztes Quartal"
+      ],
+      "Last week": [
+        "Letzte Woche"
+      ],
+      "Last year": [
+        "Vergangenes Jahr"
+      ],
+      "Less than": [
+        "Kleiner als"
+      ],
+      "Less than or equal to": [
+        "Kleiner oder gleich"
+      ],
+      "Less than or equal to previous": [
+        "Kleiner oder gleich dem vorherigen Wert"
+      ],
+      "Less than previous": [
+        "Kleiner als der vorherige Wert"
+      ],
+      "March": [
+        "März"
+      ],
+      "May": [
+        "Mai"
+      ],
+      "Next month": [
+        "Nächster Monat"
+      ],
+      "Next quarter": [
+        "Nächstes Quartal"
+      ],
+      "Next week": [
+        "Nächste Woche"
+      ],
+      "Next year": [
+        "Nächstes Jahr"
+      ],
+      "No errors": [
+        "Keine Fehler"
+      ],
+      "Not between": [
+        "Nicht zwischen"
+      ],
+      "Not equal to": [
+        "Ungleich"
+      ],
+      "November": [
+        "November"
+      ],
+      "October": [
+        "Oktober"
+      ],
+      "Quarter 1": [
+        "1. Quartal"
+      ],
+      "Quarter 2": [
+        "2. Quartal"
+      ],
+      "Quarter 3": [
+        "3. Quartal"
+      ],
+      "Quarter 4": [
+        "4. Quartal"
+      ],
+      "September": [
+        "September"
+      ],
+      "Text contains": [
+        "Text enthält"
+      ],
+      "Text does not contain": [
+        "Text enthält nicht"
+      ],
+      "Text ends with": [
+        "Text endet mit"
+      ],
+      "Text is email": [
+        "Text ist eine E-Mail-Adresse"
+      ],
+      "Text is exactly": [
+        "Text lautet genau"
+      ],
+      "Text is not equal": [
+        "Text ist ungleich"
+      ],
+      "Text is URL": [
+        "Text ist eine URL"
+      ],
+      "Text starts with": [
+        "Text beginnt mit"
+      ],
+      "This month": [
+        "Dieser Monat"
+      ],
+      "This quarter": [
+        "Aktuelles Quartal"
+      ],
+      "This week": [
+        "Aktuelle Woche"
+      ],
+      "This year": [
+        "Aktuelles Jahr"
+      ],
+      "Today": [
+        "Heute"
+      ],
+      "Tomorrow": [
+        "Morgen"
+      ],
+      "Top N items": [
+        "Die N ersten Elemente"
+      ],
+      "Top N percent": [
+        "Obere N Prozent"
+      ],
+      "Year to date": [
+        "Seit Jahresbeginn"
+      ],
+      "Yesterday": [
+        "Gestern"
+      ]
+    },
     "sheets_2025:Spreadsheet context menu": {
+      "(Blanks)": [
+        "(Leerzeichen)"
+      ],
       "AI Quick Edit": [
         "KI-Schnellbearbeitung"
       ],
@@ -1204,6 +1486,14 @@
         "Jahr"
       ]
     },
+    "sheets_2025:Spreadsheet customCurrencyFormatDialog": {
+      "Format": [
+        "Format"
+      ],
+      "Symbol": [
+        "Symbol"
+      ]
+    },
     "sheets_2025:Spreadsheet delete sheet dialog": {
       "Are you sure you want to delete ${ sheetName }?": [
         "Möchtest du „${ sheetName }“ wirklich löschen?"
@@ -1230,6 +1520,11 @@
       ],
       "Your screen is too small to edit this spreadsheet. You’re in view-only mode. To make changes, please open this spreadsheet on a larger screen or expand your browser window.": [
         "Dein Bildschirm ist zu klein, um diese Tabelle zu bearbeiten. Du befindest dich im Nur-Anzeige-Modus. Um Änderungen vorzunehmen, öffne diese Tabelle bitte auf einem größeren Bildschirm oder erweitere dein Browserfenster."
+      ]
+    },
+    "sheets_2025:Spreadsheet editingDisabledButton": {
+      "Edit": [
+        "Bearbeiten"
       ]
     },
     "sheets_2025:Spreadsheet editor": {
@@ -1666,6 +1961,9 @@
       ]
     },
     "sheets_2025:Spreadsheet editor search dialog": {
+      "${ current } of ${ total }": [
+        "${ current } von ${ total }"
+      ],
       "Close": [
         "Schließen"
       ],
@@ -1697,11 +1995,29 @@
       ]
     },
     "sheets_2025:Spreadsheet editor toolbar": {
+      "Apply border": [
+        "Rahmen übernehmen"
+      ],
+      "Apply fill color": [
+        "Füllfarbe übernehmen"
+      ],
+      "Apply text color": [
+        "Textfarbe übernehmen"
+      ],
       "Bold": [
         "Fett"
       ],
       "Border": [
-        "Rand"
+        "Rahmen"
+      ],
+      "Choose border": [
+        "Rahmen auswählen"
+      ],
+      "Choose fill color": [
+        "Füllfarbe auswählen"
+      ],
+      "Choose text color": [
+        "Textfarbe auswählen"
       ],
       "Clear formatting": [
         "Formatierung entfernen"
@@ -1785,7 +2101,7 @@
         "Durchgestrichen"
       ],
       "Text color": [
-        "Schriftfarbe"
+        "Textfarbe"
       ],
       "Text wrapping": [
         "Textumbruch"
@@ -1850,6 +2166,35 @@
         "Z → A sortieren"
       ]
     },
+    "sheets_2025:Spreadsheet filterByCondition": {
+      "None": [
+        "Keine"
+      ]
+    },
+    "sheets_2025:Spreadsheet formatMenu": {
+      "Coming soon...": [
+        "Demnächst verfügbar ..."
+      ]
+    },
+    "sheets_2025:Spreadsheet formulaBar": {
+      "Edit": [
+        "Bearbeiten"
+      ],
+      "Remove": [
+        "Entfernen"
+      ],
+      "View": [
+        "Ansicht"
+      ]
+    },
+    "sheets_2025:Spreadsheet gridFooter": {
+      "Add": [
+        "Hinzufügen"
+      ],
+      "more rows at the bottom": [
+        "weitere Zeilen unten"
+      ]
+    },
     "sheets_2025:Spreadsheet insert link dialog": {
       "Apply": [
         "Anwenden"
@@ -1885,23 +2230,23 @@
       "Cancel": [
         "Abbrechen"
       ],
-      "column": [
-        "Spalte"
-      ],
-      "column width": [
-        "Spaltenbreite"
-      ],
-      "Default": [
-        "Standard"
+      "Default ${ size }": [
+        "Standard ${ size }"
       ],
       "OK": [
         "OK"
       ],
-      "row": [
-        "Zeile"
+      "Resize column ${ title }": [
+        "Spalte ${ title } anpassen"
       ],
-      "row height": [
-        "Zeilenhöhe"
+      "Resize row ${ title }": [
+        "Höhe der Zeile ${ title } anpassen"
+      ],
+      "Specify column width (px)": [
+        "Spaltenbreite festlegen (px)"
+      ],
+      "Specify row height (px)": [
+        "Zeilenhöhe festlegen (px)"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2075,7 +2420,19 @@
         "Bereich auswählen"
       ],
       "Series": [
-        "Serie"
+        "Datenreihe"
+      ],
+      "Series ${ seriesNumber }": [
+        "Datenreihe ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Aggregate": [
+        "Zusammenfassung der Datenreihe ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Name": [
+        "Name der Datenreihe ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Range": [
+        "Datenbereich der Datenreihe ${ seriesNumber }"
       ],
       "Show data in hidden rows and columns": [
         "Daten in ausgeblendeten Zeilen und Spalten anzeigen"
@@ -2341,15 +2698,32 @@
         "Tabellenüberschrift"
       ]
     },
+    "sheets_2025:Spreadsheet viewMenu": {
+      "1 column": [
+        "1 Spalte"
+      ],
+      "1 row": [
+        "1 Zeile"
+      ],
+      "2 columns": [
+        "2 Spalten"
+      ],
+      "2 rows": [
+        "2 Zeilen"
+      ],
+      "No columns": [
+        "Keine Spalten"
+      ],
+      "No rows": [
+        "Keine Zeilen"
+      ]
+    },
     "Title": {
       "Delete comment": [
         "Kommentar löschen"
       ],
       "Delete thread": [
         "Unterhaltung löschen"
-      ],
-      "Explore the New Suggestion Mode": [
-        "Den neuen Vorschlagsmodus erkunden"
       ],
       "Language not supported": [
         "Sprache wird nicht unterstützt"

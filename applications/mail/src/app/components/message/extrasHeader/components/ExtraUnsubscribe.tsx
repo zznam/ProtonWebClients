@@ -18,7 +18,7 @@ import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import useModalState from '@proton/components/components/modalTwo/useModalState';
 import Prompt from '@proton/components/components/prompt/Prompt';
 import useEventManager from '@proton/components/hooks/useEventManager';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcEnvelope } from '@proton/icons/icons/IcEnvelope';
 import type {
     MessageStateWithData,
@@ -72,6 +72,7 @@ const ExtraUnsubscribe = ({ message }: Props) => {
     const [passAliasesModalProps, setPassAliasesModalOpen, renderPassAliasesModal] = useModalState();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- autofix-eslint-C4F463
     const unsubscribeMethods = message.UnsubscribeMethods || {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- unsubscribeMethods is derived from message and only read for its keys
     const hasUnsubscribeMethods = useMemo(() => !!Object.keys(unsubscribeMethods).length, [unsubscribeMethods]);
     const isSimpleLoginAlias = hasSimpleLoginSender(message);
     const descriptionText = useMemo(() => {

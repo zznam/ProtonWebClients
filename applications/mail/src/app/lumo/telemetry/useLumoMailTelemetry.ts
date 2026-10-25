@@ -6,7 +6,7 @@ import type { LumoAgentTelemetry, LumoConfirmAnswer } from '@proton/llm/lib/lumo
 import { LumoChainEnd } from '@proton/llm/lib/lumoAgent/ui/types';
 import { TelemetryMailLumoEvents, TelemetryMeasurementGroups } from '@proton/shared/lib/api/telemetry';
 import { sendTelemetryReport } from '@proton/shared/lib/helpers/metrics';
-import type { SimpleMap } from '@proton/shared/lib/interfaces';
+import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 
 /** The `reason` dimension, shared by `chain_end` and `tool_end`; a tool only ever reports the first two. */
 enum EndReason {
@@ -15,6 +15,7 @@ enum EndReason {
     USER_STOPPED = 'user_stopped',
     REPLACED = 'replaced',
     DISCARDED = 'discarded',
+    CONTEXT_LIMIT = 'context_limit',
 }
 
 enum PromptSource {
@@ -32,6 +33,7 @@ const CHAIN_END_REASONS: Record<LumoChainEnd, EndReason> = {
     [LumoChainEnd.STOPPED]: EndReason.USER_STOPPED,
     [LumoChainEnd.REPLACED]: EndReason.REPLACED,
     [LumoChainEnd.DISCARDED]: EndReason.DISCARDED,
+    [LumoChainEnd.CONTEXT_LIMIT]: EndReason.CONTEXT_LIMIT,
 };
 
 /** The reporters `buildLumoMailConfig` closes over; the rest are called straight from a component. */
@@ -44,6 +46,7 @@ interface LumoMailTelemetry extends LumoMailConfigTelemetry {
     assistantOpened: () => void;
     suggestionPicked: (cardId: string) => void;
     debugReportOpened: () => void;
+    assistantDisabled: () => void;
 }
 
 /**
@@ -108,5 +111,9 @@ export const useLumoMailTelemetry = (): LumoMailTelemetry => {
         toolFailed: (toolName: ToolName, toolKind: ToolKind) => reportTool(toolName, toolKind, EndReason.FAILED),
 
         debugReportOpened: () => report(TelemetryMailLumoEvents.debug_report_opened),
+
+        assistantDisabled: () => {
+            return report(TelemetryMailLumoEvents.assistant_disabled);
+        },
     };
 };

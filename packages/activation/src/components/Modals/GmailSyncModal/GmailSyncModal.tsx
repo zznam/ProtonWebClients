@@ -1,11 +1,15 @@
+import { useEffect } from 'react';
+
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { type ModalProps, ModalTwo, ModalTwoContent, ModalTwoHeader } from '@proton/components';
+import ModalTwo, { type ModalProps } from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 
 import { getBYOEFailNotification, getSyncSuccessNotification } from '../../../constants';
 import useOAuthPopup from '../../../hooks/useOAuthPopup';
-import type { EASY_SWITCH_SOURCES, ImportToken, OAuthProps } from '../../../interface';
+import type { EASY_SWITCH_SOURCES, ImportToken, OAuthProps, TIME_PERIOD } from '../../../interface';
 import { EASY_SWITCH_FEATURES, OAUTH_PROVIDER } from '../../../interface';
 import { useEasySwitchDispatch, useEasySwitchSelector } from '../../../logic/store';
 import {
@@ -16,6 +20,7 @@ import {
 } from '../../../logic/sync/sync.actions';
 import type { Sync } from '../../../logic/sync/sync.interface';
 import { selectCreateSyncState } from '../../../logic/sync/sync.selectors';
+import { trackBYOECreationStarted, trackBYOEGoogleSignInClicked } from '../../../telemetry/byoeCreationFunnel';
 import AddBYOEModal from '../AddBYOEModal/AddBYOEModal';
 import GmailSyncModalAnimation from './GmailSyncModalAnimation';
 import SignInWithGoogle from './SignInWithGoogle';
@@ -25,7 +30,12 @@ interface Props extends ModalProps {
     reduceHeight?: boolean;
     onSyncCallback?: (hasError: boolean, sync?: Sync) => void;
     onSyncSkipCallback?: () => void;
-    onBYOECallback?: (hasError: boolean, importEmails: boolean, token?: ImportToken) => void;
+    onBYOECallback: (params: {
+        hasError: boolean;
+        importEmails: boolean;
+        importPeriod: TIME_PERIOD | undefined;
+        token?: ImportToken;
+    }) => void;
     noSkip?: boolean;
     hasAccessToBYOE?: boolean;
     expectedEmailAddress?: string;
@@ -87,7 +97,16 @@ const GmailSyncModal = ({
         });
     };
 
-    const handleBYOEWithImport = (importEmails: boolean) => {
+    useEffect(() => {
+        // Without access to BYOE this modal only sets up a Gmail forwarding, which is not a BYOE creation
+        if (hasAccessToBYOE) {
+            trackBYOECreationStarted({ source, isConversion: !!expectedEmailAddress });
+        }
+    }, []);
+
+    const handleBYOEWithImport = (importEmails: boolean, importPeriod?: TIME_PERIOD) => {
+        trackBYOEGoogleSignInClicked({ hasImportEmails: importEmails, importPeriod });
+
         void triggerOAuthPopup({
             provider: OAUTH_PROVIDER.GOOGLE,
             features: [EASY_SWITCH_FEATURES.BYOE],
@@ -108,7 +127,7 @@ const GmailSyncModal = ({
                 const payload = res.type.endsWith('fulfilled') ? res?.payload : undefined;
 
                 const hasError = res.type.endsWith('rejected');
-                onBYOECallback?.(hasError, importEmails, payload);
+                onBYOECallback({ hasError, importEmails, importPeriod, token: payload });
             },
         });
     };

@@ -1,7 +1,11 @@
-import type { Address, DecryptedAddressKey, DecryptedKey, OrganizationKey, User } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { DecryptedAddressKey, DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import type { OrganizationKey } from '@proton/shared/lib/interfaces/OrganizationKey';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
-import type { CreateSecureLinkData, FileDescriptorProcessResult } from '../../lib/crypto/processes';
 import type { DecryptedActionPayload } from '../../lib/crypto/processes/access-token/open-action-payload';
+import type { FileDescriptorProcessResult } from '../../lib/crypto/processes/file/create-file-descriptor';
+import type { CreateSecureLinkData } from '../../lib/crypto/processes/secure-link/create-secure-link';
 import type { Group, GroupWithPublicKeys } from '../../lib/groups/groups.types';
 import type {
     EncodedItemKeyRotation,
@@ -23,8 +27,8 @@ import type {
     ShareKeyResponse,
     VaultCreateRequest,
     VaultUpdateRequest,
-} from '../api';
-import type { FileID, FileIdentifier } from '../data';
+} from '../api/pass';
+import type { FileID, FileIdentifier } from '../data/files';
 import type { ShareRole, ShareType } from '../data/shares';
 import type { NativeMessageData } from '../desktop';
 import type { MaybeNull } from '../utils';
@@ -127,6 +131,7 @@ export interface PassCryptoWorker extends SerializableCryptoContext<PassCryptoSn
         shareId: ShareId;
         targetKeys: InviteTargetKey[];
         itemId?: ItemId;
+        hideSensitiveContent?: boolean;
     }) => Promise<InviteCreateRequest>;
     promoteInvite: (data: { shareId: ShareId; invitedPublicKey: string }) => Promise<NewUserInvitePromoteRequest>;
     createNewUserInvite: (data: {
@@ -134,6 +139,7 @@ export interface PassCryptoWorker extends SerializableCryptoContext<PassCryptoSn
         role: ShareRole;
         shareId: ShareId;
         itemId?: ItemId;
+        hideSensitiveContent?: boolean;
     }) => Promise<NewUserInviteCreateRequest>;
     acceptVaultInvite: (data: {
         invitedAddressId: string;

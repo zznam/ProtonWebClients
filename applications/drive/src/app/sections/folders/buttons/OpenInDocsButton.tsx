@@ -1,5 +1,8 @@
-import { MimeIcon, ToolbarButton } from '@proton/components';
-import { getOpenInDocsMimeIconName, getOpenInDocsString } from '@proton/shared/lib/drive/translations';
+import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton';
+import { MimeProtonDoc } from '@proton/file-icons/icons/MimeProtonDoc';
+import { MimeProtonSheet } from '@proton/file-icons/icons/MimeProtonSheet';
+import { IcArrowOutSquare } from '@proton/icons/icons/IcArrowOutSquare';
+import { getOpenInDocsString } from '@proton/shared/lib/drive/translations';
 
 import { hasFoldersSelected, isMultiSelect } from '../../../legacy/components/sections/ToolbarButtons/utils';
 import { ContextMenuButton } from '../../../statelessComponents/ContextMenu';
@@ -43,13 +46,13 @@ export const OpenInDocsButton = ({ selectedItems, type, close }: Props) => {
     };
 
     const title = getOpenInDocsString(documentInfo, selectedItem.mimeType);
-    const iconName = getOpenInDocsMimeIconName(documentInfo);
+    const DocumentTypeIcon = documentInfo.type === 'spreadsheet' ? MimeProtonSheet : MimeProtonDoc;
 
     if (type === 'toolbar') {
         return (
             <ToolbarButton
                 title={title}
-                icon={<MimeIcon name={iconName} alt={title} />}
+                icon={documentInfo.isNative ? <IcArrowOutSquare alt={title} /> : <DocumentTypeIcon alt={title} />}
                 onClick={onClick}
                 data-testid="toolbar-open-document"
             />
@@ -60,7 +63,7 @@ export const OpenInDocsButton = ({ selectedItems, type, close }: Props) => {
         return (
             <ContextMenuButton
                 name={title}
-                icon={<MimeIcon name={iconName} />}
+                icon={<DocumentTypeIcon />}
                 testId="context-menu-open-document"
                 action={onClick}
                 close={() => close?.()}

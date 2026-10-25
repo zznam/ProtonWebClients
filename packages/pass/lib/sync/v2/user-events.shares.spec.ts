@@ -2,16 +2,18 @@ import { runSaga } from 'redux-saga';
 
 import { ApiError } from '@proton/shared/lib/fetch/ApiError';
 
-import { shareCreated, shareDeleted, shareUpdated } from '../../../store/actions';
-import { sagaSetup } from '../../../store/sagas/testing';
-import type { PassCryptoWorker, ShareGetResponse, ShareId, SyncEventShareOutput } from '../../../types';
+import { shareCreated, shareDeleted, shareUpdated } from '../../../store/actions/creators/share';
+import type { ShareGetResponse, SyncEventShareOutput } from '../../../types/api/pass';
+import type { PassCryptoWorker } from '../../../types/crypto/pass-crypto';
+import type { ShareId } from '../../../types/crypto/pass-types';
+import { createTestItem } from '../../../utils/tests/fixtures/items';
+import { createShareRemovedError, createTestShare } from '../../../utils/tests/fixtures/shares';
+import { sagaSetup } from '../../../utils/tests/saga';
 import { exposePassCrypto } from '../../crypto';
 import * as folderRequests from '../../folders/folders.requests';
 import * as itemRequests from '../../items/item.requests';
-import { createTestItem } from '../../items/item.test.utils';
 import * as shareParser from '../../shares/share.parser';
 import * as shareRequests from '../../shares/share.requests';
-import { createShareRemovedError, createTestShare } from '../../shares/share.test.utils';
 import type { EventProcessor } from '../types';
 import { processSharesCreated, processSharesDeleted, processSharesUpdated } from './user-events.shares';
 

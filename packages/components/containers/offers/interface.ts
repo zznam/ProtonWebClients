@@ -1,23 +1,23 @@
 import type { ComponentType, JSXElementConstructor, ReactNode } from 'react';
 
 import type { ButtonLikeShape, ButtonLikeSize } from '@proton/atoms/Button/ButtonLike';
-import type { FeatureCode } from '@proton/features';
+import type { FeatureCode } from '@proton/features/interface';
 import type { IconComponent } from '@proton/icons/component';
 import type { IconSize } from '@proton/icons/types';
 import type { COUPON_CODES, CYCLE } from '@proton/payments/core/constants';
 import type { Currency, PlanIDs } from '@proton/payments/core/interface';
-import type { Optional } from '@proton/shared/lib/interfaces';
+import type { Optional } from '@proton/shared/lib/interfaces/utils';
 
 import type { PlanCardFeatureIcon } from '../payments/features/interface';
 import type { OfferProduct } from './helpers/getOfferProduct';
-import type { Q3Sale2026OfferId } from './operations/q3Sale2026offers';
+import type { BlackFriday2026OfferId } from './operations/blackFriday2026offers';
 
 export type OfferId =
     | 'go-unlimited-2022'
     | 'mail-trial-2023'
     | 'pass-family-plan-2024-yearly'
     | 'unlimited-to-duo-discounted'
-    | Q3Sale2026OfferId;
+    | BlackFriday2026OfferId;
 
 export type OfferGlobalFeatureCodeValue = Record<OfferId, boolean>;
 
@@ -46,7 +46,7 @@ export interface Operation {
     isUsingMoreThan80PercentStorage?: boolean;
 }
 
-export interface OfferImages {
+interface OfferImages {
     sideImage?: string;
     sideImage2x?: string;
     bannerImage?: string;
@@ -54,11 +54,7 @@ export interface OfferImages {
     modalImage?: string;
 }
 
-export interface OfferDealSaveSentenceType {
-    sentenceSaveType?: 'switch-yearly' | 'limited-time-deal';
-}
-
-export interface OfferTracking {
+interface OfferTracking {
     onTopNavbarClick?: () => void;
     onClickCloseButton?: () => void;
     onSelectDeal?: () => void;
@@ -140,7 +136,7 @@ export interface Deal {
     sentenceSaveType?: 'switch-yearly' | 'switch-two-year' | 'limited-time-deal';
 }
 
-export interface Prices {
+interface Prices {
     withCoupon: number;
     withoutCoupon: number;
     withoutCouponMonthly: number;

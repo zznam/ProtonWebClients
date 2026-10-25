@@ -6,7 +6,8 @@ import { useUser } from '@proton/account/user/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import { useHotkeys } from '@proton/hooks/useHotkeys';
+import useLoading from '@proton/hooks/useLoading';
 import { mailSettingsActions } from '@proton/mail/store/mailSettings';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { PLANS, PLAN_NAMES } from '@proton/payments/core/constants';
@@ -20,15 +21,14 @@ import {
     MAIL_UPSELL_PATHS,
     UPSELL_COMPONENT,
 } from '@proton/shared/lib/constants';
-import { getUpsellRef } from '@proton/shared/lib/helpers/upsell';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 
 import Editor from '../../components/editor/Editor';
 import { useToolbar } from '../../components/editor/hooks/useToolbar';
 import type { EditorActions } from '../../components/editor/interface';
 import Toggle from '../../components/toggle/Toggle';
 import useErrorHandler from '../../hooks/useErrorHandler';
-import { useHotkeys } from '../../hooks/useHotkeys';
 import SettingsLayout from '../account/SettingsLayout';
 import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
 import SettingsLayoutRight from '../account/SettingsLayoutRight';

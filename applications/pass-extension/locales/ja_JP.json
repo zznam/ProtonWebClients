@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "Android 向け ${ PASS_SHORT_APP_NAME }"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "iOS 向け ${ PASS_SHORT_APP_NAME }"
-      ],
       "Accept": [
         "承認する"
       ],
@@ -117,6 +111,9 @@
       ],
       "Bulk restore items from trash": [
         "ごみ箱からアイテムを一括復元"
+      ],
+      "Bulk select items": [
+        "アイテムを一括選択"
       ],
       "Cancel": [
         "キャンセル"
@@ -328,6 +325,15 @@
       "Do not suggest on this website": [
         "このウェブサイトでは提案しないでください"
       ],
+      "Download for Linux": [
+        "Linux 版をダウンロード"
+      ],
+      "Download for macOS": [
+        "macOS 版をダウンロード"
+      ],
+      "Download for Windows": [
+        "Windows 版をダウンロード"
+      ],
       "Download this CSV template": [
         "この CSV テンプレートをダウンロード"
       ],
@@ -505,6 +511,9 @@
       "Move to Trash": [
         "ごみ箱に移動"
       ],
+      "Multiple select": [
+        "複数選択"
+      ],
       "New token": [
         "新規トークン"
       ],
@@ -525,6 +534,9 @@
       ],
       "Open navigation": [
         "ナビゲーションを開く"
+      ],
+      "Open platform selection dropdown": [
+        "プラットフォーム選択ドロップダウンを開く"
       ],
       "Organize vaults": [
         "保管庫を整理"
@@ -682,6 +694,12 @@
       "Show Less": [
         "一部のみ表示"
       ],
+      "Show less": [
+        "詳細を非表示"
+      ],
+      "Show more": [
+        "さらに表示"
+      ],
       "Sign back in": [
         "再度サインインする"
       ],
@@ -820,9 +838,9 @@
         "保管庫"
       ]
     },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } デスクトップアプリ"
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "${ hiddenResultsCount } 件の追加の結果は表示されていません"
       ]
     },
     "Button": {
@@ -868,8 +886,17 @@
       "An email alias works like an email address, but reduces spam and keeps your actual email address and identity hidden.": [
         "メールエイリアスはメールアドレスと同じように機能しますが、スパムを減らし、実際のメールアドレスと身元を隠します。"
       ],
+      "Change these passwords immediately": [
+        "これらのパスワードを今すぐ変更してください"
+      ],
       "Change your passwords": [
         "パスワードを変更してください"
+      ],
+      "Check if your passwords have been exposed": [
+        "パスワードが漏洩していないか確認する"
+      ],
+      "Checking ${ compromised.progress.completed } of ${ compromised.progress.total }": [
+        "${ compromised.progress.total } 件中 ${ compromised.progress.completed } 件を確認中"
       ],
       "Create unique passwords": [
         "一意のパスワードを作成してください"
@@ -927,6 +954,9 @@
       ],
       "This account is vulnerable, visit the service and change your password.": [
         "このアカウントは脆弱です。サービスにアクセスしてパスワードを変更してください。"
+      ],
+      "This login password appears in a data breach. Please visit the service and change the password.": [
+        "このログインパスワードはデータ侵害で流出した可能性があります。該当のサービスにアクセスして、パスワードを変更してください。"
       ],
       "This service offers 2FA. Enable it for added account security.": [
         "このサービスは 2FA を提供します。アカウントのセキュリティを強化するには、これを有効にします。"
@@ -1070,6 +1100,9 @@
       "Editing item failed": [
         "アイテムの編集に失敗しました"
       ],
+      "Email is not valid": [
+        "メールアドレスが無効です"
+      ],
       "Empty CSV file": [
         "CSV ファイルが空です"
       ],
@@ -1081,6 +1114,9 @@
       ],
       "Encrypted JSON not supported": [
         "暗号化 JSON には未対応です"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "ドメイン（@example.com）を含めずにユーザー名を入力してください。"
       ],
       "Error reporting problem": [
         "エラー報告の問題"
@@ -1259,6 +1295,9 @@
       "Incorrect backup password. Please try again.": [
         "間違ったバックアップパスワードです。再度お試しください。"
       ],
+      "Incorrect password. Please try again.": [
+        "パスワードが正しくありません。もう一度お試しください。"
+      ],
       "Incorrect second password. Please try again.": [
         "セカンドパスワードが正しくありません。もう一度お試しください。"
       ],
@@ -1301,8 +1340,14 @@
       "Network error": [
         "ネットワークエラーが発生しました"
       ],
+      "Not a valid number": [
+        "無効な番号です"
+      ],
       "Passphrase is incorrect": [
         "パスフレーズが間違っています"
+      ],
+      "Passwords do not match": [
+        "パスワードが一致しません"
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "${ domainsJSX } ウェブサイトへのアクセスが拒否されました。"
@@ -1370,6 +1415,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME }デスクトップアプリにログインする必要があります。"
       ],
+      "The email addresses do not match": [
+        "メールアドレスが一致しません"
+      ],
       "The URL is in the list": [
         "URLはリストにあります\n"
       ],
@@ -1379,6 +1427,15 @@
       "This domain is already managed by your organization": [
         "このドメインはすでにお客様の組織によって管理されています"
       ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "このフィールドは${ maximumLength }文字の最大値を超えています。"
+      ],
+      "This field is required": [
+        "この項目の入力は必須です"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "このフィールドには ${ minimumLength } 文字以上の入力が必要です。"
+      ],
       "This may occur after a long time of not using ${ PASS_SHORT_APP_NAME }, or clearing your Safari history.": [
         "この問題は、 ${ PASS_SHORT_APP_NAME }を長時間使用しなかった後、またはSafariの履歴を消去した後に発生することがあります。"
       ],
@@ -1387,6 +1444,9 @@
       ],
       "Trashing item failed": [
         "アイテムの削除に失敗しました"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "文字、数字、_.- のみを使用してみてください。"
       ],
       "Unable to generate an OTP code for this item": [
         "このアイテムの OTP コードを生成できません"
@@ -1421,6 +1481,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "保管庫 “${ payload.content.name }” の更新に失敗しました"
       ],
+      "Username must begin with a letter or digit": [
+        "ユーザー名は英字か数字で始めなければいけません"
+      ],
+      "Username must end with a letter or digit": [
+        "ユーザー名の最後は英字か数字でなければいけません"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "保管庫 “${ payload.content.name }” の作成に失敗しました"
       ],
@@ -1444,6 +1510,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "PINコードが違います。もう一度やり直してください。"
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "間違った回復用フレーズです。再度試すか他の回復手段を使用してください。"
       ],
       "Wrong second password": [
         "セカンドパスワードが正しくありません"
@@ -1526,6 +1595,14 @@
       ],
       "Username": [
         "ユーザー名"
+      ]
+    },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "${ itemsCount } 件の提案が見つかりました。キーボードを使用してナビゲートしてください。"
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "矢印キーで提案を表示し、選択することができます。エンターキーで確定し、エスケープキーで提案を閉じることができます。"
       ]
     },
     "Info": {
@@ -1679,6 +1756,9 @@
       "Access your passwords on the go with our mobile apps.": [
         "モバイルアプリで外出先からパスワードにアクセス。"
       ],
+      "Add a payment method so your subscription continues when your trial ends.": [
+        "無料トライアル終了後もサブスクリプションを継続できるよう、お支払い方法を追加してください。"
+      ],
       "Add your custom email address to monitor:": [
         "監視対象にカスタムメールアドレスを追加："
       ],
@@ -1817,8 +1897,8 @@
       "Can view this item.": [
         "このアイテムを閲覧できます。"
       ],
-      "Change your password": [
-        "パスワードを変更"
+      "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
+        "${ compromised.progress.total } 件中 ${ compromised.progress.completed } 件のパスワードを確認中"
       ],
       "Choose a saved passkey to sign-in to ${ domain }": [
         "${ domain } にサインインするための保存されたパスキーを選択してください"
@@ -1919,9 +1999,6 @@
       "Editor": [
         "編集者"
       ],
-      "email": [
-        "メール"
-      ],
       "Email address successfully deleted from monitoring": [
         "メールアドレスが監視から正常に削除されました"
       ],
@@ -2017,9 +2094,6 @@
       ],
       "Fill in the CSV with your data": [
         "CSV にデータを入力します"
-      ],
-      "finance": [
-        "ファイナンス"
       ],
       "Follow those steps to import your data with a generic CSV:": [
         "以下の手順に従って、汎用 CSV を使用してデータをインポートします:"
@@ -2174,9 +2248,6 @@
       "Medium Priority": [
         "優先度：中"
       ],
-      "Monitor accounts": [
-        "アカウントモニター"
-      ],
       "Monitoring settings successfully updated": [
         "モニタリング設定が正常に更新されました"
       ],
@@ -2193,7 +2264,7 @@
         "「${ payload.content.name }」からすべてのアイテムを移動します"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "アイテムを別の保管庫に移動すると、そのアイテムのセキュアリンクはすべて消去されます。"
+        "アイテムを別の保管庫に移動すると、すべてのセキュアリンクが消去されます。"
       ],
       "Moving items": [
         "アイテムの移動"
@@ -2287,9 +2358,6 @@
       ],
       "Passkey sign-in": [
         "パスキーでサインイン"
-      ],
-      "password": [
-        "パスワード"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "パスワードロックが正常に登録されました。 ${ PASS_APP_NAME }のロック解除に使用してください"
@@ -2518,6 +2586,9 @@
       ],
       "Save passkey": [
         "パスキーを保存"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "QR コードをスキャンして iOS / Android 版 ${ PASS_APP_NAME } をダウンロード"
       ],
       "Secure links": [
         "セキュアリンク"
@@ -2777,9 +2848,6 @@
       "User's access successfully updated": [
         "ユーザーアクセスは正しく更新されました"
       ],
-      "username": [
-        "ユーザー名"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "保管庫「${ payload.content.name }」が正常に削除されました"
       ],
@@ -2982,6 +3050,9 @@
       "${ hours } hour": [
         "${ hours } 時間"
       ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } 文字"
+      ],
       "${ minutes } minute": [
         "${ minutes } 分"
       ],
@@ -3080,6 +3151,9 @@
       ],
       "Account Type": [
         "口座種別"
+      ],
+      "Add a payment method": [
+        "お支払い方法を追加"
       ],
       "Add a random prefix for this domain when creating a new alias.": [
         "新しいエイリアスを作成する際に、このドメインにランダムなプレフィックスを追加します。"
@@ -3576,6 +3650,9 @@
       "LinkedIn account": [
         "LinkedIn アカウント"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "ログイン"
       ],
@@ -3584,6 +3661,9 @@
       ],
       "Logins": [
         "ログイン"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "メールボックス"
@@ -4118,6 +4198,9 @@
       ],
       "WiFi network": [
         "WiFiネットワーク"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "仕事の詳細"
@@ -4734,6 +4817,12 @@
       "Clear clipboard": [
         "クリップボードをクリア"
       ],
+      "Compromised password": [
+        "漏洩したパスワード"
+      ],
+      "Compromised passwords": [
+        "漏洩したパスワード"
+      ],
       "Confirm extra password": [
         "追加パスワードの確認"
       ],
@@ -4845,6 +4934,9 @@
       "Excluded items": [
         "除外されたアイテム"
       ],
+      "Export": [
+        "エクスポート"
+      ],
       "Fill & copy password": [
         "パスワードを入力してコピー"
       ],
@@ -4853,6 +4945,9 @@
       ],
       "Folder options": [
         "フォルダー設定"
+      ],
+      "Get mobile apps": [
+        "モバイルアプリを入手"
       ],
       "Get Started": [
         "利用開始"
@@ -4881,6 +4976,9 @@
       "Import - ${ date }": [
         "インポート - ${ date }"
       ],
+      "Import failed": [
+        "インポートに失敗"
+      ],
       "Import to vault(s)": [
         "一つ(複数)のフォルダーへのインポート"
       ],
@@ -4895,6 +4993,9 @@
       ],
       "Item": [
         "アイテム"
+      ],
+      "Keep your subscription active": [
+        "サブスクリプションを継続して利用する"
       ],
       "Last autofill": [
         "最後の自動入力"
@@ -4955,6 +5056,9 @@
       ],
       "No access tokens yet": [
         "アクセストークンがまだありません"
+      ],
+      "No compromised passwords": [
+        "漏洩したパスワードはありません"
       ],
       "No excluded items": [
         "除外項目なし"
@@ -5133,6 +5237,9 @@
       "Update available": [
         "アップデートが利用可能です"
       ],
+      "Upgrade to check for compromised passwords": [
+        "アップグレードして漏洩したパスワードを確認"
+      ],
       "URL matching": [
         "URL一致"
       ],
@@ -5225,8 +5332,14 @@
       "OTP secret or URI is invalid": [
         "OTP シークレットまたは URI が無効です"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "パスワードは ${ MIN_PASSWORD_LENGTH } 文字以上必要です"
+      ],
       "Section name cannot be empty": [
         "セクション名は空欄にできません"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "もっと短いユーザ名にしてください (${ n } 文字以内)"
       ],
       "URL already exists": [
         "URLはすでに存在しています"
@@ -5381,9 +5494,6 @@
       ],
       "Move to trash": [
         "ごみ箱に移動"
-      ],
-      "Name is required": [
-        "名前は必須です"
       ],
       "No items": [
         "アイテムがありません"

@@ -18,7 +18,7 @@ import useAuthentication from '@proton/components/hooks/useAuthentication';
 import useStableLoading from '@proton/hooks/useStableLoading';
 import { IcArrowOutFromRectangle } from '@proton/icons/icons/IcArrowOutFromRectangle';
 import { IcBagPercent } from '@proton/icons/icons/IcBagPercent';
-import { BilledUserInlineMessage } from '@proton/payments-ui/client-extensions/billed-user/index';
+import { BilledUserInlineMessage } from '@proton/payments-ui/client-extensions/billed-user/BilledUserInlineMessage';
 import type { usePaymentFacade } from '@proton/payments-ui/client-extensions/usePaymentFacade';
 import { TaxFields } from '@proton/payments-ui/ui/billing-address/components/TaxFields';
 import type { useTaxCountry } from '@proton/payments-ui/ui/billing-address/hooks/useTaxCountry';
@@ -35,7 +35,7 @@ import { usePayments } from '@proton/payments-ui/ui/context/PaymentContext';
 import { PAYMENT_METHOD_TYPES } from '@proton/payments/core/constants';
 import { savedMethodRequires3DS } from '@proton/payments/core/createPaymentToken';
 import type { Currency } from '@proton/payments/core/interface';
-import { isBilledUser } from '@proton/shared/lib/interfaces';
+import { isBilledUser } from '@proton/shared/lib/interfaces/User';
 
 interface AmountProps {
     amount: number | undefined;

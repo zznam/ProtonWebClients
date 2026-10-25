@@ -1,4 +1,4 @@
-import type { SignedKeyList } from '@proton/shared/lib/interfaces';
+import type { SignedKeyList } from '@proton/shared/lib/interfaces/SignedKeyList';
 
 import type {
     CreateImportPayload,
@@ -115,12 +115,16 @@ export const startEasySwitchSignupImportTask = ({
     Provider,
     AutomaticImport,
     QuotaThresholdRatio,
+    StartTime,
+    ClaimAddress,
 }: {
     Source: string;
     Account: string;
     Provider: OAUTH_PROVIDER;
     AutomaticImport: boolean;
     QuotaThresholdRatio?: number;
+    StartTime?: number;
+    ClaimAddress?: boolean;
 }) => ({
     url: 'importer/v1/mail/importers/start/all',
     method: 'POST',
@@ -130,7 +134,15 @@ export const startEasySwitchSignupImportTask = ({
         Provider,
         AutomaticImport: AutomaticImport ? 1 : 0,
         QuotaThresholdRatio: QuotaThresholdRatio ?? null,
+        StartTime,
+        ClaimAddress: ClaimAddress ? 1 : 0,
     },
+});
+
+export const checkExternalAddressClaimable = (Email: string) => ({
+    method: 'POST' as const,
+    url: 'mail/v4/byoe-address/claimable',
+    data: { Email },
 });
 
 export const getImportsList = () => ({

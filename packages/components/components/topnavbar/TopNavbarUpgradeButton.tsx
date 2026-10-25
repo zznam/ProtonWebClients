@@ -2,17 +2,18 @@ import { useLocation } from 'react-router-dom';
 
 import { c } from 'ttag';
 
-import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useConfig } from '@proton/app-context/useConfig';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { IcUpgrade } from '@proton/icons/icons/IcUpgrade';
+import { useSubscriptionForApp } from '@proton/payments-ui/ui/hooks/useSubscriptionForApp';
 import { useTrialInfo } from '@proton/payments-ui/ui/hooks/useTrialInfo';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS, SHARED_UPSELL_PATHS, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
 import { isElectronApp } from '@proton/shared/lib/helpers/desktop';
-import { getUpgradePath, getUpsellRefFromApp } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRefFromApp } from '@proton/shared/lib/helpers/ref';
 
 import { freeTrialUpgradeClick } from '../../containers/desktop/openExternalLink';
 import { useHasInboxDesktopInAppPayments } from '../../containers/desktop/useHasInboxDesktopInAppPayments';
@@ -32,7 +33,7 @@ interface Props {
 const TopNavbarUpgradeButton = ({ app }: Props) => {
     const [user] = useUser();
     const [userSettings] = useUserSettings();
-    const [subscription] = useSubscription();
+    const [subscription] = useSubscriptionForApp();
     const { hasAtLeastOneTrial, hasReferralTrial, hasAtLeastOneB2BTrial } = useTrialInfo();
     const location = useLocation();
     const { APP_NAME } = useConfig();

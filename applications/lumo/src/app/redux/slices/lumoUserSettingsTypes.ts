@@ -54,6 +54,7 @@ export interface LumoUserSettings {
     showProjectConversationsInHistory?: boolean;
     chatHistoryDateField?: ChatHistoryDateField;
     automaticWebSearch?: boolean;
+    automaticArtifactCreation?: boolean;
     animatedBackgroundEnabled?: boolean;
     animatedBackgroundBlobMode?: 'ambient' | 'lavaLamp';
     showGallerySuggestions: boolean;
@@ -64,7 +65,9 @@ export interface LumoUserSettings {
     memoryPromptsSinceAutoSave?: number;
     /** Newest chat prompt included in a scan that successfully persisted at least one memory. */
     memoryLastProcessedMessageAt?: string;
-    preferredModelTier?: 'lumo-lite' | 'lumo-max' | 'apertus-15';
+    preferredModelTier?: 'lumo-lite' | 'lumo-max' | 'apertus-15' | 'lumo-preview';
     preferredResponseMode?: 'fast' | 'thinking';
     apertusOnboardingAcceptedAt?: number;
+    /** Dictation language: a supported language code or "auto". Undefined until the user has chosen. */
+    dictationLanguage?: string;
 }

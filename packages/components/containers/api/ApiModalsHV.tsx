@@ -1,7 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 
 import type { ApiListenerCallback, ApiVerificationEvent } from '@proton/shared/lib/api/createApi';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import remove from '@proton/utils/remove';
 import replace from '@proton/utils/replace';
 
@@ -15,7 +15,7 @@ const HumanVerificationModal = lazy(
         )
 );
 
-export interface ApiEventTarget {
+interface ApiEventTarget {
     addEventListener: (cb: ApiListenerCallback) => void;
     removeEventListener: (cb: ApiListenerCallback) => void;
 }

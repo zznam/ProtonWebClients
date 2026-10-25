@@ -1,7 +1,7 @@
 import { c } from 'ttag';
 
+import { getIsSystemGroup } from '@proton/account/groups/groupFlags';
 import type { SectionConfig, SidebarConfig } from '@proton/components/containers/layout/interface';
-import canUseGroups from '@proton/components/containers/organization/groups/canUseGroups';
 import { isScribeSupported } from '@proton/components/helpers/assistant';
 import { IcArchiveBox } from '@proton/icons/icons/IcArchiveBox';
 import { IcBuildings } from '@proton/icons/icons/IcBuildings';
@@ -18,24 +18,12 @@ import { IcSliders } from '@proton/icons/icons/IcSliders';
 import { IcUsers } from '@proton/icons/icons/IcUsers';
 import { IcVault } from '@proton/icons/icons/IcVault';
 import { PLANS } from '@proton/payments/core/constants';
-import {
-    getIsB2BAudienceFromPlan,
-    organizationOrSubscriptionSupportsSSO,
-    upsellPlanSSO,
-} from '@proton/payments/core/plan/helpers';
-import {
-    getHasExternalMemberCapableB2BPlan,
-    getHasMemberCapablePlan,
-    getHasVpnB2BPlan,
-    getHasVpnGatewaysUpsellPlan,
-    hasAnyB2bBundle,
-    hasMeet,
-    hasMeetBusiness,
-} from '@proton/payments/core/subscription/helpers';
+import { getHasSsoUpsell, getIsSsoAvailable } from '@proton/payments/core/plan/helpers';
 import { appSupportsSSO } from '@proton/shared/lib/apps/apps';
 import {
     APPS,
     BRAND_NAME,
+    LUMO_APP_NAME,
     ORGANIZATION_STATE,
     ORGANIZATION_TWOFA_SETTING,
     PROTON_SENTINEL_NAME,
@@ -49,6 +37,7 @@ import {
 } from '@proton/shared/lib/organization/helper';
 
 import type { OrganizationRouterParams } from '../../content/router-params';
+import type { FeatureAccessVisibility } from './components/FeatureAccessSection';
 
 const videoConferenceValidApplications = new Set<string>([APPS.PROTONMAIL, APPS.PROTONCALENDAR]);
 const scribeValidApplications = new Set<string>([APPS.PROTONMAIL]);
@@ -57,21 +46,21 @@ export const getOrganizationAppRoutes = ({
     app,
     user,
     organization,
-    subscription,
+    allSubscriptions,
     entitlements,
     groups,
     isGroupOwner,
     flags,
     permissions,
-}: OrganizationRouterParams): SidebarConfig => {
+}: OrganizationRouterParams): SidebarConfig & { featureAccess: FeatureAccessVisibility } => {
     const {
-        isUserGroupsNoCustomDomainEnabled = false,
         isScribeEnabled = false,
         isZoomIntegrationEnabled = false,
         isProtonMeetIntegrationEnabled = false,
         isAlwaysOnVpnEnabled = false,
         isSsoForPbsEnabled = false,
         isRetentionPoliciesEnabled = false,
+        isLumoApiEnabled = false,
     } = flags;
     const hasOrganizationKey = hasOrganizationSetupWithKeys(organization);
     const hasOrganization = hasOrganizationSetup(organization);
@@ -80,26 +69,22 @@ export const getOrganizationAppRoutes = ({
     const isOrgConfigured = hasOrganizationKey || hasOrganization;
     const hasActiveOrganizationKey = isOrgActive && hasOrganizationKey;
     const hasActiveOrganization = isOrgActive && hasOrganization;
-    const hasMemberCapablePlan = getHasMemberCapablePlan(organization, subscription);
+    const hasMemberCapablePlan = entitlements.isMultiUser;
     const hasSubUsers = (organization?.UsedMembers || 0) > 1;
 
     const canManageOrganization = !!organization && permissions['account.organization_identity.read'];
     const canSchedulePhoneCalls = canScheduleOrganizationPhoneCalls({ organization, user });
 
-    const hasVpnB2BPlan = getHasVpnB2BPlan(subscription);
-
     // MSP subsidiary orgs don't own their subscription (it belongs to the MSP manager), so `subscription`
     // resolves to the free/dummy value for them. Workaround: MSP currently only runs on Pass Pro, which is
     // already an external-member-capable plan, so treat subsidiaries as such directly.
-    const hasExternalMemberCapableB2BPlan =
-        getHasExternalMemberCapableB2BPlan(subscription) || !!organization?.IsSubsidiary;
+    const hasExternalMemberCapableB2BPlan = entitlements.hasExternalManagedMembers || !!organization?.IsSubsidiary;
 
     const canShowB2BActivityMonitorEvents =
-        (isOrgConfigured || getIsB2BAudienceFromPlan(organization?.PlanName)) &&
-        !!permissions['account.activity_log.read'];
+        (isOrgConfigured || entitlements.isB2B) && !!permissions['account.activity_log.read'];
 
     const canShowB2BConnectionEvents =
-        entitlements.orgHasVpnActivityMonitor &&
+        entitlements.hasVpnActivityMonitor &&
         app === APPS.PROTONVPN_SETTINGS &&
         permissions['account.activity_log.read'] &&
         isOrgConfigured;
@@ -108,19 +93,13 @@ export const getOrganizationAppRoutes = ({
     const isPartOfFamily = getOrganizationDenomination(organization) === 'familyGroup';
     const isPassFamilyPlan = isOrganizationPassFamily(organization);
 
-    const isPassEssentials = organization?.PlanName === PLANS.PASS_PRO;
-
-    const hasGroups = (groups?.length ?? 0) > 0;
+    const alreadyHasGroups = !!groups?.some((group) => !getIsSystemGroup(group));
+    const canUseGroups = hasActiveOrganizationKey && entitlements.hasGroups;
+    const canUpgradeToGroups = entitlements.isPassB2BWithoutGroups;
     const canShowGroupsSection =
         (permissions['account.group.read'] || !!isGroupOwner) &&
         !!organization &&
-        (hasGroups ||
-            isPassEssentials ||
-            (hasActiveOrganizationKey &&
-                canUseGroups(organization?.PlanName, {
-                    isUserGroupsNoCustomDomainEnabled,
-                    hasGroups,
-                })));
+        (alreadyHasGroups || canUpgradeToGroups || canUseGroups);
 
     const hasUsedMembers = (organization?.UsedMembers ?? 0) > 1;
     const canShowUsersAndAddressesSection =
@@ -132,16 +111,11 @@ export const getOrganizationAppRoutes = ({
             // The user must have an active (non-delinquent) plan that supports multi-user
             (isOrgActive && hasMemberCapablePlan));
 
-    const hasMeetPlan = hasMeetBusiness(subscription) || hasMeet(subscription);
-
     const hasUsedDomains = (organization?.UsedDomains ?? 0) > 0;
     const canShowDomainNamesSection =
         permissions['account.domain.read'] &&
-        // user.hasPaidMail is needed, because for example VPN B2B doesn't need domains by design
         // NOTE: This configuration is tied with the mail/routes.tsx domains availability
-        ((hasOrganizationKey && user.hasPaidMail) ||
-            // Don't use user.hasPaidMeet otherwise we will show domain names section to every user with Meet addon
-            (hasOrganizationKey && hasMeetPlan) ||
+        ((hasOrganizationKey && entitlements.hasCustomDomainAddresses) ||
             // If the organization is not active (end of subscription without renewal), we allow users to access this page to delete domains
             (isOrgDelinquent && hasUsedDomains));
 
@@ -160,6 +134,8 @@ export const getOrganizationAppRoutes = ({
         (hasActiveOrganizationKey || (isPartOfFamily && hasOrganization)) &&
         user.hasPaidMail &&
         videoConferenceValidApplications.has(app);
+
+    const canShowLumoApiSection = isLumoApiEnabled && hasMemberCapablePlan;
 
     const canShowAccessControl = permissions['account.access_control.read'] && (hasSubUsers || isOrgConfigured);
 
@@ -190,16 +166,17 @@ export const getOrganizationAppRoutes = ({
 
     const subSectionTitleAppearance = isPartOfFamily ? '' : c('Title').t`Customization`;
 
-    const orgOrSubscriptionSupportsSSO = organizationOrSubscriptionSupportsSSO({
-        organization,
-        subscription,
+    const isSsoAvailable = getIsSsoAvailable({
+        hasSso: entitlements.hasSso,
+        subscriptions: allSubscriptions,
         isSsoForPbsEnabled,
     });
+    const hasSsoUpsell = getHasSsoUpsell(allSubscriptions);
 
     const canShowSSOSection =
         permissions['account.sso_config.read'] &&
         appSupportsSSO(app) &&
-        (orgOrSubscriptionSupportsSSO || upsellPlanSSO(organization?.PlanName)) &&
+        (isSsoAvailable || hasSsoUpsell) &&
         isOrgConfigured;
 
     const routes = {
@@ -242,7 +219,7 @@ export const getOrganizationAppRoutes = ({
             icon: IcPassGroup,
             noTitle: true,
             available: canShowGroupsSection,
-            upgradeRequired: isPassEssentials,
+            upgradeRequired: !entitlements.hasGroups && !alreadyHasGroups,
             subsections: [
                 {
                     id: 'groups-management',
@@ -324,9 +301,7 @@ export const getOrganizationAppRoutes = ({
             text: c('Title').t`Gateways`,
             to: '/gateways',
             icon: IcServers,
-            available:
-                permissions['account.gateway.read'] &&
-                (entitlements.orgHasMaxDedicatedIps || getHasVpnGatewaysUpsellPlan(subscription)),
+            available: permissions['account.gateway.read'] && entitlements.hasDedicatedIpsOrIsVpnB2B,
             subsections: [
                 {
                     id: 'servers',
@@ -343,7 +318,7 @@ export const getOrganizationAppRoutes = ({
             text: c('Title').t`Shared servers`,
             to: '/shared-servers',
             icon: IcEarth,
-            available: permissions['account.shared_server.read'] && entitlements.orgHasVpnLocationFilter,
+            available: permissions['account.shared_server.read'] && entitlements.hasVpnLocationFilter,
             subsections: [
                 {
                     id: 'servers',
@@ -362,10 +337,7 @@ export const getOrganizationAppRoutes = ({
                 .t`Enforce VPN usage across your organization by blocking internet access unless a VPN connection is active.`,
             to: '/always-on-vpn',
             icon: IcVault,
-            available:
-                isAlwaysOnVpnEnabled &&
-                permissions['account.always_on.read'] &&
-                (hasVpnB2BPlan || hasAnyB2bBundle(subscription)),
+            available: isAlwaysOnVpnEnabled && permissions['account.always_on.read'] && entitlements.isVpnB2B,
         },
         connectionEvents: {
             id: 'connectionEvents',
@@ -391,7 +363,7 @@ export const getOrganizationAppRoutes = ({
             to: '/activity-monitor',
             icon: IcCardIdentity,
             available: canShowB2BActivityMonitorEvents,
-            upgradeRequired: isPassEssentials,
+            upgradeRequired: entitlements.isPassB2BWithoutActivityMonitor,
             subsections: [
                 {
                     id: 'activity-monitor-dashboard',
@@ -529,7 +501,7 @@ export const getOrganizationAppRoutes = ({
             to: '/single-sign-on',
             icon: IcKey,
             available: canShowSSOSection,
-            upgradeRequired: !orgOrSubscriptionSupportsSSO && !!upsellPlanSSO(organization?.PlanName),
+            upgradeRequired: !isSsoAvailable && hasSsoUpsell,
         },
         accessControl: {
             id: 'accessControl',
@@ -549,11 +521,12 @@ export const getOrganizationAppRoutes = ({
                 {
                     id: 'feature-access',
                     text: c('Title').t`Feature access`,
-                    available: canShowVideoConferenceSection || canShowScribeSection,
+                    available: canShowVideoConferenceSection || canShowScribeSection || canShowLumoApiSection,
                     keywords: [
                         c('Title').t`${BRAND_NAME} Scribe writing assistant`,
                         c('Title').t`Video conferencing with Zoom`,
                         c('Title').t`Email categories`,
+                        c('Title').t`${LUMO_APP_NAME} API`,
                     ],
                 },
             ],
@@ -567,5 +540,10 @@ export const getOrganizationAppRoutes = ({
         available: showOrganizationSection,
         header: sectionTitle,
         routes,
+        featureAccess: {
+            canShowScribe: canShowScribeSection,
+            canShowVideoConference: canShowVideoConferenceSection,
+            canShowLumoApi: canShowLumoApiSection,
+        },
     };
 };

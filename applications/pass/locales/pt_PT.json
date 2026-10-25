@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } para Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } para iOS"
-      ],
       "Accept": [
         "Aceitar"
       ],
@@ -315,6 +309,12 @@
       ],
       "Don't show this again": [
         "Não mostrar novamente"
+      ],
+      "Download for macOS": [
+        "Transferir para macOS"
+      ],
+      "Download for Windows": [
+        "Transferir para Windows"
       ],
       "Download this CSV template": [
         "Transfere este modelo CSV"
@@ -670,6 +670,12 @@
       "Show Less": [
         "Mostrar menos"
       ],
+      "Show less": [
+        "Mostrar menos"
+      ],
+      "Show more": [
+        "Mostrar mais"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Iniciar sessão com o ${ BRAND_NAME }"
       ],
@@ -802,11 +808,6 @@
       ],
       "Vault": [
         "Cofre"
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicação para desktop do ${ MAIL_APP_NAME }"
       ]
     },
     "Button": {
@@ -1048,6 +1049,9 @@
       "Editing item failed": [
         "A edição do item falhou"
       ],
+      "Email is not valid": [
+        "O e-mail não é válido."
+      ],
       "Empty CSV file": [
         "Ficheiro CSV vazio"
       ],
@@ -1059,6 +1063,9 @@
       ],
       "Encrypted JSON not supported": [
         "JSON encriptado não é suportado"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Introduza o seu nome de utilizador sem o domínio (@example.com)"
       ],
       "Error reporting problem": [
         "Problema ao reportar erro."
@@ -1240,6 +1247,9 @@
       "Incorrect backup password. Please try again.": [
         "A palavra-passe de backup não é correta. Tente novamente."
       ],
+      "Incorrect password. Please try again.": [
+        "Palavra-passe incorreta. Tente novamente."
+      ],
       "Incorrect second password. Please try again.": [
         "A secunda palavra-passe não é correta. Tente novamente."
       ],
@@ -1273,8 +1283,14 @@
       "Network error": [
         "Erro de rede"
       ],
+      "Not a valid number": [
+        "O número não é válido."
+      ],
       "Passphrase is incorrect": [
         "A frase-passe está incorreta"
+      ],
+      "Passwords do not match": [
+        "As palavras-passe não correspondem."
       ],
       "PIN codes do not match": [
         "Os códigos PIN não correspondem"
@@ -1333,11 +1349,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "A aplicação de computador do ${ PASS_APP_NAME } deve ter a sessão iniciada."
       ],
+      "The email addresses do not match": [
+        "Os endereços de e-mail não correspondem."
+      ],
       "The session has expired. Please sign in again.": [
         "A sessão expirou. Inicie sessão novamente."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Ocorreu um erro ao remover a ligação segura. Tente novamente dentro de alguns minutos."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Este campo excede o máximo de ${ maximumLength } caracteres."
+      ],
+      "This field is required": [
+        "Este campo é obrigatório"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Este campo requer um mínimo de ${ minimumLength } carateres."
       ],
       "Too many failed attempts. Please sign in again.": [
         "Demasiadas tentativas erradas. Inicie sessão novamente."
@@ -1347,6 +1375,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Tente contactar o proprietário da ligação."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Tente utilizar apenas letras, números e _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Não é possível gerar um código OTP para este item"
@@ -1378,6 +1409,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "A actualização do cofre \"${ payload.content.name }\" falhou"
       ],
+      "Username must begin with a letter or digit": [
+        "O nome de utilizador deve começar com uma letra ou um algarismo"
+      ],
+      "Username must end with a letter or digit": [
+        "O nome de utilizador deve acabar com uma letra ou algarismo"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "A criação do cofre \"${ payload.content.name }\" falhou."
       ],
@@ -1401,6 +1438,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Código PIN errado. Tente novamente."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase de recuperação incorreta. Tente novamente ou utilize outro método de recuperação."
       ],
       "Wrong second password": [
         "Segunda palavra-passe errada"
@@ -1746,9 +1786,6 @@
       "Can view this item.": [
         "Pode ver este item."
       ],
-      "Change your password": [
-        "Altere a sua palavra-passe"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "Confirme a sua palavra-passe para continuar com a remoção."
       ],
@@ -1829,9 +1866,6 @@
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "e-mail"
       ],
       "Email address successfully deleted from monitoring": [
         "O endereço de e-mail foi eliminado da monitorização."
@@ -1928,9 +1962,6 @@
       ],
       "Fill in the CSV with your data": [
         "Preencha o ficheiro CSV com os seus dados"
-      ],
-      "finance": [
-        "finanças"
       ],
       "Follow those steps to import your data with a generic CSV:": [
         "Siga estes passos para importar os seus dados com um ficheiro CSV genérico:"
@@ -2085,9 +2116,6 @@
       "Medium Priority": [
         "Prioridade média"
       ],
-      "Monitor accounts": [
-        "Monitor de contas"
-      ],
       "Monitoring settings successfully updated": [
         "As definições de monitorização foram atualizadas."
       ],
@@ -2105,7 +2133,8 @@
         "Movendo todos os itens de \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Mover um item para outro cofre apagará as suas ligações seguras."
+        "Mover um item para outro cofre apagará as suas ligações seguras.",
+        "Mover itens para outro cofre apagará as suas ligações seguras."
       ],
       "Moving items": [
         "A mover itens"
@@ -2178,9 +2207,6 @@
       ],
       "Pass Plus trial": [
         "Avaliação do Pass Plus"
-      ],
-      "password": [
-        "palavra-passe"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "O bloqueio por palavra-passe foi registado. Utilize-o para desbloquear o ${ PASS_APP_NAME }"
@@ -2627,9 +2653,6 @@
       ],
       "User's access successfully updated": [
         "O acesso do utilizador foi atualizado."
-      ],
-      "username": [
-        "nome de utilizador"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "O cofre \"${ payload.content.name }\" foi eliminado."
@@ -5114,8 +5137,16 @@
       "OTP secret or URI is invalid": [
         "A chave secreta OTP ou o URI não funciona."
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "A palavra-passe deve conter pelo menos ${ MIN_PASSWORD_LENGTH } caráter.",
+        "A palavra-passe deve conter pelo menos ${ MIN_PASSWORD_LENGTH } carateres."
+      ],
       "Section name cannot be empty": [
         "O nome da secção não pode estar vazio."
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Tente um nome de utilizador mais pequeno (máximo de ${ n } caráter)",
+        "Tente um nome de utilizador mais pequeno (máximo de carateres ${ n })"
       ],
       "URL already exists": [
         "O URL já existe."
@@ -5268,9 +5299,6 @@
       ],
       "Move to trash": [
         "Mover para o lixo"
-      ],
-      "Name is required": [
-        "É necessário um nome."
       ],
       "No items": [
         "Nenhum item"

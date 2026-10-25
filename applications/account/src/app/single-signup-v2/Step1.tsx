@@ -14,13 +14,13 @@ import useModalState from '@proton/components/components/modalTwo/useModalState'
 import SkeletonLoader from '@proton/components/components/skeletonLoader/SkeletonLoader';
 import CurrencySelector from '@proton/components/containers/payments/CurrencySelector';
 import CycleSelector from '@proton/components/containers/payments/CycleSelector';
-import { forceAddonsMinMaxConstraints } from '@proton/components/containers/payments/planCustomizer';
-import { getShortBillingText } from '@proton/components/containers/payments/subscription/helpers';
+import { forceAddonsMinMaxConstraints } from '@proton/components/containers/payments/planCustomizer/helpers';
+import { getShortBillingText } from '@proton/components/containers/payments/subscription/helpers/getTotalBillingText';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import useErrorHandler from '@proton/components/hooks/useErrorHandler';
-import { useHandler } from '@proton/components/hooks/useHandler';
+import { useHandler } from '@proton/hooks/useHandler';
 import useLoading from '@proton/hooks/useLoading';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import { useCurrencies } from '@proton/payments-ui/client-extensions/useCurrencies';
 import { usePaymentsApi } from '@proton/payments-ui/react-extensions/usePaymentsApi';
 import { useCouponConfig } from '@proton/payments-ui/ui/coupon-config/useCouponConfig';
@@ -51,14 +51,14 @@ import type {
     EstimationChangePayload,
 } from '@proton/payments/telemetry/shared-checkout-telemetry';
 import { checkoutTelemetry } from '@proton/payments/telemetry/telemetry';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { TelemetryAccountSignupEvents } from '@proton/shared/lib/api/telemetry';
 import type { ActiveSession } from '@proton/shared/lib/authentication/persistedSessionHelper';
 import { APPS, BRAND_NAME, DRIVE_APP_NAME, PASS_APP_NAME, SSO_PATHS } from '@proton/shared/lib/constants';
 import { getPrivacyPolicyURL } from '@proton/shared/lib/helpers/url';
-import type { Api } from '@proton/shared/lib/interfaces';
-import { Audience } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
 import { isFree } from '@proton/shared/lib/user/helpers';
 import simpleLoginLogo from '@proton/styles/assets/img/illustrations/simplelogin-logo.svg';
 import { useFlag } from '@proton/unleash/useFlag';
@@ -77,6 +77,7 @@ import type { AccountStepDetailsRef } from './AccountStepDetails';
 import AccountStepDetails from './AccountStepDetails';
 import type { AccountStepPaymentRef } from './AccountStepPayment';
 import AccountStepPayment from './AccountStepPayment';
+import AccountStepPaymentSummary from './AccountStepPaymentSummary';
 import AccountSwitcherItem from './AccountSwitcherItem';
 import AudienceTabs from './Audience';
 import Box from './Box';
@@ -108,6 +109,11 @@ import PassTrial2024UpsellModal from './modals/PassTrial2024UpsellModal';
 import { type CheckTrialPriceParams, type CheckTrialPriceResult, checkTrialPrice } from './modals/Trial2024UpsellModal';
 import PassLifetimeSpecialOffer from './pass/LifetimeOfferMessage';
 import PassLifetimeFeaturedSection from './pass/PassLifetimeFeaturedSection';
+import {
+    PaymentlessTrialOrganizationSize,
+    PaymentlessTrialSummarySkeleton,
+    getIsPaymentlessTrial,
+} from './paymentlessTrial';
 
 export interface Step1Rref {
     scrollIntoPayment: () => void;
@@ -130,6 +136,7 @@ const Step1 = ({
         planCards,
         audience,
         audiences,
+        defaults,
     },
     initialSessionsLength,
     signupParameters,
@@ -299,6 +306,7 @@ const Step1 = ({
             ValidateBillingAddress: true,
             VatId: values.vatNumber,
             previousEstimation: model.subscriptionData.checkResult,
+            subscription: model.session?.subscription,
         });
     };
 
@@ -461,6 +469,9 @@ const Step1 = ({
             cycle: completeCheckOptions.cycle,
             currency: completeCheckOptions.currency,
         });
+        if (subscriptionCheckOptions.trial) {
+            optimisticCheckResult.SubscriptionMode = SubscriptionMode.Trial;
+        }
 
         setModel((old) => {
             const result = {
@@ -610,21 +621,28 @@ const Step1 = ({
         return getStartUsingAppNameText(appName);
     })();
 
-    const isNoCreditCardTrial =
-        signupParameters.cardless &&
-        checkTrial &&
-        audience === Audience.B2B &&
-        (selectedPlan.Name === PLANS.PASS_BUSINESS || selectedPlan.Name === PLANS.PASS_PRO);
+    const isPaymentlessTrial = getIsPaymentlessTrial({
+        cardless: signupParameters.cardless,
+        isTrial: model.loadingDependencies ? signupTrial : checkTrial,
+        audience,
+        planName: model.loadingDependencies ? (signupParameters.preSelectedPlan ?? defaults.plan) : selectedPlan.Name,
+    });
 
-    const hasSelectedFree = selectedPlan.Name === PLANS.FREE || mode === SignupMode.MailReferral || isNoCreditCardTrial;
+    const isLoadingPaymentlessTrial = isPaymentlessTrial && model.loadingDependencies;
+
+    const isRecheckingOrganizationSize = isPaymentlessTrial && loadingPaymentDetails;
+
+    const hasSelectedFree = selectedPlan.Name === PLANS.FREE || mode === SignupMode.MailReferral;
+
+    const showPaymentStep = !hasSelectedFree && !isPaymentlessTrial;
 
     const getNoPaymentSubscriptionData = () =>
-        isNoCreditCardTrial
+        isPaymentlessTrial
             ? { ...model.subscriptionData, payment: undefined }
             : getFreeSubscriptionData(model.subscriptionData);
 
     const termsAndConditionsLink = (
-        <Href className="color-weak" key="terms" href={getLocaleTermsURL(app)}>
+        <Href className="color-norm" key="terms" href={getLocaleTermsURL(app)}>
             {
                 // translator: Full sentence "By continuing, you agree to our terms and conditions and privacy policy."
                 c('new_plans: signup').t`terms and conditions`
@@ -633,7 +651,7 @@ const Step1 = ({
     );
 
     const privacyPolicyLink = (
-        <Href className="color-weak" key="privacy" href={getPrivacyPolicyURL(app)}>
+        <Href className="color-norm" key="privacy" href={getPrivacyPolicyURL(app)}>
             {
                 // translator: Full sentence "By continuing, you agree to our terms and conditions and privacy policy."
                 c('Link').t`privacy policy`
@@ -642,7 +660,7 @@ const Step1 = ({
     );
 
     const terms = (
-        <div className="mt-4 text-sm color-weak text-center">
+        <div className="mt-4 text-sm text-center">
             {
                 // translator: Full sentence "By continuing, you agree to our terms and conditions and privacy policy."
                 c('pass_signup_2023: Info')
@@ -699,7 +717,7 @@ const Step1 = ({
             taxInclusive: () => null,
             renewalNotice: ({ content }) =>
                 !checkTrial ? (
-                    <div className="w-full text-sm color-norm opacity-70">
+                    <div className="w-full mt-4 text-sm color-norm text-center">
                         <span className="pr-1">*</span>
                         {content}
                     </div>
@@ -709,7 +727,7 @@ const Step1 = ({
         }
     );
 
-    const showRenewalNotice = checkoutView.getItem('renewalNotice').visible && !checkTrial && !hasSelectedFree;
+    const showRenewalNotice = checkoutView.getItem('renewalNotice').visible && !checkTrial && showPaymentStep;
     /**
      * If there is a regional currency then B2C plans can have plans in this currency while B2B plans do not.
      * In that case, we need to automatically select the fallback currency for B2B plans.
@@ -893,7 +911,6 @@ const Step1 = ({
                 </div>
             }
             logo={logo}
-            footer={checkoutView.render('renewalNotice')}
             hasDecoration
             bottomRight={<SignupSupportDropdown isDarkBg={isDarkBg} />}
             className={className}
@@ -925,20 +942,22 @@ const Step1 = ({
                     </div>
                 )}
 
-                <Step1OfferBanner
-                    isPorkbunPayment={isPorkbunPayment}
-                    model={model}
-                    signupParameters={signupParameters}
-                    selectedPlan={selectedPlan}
-                    mode={mode}
-                    planIDs={subscriptionCheckOptions.planIDs}
-                    checkResult={subscriptionCheckOptions.checkResult}
-                    options={options}
-                    app={app}
-                    hasPlanSelector={hasPlanSelector}
-                    audience={audience}
-                    isSignupTrial={signupTrial}
-                />
+                {!isLoadingPaymentlessTrial && (
+                    <Step1OfferBanner
+                        isPorkbunPayment={isPorkbunPayment}
+                        model={model}
+                        signupParameters={signupParameters}
+                        selectedPlan={selectedPlan}
+                        mode={mode}
+                        planIDs={subscriptionCheckOptions.planIDs}
+                        checkResult={subscriptionCheckOptions.checkResult}
+                        options={options}
+                        app={app}
+                        hasPlanSelector={hasPlanSelector}
+                        audience={audience}
+                        isSignupTrial={signupTrial}
+                    />
+                )}
 
                 {hasPlanSelector && (
                     <>
@@ -988,7 +1007,7 @@ const Step1 = ({
                                 <div className="flex justify-center lg:justify-end">
                                     <div className="inline-block mt-3 mb-2">{currencySelector}</div>
                                 </div>
-                                <div className={clsx(hasSelectedFree && 'visibility-hidden', 'flex justify-center')}>
+                                <div className={clsx(!showPaymentStep && 'visibility-hidden', 'flex justify-center')}>
                                     {!signupTrial && <Guarantee />}
                                 </div>
                             </BoxContent>
@@ -1016,20 +1035,41 @@ const Step1 = ({
 
                             const hasBenefits = !hasUserStep;
 
-                            const step2Summary = (
-                                <RightSummary
-                                    variant={isDarkBg ? 'gradientBorder' : 'gradient'}
-                                    className={clsx(
-                                        'p-6 md:flex rounded-xl',
-                                        !hasBenefits && 'visibility-hidden',
-                                        // By default this section is hidden for small screens.
-                                        // However we want to make an exception for the Pass Lifetime.
-                                        selectedPlan.Name !== PLANS.PASS_LIFETIME && 'hidden'
-                                    )}
-                                >
-                                    {hasBenefits ? benefits : null}
-                                </RightSummary>
-                            );
+                            const step2Summary = (() => {
+                                if (isLoadingPaymentlessTrial) {
+                                    return <PaymentlessTrialSummarySkeleton />;
+                                }
+
+                                if (isPaymentlessTrial) {
+                                    return (
+                                        <AccountStepPaymentSummary
+                                            model={model}
+                                            options={options}
+                                            selectedPlan={selectedPlan}
+                                            loadingPaymentDetails={loadingPaymentDetails || loadingSignout}
+                                            showRenewalNotice={showRenewalNotice}
+                                            app={app}
+                                            couponConfig={couponConfig}
+                                            isPaymentlessTrial
+                                        />
+                                    );
+                                }
+
+                                return (
+                                    <RightSummary
+                                        variant={isDarkBg ? 'gradientBorder' : 'gradient'}
+                                        className={clsx(
+                                            'p-6 md:flex rounded-xl',
+                                            !hasBenefits && 'visibility-hidden',
+                                            // By default this section is hidden for small screens.
+                                            // However we want to make an exception for the Pass Lifetime.
+                                            selectedPlan.Name !== PLANS.PASS_LIFETIME && 'hidden'
+                                        )}
+                                    >
+                                        {hasBenefits ? benefits : null}
+                                    </RightSummary>
+                                );
+                            })();
 
                             const createANewAccount = (
                                 <InlineLinkButton
@@ -1042,7 +1082,7 @@ const Step1 = ({
                                 </InlineLinkButton>
                             );
 
-                            const willShowStep2 = !hasSelectedFree;
+                            const willShowStep2 = showPaymentStep;
                             const willHaveSingleStep = step === 1 && !willShowStep2;
                             const accountStep = willHaveSingleStep ? undefined : step++;
 
@@ -1087,7 +1127,7 @@ const Step1 = ({
                                                             );
                                                         }
                                                     })()}
-                                                    {hasSelectedFree && (
+                                                    {!showPaymentStep && (
                                                         <Button
                                                             color="norm"
                                                             pill
@@ -1103,7 +1143,7 @@ const Step1 = ({
                                                     <div
                                                         className={clsx(
                                                             'text-center',
-                                                            hasSelectedFree ? 'mt-4' : 'mt-6',
+                                                            showPaymentStep ? 'mt-6' : 'mt-4',
                                                             hasUserStepOptimistic && 'visibility-hidden'
                                                         )}
                                                     >
@@ -1156,6 +1196,10 @@ const Step1 = ({
                                     contextProps.defaultEmail = invitation.data.invitee;
                                     contextProps.availableSignupTypes = new Set([SignupType.External]);
                                     stepProps.emailReadOnly = invitation.data.invitee !== '';
+                                }
+
+                                if (isPaymentlessTrial) {
+                                    contextProps.availableSignupTypes = new Set([SignupType.External]);
                                 }
 
                                 return {
@@ -1221,7 +1265,7 @@ const Step1 = ({
                                                         accountStepDetailsRef={accountDetailsRef}
                                                         disableChange={loadingSignup}
                                                         onSubmit={
-                                                            hasSelectedFree
+                                                            !showPaymentStep
                                                                 ? async () => {
                                                                       if (
                                                                           selectedPlan.Name === PLANS.FREE &&
@@ -1287,13 +1331,25 @@ const Step1 = ({
                                                         footer={(details) => {
                                                             return (
                                                                 <>
-                                                                    {hasSelectedFree && (
+                                                                    {isPaymentlessTrial &&
+                                                                        !isLoadingPaymentlessTrial && (
+                                                                            <PaymentlessTrialOrganizationSize
+                                                                                model={model}
+                                                                                options={options}
+                                                                                onChangePlanIDs={(planIDs) =>
+                                                                                    handleOptimistic({ planIDs })
+                                                                                }
+                                                                                telemetryContext={telemetryContext}
+                                                                            />
+                                                                        )}
+                                                                    {!showPaymentStep && (
                                                                         <div className="mb-4">
                                                                             <Button
                                                                                 {...(() => {
                                                                                     if (
                                                                                         loadingSignup ||
-                                                                                        checkingTrial
+                                                                                        checkingTrial ||
+                                                                                        isRecheckingOrganizationSize
                                                                                     ) {
                                                                                         return { loading: true };
                                                                                     }
@@ -1308,6 +1364,7 @@ const Step1 = ({
                                                                                 size="large"
                                                                                 color="norm"
                                                                                 className="block mx-auto"
+                                                                                fullWidth={isPaymentlessTrial}
                                                                                 pill
                                                                             >
                                                                                 {cta}
@@ -1393,7 +1450,7 @@ const Step1 = ({
                                                                             </span>
                                                                         </div>
                                                                     )}
-                                                                    {hasSelectedFree && terms}
+                                                                    {!showPaymentStep && terms}
                                                                     {selectedPlan.Name === PLANS.PASS_LIFETIME && (
                                                                         <PassLifetimeFeaturedSection className="mt-8" />
                                                                     )}
@@ -1411,7 +1468,7 @@ const Step1 = ({
                         })()}
                     </Box>
                 )}
-                {!hasSelectedFree && (
+                {showPaymentStep && (
                     <Box className="mt-12" style={boxWidth}>
                         <BoxHeader
                             step={step++}
@@ -1484,6 +1541,7 @@ const Step1 = ({
                                     selectedMethodRef.current = method;
                                 }}
                                 couponConfig={couponConfig}
+                                renewalNotice={checkoutView.render('renewalNotice')}
                             />
                         </BoxContent>
                     </Box>

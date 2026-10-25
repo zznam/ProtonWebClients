@@ -2,10 +2,10 @@ import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import loudRejection from 'loud-rejection';
 
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { parseDOMStringToBodyElement } from '@proton/mail/helpers/parseDOMStringToBodyElement';
 import { MIME_TYPES } from '@proton/shared/lib/constants';
-import type { AddressKey } from '@proton/shared/lib/interfaces';
+import type { AddressKey } from '@proton/shared/lib/interfaces/Key';
 import type { AttachmentFullMetadata } from '@proton/shared/lib/interfaces/mail/Message';
 
 import { addApiMock, addApiResolver, parseFormData } from '../../../helpers/tests/api';
@@ -160,6 +160,13 @@ describe('Composer attachments', () => {
 
     beforeEach(() => {
         clearAll();
+        // The autosave debounce (2s) and the minimum "Message sent" notification delay (2.5s) are
+        // skipped on the fake clock; `advanceTimers` keeps the crypto and short timers running as usual.
+        jest.useFakeTimers({ advanceTimers: true });
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
     });
 
     it('should not show embedded modal when plaintext mode', async () => {

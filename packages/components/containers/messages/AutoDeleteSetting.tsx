@@ -2,12 +2,13 @@ import { c } from 'ttag';
 
 import { useUser } from '@proton/account/user/hooks';
 import { useApi } from '@proton/app-context/useApi';
-import { FeatureCode, useFeature } from '@proton/features';
-import { useLoading } from '@proton/hooks';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
+import useLoading from '@proton/hooks/useLoading';
 import { mailSettingsActions } from '@proton/mail/store/mailSettings';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { updateAutoDelete } from '@proton/shared/lib/api/mailSettings';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { AUTO_DELETE_SPAM_AND_TRASH_DAYS } from '@proton/shared/lib/mail/mailSettings';
 
 import Info from '../../components/link/Info';
@@ -49,7 +50,7 @@ const AutoDeleteSetting = ({ settingValue = AUTO_DELETE_SPAM_AND_TRASH_DAYS.DISA
                 <SettingsLayoutLeft>
                     <label htmlFor="autoDelete" className="text-semibold flex flex-nowrap items-start">
                         <span className="mr-2 flex-1">
-                            <span className="mr-2">{c('Label').t`Auto-delete unwanted messages`}</span>
+                            <span className="mr-2">{c('Label').t`Auto-delete trash and spam`}</span>
                             <Info
                                 className="shrink-0"
                                 title={c('Tooltip')

@@ -6,7 +6,7 @@ import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { updateInvoiceText } from '@proton/shared/lib/api/settings';
 
 import Form from '../../components/form/Form';
@@ -15,7 +15,7 @@ import ModalTwo from '../../components/modalTwo/Modal';
 import ModalTwoContent from '../../components/modalTwo/ModalContent';
 import ModalTwoFooter from '../../components/modalTwo/ModalFooter';
 import ModalTwoHeader from '../../components/modalTwo/ModalHeader';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import TextAreaTwo from '../../components/v2/input/TextArea';
 import useEventManager from '../../hooks/useEventManager';
 

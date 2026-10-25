@@ -1,10 +1,9 @@
+import { getTransformIgnorePatterns } from '@proton/jest-swc-preset/transformIgnorePatterns.js';
+
 export default {
     setupFilesAfterEnv: ['./jest.setup.ts'],
-    moduleDirectories: ['<rootDir>/node_modules', 'node_modules'],
     testEnvironment: '@proton/jest-env',
-    transformIgnorePatterns: [
-        'node_modules/(?!(@proton/shared|@protontech/telemetry|mutex-browser|@protontech/crypto|bip39|@preact/signals-core)/)',
-    ],
+    transformIgnorePatterns: getTransformIgnorePatterns(),
     preset: '@proton/jest-swc-preset',
 
     moduleNameMapper: {

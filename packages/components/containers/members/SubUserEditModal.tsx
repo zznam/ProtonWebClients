@@ -3,28 +3,29 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { c } from 'ttag';
 
-import {
-    type MemberKeyPayload,
-    type PromoteGlobalSSOPayload,
-    assignMemberRoles,
-    confirmMemberRoleChange,
-    editMember,
-    getMemberAddresses,
-    getPrivateAdminError,
-    getPrivateText,
-    getRolesTabBanner,
-} from '@proton/account';
+import { getMemberAddresses } from '@proton/account/members';
+import { assignMemberRoles, confirmMemberRoleChange, editMember } from '@proton/account/members/actions';
 import { MemberUnprivatizationMode, getMemberUnprivatizationMode } from '@proton/account/members/memberUnprivatization';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { getStorageRange, getTotalStorage } from '@proton/account/organization/storage';
+import {
+    type MemberKeyPayload,
+    type PromoteGlobalSSOPayload,
+    getPrivateAdminError,
+    getPrivateText,
+    getRolesTabBanner,
+} from '@proton/account/organizationKey/actions';
 import { useOrganizationKey } from '@proton/account/organizationKey/hooks';
+import { isOrgKeyRequired } from '@proton/account/organizationRoles/helpers';
+import { useOrganizationRoles } from '@proton/account/organizationRoles/hooks';
 import { AdminRolesUIState, useAdminRolesUI } from '@proton/account/userPermissions/hooks';
 import useBYOEFeatureStatus from '@proton/activation/src/hooks/useBYOEFeatureStatus';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { FeatureCode, useFeature } from '@proton/features';
-import { useLoading } from '@proton/hooks';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
+import useLoading from '@proton/hooks/useLoading';
 import { IcInfoCircleFilled } from '@proton/icons/icons/IcInfoCircleFilled';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { LUMO_APP_NAME, MEMBER_PRIVATE, MEMBER_ROLE, NAME_PLACEHOLDER } from '@proton/shared/lib/constants';
@@ -32,8 +33,9 @@ import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 import { hasOrganizationSetupWithKeys } from '@proton/shared/lib/helpers/organization';
 import { sizeUnits } from '@proton/shared/lib/helpers/size';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { EnhancedMember, Member } from '@proton/shared/lib/interfaces';
-import { getIsPasswordless } from '@proton/shared/lib/keys';
+import type { EnhancedMember, Member } from '@proton/shared/lib/interfaces/Member';
+import { getIsMemberSetup } from '@proton/shared/lib/keys/memberHelper';
+import { getIsPasswordless } from '@proton/shared/lib/keys/organizationKeys';
 import noop from '@proton/utils/noop';
 
 import type { ModalProps } from '../../components/modalTwo/Modal';
@@ -43,7 +45,7 @@ import useModalState from '../../components/modalTwo/useModalState';
 import { useModalTwo } from '../../components/modalTwo/useModalTwo';
 import Prompt from '../../components/prompt/Prompt';
 import Toggle from '../../components/toggle/Toggle';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import useFormErrors from '../../components/v2/useFormErrors';
 import getBoldFormattedText from '../../helpers/getBoldFormattedText';
 import useErrorHandler from '../../hooks/useErrorHandler';
@@ -136,6 +138,7 @@ const SubUserEditModal = ({
 }: Props) => {
     const [organization] = useOrganization();
     const [organizationKey] = useOrganizationKey();
+    const [organizationRoles] = useOrganizationRoles();
     const dispatch = useDispatch();
     const storageSizeUnit = sizeUnits.GB;
     const { validator, onFormSubmit } = useFormErrors();
@@ -196,6 +199,14 @@ const SubUserEditModal = ({
     const hasVPN = Boolean(organization?.MaxVPN);
     const unprivatization = getMemberUnprivatizationMode(member);
     const isPendingMagicLinkInvite = unprivatization.mode === MemberUnprivatizationMode.MagicLinkInvite;
+    const selectedRolesRequireOrgKey =
+        organizationRoles?.some((role) => selectedRoles.has(role.OrganizationRoleID) && isOrgKeyRequired(role)) ??
+        false;
+    const requiresSignInForAdmin =
+        passwordlessMode &&
+        Boolean(member.SSO) &&
+        !getIsMemberSetup(member) &&
+        (selectedRolesRequireOrgKey || unprivatization.makeAdmin);
 
     const isSelf = Boolean(member.Self);
 
@@ -681,6 +692,7 @@ const SubUserEditModal = ({
                                               userRoles={member.UserOrganizationRoles}
                                               isEditingSelf={isSelf}
                                               disabled={
+                                                  submitting ||
                                                   isSelf ||
                                                   isPendingMagicLinkInvite ||
                                                   !hasMemberRoles ||
@@ -692,6 +704,7 @@ const SubUserEditModal = ({
                                                       !loadingAdminRolesUI,
                                                   pendingInvitation: isPendingMagicLinkInvite,
                                                   isEditingSelf: isSelf,
+                                                  requiresSignInForAdmin,
                                               })}
                                           />
                                       ),

@@ -1,11 +1,11 @@
 import { useAddresses } from '@proton/account/addresses/hooks';
+import { useEntitlementCatalog, useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { usePlans } from '@proton/account/plans/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useUserInvitations } from '@proton/account/userInvitations/hooks';
 import { useCalendars } from '@proton/calendar/calendars/hooks';
-import { useEntitlementChecks } from '@proton/payments-ui/entitlements/hooks';
 import { PaymentsContextProvider } from '@proton/payments-ui/ui/context/PaymentContext';
 import { usePreferredPlansMap } from '@proton/payments-ui/ui/hooks/usePreferredPlansMap';
 import { FREE_PLAN } from '@proton/payments/core/subscription/freePlans';
@@ -29,11 +29,13 @@ import useLoad from '../../../hooks/useLoad';
 import { useTrialOnlyPaymentMethods } from '../../../hooks/useTrialOnlyPaymentMethods';
 import SettingsSectionExtraWide from '../../account/SettingsSectionExtraWide';
 import SettingsSectionWide from '../../account/SettingsSectionWide';
-import TrialInfo from '../../referral/components/TrialInfo/TrialInfo';
+import ReferralTrialInfo from '../../referral/components/ReferralTrialInfo/ReferralTrialInfo';
 import { useSubscriptionModalRaw } from './SubscriptionModalProvider';
-import { useUpsellsToDisplay } from './helpers';
-import { SubscriptionPanel, UpsellPanels, UsagePanel } from './panels';
+import { useUpsellsToDisplay } from './helpers/dashboard-upsells';
 import PendingInvitationsPanel from './panels/PendingInvitationsPanel';
+import UpsellPanels from './panels/UpsellPanels';
+import UsagePanel from './panels/UsagePanel';
+import SubscriptionPanel from './panels/subscription-panel/SubscriptionPanel';
 
 import './YourPlanSection.scss';
 
@@ -43,6 +45,7 @@ interface Props {
 
 const YourPlanSectionInner = ({ app }: Props) => {
     const [user] = useUser();
+    const [entitlementCatalog] = useEntitlementCatalog();
     const [plansResult, loadingPlans] = usePlans();
     const plans = plansResult?.plans;
     const freePlan = plansResult?.freePlan || FREE_PLAN;
@@ -50,7 +53,7 @@ const YourPlanSectionInner = ({ app }: Props) => {
     const [calendars] = useCalendars();
     const [subscription, loadingSubscription] = useSubscription();
     const [organization, loadingOrganization] = useOrganization();
-    const [entitlements, entitlementsLoading] = useEntitlementChecks();
+    const [entitlements, entitlementsLoading] = useEntitlementChecksForOrgAndUser();
     const [invites = []] = useUserInvitations();
     const openSubscriptionModal = useSubscriptionModalRaw();
     const canAccessDuoPlan = getCanSubscriptionAccessDuoPlan(subscription);
@@ -91,7 +94,7 @@ const YourPlanSectionInner = ({ app }: Props) => {
     const shouldRenderSubscription = user.canPay || (subscription && !isTrial(subscription));
     const shouldRenderPendingInvitation = !!invites.length;
 
-    const trialInfo = getTrialInfoForSingleSubscription(subscription);
+    const trialInfo = getTrialInfoForSingleSubscription(entitlementCatalog, subscription);
     const shouldRenderTrialInfo =
         trialInfo.isReferralTrial &&
         ((!hasTrialPaymentMethods && !isAutoRenewTrial(subscription)) || isAutoRenewTrial(subscription));
@@ -136,7 +139,7 @@ const YourPlanSectionInner = ({ app }: Props) => {
                     <UsagePanel addresses={addresses} calendars={calendars} organization={organization} user={user} />
                 )}
                 {shouldRenderUpsells && <UpsellPanels upsells={upsells} subscription={subscription} />}
-                {shouldRenderTrialInfo && <TrialInfo />}
+                {shouldRenderTrialInfo && <ReferralTrialInfo />}
                 {shouldRenderPendingInvitation && <PendingInvitationsPanel invites={invites} />}
             </div>
         </SettingsSection>

@@ -1,5 +1,5 @@
 import type { LumoApiClientConfig } from '@proton/lumo-api-client/core/types';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 import { generateSpaceKeyBase64 } from '../../crypto';
 import { findAgentById } from '../../features/agents/registry';
@@ -14,7 +14,7 @@ import { flattenAttachmentsForLlm } from '../../llm/attachments';
 import { ENABLE_U2L_ENCRYPTION } from '../../llm/config';
 import { getContextLimitsForModelTier } from '../../llm/modelContextLimits';
 import { selectMessagesByConversationId } from '../../redux/selectors';
-import { clearPendingAgent } from '../../redux/slices/composerActions';
+import { clearPendingAgent, clearPendingArtifactCreation } from '../../redux/slices/composerActions';
 import type { AttachmentMap } from '../../redux/slices/core/attachments';
 import { pushAttachmentRequest, upsertAttachment } from '../../redux/slices/core/attachments';
 import {
@@ -40,7 +40,7 @@ import { createGenerationError, getErrorTypeFromMessage } from '../../services/e
 import { throwIfAborted } from '../../services/generation/abortGeneration';
 import { maybeAutoSaveMemoriesFromChats } from '../../services/memoryAutoSave';
 import { SearchService } from '../../services/search/searchService';
-import type { ImageAspectRatio, MessageId, ShallowAttachment } from '../../types';
+import type { ImageAspectRatio, MessageId, QuestionAnswer, ShallowAttachment } from '../../types';
 import {
     type ArtifactActionMeta,
     type Attachment,
@@ -62,6 +62,7 @@ import {
     resolveReferencedFilesForSend,
     shouldSkipRagForExplicitFiles,
 } from '../../util/resolveProjectFiles';
+import { type ArtifactGenerationType, sendArtifactTurnContextEvent } from '../../util/telemetry';
 import { buildArtifactRegistry } from './artifact/artifactRegistry';
 import { runGenerationWithCompaction } from './compactionFlow';
 import type { ConversationContext } from './conversationContext';
@@ -113,6 +114,7 @@ export type NewMessageData = {
     content: string;
     attachments: Attachment[];
     artifactAction?: ArtifactActionMeta;
+    questionAnswers?: QuestionAnswer[];
     artifactCreateModeActive?: boolean;
     artifactRevisionTargetId?: string;
 };
@@ -135,10 +137,12 @@ export function mergeConversationAttachmentsForTurns(existing: Attachment[], res
 // ?q= deep-link security (guest auto-send, first inference only)
 //
 // Guest chat only: opening a link with ?q= auto-sends a prompt the user did not type and has not reviewed yet.
-// An attacker could embed instructions to call web_extract with exfiltration URLs. We mitigate
-// the immediate auto-send by:
+// An attacker could embed instructions to call web_extract with exfiltration URLs, or to create a
+// live webpage artifact the user did not opt into. We mitigate the immediate auto-send by:
 //   1. Excluding web_extract from the external-tool allowlist (see below).
 //   2. Injecting a one-shot system notice in prepareTurns (isFromQueryParam).
+//   3. Not registering create_artifact on that turn (resolveArtifactToolMode + isFromQueryParam).
+//      Outbound requests from artifact previews depend on CSP on /lumo/v1/artifact-shell (server).
 //
 // Accepted trade-offs (intentional):
 //   - First inference only. After the link opens the prompt appears as the first user message;
@@ -179,8 +183,9 @@ export type UiContext = {
     updateSibling?: (message: Message | undefined) => void; // todo remove optional
     enableExternalTools: boolean;
     enableImageTools: boolean;
+    enableAskUserQuestionsTool?: boolean;
     enableReasoning?: boolean;
-    modelTier?: 'auto' | 'lumo-lite' | 'lumo-max' | 'apertus-15';
+    modelTier?: 'auto' | 'lumo-lite' | 'lumo-max' | 'apertus-15' | 'lumo-preview';
     generateTitle?: boolean;
     enableSmoothing?: boolean; // todo remove optional
     navigateCallback?: (conversationId: ConversationId) => void; // todo remove optional
@@ -189,42 +194,92 @@ export type UiContext = {
     /** Set only on the auto-send from a ?q= URL; see ?q= deep-link security comment above. */
     isFromQueryParam?: boolean;
     // True only on the turn where the user explicitly entered Create Artifact mode in the
-    // composer. See `resolveArtifactToolMode` for how this combines with existing-artifact
-    // state to decide whether/how the `create_artifact` tool is made available.
+    // composer (phase 2). See `resolveArtifactToolMode` for how this combines with the
+    // persisted preference and existing-artifact state.
     canvasModeActive?: boolean;
 };
 
 // Whether/how the `create_artifact` client tool is made available on this turn:
-// - 'off': not registered at all — no artifact exists yet and the user hasn't opted in.
-// - 'create': the user just entered Create Artifact mode — may create a new artifact or
-//   revise an existing one.
-// - 'revise': mode isn't active, but the conversation already has an artifact — may only
-//   revise it, not spawn an unrelated new one. Covers follow-ups (including the artifact
-//   panel's selection-based inline-edit flow) without requiring the user to re-enter the mode.
-export type ArtifactToolMode = 'off' | 'create' | 'revise';
+// - 'off': not registered — no artifact exists yet and creation is disabled.
+// - 'create': the user explicitly entered Create Artifact mode (phase 2) — the model is told
+//   to respond with the tool.
+// - 'auto': creation is enabled (the default) — the tool is available, but the model decides
+//   whether the request calls for an artifact. May also revise an existing artifact.
+// - 'revise': the conversation already has an artifact but creation is disabled — may only
+//   revise it, not spawn an unrelated new one. Covers follow-ups (including the artifact panel's
+//   inline-edit flow).
+export type ArtifactToolMode = 'off' | 'create' | 'auto' | 'revise';
 
 export function resolveArtifactToolMode(
     canvasModeActive: boolean | undefined,
     messageChain: Message[],
-    isArtifactsViewFeatureEnabled?: boolean
+    isArtifactsViewFeatureEnabled?: boolean,
+    artifactCreationEnabled?: boolean,
+    /** First inference from a ?q= deep link only; see SECBTY comment above. */
+    isFromQueryParam?: boolean,
+    /** Guest sessions never register create_artifact (Library and composer toggle require sign-in). */
+    isGuestUser?: boolean
 ): ArtifactToolMode {
     if (!isArtifactsViewFeatureEnabled) {
         return 'off';
     }
+
+    if (isGuestUser) {
+        return 'off';
+    }
+
     if (canvasModeActive) {
         return 'create';
     }
+
+    if (isFromQueryParam) {
+        return 'off';
+    }
+
+    if (artifactCreationEnabled ?? true) {
+        return 'auto';
+    }
+
     const hasArtifact = Object.keys(buildArtifactRegistry(messageChain)).length > 0;
-    return hasArtifact ? 'revise' : 'off';
+    if (hasArtifact) {
+        return 'revise';
+    }
+
+    return 'off';
 }
 
 export type SettingsContext = {
     personalization?: PersonalizationSettings;
     isMemoryFeatureEnabled?: boolean;
     isArtifactsViewFeatureEnabled?: boolean;
+    /** `LumoArtifactSlides`: the model may create slide decks (`presentation` artifacts). */
+    isArtifactSlidesFeatureEnabled?: boolean;
     hasLumoPlus?: boolean;
     isVisualizationInstructionsFeatureEnabled?: boolean;
+    isGuestUser?: boolean;
 };
+
+function isArtifactCreationEnabledForRequest(
+    state: LumoState,
+    conversationId: ConversationId | undefined,
+    settingsContext: SettingsContext
+): boolean {
+    if (settingsContext.isGuestUser) {
+        return false;
+    }
+    return resolveArtifactCreationEnabled(state, conversationId);
+}
+
+function artifactCreationSettingForRequest(
+    state: LumoState,
+    conversationId: ConversationId | undefined,
+    settingsContext: SettingsContext
+): ArtifactCreationSetting {
+    if (settingsContext.isGuestUser) {
+        return 'chat-off';
+    }
+    return resolveArtifactCreationSetting(state, conversationId);
+}
 
 function shouldIncludeVisualizationInstructions(
     settingsContext: SettingsContext,
@@ -255,6 +310,54 @@ function ensureConversation(c: ConversationContext, ui: UiContext, createdAt: st
         dispatch(updateConversationStatus({ id: conversationId, status: ConversationStatus.GENERATING }));
         return { spaceId, conversationId };
     };
+}
+
+function sendArtifactTurnTelemetry(
+    generationType: ArtifactGenerationType,
+    artifactToolMode: ArtifactToolMode,
+    chain: Message[],
+    isArtifactsViewFeatureEnabled: boolean | undefined,
+    creationSetting: ArtifactCreationSetting
+) {
+    if (!isArtifactsViewFeatureEnabled) {
+        return;
+    }
+
+    sendArtifactTurnContextEvent({
+        generationType,
+        artifactToolMode,
+        hasExistingArtifact: Object.keys(buildArtifactRegistry(chain)).length > 0,
+        creationSetting,
+    });
+}
+
+/**
+ * Whether the model may create new artifacts in this conversation.
+ *
+ * The conversation's own choice (set from the composer tool menu) wins, then the global
+ * setting, then on. A pending composer choice only applies before the conversation exists —
+ * once it does, the choice has already been stamped onto it (see `initializeNewSpaceAndConversation`).
+ */
+export function resolveArtifactCreationEnabled(state: LumoState, conversationId: ConversationId | undefined): boolean {
+    const setting = resolveArtifactCreationSetting(state, conversationId);
+    return setting === 'default-on' || setting === 'chat-on';
+}
+
+/** Whether creation is on, and whether that comes from the Settings default or the chat's own choice. */
+export type ArtifactCreationSetting = 'default-on' | 'default-off' | 'chat-on' | 'chat-off';
+
+/** Same resolution order as `resolveArtifactCreationEnabled`, keeping track of where the value came from. */
+export function resolveArtifactCreationSetting(
+    state: LumoState,
+    conversationId: ConversationId | undefined
+): ArtifactCreationSetting {
+    const globalDefault = state.lumoUserSettings?.automaticArtifactCreation ?? true;
+    const conversation = conversationId ? state.conversations[conversationId] : undefined;
+    const chatChoice = conversation ? conversation.artifactCreation : state.composerActions?.pendingArtifactCreation;
+    if (chatChoice === undefined || chatChoice === null) {
+        return globalDefault ? 'default-on' : 'default-off';
+    }
+    return chatChoice ? 'chat-on' : 'chat-off';
 }
 
 /**
@@ -404,7 +507,8 @@ export function sendMessage({
             date2,
             m.artifactAction,
             m.artifactCreateModeActive,
-            m.artifactRevisionTargetId
+            m.artifactRevisionTargetId,
+            m.questionAnswers
         );
 
         // Save the user message to Redux and request push to persistence HTTP API
@@ -583,7 +687,18 @@ export function sendMessage({
             const artifactToolMode = resolveArtifactToolMode(
                 ui.canvasModeActive,
                 updatedLinearChain,
-                s.isArtifactsViewFeatureEnabled
+                s.isArtifactsViewFeatureEnabled,
+                // Fresh state: `state` predates the conversation this send may have just created.
+                isArtifactCreationEnabledForRequest(getState(), conversationId, s),
+                ui.isFromQueryParam,
+                s.isGuestUser
+            );
+            sendArtifactTurnTelemetry(
+                'new',
+                artifactToolMode,
+                updatedLinearChain,
+                s.isArtifactsViewFeatureEnabled,
+                artifactCreationSettingForRequest(getState(), conversationId, s)
             );
 
             const contextLimits = getContextLimitsForModelTier(ui.modelTier);
@@ -598,7 +713,8 @@ export function sendMessage({
                     shouldIncludeVisualizationInstructions(s, state.lumoUserSettings),
                     artifactToolMode,
                     ui.isFromQueryParam,
-                    contextLimits
+                    contextLimits,
+                    !!s.isArtifactSlidesFeatureEnabled
                 );
 
             await dispatch(
@@ -624,6 +740,8 @@ export function sendMessage({
                         generateTitle,
                         imageAspectRatio: ui.imageAspectRatio,
                         artifactToolMode,
+                        artifactPresentationEnabled: !!s.isArtifactSlidesFeatureEnabled,
+                        enableAskUserQuestionsTool: ui.enableAskUserQuestionsTool,
                         config: {
                             enableU2LEncryption: ENABLE_U2L_ENCRYPTION,
                             enableSmoothing: ui.enableSmoothing,
@@ -780,7 +898,17 @@ export function regenerateMessage({
             const artifactToolMode = resolveArtifactToolMode(
                 ui.canvasModeActive,
                 c.messageChain,
-                s.isArtifactsViewFeatureEnabled
+                s.isArtifactsViewFeatureEnabled,
+                isArtifactCreationEnabledForRequest(state, c.conversationId, s),
+                undefined,
+                s.isGuestUser
+            );
+            sendArtifactTurnTelemetry(
+                'regenerate',
+                artifactToolMode,
+                c.messageChain,
+                s.isArtifactsViewFeatureEnabled,
+                artifactCreationSettingForRequest(state, c.conversationId, s)
             );
 
             const contextLimits = getContextLimitsForModelTier(ui.modelTier);
@@ -795,7 +923,8 @@ export function regenerateMessage({
                     shouldIncludeVisualizationInstructions(s, state.lumoUserSettings),
                     artifactToolMode,
                     false,
-                    contextLimits
+                    contextLimits,
+                    !!s.isArtifactSlidesFeatureEnabled
                 );
 
                 // Add retry instructions if provided
@@ -837,6 +966,8 @@ export function regenerateMessage({
                         modelTier: ui.modelTier,
                         enableSuggestedQuestions: false,
                         artifactToolMode,
+                        artifactPresentationEnabled: !!s.isArtifactSlidesFeatureEnabled,
+                        enableAskUserQuestionsTool: ui.enableAskUserQuestionsTool,
                         config: {
                             enableU2LEncryption: ENABLE_U2L_ENCRYPTION,
                             enableSmoothing: ui.enableSmoothing,
@@ -1005,7 +1136,17 @@ export function retrySendMessage({
         const artifactToolMode = resolveArtifactToolMode(
             ui.canvasModeActive,
             updatedLinearChain,
-            s.isArtifactsViewFeatureEnabled
+            s.isArtifactsViewFeatureEnabled,
+            isArtifactCreationEnabledForRequest(state, c.conversationId, s),
+            undefined,
+            s.isGuestUser
+        );
+        sendArtifactTurnTelemetry(
+            'retry',
+            artifactToolMode,
+            updatedLinearChain,
+            s.isArtifactsViewFeatureEnabled,
+            artifactCreationSettingForRequest(state, c.conversationId, s)
         );
 
         const contextLimits = getContextLimitsForModelTier(ui.modelTier);
@@ -1020,7 +1161,8 @@ export function retrySendMessage({
                 shouldIncludeVisualizationInstructions(s, state.lumoUserSettings),
                 artifactToolMode,
                 false,
-                contextLimits
+                contextLimits,
+                !!s.isArtifactSlidesFeatureEnabled
             );
 
         // Call the LLM
@@ -1047,6 +1189,8 @@ export function retrySendMessage({
                         enableSuggestedQuestions: false,
                         generateTitle: requestTitle,
                         artifactToolMode,
+                        artifactPresentationEnabled: !!s.isArtifactSlidesFeatureEnabled,
+                        enableAskUserQuestionsTool: ui.enableAskUserQuestionsTool,
                         config: {
                             enableU2LEncryption: ENABLE_U2L_ENCRYPTION,
                             enableSmoothing: ui.enableSmoothing,
@@ -1065,7 +1209,12 @@ export function retrySendMessage({
 }
 
 export function initializeNewSpaceAndConversation(createdAt: string, isGhostMode: boolean = false) {
-    return (dispatch: LumoDispatch): { conversationId: ConversationId; spaceId: SpaceId } => {
+    return (
+        dispatch: LumoDispatch,
+        getState: () => LumoState
+    ): { conversationId: ConversationId; spaceId: SpaceId } => {
+        const pendingArtifactCreation = getState().composerActions?.pendingArtifactCreation ?? null;
+
         const spaceId = newSpaceId();
         dispatch(addSpace({ id: spaceId, createdAt, updatedAt: createdAt, spaceKey: generateSpaceKeyBase64() }));
         dispatch(pushSpaceRequest({ id: spaceId }));
@@ -1080,9 +1229,14 @@ export function initializeNewSpaceAndConversation(createdAt: string, isGhostMode
                 updatedAt: createdAt,
                 status: ConversationStatus.GENERATING,
                 ...(isGhostMode && { ghost: true }),
+                // Part of the first push, so the server never holds a version without it.
+                ...(pendingArtifactCreation !== null && { artifactCreation: pendingArtifactCreation }),
             })
         );
         dispatch(pushConversationRequest({ id: conversationId }));
+        if (pendingArtifactCreation !== null) {
+            dispatch(clearPendingArtifactCreation());
+        }
 
         return { conversationId, spaceId };
     };
@@ -1097,7 +1251,8 @@ function createMessagePair(
     date2: string,
     artifactAction?: ArtifactActionMeta,
     artifactCreateModeActive?: boolean,
-    artifactRevisionTargetId?: string
+    artifactRevisionTargetId?: string,
+    questionAnswers?: QuestionAnswer[]
 ) {
     const context = flattenAttachmentsForLlm(attachments);
     const shallowAttachments = stripDataFromAttachments(attachments);
@@ -1114,6 +1269,7 @@ function createMessagePair(
         blocks: [{ type: 'text', content }],
         ...(shallowAttachments.length && { attachments: shallowAttachments }),
         ...(artifactAction && { artifactAction }),
+        ...(questionAnswers && { questionAnswers }),
         ...(artifactCreateModeActive && { artifactCreateModeActive: true }),
         ...(artifactRevisionTargetId && { artifactRevisionTargetId }),
     };

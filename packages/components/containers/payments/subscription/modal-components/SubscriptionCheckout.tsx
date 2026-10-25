@@ -8,8 +8,13 @@ import { useUser } from '@proton/account/user/hooks';
 import { useConfig } from '@proton/app-context/useConfig';
 import { useCurrencies } from '@proton/payments-ui/client-extensions/useCurrencies';
 import type { PaymentFacade } from '@proton/payments-ui/client-extensions/usePaymentFacade';
-import type { MethodsHook } from '@proton/payments-ui/react-extensions/index';
+import type { MethodsHook } from '@proton/payments-ui/react-extensions/useMethods';
 import type { TaxCountryHook } from '@proton/payments-ui/ui/billing-address/hooks/useTaxCountry';
+import { GuardBanner } from '@proton/payments-ui/ui/components/GuardBanner';
+import {
+    IdealAuthorizationText,
+    isIdealAuthorizationNoteShown,
+} from '@proton/payments-ui/ui/components/IdealAuthorizationText';
 import type { CouponConfigRendered } from '@proton/payments-ui/ui/coupon-config/useCouponConfig';
 import { createCheckoutView } from '@proton/payments-ui/ui/headless-checkout/checkout-view';
 import type { CheckoutModifiers } from '@proton/payments/core/checkout-modifiers';
@@ -26,7 +31,7 @@ import type {
 import { SelectedPlan } from '@proton/payments/core/subscription/selected-plan';
 import { APPS } from '@proton/shared/lib/constants';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { MailFeatureFlag } from '@proton/unleash/Flags';
 import { useFlag } from '@proton/unleash/useFlag';
 
@@ -367,7 +372,16 @@ const SubscriptionCheckout = ({
                 selectedPlan: new SelectedPlan(planIDs, plansMap, cycle, currency),
                 paymentForbiddenReason,
             })}
-            description={showPlanDescription ? <PlanDescription list={list} /> : null}
+            description={
+                <>
+                    {isIdealAuthorizationNoteShown(paymentFacade) && !paymentForbiddenReason.forbidden && (
+                        <div className="mt-2">
+                            <IdealAuthorizationText />
+                        </div>
+                    )}
+                    {showPlanDescription ? <PlanDescription list={list} /> : null}
+                </>
+            }
             disableCurrencySelector={disableCurrencySelector}
             renewNotice={checkoutView.render('renewalNotice')}
             showPaymentProtectionCopy={!isPassBasic}
@@ -408,6 +422,11 @@ const SubscriptionCheckout = ({
 
             {/* Submit button */}
             <div className="my-4">
+                <GuardBanner
+                    errors={checkResult.GuardResult ?? []}
+                    telemetry={{ checkResult, subscriptions: subscription }}
+                    className="mb-4"
+                />
                 {submit}
                 {checkoutView.render('taxInclusive')}
                 {checkoutView.render('vatReverseCharge')}

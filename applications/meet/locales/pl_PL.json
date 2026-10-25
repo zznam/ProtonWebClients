@@ -61,9 +61,6 @@
       "A participant reacted with ${ emoji }": [
         "Uczestnik zareagował: ${ emoji }"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Połączono w trybie przekaźnika TURN z powodu ograniczeń sieciowych. Może to zwiększyć opóźnienia i wpłynąć na jakość połączenia."
-      ],
       "Connection lost. Reconnecting…": [
         "Połączenie przerwane. Ponowne łączenie…"
       ],
@@ -279,9 +276,6 @@
       "Download": [
         "Pobierz"
       ],
-      "Download app": [
-        "Pobierz aplikację"
-      ],
       "Download local participant report": [
         "Pobierz raport lokalnego uczestnika"
       ],
@@ -384,6 +378,9 @@
       "Minimize preview": [
         "Minimalizuj podgląd"
       ],
+      "More info": [
+        "Więcej informacji"
+      ],
       "More info: ${ safeTitle }": [
         "Więcej informacji: ${ safeTitle }"
       ],
@@ -402,8 +399,8 @@
       "Noise cancellation": [
         "Redukcja szumów"
       ],
-      "Open app": [
-        "Otwórz aplikację"
+      "Not now": [
+        "Nie teraz"
       ],
       "Open link": [
         "Otwórz link"
@@ -576,9 +573,6 @@
       "Stay in meeting": [
         "Pozostań na spotkaniu"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Przestań otwierać spotkania w aplikacji komputerowej"
-      ],
       "Stop receiving video": [
         "Przestań odbierać wideo"
       ],
@@ -590,6 +584,9 @@
       ],
       "Stop Recording Track Stats": [
         "Zatrzymaj nagrywanie statystyk ścieżki"
+      ],
+      "Stop sharing": [
+        "Zatrzymaj udostępnianie"
       ],
       "Submit": [
         "Wyślij"
@@ -662,9 +659,6 @@
       "Blur background": [
         "Rozmyj tło"
       ],
-      "Chat": [
-        "Czat"
-      ],
       "Close": [
         "Zamknij"
       ],
@@ -677,9 +671,6 @@
       "Copy meeting link": [
         "Kopiuj link do spotkania"
       ],
-      "Debug overlay": [
-        "Nakładka z informacjami diagnostycznymi"
-      ],
       "Go to dashboard": [
         "Przejdź do pulpitu"
       ],
@@ -688,12 +679,6 @@
       ],
       "Lock meeting": [
         "Zablokuj spotkanie"
-      ],
-      "Lower hand": [
-        "Opuść rękę"
-      ],
-      "Meeting details": [
-        "Szczegóły spotkania"
       ],
       "More options": [
         "Więcej opcji"
@@ -710,23 +695,11 @@
       "Participant host control options": [
         "Opcje zarządzania uczestnikami przez gospodarza"
       ],
-      "Participants": [
-        "Uczestnicy"
-      ],
-      "Raise hand": [
-        "Podnieś rękę"
-      ],
       "Rotate camera": [
         "Obróć kamerę"
       ],
       "Save my name on this device": [
         "Zapisz moje imię na tym urządzeniu"
-      ],
-      "Screen share": [
-        "Udostępnianie ekranu"
-      ],
-      "Settings": [
-        "Ustawienia"
       ],
       "Stop recording and download.": [
         "Zatrzymaj nagrywanie i pobierz."
@@ -737,17 +710,11 @@
       "Toggle emoji reactions": [
         "Przełącz reakcje emoji"
       ],
-      "Toggle meeting details": [
-        "Przełącz szczegóły spotkania"
-      ],
       "Toggle participants": [
         "Przełącz uczestników"
       ],
       "Toggle screen share": [
         "Przełącz udostępnianie ekranu"
-      ],
-      "Toggle settings": [
-        "Przełącz ustawienia"
       ],
       "Video settings": [
         "Ustawienia wideo"
@@ -802,16 +769,6 @@
     "Badge": {
       "Active": [
         "Aktywne"
-      ]
-    },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Połączono przez tryb przekaźnika TURN ze względu na ograniczenia sieciowe. Może to zwiększyć opóźnienie i wpłynąć na jakość połączenia."
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplikacja desktopowa ${ MAIL_APP_NAME }"
       ]
     },
     "Bug category": {
@@ -1851,6 +1808,9 @@
       "Incorrect backup password. Please try again.": [
         "Hasło zapasowe jest nieprawidłowe. Spróbuj ponownie."
       ],
+      "Incorrect password. Please try again.": [
+        "Hasło jest nieprawidłowe. Spróbuj ponownie."
+      ],
       "Incorrect second password. Please try again.": [
         "Drugie hasło jest nieprawidłowe. Spróbuj ponownie."
       ],
@@ -1934,6 +1894,9 @@
       ],
       "We couldn’t send a verification code using this method.": [
         "Nie udało się wysłać kodu weryfikacyjnego tą metodą."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Hasło odzyskiwania jest nieprawidłowe. Spróbuj ponownie lub użyj innej metody odzyskiwania."
       ],
       "Your browser ran out of storage space. We saved the recording up to this point.": [
         "W Twojej przeglądarce skończyło się miejsce na dane. Zapisaliśmy nagranie do tego momentu."
@@ -2352,9 +2315,6 @@
       "Get a secure meeting link then add it to your calendar": [
         "Pobierz bezpieczny link do spotkania, a następnie dodaj go do swojego kalendarza"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Zyskaj najlepsze wrażenia dzięki aplikacji komputerowej ${ protonMeet }"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Przejdź do about:config, wyszukaj media.peerconnection.enabled i ustaw na true."
       ],
@@ -2640,9 +2600,6 @@
       "Share screen": [
         "Udostępnij ekran"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Udostępnij ten link, aby zaprosić innych. Możesz go również w dowolnej chwili znaleźć, klikając ikonę informacji na pasku narzędzi."
-      ],
       "Sign in": [
         "Zaloguj się"
       ],
@@ -2651,9 +2608,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "Wybór głośnika nie jest dostępny w tej przeglądarce. Użyj ustawień systemowych, aby wybrać inny głośnik."
-      ],
-      "Start recording": [
-        "Rozpocznij nagrywanie"
       ],
       "Starting camera…": [
         "Uruchamianie kamery…"
@@ -2693,9 +2647,6 @@
       ],
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "To spotkanie osiągnęło limit czasu darmowego planu. Ulepsz plan, aby wydłużyć czas trwania spotkań w przyszłości."
-      ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "To spotkanie zostało otwarte w aplikacji komputerowej ${ MEET_APP_NAME }."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "To nagranie zostanie trwale usunięte z tego urządzenia. Tej operacji nie można cofnąć."
@@ -2780,9 +2731,6 @@
       ],
       "You are almost there": [
         "Już prawie gotowe"
-      ],
-      "You can close this tab.": [
-        "Możesz zamknąć tę kartę."
       ],
       "You can now return to the application to continue": [
         "Możesz wrócić do aplikacji, aby kontynuować"
@@ -2986,6 +2934,9 @@
       ],
       "Monday to Friday": [
         "Od poniedziałku do piątku"
+      ],
+      "More options": [
+        "Więcej opcji"
       ],
       "Muted": [
         "Wyciszono"

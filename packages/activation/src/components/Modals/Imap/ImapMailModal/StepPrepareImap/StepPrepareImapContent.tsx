@@ -1,14 +1,14 @@
 import { c } from 'ttag';
 
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { LabelStack } from '@proton/components';
+import LabelStack from '@proton/components/components/labelStack/LabelStack';
 import { IcClock } from '@proton/icons/icons/IcClock';
 import { IcExclamationCircleFilled } from '@proton/icons/icons/IcExclamationCircleFilled';
 import { IcFolders } from '@proton/icons/icons/IcFolders';
 import { IcInbox } from '@proton/icons/icons/IcInbox';
 import { IcTag } from '@proton/icons/icons/IcTag';
 import { IcTags } from '@proton/icons/icons/IcTags';
-import type { Label } from '@proton/shared/lib/interfaces';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 
 import { getTimeUnitLabels } from '../../../../../constants';
 import { EasyTrans } from '../../../../../helpers/easyTrans';

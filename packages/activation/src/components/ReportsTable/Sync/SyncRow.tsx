@@ -1,20 +1,20 @@
-import { TableCell, TableRow } from '@proton/components';
+import { memo } from 'react';
+
+import TableCell from '@proton/components/components/table/TableCell';
+import TableRow from '@proton/components/components/table/TableRow';
 
 import { ApiImportProvider } from '../../../api/api.interface';
-import { useEasySwitchSelector } from '../../../logic/store';
-import { selectSyncById } from '../../../logic/sync/sync.selectors';
+import type { Sync } from '../../../logic/sync/sync.interface';
 import ReportsTableCell from '../ReportsTableCell';
 import SyncRowActions from './SyncRowActions';
 import SyncRowStatus from './SyncRowStatus';
 
 interface Props {
-    syncId: string;
+    sync: Sync;
 }
 
-const SyncRow = ({ syncId }: Props) => {
-    const syncItem = useEasySwitchSelector((state) => selectSyncById(state, syncId));
-
-    const { product, account, state } = syncItem;
+const SyncRow = ({ sync }: Props) => {
+    const { product, account, state } = sync;
 
     return (
         <TableRow data-testid="reportsTable:syncRow">
@@ -24,10 +24,10 @@ const SyncRow = ({ syncId }: Props) => {
                 <SyncRowStatus state={state} />
             </TableCell>
             <TableCell className="easy-switch-table-actions">
-                <SyncRowActions syncId={syncId} />
+                <SyncRowActions syncItem={sync} />
             </TableCell>
         </TableRow>
     );
 };
 
-export default SyncRow;
+export default memo(SyncRow);

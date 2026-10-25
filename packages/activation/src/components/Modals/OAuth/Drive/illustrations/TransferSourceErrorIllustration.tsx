@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { useId } from 'react';
 
-import { useTheme } from '@proton/components';
+import { useTheme } from '@proton/components/containers/themes/ThemeProvider';
 
 const FRAME_W = 360;
 const FRAME_H = 188;
@@ -316,7 +316,7 @@ export const TransferSourceErrorIllustration = () => {
                     ...tileFace(palette.plainTile),
                 }}
             >
-                <GoogleDriveMark uid={uid} />
+                <ProtonDriveMark uid={uid} />
             </div>
 
             <div
@@ -344,7 +344,7 @@ export const TransferSourceErrorIllustration = () => {
                         ...tileFace(palette.badgedTile),
                     }}
                 >
-                    <ProtonDriveMark uid={uid} />
+                    <GoogleDriveMark uid={uid} />
                 </div>
             </div>
 

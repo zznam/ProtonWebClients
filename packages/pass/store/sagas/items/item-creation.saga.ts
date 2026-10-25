@@ -5,13 +5,15 @@ import { hasAttachments } from '../../../lib/items/item.predicates';
 import type { ItemRevisionWithAlias } from '../../../lib/items/item.requests';
 import { createAlias, createItem, createItemWithAlias } from '../../../lib/items/item.requests';
 import { createTelemetryEvent } from '../../../lib/telemetry/utils';
-import type { ItemRevision } from '../../../types';
+import type { ItemRevision } from '../../../types/data/items';
 import { TelemetryEventName, TelemetryItemType } from '../../../types/data/telemetry';
 import { deobfuscate } from '../../../utils/obfuscate/xor';
-import { filesResolve, itemCreate, itemCreateDismiss } from '../../actions';
+import { filesResolve } from '../../actions/creators/files';
+import { itemCreate, itemCreateDismiss } from '../../actions/creators/item';
+import { withIntentSender } from '../../actions/enhancers/endpoint';
 import { withRevalidate } from '../../request/enhancers';
-import { selectShareOrThrow } from '../../selectors';
 import { SelectorError } from '../../selectors/errors';
+import { selectShareOrThrow } from '../../selectors/shares';
 import type { RootSagaOptions } from '../../types';
 import { itemLinkPendingFiles } from './item-files.sagas';
 
@@ -47,14 +49,15 @@ function* singleItemCreationWorker(options: RootSagaOptions, action: ItemCreatio
         if (hasTotp) void telemetry?.push(createTelemetryEvent(TelemetryEventName.TwoFACreation, {}, {}));
     } catch (error) {
         if (error instanceof SelectorError) yield put(itemCreateDismiss({ optimisticId, shareId, itemName }));
-        yield put(itemCreate.failure(meta.request.id, error, { optimisticId, shareId }));
+        yield put(withIntentSender(itemCreate.failure(meta.request.id, error, { optimisticId, shareId }), action));
     }
 }
 
-function* withAliasCreationWorker(options: RootSagaOptions, { payload: createIntent, meta }: ItemWithAliasCreationAction) {
+function* withAliasCreationWorker(options: RootSagaOptions, action: ItemWithAliasCreationAction) {
     const { getTelemetry } = options;
     const telemetry = getTelemetry();
 
+    const { payload: createIntent, meta } = action;
     const { shareId, optimisticId, files } = createIntent;
     const shouldLink = files.toAdd.length > 0;
 
@@ -70,7 +73,7 @@ function* withAliasCreationWorker(options: RootSagaOptions, { payload: createInt
         void telemetry?.push(createTelemetryEvent(TelemetryEventName.ItemCreation, {}, { type: TelemetryItemType[aliasItem.data.type] }));
         if (deobfuscate(content.totpUri)) void telemetry?.push(createTelemetryEvent(TelemetryEventName.TwoFACreation, {}, {}));
     } catch (error) {
-        yield put(itemCreate.failure(meta.request.id, error, { optimisticId, shareId }));
+        yield put(withIntentSender(itemCreate.failure(meta.request.id, error, { optimisticId, shareId }), action));
     }
 }
 

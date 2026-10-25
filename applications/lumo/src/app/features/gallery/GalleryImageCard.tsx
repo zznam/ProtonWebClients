@@ -2,7 +2,9 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { c } from 'ttag';
 
+import { useNotifications } from '@proton/app-context/useNotifications';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
+import { formatIntlDate } from '@proton/shared/lib/date/formatIntlDate';
 
 import { useFileHandling } from '../../components/Composer/hooks/useFileHandling';
 import { LumoIcon } from '../../components/LumoIcon/LumoIcon';
@@ -10,9 +12,9 @@ import type { DrawingMode } from '../../features/drawingcanvas/types';
 import { ImagePreviewOverlay } from '../../features/imageActions/ImagePreviewOverlay';
 import { useLazyAttachment } from '../../hooks/useLazyAttachment';
 import { useLumoNavigate } from '../../hooks/useLumoNavigate';
-import { downloadImage } from '../../remote/lumoImageDownload';
 import { attachmentDataCache } from '../../services/attachmentDataCache';
 import type { AttachmentId } from '../../types';
+import { triggerFileDownload } from '../../util/triggerFileDownload';
 
 interface GalleryImageCardProps {
     attachmentId: AttachmentId;
@@ -28,6 +30,7 @@ export const GalleryImageCard = ({ attachmentId, createdAt, onExport, imageSrcOv
     const [overlayDefaultMode, setOverlayDefaultMode] = useState<'preview' | 'edit'>('preview');
     const [hovered, setHovered] = useState(false);
     const navigate = useLumoNavigate();
+    const { createNotification } = useNotifications();
     const { handleFilesSelected } = useFileHandling({ messageChain: [] });
 
     const imageDataUrl = useMemo(() => {
@@ -49,9 +52,17 @@ export const GalleryImageCard = ({ attachmentId, createdAt, onExport, imageSrcOv
         async (e?: React.MouseEvent) => {
             e?.stopPropagation();
             if (!imageDataUrl) return;
-            await downloadImage(imageDataUrl, attachment?.filename || `generated-image-${attachmentId}.png`);
+            try {
+                await triggerFileDownload(
+                    imageDataUrl,
+                    attachment?.filename || `generated-image-${attachmentId}.png`,
+                    'image'
+                );
+            } catch {
+                createNotification({ type: 'error', text: c('Error').t`Failed to download image. Please try again.` });
+            }
         },
-        [imageDataUrl, attachment, attachmentId]
+        [imageDataUrl, attachment, attachmentId, createNotification]
     );
 
     const handleChangeStyle = useCallback(
@@ -71,7 +82,7 @@ export const GalleryImageCard = ({ attachmentId, createdAt, onExport, imageSrcOv
         [imageDataUrl, attachment, handleFilesSelected, navigate]
     );
 
-    const formattedDate = createdAt.toLocaleDateString(undefined, {
+    const formattedDate = formatIntlDate(createdAt, {
         month: 'short',
         day: 'numeric',
         year: createdAt.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined,
@@ -94,11 +105,17 @@ export const GalleryImageCard = ({ attachmentId, createdAt, onExport, imageSrcOv
                 onClick={() => openOverlay('preview')}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
-                aria-label={`Generated image from ${formattedDate}`}
+                aria-label={
+                    // translator: Accessible description of a generated image; formattedDate is its creation date.
+                    c('collider_2025:Label').t`Generated image from ${formattedDate}`
+                }
             >
                 <img
                     src={imageDataUrl}
-                    alt={`Generated image from ${formattedDate}`}
+                    alt={
+                        // translator: Accessible description of a generated image; formattedDate is its creation date.
+                        c('collider_2025:Label').t`Generated image from ${formattedDate}`
+                    }
                     className="gallery-card__image"
                     loading="lazy"
                 />

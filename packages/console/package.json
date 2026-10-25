@@ -1,0 +1,31 @@
+{
+    "name": "@proton/console",
+    "description": "Admin Console pages shared with Account and VPN settings",
+    "license": "GPL-3.0",
+    "author": "",
+    "sideEffects": false,
+    "type": "module",
+    "exports": {},
+    "scripts": {
+        "check:types": "tsc --checkers 1",
+        "lint": "eslint --quiet",
+        "test": "TZ=UTC vitest run",
+        "test:ci": "pnpm run test --run",
+        "test:ui": "pnpm run test --ui",
+        "test:watch": "pnpm run test --watch"
+    },
+    "devDependencies": {
+        "@proton/eslint-config-proton": "workspace:^",
+        "@proton/vitest-config": "workspace:^",
+        "@testing-library/jest-dom": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "@vitejs/plugin-react": "^6.1.2",
+        "@vitest/coverage-v8": "catalog:",
+        "@vitest/ui": "catalog:",
+        "eslint": "catalog:",
+        "happy-dom": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:"
+    }
+}

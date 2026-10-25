@@ -6,7 +6,7 @@ import type {
   VERIFICATION_STATUS,
 } from '@protontech/crypto'
 import { CryptoProxy } from '@protontech/crypto'
-import { SignedPlaintextContent } from '@proton/docs-proto'
+import { SignedPlaintextContent } from '@proton/docs-proto/Generated/DocumentUpdate'
 import {
   encryptDataWith16ByteIV as gcmEncryptWith16ByteIV,
   decryptData as gcmDecrypt,
@@ -17,15 +17,25 @@ import { utf8StringToUint8Array } from '@protontech/crypto/utils'
 import type { EncryptionContext } from './EncryptionContext'
 import { deriveGcmKey } from '../../Crypto/deriveGcmKey'
 import { HKDF_SALT_SIZE } from '../../Crypto/Constants'
-import { Result } from '@proton/docs-shared'
+import { Result } from '@proton/docs-shared/Result'
 import type { DriveCompatWrapper } from '@proton/drive-store/lib/DriveCompatWrapper'
+import type { Api } from '@proton/shared/lib/interfaces/Api'
+import { getPublicKeysForEmail } from '../../Crypto/getPublicKeysForEmail'
+
+type EncryptionServiceOptions = {
+  providedGetVerificationKey?: (email: string) => Promise<PublicKeyReference[]>
+}
 
 export class EncryptionService<C extends EncryptionContext> {
+  private providedGetVerificationKey?: EncryptionServiceOptions['providedGetVerificationKey']
+
   constructor(
     private context: C,
     private driveCompat: DriveCompatWrapper,
+    private api: Api,
+    { providedGetVerificationKey }: EncryptionServiceOptions = {},
   ) {
-    this.context = context
+    this.providedGetVerificationKey = providedGetVerificationKey
   }
 
   private getContext(associatedData: string) {
@@ -163,7 +173,10 @@ export class EncryptionService<C extends EncryptionContext> {
   async getVerificationKey(email: string): Promise<Result<PublicKeyReference[]>> {
     try {
       if (this.driveCompat.getCompatType() === 'public') {
-        const value = await this.driveCompat.getPublicCompat().getPublicKeysForEmail(email)
+        const publicCompat = this.driveCompat.getPublicCompat()
+        const value = publicCompat
+          ? await publicCompat.getPublicKeysForEmail(email)
+          : await getPublicKeysForEmail(this.api, email)
         if (!value) {
           return Result.fail(`Failed to get public keys for email in public context`)
         }
@@ -172,7 +185,9 @@ export class EncryptionService<C extends EncryptionContext> {
         return Result.ok(keys)
       }
 
-      const value = await this.driveCompat.getUserCompat().getVerificationKey(email)
+      const value = this.providedGetVerificationKey
+        ? await this.providedGetVerificationKey(email)
+        : await this.driveCompat.getUserCompat().getVerificationKey(email)
 
       return Result.ok(value)
     } catch (error) {

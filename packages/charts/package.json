@@ -14,7 +14,7 @@
         "./TrendChart.types": "./src/charts/TrendChart/TrendChart.types.ts"
     },
     "scripts": {
-        "check-types": "tsc --checkers 1",
+        "check:types": "tsc --checkers 1",
         "lint": "eslint --quiet",
         "test": "TZ=UTC vitest",
         "test:ci": "pnpm run test --run",
@@ -26,23 +26,26 @@
         "@proton/components": "workspace:^",
         "@proton/utils": "workspace:^",
         "chart.js": "^4.5.1",
-        "react": "^18.3.1",
+        "react": "catalog:",
         "react-chartjs-2": "^5.3.1"
     },
     "devDependencies": {
         "@proton/eslint-config-proton": "workspace:^",
+        "@proton/styles": "workspace:^",
         "@proton/vitest-config": "workspace:^",
-        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/jest-dom": "catalog:",
         "@testing-library/react": "^15.0.7",
-        "@types/react": "^18.3.31",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "@vitejs/plugin-react": "^6.1.1",
-        "@vitest/coverage-v8": "^5.0.1",
-        "@vitest/ui": "5.0.1",
-        "eslint": "^10.11.0",
-        "happy-dom": "^20.14.5",
-        "react-dom": "^18.3.1",
-        "typescript": "npm:@typescript/typescript6@^6.0.2",
-        "vitest": "^5.0.1"
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "@vitejs/plugin-react": "^6.1.2",
+        "@vitest/coverage-v8": "catalog:",
+        "@vitest/ui": "catalog:",
+        "eslint": "catalog:",
+        "happy-dom": "catalog:",
+        "react-dom": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:"
     }
 }

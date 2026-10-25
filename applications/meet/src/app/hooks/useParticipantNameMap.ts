@@ -1,6 +1,7 @@
 import { type RefObject, useCallback, useEffect, useRef } from 'react';
 
 import { useLocalParticipant, useRoomContext } from '@livekit/components-react';
+import { logger } from '@protontech/logger';
 import type { Participant } from 'livekit-client';
 import { c } from 'ttag';
 
@@ -138,8 +139,7 @@ export const useParticipantNameMap = (meetingLinkName: string, decryptionKeyRef?
                     await handleFetch(meetingLinkName);
                 }
             } catch (error) {
-                // eslint-disable-next-line no-console
-                console.error(error);
+                logger.error('Failed to fetch participants', error);
                 isFetchingRef.current = false;
             }
         },
@@ -151,14 +151,13 @@ export const useParticipantNameMap = (meetingLinkName: string, decryptionKeyRef?
             const response = await api<{ Current: number }>(queryParticipantsCount(meetingLinkName));
             return response.Current;
         } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(error);
+            logger.error('Failed to fetch the participants count', error);
         }
     };
 
-    const updateAdminParticipant = async (roomId: string, participantUid: string, participantType: Number) => {
+    const updateAdminParticipant = async (meetingLinkName: string, participantUid: string, participantType: Number) => {
         if (participantUid === localParticipant?.identity) {
-            await getParticipants(roomId);
+            await getParticipants(meetingLinkName);
             return;
         }
 

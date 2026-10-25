@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useDevicesListing } from '../_devices';
+import useDevicesListing from '../_devices/useDevicesListing';
 import type { DecryptedLink } from '../_links/interface';
 import useLink from '../_links/useLink';
 import useLinksState from '../_links/useLinksState';
@@ -72,21 +72,7 @@ export default function useLinkPath() {
         [getCachedLink]
     );
 
-    const getPath = useCallback(
-        async (abortSignal: AbortSignal, shareId: string, linkId: string): Promise<string> => {
-            return traverseLinksToRoot(abortSignal, shareId, linkId)
-                .then((path) => {
-                    return `/${path.map(({ name }) => name).join('/')}`;
-                })
-                .catch((err) => {
-                    return err.message || '';
-                });
-        },
-        [traverseLinksToRoot]
-    );
-
     return {
         traverseLinksToRoot,
-        getPath,
     };
 }

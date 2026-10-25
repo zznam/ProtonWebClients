@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { c } from 'ttag';
 
-import { useSubscription } from '@proton/account/subscription/hooks';
+import { useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useConfig } from '@proton/app-context/useConfig';
 import { Button } from '@proton/atoms/Button/Button';
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const OnboardingDiscoverFeaturesStep = ({ onClose }: Props) => {
-    const [subscription] = useSubscription();
+    const [entitlements] = useEntitlementChecksForOrgAndUser();
     const { APP_NAME } = useConfig();
     const api = useApi();
 
@@ -47,7 +47,7 @@ const OnboardingDiscoverFeaturesStep = ({ onClose }: Props) => {
     // In case we are in account, we need to display the feature list in a different order
     const parentApp = getAppFromPathnameSafe(window.location.pathname);
 
-    const allFeatures = getFeatures(subscription, handleOnClickFeatureCTA).filter((feature) => feature.canShowFeature);
+    const allFeatures = getFeatures(entitlements, handleOnClickFeatureCTA).filter((feature) => feature.canShowFeature);
 
     // Remove sections having no features
     const allSections = getSections(APP_NAME, parentApp).filter((section) => section.featuresList.length != 0);

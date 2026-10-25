@@ -6,11 +6,12 @@ import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import { resetMeetingState } from '@proton/meet/store/resetMeetingState';
 import {
     selectExpirationTime,
-    setMeetingInfo,
+    setCurrentMeeting,
     startMeetingDurationTimer,
     stopMeetingDurationTimer,
-} from '@proton/meet/store/slices/meetingInfo';
+} from '@proton/meet/store/slices/currentMeeting';
 import { selectTotalParticipantCount } from '@proton/meet/store/slices/participants/sortedParticipantsSlice';
+import { clearRecording } from '@proton/meet/store/slices/recordingsSlice';
 import { isSafari } from '@proton/shared/lib/helpers/browser';
 
 import { AutoCloseMeetingModal } from '../components/AutoCloseMeetingModal/AutoCloseMeetingModal';
@@ -39,7 +40,6 @@ interface MeetContainerProps {
     instantMeeting: boolean;
     assignHost: (participantUuid: string) => Promise<void>;
     getKeychainIndexInformation: () => (number | undefined)[];
-    isUsingTurnRelay: boolean;
     liveKitConnectionState: ConnectionState | null;
     showReconnectedMessage: boolean;
     setShowReconnectedMessage: React.Dispatch<React.SetStateAction<boolean>>;
@@ -65,7 +65,6 @@ export const MeetContainer = ({
     instantMeeting,
     assignHost,
     getKeychainIndexInformation,
-    isUsingTurnRelay,
     liveKitConnectionState,
     showReconnectedMessage,
     setShowReconnectedMessage,
@@ -86,7 +85,7 @@ export const MeetContainer = ({
 
     useLayoutEffect(() => {
         dispatch(
-            setMeetingInfo({
+            setCurrentMeeting({
                 instantMeeting,
                 displayName,
             })
@@ -106,6 +105,10 @@ export const MeetContainer = ({
     }, [dispatch, expirationTime]);
 
     useEffect(() => {
+        // Not part of `resetMeetingState`: the post-meeting screen reads this slice after
+        // this container unmounts, so a leftover recording is dropped on the way in instead.
+        dispatch(clearRecording());
+
         return () => {
             dispatch(resetMeetingState());
         };
@@ -182,7 +185,6 @@ export const MeetContainer = ({
                     isDisconnected={isDisconnected}
                     liveKitConnectionState={liveKitConnectionState}
                     showReconnectedMessage={showReconnectedMessage}
-                    isUsingTurnRelay={isUsingTurnRelay}
                 >
                     <MeetContext.Provider value={meetContextValue}>
                         {debugOverlay.isOpen && (
@@ -193,7 +195,6 @@ export const MeetContainer = ({
                             />
                         )}
                         <MeetingBody
-                            isUsingTurnRelay={isUsingTurnRelay}
                             liveKitConnectionState={liveKitConnectionState}
                             showReconnectedMessage={showReconnectedMessage}
                             setShowReconnectedMessage={setShowReconnectedMessage}

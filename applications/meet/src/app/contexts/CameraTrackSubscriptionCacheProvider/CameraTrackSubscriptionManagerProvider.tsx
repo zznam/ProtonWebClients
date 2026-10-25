@@ -6,10 +6,12 @@ import type { Participant, TrackPublication } from 'livekit-client';
 import { RoomEvent } from 'livekit-client';
 
 import { PAGE_SIZE, SMALL_SCREEN_PAGE_SIZE } from '@proton/meet/constants';
+import { useMeetErrorReporting } from '@proton/meet/hooks/useMeetErrorReporting';
 import { useMeetSelector } from '@proton/meet/store/hooks';
 import { selectActiveSpeakerSpotlightIdentity } from '@proton/meet/store/slices/participants/sortedParticipantsSlice';
 import { selectMeetSettings, selectParticipantsWithDisabledVideos } from '@proton/meet/store/slices/settings';
 import { isMobile } from '@proton/shared/lib/helpers/browser';
+import { useFlag } from '@proton/unleash/useFlag';
 
 import { useParticipantQuality } from '../../hooks/useParticipantQuality';
 import { useStableCallback } from '../../hooks/useStableCallback';
@@ -35,12 +37,20 @@ export const CameraTrackSubscriptionManagerProvider = ({ children }: { children:
     const participantQuality = useParticipantQuality();
 
     const spotlightParticipantIdentity = useMeetSelector(selectActiveSpeakerSpotlightIdentity);
+    const allowResettingFrozenVideoTracks = useFlag('MeetAllowResettingFrozenVideoTracks');
+    const { reportMeetError } = useMeetErrorReporting();
 
-    const [manager, setManager] = useState(() => new CameraTrackSubscriptionManager(DEFAULT_CAPACITY, room));
+    const [manager, setManager] = useState(
+        () => new CameraTrackSubscriptionManager(DEFAULT_CAPACITY, room, reportMeetError)
+    );
 
     useEffect(() => {
         manager.setPolicy({ disableVideos, participantsWithDisabledVideos, participantQuality });
     }, [manager, disableVideos, participantsWithDisabledVideos, participantQuality]);
+
+    useEffect(() => {
+        manager.setAllowResettingFrozenVideoTracks(allowResettingFrozenVideoTracks);
+    }, [manager, allowResettingFrozenVideoTracks]);
 
     useEffect(() => {
         manager.setSpotlightParticipantIdentity(spotlightParticipantIdentity);
@@ -50,7 +60,7 @@ export const CameraTrackSubscriptionManagerProvider = ({ children }: { children:
     const handleDisconnected = useStableCallback(() => {
         manager.destroy();
 
-        const newManager = new CameraTrackSubscriptionManager(DEFAULT_CAPACITY, room);
+        const newManager = new CameraTrackSubscriptionManager(DEFAULT_CAPACITY, room, reportMeetError);
         newManager.setPolicy({ disableVideos, participantsWithDisabledVideos, participantQuality });
         newManager.setSpotlightParticipantIdentity(spotlightParticipantIdentity);
         newManager.setupReconcileLoop();

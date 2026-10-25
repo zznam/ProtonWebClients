@@ -2,24 +2,21 @@ import { memo } from 'react';
 
 import { c } from 'ttag';
 
-import { TableCell, TableRow } from '@proton/components';
+import TableCell from '@proton/components/components/table/TableCell';
+import TableRow from '@proton/components/components/table/TableRow';
 import { shortHumanSize } from '@proton/shared/lib/helpers/humanSize';
 
-import type { ActiveImportID } from '../../../logic/importers/importers.interface';
-import { selectActiveImporterById, selectImporterById } from '../../../logic/importers/importers.selectors';
-import { useEasySwitchSelector } from '../../../logic/store';
+import type { ActiveImporter, Importer } from '../../../logic/importers/importers.interface';
 import ReportsTableCell from '../ReportsTableCell';
 import ImporterRowActions from './ImporterRowActions';
 import ImporterRowStatus from './ImporterRowStatus';
 
 interface Props {
-    activeImporterId: ActiveImportID;
+    activeImporter: ActiveImporter;
+    importer: Importer;
 }
 
-const ImporterRow = ({ activeImporterId }: Props) => {
-    const activeImporter = useEasySwitchSelector((state) => selectActiveImporterById(state, activeImporterId));
-    const importer = useEasySwitchSelector((state) => selectImporterById(state, activeImporter.importerID));
-
+const ImporterRow = ({ activeImporter, importer }: Props) => {
     const { product, importState, startDate, errorCode, importedBytes } = activeImporter;
     const { account, provider } = importer;
 
@@ -31,11 +28,11 @@ const ImporterRow = ({ activeImporterId }: Props) => {
             </TableCell>
             <TableCell className="easy-switch-table-status">
                 <div>
-                    <ImporterRowStatus state={importState} errorCode={errorCode} />
+                    <ImporterRowStatus state={importState} errorCode={errorCode} product={product} />
                 </div>
             </TableCell>
             <TableCell className="easy-switch-table-actions">
-                <ImporterRowActions activeImporterID={activeImporter.localID} />
+                <ImporterRowActions activeImporter={activeImporter} importer={importer} />
             </TableCell>
         </TableRow>
     );

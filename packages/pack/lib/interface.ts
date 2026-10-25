@@ -1,4 +1,4 @@
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 
 export interface ProtonPackOptions {
     version: string;
@@ -10,7 +10,6 @@ export interface ProtonPackOptions {
     featureFlags: string;
     sri: boolean;
     babelLoader: boolean;
-    inlineIcons: boolean;
     /**
      * Override the loader transpilation targets with an explicit query
      */
@@ -60,7 +59,6 @@ export interface WebpackOptions {
     babelLoader: boolean;
     featureFlags: string;
     writeSRI: boolean;
-    inlineIcons: boolean;
     /**
      * Optional explicit query to override transpilation targets. Falls back to `browserslistEnv` when unset.
      */

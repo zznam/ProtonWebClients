@@ -8,8 +8,8 @@ import OnboardingStep from '@proton/components/containers/onboarding/OnboardingS
 import type { OnboardingStepRenderCallback } from '@proton/components/containers/onboarding/interface';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { MAIL_APP_NAME } from '@proton/shared/lib/constants';
-import type { User } from '@proton/shared/lib/interfaces';
-import { getIsBYOEAccount } from '@proton/shared/lib/keys';
+import type { User } from '@proton/shared/lib/interfaces/User';
+import { getIsBYOEAccount } from '@proton/shared/lib/keys/accountType';
 import blockTrackersSvg from '@proton/styles/assets/img/onboarding/mail_onboarding_block_trackers_new.svg';
 import encryptionSvg from '@proton/styles/assets/img/onboarding/mail_onboarding_encryption_new.svg';
 import noAdsSvg from '@proton/styles/assets/img/onboarding/mail_onboarding_no_ads.svg';
@@ -18,7 +18,8 @@ import clsx from '@proton/utils/clsx';
 import isTruthy from '@proton/utils/isTruthy';
 
 import { useGetStartedChecklist } from '../../../../containers/onboardingChecklist/provider/GetStartedChecklistProvider';
-
+import { TrackOnboardingStepLoad } from '../../../../telemetry/TrackOnboardingStepLoad';
+import { ONBOARDING_STEPS, useOnboardingTracking } from '../../../../telemetry/onboardingEvents';
 import type { OnboardingStepEligibleCallback } from '../interface';
 import OnboardingContent from '../layout/OnboardingContent';
 
@@ -103,17 +104,20 @@ const PrivacyFeature = ({ description, imgSrc }: { imgSrc: string; description: 
 };
 
 const OnboardingWelcomeStep = ({ onNext }: OnboardingStepRenderCallback) => {
+    const { trackStepCompleted } = useOnboardingTracking();
     const { markItemsAsDone } = useGetStartedChecklist();
     const [user] = useUser();
     const privacyFeature = getPrivacyFeatures(user);
 
     const handleNext = () => {
         void markItemsAsDone('ProtectInbox');
+        trackStepCompleted(ONBOARDING_STEPS.welcome);
         onNext();
     };
 
     return (
         <OnboardingStep>
+            <TrackOnboardingStepLoad step={ONBOARDING_STEPS.welcome} />
             <OnboardingContent
                 title={c('Onboarding modal').t`Welcome to ${MAIL_APP_NAME}`}
                 description={c('Onboarding modal').t`Where privacy is default.`}

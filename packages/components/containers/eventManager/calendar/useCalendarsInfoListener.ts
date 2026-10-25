@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { calendarServerEvent } from '@proton/calendar/calendarServerEvent';
-import { baseUseDispatch } from '@proton/react-redux-store';
+import { baseUseDispatch } from '@proton/react-redux-store/ProtonStoreContext';
 
 import { useCalendarModelEventManager } from './CalendarModelEventManagerProvider';
 
@@ -25,5 +25,3 @@ const useCalendarsInfoCalendarListener = (calendarIDs: string[]) => {
 export const useCalendarsInfoListener = (calendarIDs: string[]) => {
     useCalendarsInfoCalendarListener(calendarIDs);
 };
-
-export default useCalendarsInfoListener;

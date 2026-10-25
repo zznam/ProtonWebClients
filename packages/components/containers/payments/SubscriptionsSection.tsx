@@ -1,5 +1,6 @@
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { Button } from '@proton/atoms/Button/Button';
@@ -9,7 +10,7 @@ import { PLAN_TYPES } from '@proton/payments/core/constants';
 import { getSubscriptionsArray } from '@proton/payments/core/subscription/helpers';
 import { isPaidSubscription } from '@proton/payments/core/type-guards';
 
-import { default as Badge } from '../../components/badge/Badge';
+import { Badge } from '../../components/badge/Badge';
 import DropdownActions from '../../components/dropdown/DropdownActions';
 import Loader from '../../components/loader/Loader';
 import useModalState from '../../components/modalTwo/useModalState';
@@ -25,7 +26,7 @@ import type { SubscriptionRow as SubscriptionRowType } from './subscription/help
 import { getSubscriptionRows } from './subscription/helpers/getSubscriptionRows';
 import { useReactivateAction } from './subscription/helpers/useReactivateAction';
 
-export const SubscriptionRow = ({ row }: { row: SubscriptionRowType }) => {
+const SubscriptionRow = ({ row }: { row: SubscriptionRowType }) => {
     const {
         subscription,
         planTitle,
@@ -135,8 +136,10 @@ export const SubscriptionRow = ({ row }: { row: SubscriptionRowType }) => {
 const SubscriptionsSection = () => {
     const [subscription, subscriptionLoading] = useSubscription();
     const [user] = useUser();
+    const [entitlementCatalog, entitlementCatalogLoading] = useEntitlementCatalog();
 
-    if (subscriptionLoading || !subscription) {
+    const loading = subscriptionLoading || entitlementCatalogLoading || !entitlementCatalog || !subscription;
+    if (loading) {
         return <Loader />;
     }
 
@@ -146,7 +149,7 @@ const SubscriptionsSection = () => {
     }
 
     const allSubscriptions = getSubscriptionsArray(subscription);
-    const rows = getSubscriptionRows(user, allSubscriptions);
+    const rows = getSubscriptionRows(user, allSubscriptions, entitlementCatalog);
 
     return (
         <div style={{ overflow: 'auto' }}>

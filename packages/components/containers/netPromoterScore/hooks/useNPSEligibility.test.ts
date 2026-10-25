@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { getUnixTime, subDays } from 'date-fns';
 
-import { useUserSettings } from '@proton/account';
 import { useUser } from '@proton/account/user/hooks';
-import { useFeature } from '@proton/features';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
+import useFeature from '@proton/features/useFeature';
 import { NEWSLETTER_SUBSCRIPTIONS_BITS } from '@proton/shared/lib/helpers/newsletter';
 import { useFlag } from '@proton/unleash/useFlag';
 
@@ -26,9 +26,9 @@ const mockUseUserSettings = useUserSettings as jest.Mock;
 jest.mock('@proton/unleash/useFlag');
 const mockUseFlag = useFlag as jest.Mock;
 
-jest.mock('@proton/features', () => ({
-    ...jest.requireActual('@proton/features/interface'),
-    useFeature: jest.fn(),
+jest.mock('@proton/features/useFeature', () => ({
+    __esModule: true,
+    default: jest.fn(),
 }));
 const mockUseFeature = useFeature as jest.Mock;
 

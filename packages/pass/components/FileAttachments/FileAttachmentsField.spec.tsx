@@ -6,21 +6,18 @@ import { USER_ROLES } from '@proton/shared/lib/constants';
 import { useFeatureFlag } from '../../hooks/useFeatureFlag';
 import { useMatchUser } from '../../hooks/useMatchUser';
 import { useNavigateToUpgrade } from '../../hooks/useNavigateToUpgrade';
-import { selectUser, selectUserStorageAllowed } from '../../store/selectors';
+import { selectUser, selectUserStorageAllowed } from '../../store/selectors/user';
 import { uniqueId } from '../../utils/string/unique-id';
 import { render } from '../../utils/tests/render';
 import { FileAttachmentsField } from './FileAttachmentsField';
-
-jest.mock('webextension-polyfill', () => ({}));
-jest.mock('imask/esm/masked/range', () => ({}));
 
 /** Branches under test are driven by these hooks/selectors. Mock them directly
  * rather than seeding the redux store, so each scenario is isolated. */
 jest.mock('../../hooks/useFeatureFlag', () => ({ useFeatureFlag: jest.fn() }));
 jest.mock('../../hooks/useMatchUser', () => ({ useMatchUser: jest.fn() }));
 jest.mock('../../hooks/useNavigateToUpgrade', () => ({ useNavigateToUpgrade: jest.fn() }));
-jest.mock('../../store/selectors', () => ({
-    ...jest.requireActual('../../store/selectors'),
+jest.mock('../../store/selectors/user', () => ({
+    ...jest.requireActual('../../store/selectors/user'),
     selectUser: jest.fn(),
     selectUserStorageAllowed: jest.fn(),
 }));

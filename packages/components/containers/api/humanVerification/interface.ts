@@ -1,4 +1,4 @@
-import type { HumanVerificationMethodType } from '@proton/shared/lib/interfaces';
+import type { HumanVerificationMethodType } from '@proton/shared/lib/interfaces/HumanVerification';
 
 type OwnershipChallengeType = 'external' | 'login' | 'verify_address';
 
@@ -36,7 +36,7 @@ export interface VerificationTokenResult {
     Token: string;
 }
 
-export interface OwnershipMethodCache {
+interface OwnershipMethodCache {
     promise: Promise<VerificationDataResult>;
     result: OwnershipVerificationModel;
 }

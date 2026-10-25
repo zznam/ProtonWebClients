@@ -1,5 +1,8 @@
+import { useMemo } from 'react';
+
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import type { ButtonLikeShape } from '@proton/atoms/Button/ButtonLike';
 import { PLANS, PLAN_NAMES } from '@proton/payments/core/constants';
 import type { MaybeFreeSubscription } from '@proton/payments/core/subscription/helpers';
@@ -9,7 +12,7 @@ import { MAIL_APP_NAME } from '@proton/shared/lib/constants';
 import isTruthy from '@proton/utils/isTruthy';
 
 import Time from '../../../../components/time/Time';
-import { type Upsell, type UpsellWithPlan, isUpsellWithPlan } from '../helpers';
+import { type Upsell, type UpsellWithPlan, isUpsellWithPlan } from '../helpers/dashboard-upsells';
 import UpsellPanel from './UpsellPanel';
 import UpsellPriceV1 from './components/UpsellPriceV1';
 
@@ -29,7 +32,11 @@ const UpsellPanels = ({ upsells, subscription }: Props) => {
     // Add more branching logic here if you need to add another trial plan.
     const trialPlanName: string = hasBundle(subscription) ? PLAN_NAMES[PLANS.BUNDLE] : MAIL_APP_NAME;
 
-    const trialInfo = getTrialInfoForSingleSubscription(subscription);
+    const [entitlementCatalog] = useEntitlementCatalog();
+    const trialInfo = useMemo(
+        () => getTrialInfoForSingleSubscription(entitlementCatalog, subscription),
+        [entitlementCatalog, subscription]
+    );
 
     return (
         <>

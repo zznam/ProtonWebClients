@@ -14,12 +14,15 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'path';
 
+import type { Maybe } from '@proton/pass/types/utils';
+
 import pkg from './package.json';
 import getExtraResource from './src/utils/extra-resource';
 import mainConfig from './webpack.main.config';
 import rendererConfig from './webpack.renderer.config';
 
 type Hash = NonNullable<NonNullable<MakerMSIXConfig['windowsSignOptions']>['hashes']>[number];
+type PackagerHook = NonNullable<NonNullable<ForgeConfig['packagerConfig']>['afterCopyExtraResources']>[number];
 
 // macos sign options
 const osxNotarize =
@@ -46,7 +49,8 @@ const windowsPublisher = process.env.WINDOWS_SIGN_PUBLISHER ?? 'CN=Proton AG';
 const toWindowsVersion = (semver: string): string =>
     /^\d+\.\d+\.\d+\.\d+$/.test(semver) ? semver : `${semver.replace(/[-+].*/, '')}.0`;
 
-const buildAppxManifest = (): string => {
+const buildAppxManifest = (): Maybe<string> => {
+    if (process.platform !== 'win32') return undefined;
     const template = readFileSync(path.join(__dirname, 'AppxManifest.xml.in'), 'utf-8');
     const resolved = template
         .replace(/{{Version}}/g, toWindowsVersion(pkg.version))
@@ -56,11 +60,36 @@ const buildAppxManifest = (): string => {
     return outPath;
 };
 
+// macOS names and badges the Touch ID and keychain prompts after the bundle whose main executable
+// triggers them, so the native messaging host gets its own app bundle to show "Proton Pass" and its
+// icon. Runs before signing: osx-sign signs the nested bundle like Electron's helper apps.
+const wrapMacHostInBundle = async (stagingPath: string) => {
+    // nosemgrep: path-join-resolve-traversal -- packager staging directory, not user input
+    const inContents = (...segments: string[]) => path.join(stagingPath, 'Proton Pass.app', 'Contents', ...segments);
+    const assets = ['Resources', 'assets'];
+    const bundle = ['Helpers', 'proton_pass_nm_host.app', 'Contents'];
+    await fs.mkdir(inContents(...bundle, 'MacOS'), { recursive: true });
+    await fs.mkdir(inContents(...bundle, 'Resources'), { recursive: true });
+    await fs.rename(
+        inContents(...assets, 'proton_pass_nm_host'),
+        inContents(...bundle, 'MacOS', 'proton_pass_nm_host')
+    );
+    await fs.copyFile(path.join(__dirname, 'native', 'host', 'Info.plist'), inContents(...bundle, 'Info.plist'));
+    await fs.copyFile(inContents(...assets, 'logo.icns'), inContents(...bundle, 'Resources', 'logo.icns'));
+};
+
+const bundleMacHost: PackagerHook = (stagingPath, _electronVersion, platform, _arch, done) => {
+    if (platform !== 'darwin') return done();
+    wrapMacHostInBundle(stagingPath).then(() => done(), done);
+};
+
 const config: ForgeConfig = {
+    outDir: process.env.OUTPUT_PATH,
     packagerConfig: {
         asar: true,
         icon: 'assets/logo',
         extraResource: ['assets', ...getExtraResource()],
+        afterCopyExtraResources: [bundleMacHost],
         appBundleId: 'me.proton.pass.electron',
         executableName: process.platform === 'win32' ? 'ProtonPass' : 'Proton Pass',
         // required for debian, else MakerDeb will incorrectly use name from package.json
@@ -73,7 +102,7 @@ const config: ForgeConfig = {
         // node_modules `.node` files into both bundles (the universal variant is preferred at runtime anyway).
         osxUniversal: {
             x64ArchFiles:
-                '{Contents/Resources/assets/proton_pass_nm_host,Contents/Resources/app.asar.unpacked/.webpack/main/native_modules/*.node}',
+                '{Contents/Helpers/proton_pass_nm_host.app/Contents/MacOS/proton_pass_nm_host,Contents/Resources/app.asar.unpacked/.webpack/main/native_modules/*.node}',
         },
         // Protocol handler for external login flow
         protocols: [
@@ -90,13 +119,14 @@ const config: ForgeConfig = {
             packageName: `ProtonPass_Setup_${pkg.version}.msix`,
             packageAssets: `${__dirname}/assets`,
             // Use a custom manifest rather than `manifestVariables` because we
-            // need a windows.protocol Extension block to register the
-            // `protonpass://` scheme for external-login deep links — the
-            // built-in template doesn't expose that.
+            // need Extension blocks the built-in template doesn't expose:
+            // windows.protocol for `protonpass://` external-login deep links,
+            // and windows.appExecutionAlias to expose the native-messaging
+            // host as a launchable alias.
             appManifest: buildAppxManifest(),
             // When appManifest is set, electron-windows-msix derives the
             // build-time Windows Kit version from the manifest's MinVersion
-            // (10.0.14393.0 = Windows 1607, our runtime floor). That SDK
+            // (10.0.18362.0 = Windows 10 1903, our runtime floor). That SDK
             // isn't on the CI runner, which only has 10.0.26100.0 installed.
             // Pin explicitly so the runtime floor stays decoupled from the
             // SDK used to package the MSIX.
@@ -219,7 +249,8 @@ const config: ForgeConfig = {
             // Disables the NODE_OPTIONS environment variable
             [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
             // Disables the --inspect and --inspect-brk family of CLI options
-            [FuseV1Options.EnableNodeCliInspectArguments]: false,
+            // Kept for e2e builds: Playwright drives Electron through them
+            [FuseV1Options.EnableNodeCliInspectArguments]: process.env.E2E_TESTS === 'true',
             // Enables validation of the app.asar archive on macOS
             [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
             // Enforces that Electron will only load your app from "app.asar" instead of its normal search paths

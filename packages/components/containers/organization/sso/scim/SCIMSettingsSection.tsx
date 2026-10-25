@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { Action, ThunkDispatch } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
-import type { SamlState } from '@proton/account';
+import type { SamlState } from '@proton/account/samlSSO';
 import { disableSCIMAction, setupSCIMAction } from '@proton/account/samlSSO/actions';
 import { useUserPermissions } from '@proton/account/userPermissions/hooks';
 import { useApi } from '@proton/app-context/useApi';
@@ -15,11 +15,11 @@ import useLoading from '@proton/hooks/useLoading';
 import { IcArrowRotateRight } from '@proton/icons/icons/IcArrowRotateRight';
 import { IcEyeSlash } from '@proton/icons/icons/IcEyeSlash';
 import { IcInfoCircle } from '@proton/icons/icons/IcInfoCircle';
-import { baseUseDispatch } from '@proton/react-redux-store';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import { baseUseDispatch } from '@proton/react-redux-store/ProtonStoreContext';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
-import type { Domain } from '@proton/shared/lib/interfaces';
-import { DOMAIN_STATE } from '@proton/shared/lib/interfaces';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
+import { DOMAIN_STATE } from '@proton/shared/lib/interfaces/Domain';
 
 import Info from '../../../../components/link/Info';
 import useModalState from '../../../../components/modalTwo/useModalState';

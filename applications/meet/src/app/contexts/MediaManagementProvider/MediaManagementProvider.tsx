@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useLocalParticipant, useRoomContext } from '@livekit/components-react';
+import { logger } from '@protontech/logger';
 import type { LocalTrack } from 'livekit-client';
 import { ConnectionState, RoomEvent, Track } from 'livekit-client';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useMeetErrorReporting } from '@proton/meet';
+import { useMeetErrorReporting } from '@proton/meet/hooks/useMeetErrorReporting';
 import { useMeetDispatch, useMeetSelector, useMeetStore } from '@proton/meet/store/hooks';
 import {
     PermissionBlockedError,
-    requestPermission,
     setActiveDevice,
     setInitialAudioState,
     setInitialCameraState,
@@ -39,6 +39,9 @@ import {
     setNoDeviceDetected,
     setPermissionPromptStatus,
 } from '@proton/meet/store/slices/uiStateSlice';
+import { toToggleState } from '@proton/meet/telemetry/dimensions';
+import type { MediaToggleTrigger } from '@proton/meet/telemetry/events';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { isDefaultDevice } from '@proton/meet/utils/deviceUtils';
 import { setAudioSessionType } from '@proton/meet/utils/iosAudioSession';
 import { TimeoutError, withTimeout } from '@proton/meet/utils/withTimeout';
@@ -49,9 +52,11 @@ import { AnnouncementPriority } from '../../components/MeetingAnnouncer/types';
 import { useAnnounce } from '../../components/MeetingAnnouncer/useAnnounce';
 import { useMediaToggleShortcuts } from '../../hooks/useMediaToggleShortcuts';
 import { useStableCallback } from '../../hooks/useStableCallback';
+import { requestPermissionWithTelemetry } from '../../telemetry/permissions';
 import type { InitializeDevices, SwitchActiveDevice } from '../../types';
 import { supportsSetSinkId } from '../../utils/browser';
 import { createDummyVideoTrack } from '../../utils/dummyVideoTrack';
+import { isMicrophoneOnDevice } from '../../utils/isMicrophoneOnDevice';
 import type { MeetAudioContext } from '../../utils/meet-audio-context';
 import { BackgroundEffectsContext } from '../BackgroundEffects/BackgroundEffectsContext';
 import { useAppliedBackgroundEffect } from '../BackgroundEffects/useAppliedBackgroundEffect';
@@ -123,31 +128,34 @@ export const MediaManagementProvider = ({
                 deviceType === 'audiooutput' && (isSystemDefaultDevice || isDefaultDevice(deviceId));
             const targetDeviceId = isOutputSystemDefault ? '' : deviceId;
 
-            const activeDeviceIdByType: Record<'audioinput' | 'videoinput', string | null> = {
-                audioinput: activeMicrophoneDeviceId,
-                videoinput: activeCameraDeviceId,
-            };
-
             // getActiveDevice is set after LiveKit's switch resolves, so a timed out or failed one
             // leaves the old value and the next attempt still runs. options.audioOutput is written
             // before the await and only reverted on rejection, so a hang leaves it claiming a device
             // that was never applied. Its map is seeded with 'default', which the collapse above
             // keeps a target from ever matching.
-            // Inputs stay on the store: re-applying them restarts the capture.
-            const appliedDeviceId =
-                deviceType === 'audiooutput' ? room.getActiveDevice('audiooutput') : activeDeviceIdByType[deviceType];
+            // Inputs are never re-applied: that restarts the capture.
+            let isApplied: boolean;
+            if (deviceType === 'audiooutput') {
+                isApplied = room.getActiveDevice('audiooutput') === targetDeviceId;
+            } else if (deviceType === 'audioinput') {
+                const microphoneTrack = room.localParticipant.getTrackPublication(Track.Source.Microphone)?.audioTrack;
+                isApplied = microphoneTrack
+                    ? await isMicrophoneOnDevice(microphoneTrack, targetDeviceId)
+                    : activeMicrophoneDeviceId === targetDeviceId;
+            } else {
+                isApplied = activeCameraDeviceId === targetDeviceId;
+            }
 
             try {
                 try {
-                    if (appliedDeviceId !== targetDeviceId) {
+                    if (!isApplied) {
                         await withTimeout(
                             room.switchActiveDevice(deviceType, targetDeviceId),
                             'Switch active device',
                             SWITCH_DEVICE_TIMEOUT_MS
                         );
 
-                        // eslint-disable-next-line no-console
-                        console.log(`[switchActiveDevice] switched`, {
+                        logger.info(`[switchActiveDevice] switched`, {
                             deviceType,
                             requested: deviceId,
                             sent: targetDeviceId,
@@ -156,8 +164,7 @@ export const MediaManagementProvider = ({
                             livekitAudioOutput: room.options.audioOutput?.deviceId,
                         });
                     } else {
-                        // eslint-disable-next-line no-console
-                        console.log(`[switchActiveDevice] skipped, already active`, {
+                        logger.info(`[switchActiveDevice] skipped, already active`, {
                             deviceType,
                             requested: deviceId,
                             sent: targetDeviceId,
@@ -180,13 +187,11 @@ export const MediaManagementProvider = ({
 
                     selectedDeviceId = fallback.deviceId;
 
-                    // eslint-disable-next-line no-console
-                    console.warn(`[switchActiveDevice] videoinput fallback`, {
+                    logger.warn(`[switchActiveDevice] videoinput fallback`, error, {
                         deviceType,
                         deviceId: selectedDeviceId,
                         errorName: (error as Error)?.name,
                         errorMessage: (error as Error)?.message,
-                        error,
                     });
 
                     await withTimeout(
@@ -271,6 +276,9 @@ export const MediaManagementProvider = ({
 
     const { isMicrophoneEnabled, isCameraEnabled } = useLocalParticipant();
 
+    // Read synchronously by the toggle handlers, which are shared by the buttons and the shortcuts
+    const mediaToggleTriggerRef = useRef<MediaToggleTrigger>('button');
+
     const handleMicrophoneToggle = useCallback(() => {
         if (room.state === ConnectionState.Connected) {
             if (microphonePermission !== 'granted') {
@@ -282,6 +290,11 @@ export const MediaManagementProvider = ({
                 return;
             }
 
+            sendMeetActionsEvent(TelemetryMeetActionsEvents.mic_toggled, {
+                state: toToggleState(!isMicrophoneEnabled),
+                trigger: mediaToggleTriggerRef.current,
+            });
+
             return toggleAudio({
                 isEnabled: !isMicrophoneEnabled,
                 audioDeviceId: selectedMicrophoneId,
@@ -290,7 +303,7 @@ export const MediaManagementProvider = ({
         }
 
         if (microphonePermission !== 'granted' || microphones.length === 0) {
-            return dispatch(requestPermission('microphone')).catch((error) => {
+            return dispatch(requestPermissionWithTelemetry('microphone')).catch((error) => {
                 if (error instanceof PermissionBlockedError) {
                     dispatch(
                         showPermissionsModal({ modal: PermissionsModalType.PERMISSIONS_BLOCKED_MICROPHONE_MODAL })
@@ -329,6 +342,11 @@ export const MediaManagementProvider = ({
                 return;
             }
 
+            sendMeetActionsEvent(TelemetryMeetActionsEvents.camera_toggled, {
+                state: toToggleState(!isCameraEnabled),
+                trigger: mediaToggleTriggerRef.current,
+            });
+
             return toggleVideo({
                 isEnabled: !isCameraEnabled,
                 videoDeviceId: selectedCameraId,
@@ -337,7 +355,7 @@ export const MediaManagementProvider = ({
         }
 
         if (cameraPermission !== 'granted' || cameras.length === 0) {
-            return dispatch(requestPermission('camera', activeCameraDeviceId)).catch((error) => {
+            return dispatch(requestPermissionWithTelemetry('camera', activeCameraDeviceId)).catch((error) => {
                 if (error instanceof PermissionBlockedError) {
                     dispatch(showPermissionsModal({ modal: PermissionsModalType.PERMISSIONS_BLOCKED_CAMERA_MODAL }));
                 }
@@ -359,10 +377,14 @@ export const MediaManagementProvider = ({
 
     useMediaToggleShortcuts({
         onToggleMicrophone: () => {
+            mediaToggleTriggerRef.current = 'keyboard_shortcut';
             void handleMicrophoneToggle();
+            mediaToggleTriggerRef.current = 'button';
         },
         onToggleCamera: () => {
+            mediaToggleTriggerRef.current = 'keyboard_shortcut';
             void handleCameraToggle();
+            mediaToggleTriggerRef.current = 'button';
         },
         dependencies: [handleMicrophoneToggle, handleCameraToggle],
     });
@@ -609,16 +631,14 @@ export const MediaManagementProvider = ({
                     shouldCleanupPreviews ? cleanupPreviews() : Promise.resolve(),
                 ]);
             } catch (error) {
-                // eslint-disable-next-line no-console
-                console.error(error);
+                logger.error('Failed to disable local tracks during cleanup', error);
             }
 
             tracks.forEach((track) => {
                 try {
                     track.stop();
                 } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.error(error);
+                    logger.error('Failed to stop local track during cleanup', error);
                 }
             });
 

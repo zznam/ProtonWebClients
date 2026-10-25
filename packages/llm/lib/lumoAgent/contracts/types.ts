@@ -109,9 +109,9 @@ export interface ToolDefinition<Params = any, Result = any> {
      * tool-schema best practice: what the tool does AND when to use / not use it (disambiguating it
      * from its neighbours), with a short inline example where that helps. This is how the model learns
      * the tool, so it carries the trap-avoidance wording; the JSON contract itself lives in
-     * {@link paramsSchema}.
+     * {@link paramsSchema}. Absent for a product whose system prompt already describes its tools.
      */
-    toolDescription: string;
+    toolDescription?: string;
     /**
      * Whether this tool has a large usage guide that must be loaded before the model can use it well.
      * When true, {@link guide} is present and the tool is only advertised (its
@@ -141,6 +141,11 @@ export interface ToolDefinition<Params = any, Result = any> {
      * context). Additive: leaving it undefined is fine.
      */
     examples?: ToolExample[];
+    /**
+     * Cheap, store-free checks on the arguments themselves, run before a mutation's confirm card and again on
+     * the approved params. Throws a ToolInputError naming what to change.
+     */
+    checkParams?(params: Params): void;
     /** Concise text fed back to the model. Uses the {@link ReferenceRegistry} to render real ids as references. */
     serializeForLumo(result: Result, references: ReferenceRegistry): string;
     /** The transparency chip shown for this tool's run. */

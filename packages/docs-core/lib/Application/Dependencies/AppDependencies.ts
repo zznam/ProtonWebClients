@@ -1,15 +1,19 @@
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import { Logger } from '@proton/shared/lib/logs'
-import { DOCS_DEBUG_KEY, DependencyContainer, InternalEventBus } from '@proton/docs-shared'
+import type { CacheConfig } from '@proton/docs-shared/CacheConfig'
+import { DOCS_DEBUG_KEY } from '@proton/docs-shared/constants'
+import { DependencyContainer } from '@proton/docs-shared/Dependency/DependencyContainer'
+import { InternalEventBus } from '@proton/docs-shared/Events/InternalEventBus'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { SyncedEditorState } from '@proton/docs-shared/State/SyncedEditorState'
 import { App_TYPES } from './Types'
 import type { HttpHeaders } from '../../Api/Types/HttpHeaders'
 import { DocsApi } from '../../Api/DocsApi'
 import { SquashDocument } from '../../UseCase/SquashDocument'
 import { EncryptMessage } from '../../UseCase/EncryptMessage'
 import { DocLoader } from '../../Services/DocumentLoader/DocLoader'
-import type { InternalEventBusInterface, SyncedEditorState } from '@proton/docs-shared'
 import { DecryptMessage } from '../../UseCase/DecryptMessage'
-import type { Api } from '@proton/shared/lib/interfaces'
+import type { Api } from '@proton/shared/lib/interfaces/Api'
 import { EncryptionService } from '../../Services/Encryption/EncryptionService'
 import { EncryptComment } from '../../UseCase/EncryptComment'
 import { DecryptComment } from '../../UseCase/DecryptComment'
@@ -57,7 +61,13 @@ import type { APP_NAMES } from '@proton/shared/lib/constants'
 import type { SheetsDatabaseSchema } from '../../Database/SheetsDBSchema'
 import { CURRENT_SHEETS_DB_VERSION, SHEETS_DATABASE_NAME, sheetsDBMigrations } from '../../Database/SheetsDBSchema'
 import { SheetsStorageService } from '../../Services/SheetsStorage/SheetsStorageService'
-import type { CacheConfig } from '@proton/drive-store/lib/CacheConfig'
+import type { PublicKeyReference } from '@protontech/crypto'
+
+export type AppDependenciesOptions = {
+  cacheConfig?: CacheConfig
+  getVerificationKey?: (email: string) => Promise<PublicKeyReference[]>
+  logger?: LoggerInterface
+}
 
 export class AppDependencies extends DependencyContainer {
   constructor(
@@ -69,12 +79,16 @@ export class AppDependencies extends DependencyContainer {
     appVersion: string,
     unleashClient: UnleashClient,
     syncedEditorState: SyncedEditorState,
-    providedCacheConfig?: CacheConfig,
+    {
+      cacheConfig: providedCacheConfig,
+      getVerificationKey: providedGetVerificationKey,
+      logger: providedLogger,
+    }: AppDependenciesOptions = {},
   ) {
     super()
 
     this.bind(App_TYPES.Logger, () => {
-      const logger = new Logger('proton-docs', DOCS_DEBUG_KEY)
+      const logger = providedLogger ?? new Logger('proton-docs', DOCS_DEBUG_KEY)
       LoadLogger.initialize(logger)
       return logger
     })
@@ -141,15 +155,19 @@ export class AppDependencies extends DependencyContainer {
     })
 
     this.bind(App_TYPES.RealtimeEncryptionService, () => {
-      return new EncryptionService(EncryptionContext.RealtimeMessage, compatWrapper)
+      return new EncryptionService(EncryptionContext.RealtimeMessage, compatWrapper, api, {
+        providedGetVerificationKey,
+      })
     })
 
     this.bind(App_TYPES.CommentsEncryptionService, () => {
-      return new EncryptionService(EncryptionContext.PersistentComment, compatWrapper)
+      return new EncryptionService(EncryptionContext.PersistentComment, compatWrapper, api, {
+        providedGetVerificationKey,
+      })
     })
 
     this.bind(App_TYPES.LocalStorageEncryptionService, () => {
-      return new EncryptionService(EncryptionContext.LocalStorage, compatWrapper)
+      return new EncryptionService(EncryptionContext.LocalStorage, compatWrapper, api)
     })
 
     this.bind(App_TYPES.EncryptComment, () => {

@@ -6,7 +6,7 @@ import {
     chargebeeValidationErrorName,
     isMessageBusResponseFailure,
 } from '@proton/chargebee/lib/types';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { getTokenStatusV5 } from '@proton/payments/core/api/api';
 import { PAYMENT_METHOD_TYPES, PAYMENT_TOKEN_STATUS } from '@proton/payments/core/constants';
 import { createPaymentTokenV5Ideal } from '@proton/payments/core/createPaymentToken';
@@ -21,7 +21,7 @@ import type {
 import { isCurrencySupportedByMethod } from '@proton/payments/core/payment-methods/currencyOverride';
 import type { PaymentProcessorHook } from '@proton/payments/core/payment-processors/interface';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 const ACCOUNT_HOLDER_NAME_DEBOUNCE_MS = 250;
 

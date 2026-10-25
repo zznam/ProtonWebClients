@@ -1,9 +1,9 @@
 import { PLANS } from '@proton/payments/core/constants';
 import type { SavedPaymentMethod } from '@proton/payments/core/interface';
 import { USER_ROLES } from '@proton/shared/lib/constants';
-import type { User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
-import { type PassPlanResponse, PlanType } from '../../types';
+import { type PassPlanResponse, PlanType } from '../../types/api/pass';
 import * as epoch from '../../utils/time/epoch';
 import type { RequestState } from '../request/types';
 import type { State } from '../types';

@@ -1,7 +1,7 @@
 import type { PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { MINUTE } from '@proton/shared/lib/constants';
 
 import type { KeyRotationLog, MLSGroupState } from '../../types/types';
@@ -137,8 +137,7 @@ export const { setCurrentMeeting, setNavigationSeed, setMlsGroupState, resetCurr
     slice.actions;
 
 const selectNavigationSeed = (state: MeetState) => state.currentMeeting.navigationSeed;
-// TODO(follow-up): rename to selectMeetingName and migrate consumers
-export const selectRoomName = (state: MeetState) =>
+export const selectMeetingName = (state: MeetState) =>
     selectMeetingInfoModel(state).value?.meetingName ?? selectNavigationSeed(state)?.meetingName ?? '';
 export const selectIsPersonalRoom = (state: MeetState) => {
     const meetingInfo = selectMeetingInfoModel(state).value?.meetingInfo;

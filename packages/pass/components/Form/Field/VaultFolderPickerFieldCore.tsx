@@ -5,12 +5,13 @@ import { c } from 'ttag';
 import { DropdownSizeUnit } from '@proton/components/components/dropdown/utils';
 import Option from '@proton/components/components/option/Option';
 import SelectTwo from '@proton/components/components/selectTwo/SelectTwo';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 
 import { resolveFolderPath } from '../../../lib/folders/folder.utils';
 import { fromFolderKey, getFolderKey } from '../../../lib/items/item.utils';
 import type { FoldersByShareId, ShareItem } from '../../../store/reducers';
-import type { MaybeNull, ShareType } from '../../../types';
+import type { ShareType } from '../../../types/data/shares';
+import type { MaybeNull } from '../../../types/utils';
 import { PassExpandButton } from '../../Folders/PassExpandButton';
 import { PassFolderIcon } from '../../Folders/PassFolderIcon';
 import { FolderBreadcrumbCore } from '../../Vault/FolderBreadcrumbCore';

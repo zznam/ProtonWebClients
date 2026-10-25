@@ -3,9 +3,9 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import type { ProtonDriveClient } from '@protontech/drive-sdk';
 
-import type { SettingsAreaConfig } from '@proton/components';
 import SettingsSectionWide from '@proton/components/containers/account/SettingsSectionWide';
 import PrivateMainSettingsArea from '@proton/components/containers/layout/PrivateMainSettingsArea';
+import type { SettingsAreaConfig } from '@proton/components/containers/layout/interface';
 import { APPS, type APP_NAMES } from '@proton/shared/lib/constants';
 import { useFlag } from '@proton/unleash/useFlag';
 import noop from '@proton/utils/noop';
@@ -18,6 +18,7 @@ import OLESSettingsArea from '../../oles/components/SettingsArea';
 import { ImporterOrganizationsProvider } from '../../oles/useImporterOrganizations';
 import useOLESFeatureStatus from '../../oles/useOLESFeatureStatus';
 import DriveConnectEntry from '../Modals/OAuth/Drive/DriveConnectEntry';
+import { DriveImportOutcomeModal } from '../Modals/OAuth/Drive/DriveImportOutcomeModal';
 import { driveOAuthViewsOverride } from '../Modals/OAuth/Drive/driveOAuthViews';
 import ImportsTable from '../ReportsTable/ImportsTable';
 import { SyncsTable } from '../ReportsTable/SyncsTable';
@@ -84,6 +85,7 @@ const SettingsArea = ({ config, app }: Props) => {
                     </SettingsSectionWide>
                 </PrivateMainSettingsArea>
             </EasySwitchStoreInitializer>
+            {isDriveNewUIEnabled ? <DriveImportOutcomeModal /> : null}
         </EasySwitchStoreProvider>
     );
 

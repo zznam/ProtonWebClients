@@ -1,16 +1,26 @@
-export const assertIcon = (
+import { render } from '@testing-library/react';
+
+import type { IconComponent } from '@proton/icons/component';
+import type { IconSize } from '@proton/icons/types';
+
+/**
+ * For the generated `Ic*` and `Mime*` components. They inline their markup rather than referencing the sprite, so
+ * there is no name to read back: the expected icon is rendered and its markup compared instead, which stays exact
+ * without the test hardcoding any path data. Pass the rendered `size` for `Mime*` icons, whose shape depends on it.
+ */
+export const assertIconComponent = (
     iconElement: Element | null | undefined,
-    iconName?: string,
+    Icon: IconComponent,
     iconColor?: string,
-    iconPrefix: string = 'ic'
+    size?: IconSize
 ) => {
     if (!iconElement) {
         throw new Error('Icon element is undefined');
     }
 
-    if (iconName) {
-        expect((iconElement.firstChild as Element).getAttribute('xlink:href')).toBe(`#${iconPrefix}-${iconName}`);
-    }
+    // A detached container keeps the reference icon out of the document the calling test queries.
+    const { container } = render(<Icon size={size} />, { container: document.createElement('div') });
+    expect(iconElement.innerHTML).toBe(container.querySelector('svg')?.innerHTML);
 
     if (iconColor) {
         expect(iconElement.classList.contains(iconColor)).toBe(true);

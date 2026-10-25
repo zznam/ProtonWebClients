@@ -1,6 +1,10 @@
-import type { AssistantCallOptions, LumoApiClientConfig } from '@proton/lumo-api-client/core/types';
-import type { Api } from '@proton/shared/lib/interfaces';
+import { composeClientToolExecutors } from '@proton/lumo-api-client/core/client-tools';
+import { isContextLengthExceededError } from '@proton/lumo-api-client/core/context-length';
+import { createDesktopClientToolExecutor, isDesktopEnvironment } from '@proton/lumo-api-client/core/desktop-tools';
+import type { AssistantCallOptions, ClientToolExecutor, LumoApiClientConfig } from '@proton/lumo-api-client/core/types';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
+import { askUserQuestionsToolExecutor } from '../../features/client-tools/askUserQuestionsTool/askUserQuestionsTool';
 import { sendMessageWithRedux } from '../../lib/lumoApiClientRedux';
 import type { ContextFilter } from '../../llm';
 import { compactConversation, estimateTurnsTokens } from '../../llm/compaction';
@@ -15,7 +19,6 @@ import {
     pushMessageRequest,
 } from '../../redux/slices/core/messages';
 import type { LumoDispatch } from '../../redux/store';
-import { isContextLengthExceededError } from '../../services/errors/contextLengthError';
 import { isAbortError, throwIfAborted } from '../../services/generation/abortGeneration';
 import {
     type Attachment,
@@ -29,6 +32,7 @@ import {
     type Turn,
 } from '../../types';
 import type { GenerationResponseMessage } from '../../types-api';
+import { markArtifactTelemetryLiveMessage } from './artifact/artifactVersionTelemetry';
 import { createArtifactToolExecutor } from './artifact/createArtifactTool';
 import type { ArtifactToolMode } from './helper';
 
@@ -39,6 +43,10 @@ type ForwardedSendOptions = AssistantCallOptions & {
     errorHandler?: (message: GenerationResponseMessage, conversationId: string) => any;
     /** Whether/how the `create_artifact` client tool is registered for this request. See `resolveArtifactToolMode`. */
     artifactToolMode?: ArtifactToolMode;
+    /** Whether `create_artifact` offers `presentation` (slide decks, `LumoArtifactSlides`). */
+    artifactPresentationEnabled?: boolean;
+    /** Advertise the ask_user_questions tool only when its feature flag is enabled. */
+    enableAskUserQuestionsTool?: boolean;
 };
 
 export type GenerationWithCompactionParams = {
@@ -82,11 +90,32 @@ export type GenerationWithCompactionParams = {
 // per-request file budget handles instead.
 const DEFAULT_MAX_COMPACTIONS = 1;
 
-/** The `create_artifact` executor for a send, or undefined when the tool isn't registered this turn. */
-function resolveClientToolExecutor(sendOptions: ForwardedSendOptions) {
-    return sendOptions.artifactToolMode && sendOptions.artifactToolMode !== 'off'
-        ? createArtifactToolExecutor
-        : undefined;
+/**
+ * Client-side tools for a send. Artifact and Lumo Desktop connectors each have their own
+ * {@link ClientToolExecutor}; compose them so enabling create_artifact does not replace desktop tools.
+ */
+function resolveClientToolExecutor(sendOptions: ForwardedSendOptions): ClientToolExecutor | undefined {
+    const executors: ClientToolExecutor[] = [];
+
+    if (sendOptions.enableAskUserQuestionsTool) {
+        executors.push(askUserQuestionsToolExecutor);
+    }
+
+    if (sendOptions.artifactToolMode && sendOptions.artifactToolMode !== 'off') {
+        executors.push(
+            createArtifactToolExecutor({ presentationEnabled: sendOptions.artifactPresentationEnabled ?? false })
+        );
+    }
+
+    if (isDesktopEnvironment()) {
+        executors.push(createDesktopClientToolExecutor());
+    }
+
+    if (executors.length === 0) {
+        return undefined;
+    }
+
+    return composeClientToolExecutors(...executors);
 }
 
 /**
@@ -184,6 +213,12 @@ export function runGenerationWithCompaction(params: GenerationWithCompactionPara
 
         while (true) {
             throwIfAborted(sendOptions.signal);
+            // Marked per attempt: compaction retries stream into a fresh assistant message.
+            if (sendOptions.artifactToolMode && sendOptions.artifactToolMode !== 'off') {
+                markArtifactTelemetryLiveMessage(currentAssistantId, {
+                    artifactToolMode: sendOptions.artifactToolMode,
+                });
+            }
             try {
                 const turns = buildTurns(currentChain);
                 await dispatch(
@@ -204,6 +239,7 @@ export function runGenerationWithCompaction(params: GenerationWithCompactionPara
                 try {
                     await compactAndAdvance();
                 } catch (compactionError) {
+                    dispatch(updateConversationStatus({ id: conversationId, status: ConversationStatus.COMPLETED }));
                     // Nothing to compact, or compaction itself failed — surface the original overflow.
                     if (compactionError instanceof NotEnoughToCompactError) {
                         throw error;

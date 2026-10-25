@@ -8,14 +8,20 @@ import { WasmAccountSweeper, type WasmApiWalletAccount, type WasmBitcoinUnit, ty
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { MiddleEllipsis, type ModalStateProps, Prompt, useModalState, useModalStateWithData } from '@proton/components';
+import MiddleEllipsis from '@proton/components/components/ellipsis/MiddleEllipsis';
+import useModalState, {
+    type ModalStateProps,
+    useModalStateWithData,
+} from '@proton/components/components/modalTwo/useModalState';
+import Prompt from '@proton/components/components/prompt/Prompt';
 import useLoading from '@proton/hooks/useLoading';
 import { IcChevronRight } from '@proton/icons/icons/IcChevronRight';
 import { IcQrCode } from '@proton/icons/icons/IcQrCode';
 import walletBitcoinDark from '@proton/styles/assets/img/wallet/wallet-bitcoin-dark.jpg';
 import walletBitcoin from '@proton/styles/assets/img/wallet/wallet-bitcoin.jpg';
 import { COMPUTE_BITCOIN_UNIT, MIN_FEE_RATE, PriorityTargetBlock } from '@proton/wallet/constants/bitcoin';
-import { useExchangeRate, useUserWalletSettings } from '@proton/wallet/store/hooks';
+import { useExchangeRate } from '@proton/wallet/store/hooks/useExchangeRate';
+import { useUserWalletSettings } from '@proton/wallet/store/hooks/useUserWalletSettings';
 import { WalletThemeOption } from '@proton/wallet/utils/theme';
 
 import { Button, CoreButton, Input } from '../../atoms';

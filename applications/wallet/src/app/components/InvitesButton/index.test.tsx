@@ -3,15 +3,13 @@ import { act } from '@testing-library/react-hooks';
 
 import { mockUseAddresses } from '@proton/account/testing/vitest/mockUseAddresses';
 import { mockUseNotifications } from '@proton/app-context/testing/vitest/mockUseNotifications';
-import { setupCryptoProxyForTesting } from '@proton/pass/lib/crypto/utils/testing';
-import { apiWalletAccountOneA } from '@proton/wallet/tests/fixtures';
-import {
-    mockUseFlag,
-    mockUseRemainingInvites,
-    mockUseWalletApiClients,
-    mockUseWalletDispatch,
-} from '@proton/wallet/tests/mocks';
-import { getAddressKey } from '@proton/wallet/tests/utils';
+import { setupCryptoProxyForTesting } from '@proton/pass/utils/tests/fixtures/crypto';
+import { apiWalletAccountOneA } from '@proton/wallet/tests/fixtures/api';
+import { mockUseFlag } from '@proton/wallet/tests/mocks/useFlag';
+import { mockUseRemainingInvites } from '@proton/wallet/tests/mocks/useRemainingInvites';
+import { mockUseWalletApiClients } from '@proton/wallet/tests/mocks/useWalletApi';
+import { mockUseWalletDispatch } from '@proton/wallet/tests/mocks/useWalletDispatch';
+import { getAddressKey } from '@proton/wallet/tests/utils/keys';
 
 import { InvitesButton } from '.';
 

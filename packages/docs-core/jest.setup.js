@@ -29,7 +29,7 @@ jest.mock('@proton/shared/lib/helpers/setupCryptoWorker', () => ({
 // Silence JDOM warnings triggered by emoji-mart
 HTMLCanvasElement.prototype.getContext = jest.fn()
 
-jest.mock('@proton/raw-images', () => ({
+jest.mock('@proton/raw-images/createWorker', () => ({
   __esModule: true,
 }))
 
@@ -37,15 +37,15 @@ jest.mock('@proton/raw-images', () => ({
 // For instance, a test covering a component with metrics might finish successfully, but a subsequent test
 // could fail seconds later when the metrics batch is sent via fetch.
 // The metrics package has its own test coverage, so we don't need to test it here.
-jest.mock('@proton/metrics')
+jest.mock('@proton/metrics/metricsInstance')
 
-jest.mock('@proton/drive-store/store/_downloads/fileSaver/download.ts', () => {
+jest.mock('@proton/drive-store/store/_downloads/fileSaver/download', () => {
   return {
     initDownloadSW: jest.fn().mockResolvedValue(true),
   }
 })
 
-jest.mock('@proton/drive-store/utils/metrics/userSuccessMetrics.ts', () => {
+jest.mock('@proton/drive-store/utils/metrics/userSuccessMetrics', () => {
   return {
     userSuccessMetrics: {
       init: jest.fn(),

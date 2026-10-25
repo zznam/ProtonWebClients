@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } для Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } для iOS"
-      ],
       "Accept": [
         "Принять"
       ],
@@ -333,6 +327,12 @@
       ],
       "Done": [
         "Готово"
+      ],
+      "Download for macOS": [
+        "Скачать для macOS"
+      ],
+      "Download for Windows": [
+        "Скачать для Windows"
       ],
       "Download this CSV template": [
         "Скачайте этот шаблон CSV"
@@ -700,6 +700,12 @@
       "Show Less": [
         "Свернуть"
       ],
+      "Show less": [
+        "Показать меньше"
+      ],
+      "Show more": [
+        "Показать больше"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Войти с ${ BRAND_NAME }"
       ],
@@ -859,11 +865,6 @@
       ],
       "Uninstall ${ PASS_APP_NAME }": [
         "Удалить ${ PASS_APP_NAME }"
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } для ПК"
       ]
     },
     "Button": {
@@ -1111,6 +1112,9 @@
       "Editing item failed": [
         "Ошибка при редактировании элемента"
       ],
+      "Email is not valid": [
+        "Эл. почта недействительна"
+      ],
       "Empty CSV file": [
         "Пустой файл CSV"
       ],
@@ -1122,6 +1126,9 @@
       ],
       "Encrypted JSON not supported": [
         "Зашифрованный JSON не поддерживается"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Введите ваше имя пользователя без домена (@example.com)"
       ],
       "Error reporting problem": [
         "Ошибка при сообщении о проблеме"
@@ -1303,6 +1310,9 @@
       "Incorrect backup password. Please try again.": [
         "Неверный пароль резервной копии. Попробуйте еще раз."
       ],
+      "Incorrect password. Please try again.": [
+        "Неверный пароль. Пожалуйста, попробуйте снова."
+      ],
       "Incorrect second password. Please try again.": [
         "Неверный второй пароль. Попробуйте еще раз."
       ],
@@ -1336,8 +1346,14 @@
       "Network error": [
         "Ошибка сети"
       ],
+      "Not a valid number": [
+        "Номер недействителен"
+      ],
       "Passphrase is incorrect": [
         "Неверная парольная фраза"
+      ],
+      "Passwords do not match": [
+        "Пароли не совпадают"
       ],
       "PIN codes do not match": [
         "PIN-коды не совпадают"
@@ -1396,11 +1412,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "В десктопном приложении ${ PASS_APP_NAME } должен быть выполнен вход."
       ],
+      "The email addresses do not match": [
+        "Адреса электронной почты не совпадают"
+      ],
       "The session has expired. Please sign in again.": [
         "Время сеанса истекло. Пожалуйста, войдите снова."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Произошла ошибка при удалении защищенной ссылки. Повторите попытку через несколько минут."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Длина этого поля превысила максимальные ${ maximumLength } символов."
+      ],
+      "This field is required": [
+        "Это обязательное поле"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Минимальная длина для этого поля ${ minimumLength } символов."
       ],
       "Too many failed attempts. Please sign in again.": [
         "Слишком много неудачных попыток. Пожалуйста, войдите снова."
@@ -1410,6 +1438,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Попробуйте связаться с владельцем ссылки."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Попробуйте, используя только буквы, цифры и _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Невозможно сгенерировать OTP-код для этого элемента"
@@ -1441,6 +1472,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Сбой при обновлении хранилища \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "Имя пользователя должно начинаться с буквы или цифры"
+      ],
+      "Username must end with a letter or digit": [
+        "Имя пользователя должно заканчиваться буквой или цифрой"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Сбой при создании хранилища \"${ payload.content.name }\""
       ],
@@ -1464,6 +1501,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Неверный PIN-код. Попробуйте снова."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Неправильная фраза для восстановления пароля. Попробуйте снова или используйте другой метод восстановления."
       ],
       "Wrong second password": [
         "Неверный второй пароль"
@@ -1868,9 +1908,6 @@
       "Can view this item.": [
         "Можно просматривать этот элемент."
       ],
-      "Change your password": [
-        "Измените пароль"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "Подтвердите дополнительный пароль, чтобы продолжить его удаление."
       ],
@@ -1951,9 +1988,6 @@
       ],
       "Editor": [
         "Редактор"
-      ],
-      "email": [
-        "электронная почта"
       ],
       "Email address successfully deleted from monitoring": [
         "Адрес электронной почты успешно удален из мониторинга"
@@ -2047,9 +2081,6 @@
       ],
       "Fill in the CSV with your data": [
         "Заполните CSV данными"
-      ],
-      "finance": [
-        "финансы"
       ],
       "Find \"OpenSSH Authentication Agent\", right-click Properties.": [
         "Найдите службу «Агент проверки подлинности OpenSSH», щелкните правой кнопкой мыши и выберите «Свойства»."
@@ -2225,9 +2256,6 @@
       "Medium Priority": [
         "Средний приоритет"
       ],
-      "Monitor accounts": [
-        "Отслеживать аккаунты"
-      ],
       "Monitoring settings successfully updated": [
         "Настройки мониторинга успешно обновлены"
       ],
@@ -2247,9 +2275,6 @@
         "Перемещение всех элементов из \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Перемещение элемента в другое хранилище удалит его защищенные ссылки.",
-        "Перемещение элемента в другое хранилище удалит его защищенные ссылки.",
-        "Перемещение элемента в другое хранилище удалит его защищенные ссылки.",
         "Перемещение элемента в другое хранилище удалит его защищенные ссылки."
       ],
       "Moving items": [
@@ -2329,9 +2354,6 @@
       ],
       "Pass Plus trial": [
         "Пробная версия Pass Plus"
-      ],
-      "password": [
-        "пароль"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Блокировка паролем успешно выполнена. Используйте его для разблокировки ${ PASS_APP_NAME }"
@@ -2797,9 +2819,6 @@
       ],
       "User's access successfully updated": [
         "Доступ пользователя обновлен"
-      ],
-      "username": [
-        "имя пользователя"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Хранилище \"${ payload.content.name }\" успешно удалено"
@@ -5423,8 +5442,20 @@
       "OTP secret or URI is invalid": [
         "Секрет OTP или URI недействительны"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Пароль должен включать по меньшей мере ${ MIN_PASSWORD_LENGTH } символ",
+        "Пароль должен содержать хотя бы $${ MIN_PASSWORD_LENGTH } символов",
+        "Пароль должен содержать хотя бы $${ MIN_PASSWORD_LENGTH } символов",
+        "Пароль должен содержать хотя бы $${ MIN_PASSWORD_LENGTH } символов"
+      ],
       "Section name cannot be empty": [
         "Название раздела не может быть пустым"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Попробуйте более короткое имя пользователя (максимум ${ n } знак)",
+        "Попробуйте более короткое имя пользователя (максимум ${ n } знака)",
+        "Попробуйте более короткое имя пользователя (максимум ${ n } знаков)",
+        "Попробуйте более короткое имя пользователя (максимум ${ n } знаков)"
       ],
       "URL already exists": [
         "Url уже существует"
@@ -5588,9 +5619,6 @@
       ],
       "Move to trash": [
         "Переместить в корзину"
-      ],
-      "Name is required": [
-        "Требуется имя"
       ],
       "No items": [
         "Нет элементов"

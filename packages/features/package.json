@@ -2,11 +2,15 @@
     "name": "@proton/features",
     "description": "Feature toggles",
     "exports": {
-        ".": "./index.ts",
-        "./*": "./*"
+        "./interface": "./interface.ts",
+        "./reducer": "./reducer.ts",
+        "./testing/features": "./testing/features.ts",
+        "./testing/mockUseFeature": "./testing/mockUseFeature.ts",
+        "./useFeature": "./useFeature.ts",
+        "./useFeatures": "./useFeatures.ts"
     },
     "scripts": {
-        "check-types": "tsc --checkers 1",
+        "check:types": "tsc --checkers 1",
         "lint": "eslint --quiet",
         "test": "jest",
         "test:ci": "jest --runInBand --ci --logHeapUsage"
@@ -16,18 +20,23 @@
         "@proton/redux-utilities": "workspace:^",
         "@proton/shared": "workspace:^",
         "@proton/utils": "workspace:^",
-        "@reduxjs/toolkit": "^2.12.0",
-        "react": "^18.3.1"
+        "@reduxjs/toolkit": "catalog:",
+        "react": "catalog:",
+        "redux-thunk": "catalog:"
     },
     "devDependencies": {
         "@proton/eslint-config-proton": "workspace:^",
         "@proton/jest-env": "workspace:^",
         "@proton/jest-swc-preset": "workspace:^",
         "@proton/test-api": "workspace:^",
-        "@testing-library/jest-dom": "^6.9.1",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.11.0",
-        "jest": "^30.5.2",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
+        "@testing-library/jest-dom": "catalog:",
+        "@types/jest": "catalog:",
+        "@types/node": "catalog:",
+        "@types/react": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "eslint": "catalog:",
+        "jest": "catalog:",
+        "typescript": "catalog:"
     }
 }

@@ -1,3 +1,5 @@
+import { c } from 'ttag';
+
 import { ENABLE_FOUNDATION_SEARCH } from '../../config/search';
 import type { AesGcmCryptoKey } from '../../crypto/types';
 import { DbApi } from '../../indexedDb/db';
@@ -104,25 +106,40 @@ export class SearchService {
             await buildMasterKeyContext(masterKeysBundle);
 
         if (wrappedKeyBlob && typeof wrappedKeyBlob === 'string') {
-            const wrappedKeyBytes = Uint8Array.fromBase64(wrappedKeyBlob);
-            const { key: unwrappedKey, usedPrimaryMasterKey } = await unwrapAesKeyWithMasterKeys(
-                wrappedKeyBytes,
-                primaryMasterKeyObj,
-                legacyMasterKeys,
-                true
-            );
-            this.searchIndexKey = await cryptoKeyToBase64(unwrappedKey.encryptKey);
+            try {
+                const wrappedKeyBytes = Uint8Array.fromBase64(wrappedKeyBlob);
+                const { key: unwrappedKey, usedPrimaryMasterKey } = await unwrapAesKeyWithMasterKeys(
+                    wrappedKeyBytes,
+                    primaryMasterKeyObj,
+                    legacyMasterKeys,
+                    true
+                );
+                this.searchIndexKey = await cryptoKeyToBase64(unwrappedKey.encryptKey);
 
-            if (!usedPrimaryMasterKey) {
-                try {
-                    const wrappedWithPrimary = await wrapAesKey(unwrappedKey, primaryMasterKeyObj);
-                    await dbApi.saveSearchBlob(SearchService.SEARCH_INDEX_KEY_BLOB, wrappedWithPrimary.toBase64());
-                } catch (error) {
-                    safeLogger.warn('Failed to re-wrap search index key with primary master key:', error);
+                if (!usedPrimaryMasterKey) {
+                    try {
+                        const wrappedWithPrimary = await wrapAesKey(unwrappedKey, primaryMasterKeyObj);
+                        await dbApi.saveSearchBlob(SearchService.SEARCH_INDEX_KEY_BLOB, wrappedWithPrimary.toBase64());
+                    } catch (error) {
+                        safeLogger.warn('Failed to re-wrap search index key with primary master key:', error);
+                    }
                 }
-            }
 
-            return this.searchIndexKey;
+                return this.searchIndexKey;
+            } catch (error) {
+                // The stored key is wrapped with a master key we no longer have (e.g. a password
+                // reset without data recovery minted a brand-new master key — see LUMO-853). That
+                // old search index key, and therefore the existing BM25 index it protects, is gone
+                // for good. Fall through to minting a replacement rather than throwing: every future
+                // call would hit this exact same unwrap failure forever otherwise, permanently
+                // breaking search (including for brand-new, post-reset conversations). The stale,
+                // now-undecryptable BM25 index blob self-heals the next time it's loaded, since
+                // `loadBM25Index` already rebuilds from scratch on a decrypt failure.
+                safeLogger.warn(
+                    'Could not unwrap the stored search index key with any available master key; minting a new one:',
+                    error
+                );
+            }
         }
 
         const newKeyBase64 = generateSearchIndexKeyBase64();
@@ -352,7 +369,8 @@ export class SearchService {
             return {
                 type: 'conversation',
                 conversationId: conversation.id,
-                conversationTitle: conversation.title || 'Untitled',
+                // translator: Fallback title for a conversation without a name.
+                conversationTitle: conversation.title || c('collider_2025:Title').t`Untitled`,
                 timestamp,
                 ...projectInfo,
             };
@@ -443,7 +461,8 @@ export class SearchService {
                 results.push({
                     type: 'conversation',
                     conversationId: conversation.id,
-                    conversationTitle: conversation.title || 'Untitled',
+                    // translator: Fallback title for a conversation without a name.
+                    conversationTitle: conversation.title || c('collider_2025:Title').t`Untitled`,
                     timestamp,
                     ...projectInfo,
                 });
@@ -461,7 +480,8 @@ export class SearchService {
                 results.push({
                     type: 'conversation',
                     conversationId: conversation.id,
-                    conversationTitle: conversation.title || 'Untitled',
+                    // translator: Fallback title for a conversation without a name.
+                    conversationTitle: conversation.title || c('collider_2025:Title').t`Untitled`,
                     timestamp,
                     ...projectInfo,
                 });
@@ -483,7 +503,8 @@ export class SearchService {
                 results.push({
                     type: 'project',
                     projectId: space.id,
-                    projectName: space.projectName || 'Untitled Project',
+                    // translator: Fallback title for a project without a name.
+                    projectName: space.projectName || c('collider_2025:Title').t`Untitled Project`,
                     projectIcon: space.projectIcon,
                     projectDescription: space.projectInstructions,
                     timestamp,
@@ -509,7 +530,8 @@ export class SearchService {
                     type: 'message',
                     conversationId: message.conversationId,
                     messageId: message.id,
-                    conversationTitle: conversation.title || 'Untitled',
+                    // translator: Fallback title for a conversation without a name.
+                    conversationTitle: conversation.title || c('collider_2025:Title').t`Untitled`,
                     messagePreview: preview,
                     timestamp,
                     ...projectInfo,

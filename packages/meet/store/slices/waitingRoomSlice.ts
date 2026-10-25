@@ -1,12 +1,12 @@
 import type { PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { SECOND } from '@proton/shared/lib/constants';
 import isTruthy from '@proton/utils/isTruthy';
 
 import type { MeetState } from '../rootReducer';
-import { selectCanManageWaitingRoom, selectMaxParticipants } from './meetingInfo';
+import { selectCanManageWaitingRoom, selectMaxParticipants } from './currentMeeting';
 import { selectParticipantDecryptedNameMap } from './participants/participantsSlice';
 import { selectTotalParticipantCount } from './participants/sortedParticipantsSlice';
 import { selectWaitingRoomSetting } from './settings';

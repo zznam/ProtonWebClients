@@ -1,18 +1,15 @@
-import { useNotifications } from '@proton/app-context/useNotifications'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { ListPlugin } from '@lexical/react/LexicalListPlugin'
 import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin'
 import { BuildInitialEditorConfig, ShouldBootstrap } from './InitialEditorConfig'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Provider } from '@lexical/yjs'
-import type {
-  EditorRequiresClientMethods,
-  YDocMap,
-  DocStateInterface,
-  EditorInitializationConfig,
-  DocumentRole,
-} from '@proton/docs-shared'
-import { AnonymousUserDisplayName, GenerateUUID, DocProvider, getRandomAnonymousUserLetter } from '@proton/docs-shared'
+import type { Doc } from 'yjs'
+import type { EditorInitializationConfig } from './contract/EditorInitialization'
+import type { DocsDocumentAdapter } from './contract/DocsDocumentAdapter'
+import { v4 as uuidv4 } from 'uuid'
+import { DocsDocProvider } from './Plugins/Collaboration/DocsDocProvider'
+import { AnonymousUserDisplayName, getRandomAnonymousUserLetter } from './Utils/AnonymousUser'
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin'
 import { MarkdownTransformers } from './Utils/MarkdownTransformers'
@@ -26,7 +23,7 @@ import { EditorReadonlyPlugin } from './Plugins/EditorReadonlyPlugin'
 import TableCellResizerPlugin from './Plugins/TableCellResizer'
 import { LinkInfoPlugin } from './Plugins/Link/LinkInfoPlugin'
 import { ReadonlyLinkFixPlugin } from './Plugins/Link/ReadonlyLinkFixPlugin'
-import { DefaultFont } from '../../Shared/Fonts'
+import { DefaultFont } from './Constants/Fonts'
 import type { LexicalEditor } from 'lexical'
 import { EditorRefPlugin } from '@lexical/react/LexicalEditorRefPlugin'
 import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin'
@@ -43,36 +40,32 @@ import { WordCountPlugin } from './Plugins/WordCount/WordCountPlugin'
 import TreeViewPlugin from './Plugins/TreeView/TreeViewPlugin'
 import { ProtonContentEditable } from './ContentEditable/ProtonContentEditable'
 import { MarkNodesProvider } from './Plugins/MarkNodesContext'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import { ProtonLinkPlugin } from './Plugins/Link/LinkPlugin'
 import { FormattingPlugin } from './Plugins/FormattingPlugin'
-import { EditorUserMode } from '../../Lib/EditorUserMode'
-import { EditorSystemMode } from '@proton/docs-shared/lib/EditorSystemMode'
+import { EditorUserMode } from './contract/EditorUserMode'
+import { EditorSystemMode } from './contract/EditorSystemMode'
 import { BlockTypePlugin } from './Plugins/BlockTypePlugin'
 import { YjsReadonlyPlugin } from './Plugins/YjsReadonly/YjsReadonlyPlugin'
-import { useSyncedState } from '../../Hooks/useSyncedState'
 import { FixBrokenListItemPlugin } from './Plugins/FixBrokenListItemPlugin'
 import { CustomCollaborationContextProvider } from './Plugins/Collaboration/CustomCollaborationContext'
 import { FixBrokenTabNode } from './Plugins/FixBrokenTabNode'
-import { getAccentColorForUsername } from '@proton/atoms/UserAvatar/getAccentColorForUsername'
+import { getAccentColorForUsername } from './Utils/getAccentColorForUsername'
 import { PageBreakPlugin } from './Plugins/PageBreak/PageBreakPlugin'
-import { useApplication } from '../ApplicationProvider'
 import { SCROLL_TO_USER_CURSOR_COMMAND } from './Plugins/Collaboration/ScrollToUserCursorPlugin'
-import { useGenericAlertModal } from '@proton/docs-shared/components/GenericAlert'
-import { TableOfContents } from '../../Components/TableOfContents/TableOfContents'
-import DocsLayout from '../DocsLayout'
-import { useIsAlpha } from '../../Hooks/useIsAlpha'
+import { TableOfContentsPlugin } from './Plugins/TableOfContents/TableOfContentsPlugin'
+import { DocsLayoutCenterPanel, DocsLayoutGrid, DocsLayoutLeftPanel, DocsLayoutRightPanel } from './Layout/DocsLayout'
 import { useDocsDependencies } from './DocsDependenciesProvider'
+
+const EmojiAutocompletePlugin = lazy(() => import('./Plugins/emoji/EmojiAutocompletePlugin'))
 
 const TypingBotEnabled = false
 
 export type EditorProps = {
-  clientInvoker: EditorRequiresClientMethods
-  docMap: YDocMap
-  docState: DocStateInterface
+  docMap: Map<string, Doc>
+  docState: DocsDocumentAdapter
   documentId: string
   editingLocked: boolean
-  role: DocumentRole
   onEditorError: (error: Error) => void
   hidden: boolean
   editorInitializationConfig?: EditorInitializationConfig
@@ -90,13 +83,11 @@ export type EditorProps = {
 }
 
 export function Editor({
-  clientInvoker,
   docMap,
   docState,
   documentId,
   editingLocked,
   editorInitializationConfig,
-  role,
   hidden,
   onEditorError,
   onEditorReadyToReceiveUpdates,
@@ -111,25 +102,27 @@ export function Editor({
   lexicalError,
   tableOfContentsVisible,
 }: EditorProps) {
-  const { application } = useApplication()
-  const isAlpha = useIsAlpha()
   const editorRef = useRef<LexicalEditor | null>(null)
 
   const [collabCursorsContainer, setCollabCursorsContainer] = useState<HTMLDivElement | null>(null)
 
-  const { userName } = useSyncedState()
-
   const {
+    emojiPickerEnabled,
+    userName,
+    isAlpha,
+    canEdit,
     logger,
     openLink,
     showGenericAlertModal,
+    createWarningNotification,
+    showAlert,
+    reportToolbarInteraction,
+    reportWordCount,
+    subscribeToCollaboratorCursorNavigation,
     createSuggestionThread,
     getAllThreads,
     reopenSuggestion,
     rejectSuggestion,
-    getDocumentUrl,
-    replaceDocumentUrl,
-    reportTelemetry,
   } = useDocsDependencies()
 
   const setEditorRef = useCallback(
@@ -143,7 +136,7 @@ export function Editor({
 
   const yjsWebsockProvider = useMemo(() => {
     const baseProvider = (): Provider => {
-      return new DocProvider(docState)
+      return new DocsDocProvider(docState.awareness)
     }
 
     return baseProvider
@@ -161,7 +154,7 @@ export function Editor({
     return getRandomAnonymousUserLetter()
   }, [isAnonymousUser])
 
-  const anonymousUserId = useRef(GenerateUUID())
+  const anonymousUserId = useRef(uuidv4())
 
   const awarenessData = useMemo(
     () => ({
@@ -179,39 +172,17 @@ export function Editor({
   }, [letterForAnonymousUser, userName])
 
   useEffect(() => {
-    return application.syncedState.subscribeToEvent('ScrollToUserCursorData', (data) => {
+    return subscribeToCollaboratorCursorNavigation((state) => {
       const editor = editorRef.current
       if (!editor) {
         logger.error('Editor not found when trying to scroll to user cursor')
         return
       }
       editor.dispatchCommand(SCROLL_TO_USER_CURSOR_COMMAND, {
-        state: data.state,
+        state,
       })
     })
-  }, [logger, application.syncedState])
-
-  const { createNotification } = useNotifications()
-  const createWarningNotification = useCallback(
-    (message: string) => {
-      createNotification({
-        text: message,
-        type: 'warning',
-      })
-    },
-    [createNotification],
-  )
-
-  const [alertModal, showAlertModal] = useGenericAlertModal()
-  const showAlert = useCallback(
-    (title: string, message: string) => {
-      showAlertModal({
-        title,
-        translatedMessage: message,
-      })
-    },
-    [showAlertModal],
-  )
+  }, [logger, subscribeToCollaboratorCursorNavigation])
 
   return (
     <CustomCollaborationContextProvider
@@ -226,32 +197,28 @@ export function Editor({
     >
       {hidden && (
         <div
-          className="bg-norm absolute z-[100] flex h-full w-full flex-col items-center justify-center gap-4"
+          className="absolute z-[100] flex h-full w-full flex-col items-center justify-center gap-4 bg-[--background-norm]"
           data-testid="editor-curtain"
         ></div>
       )}
       <SafeLexicalComposer initialConfig={BuildInitialEditorConfig({ onError: onEditorError })}>
         {(systemMode === EditorSystemMode.Edit || systemMode === EditorSystemMode.PublicView) && (
           <Toolbar
-            clientInvoker={clientInvoker}
-            hasEditAccess={role.canEdit()}
+            onInteraction={reportToolbarInteraction}
+            hasEditAccess={canEdit}
             isEditorHidden={hidden}
             onUserModeChange={onUserModeChange}
             systemMode={systemMode}
             userMode={userMode}
           />
         )}
-        <DocsLayout.Grid leftPanelEnabled={tableOfContentsVisible}>
-          <DocsLayout.LeftPanel>
+        <DocsLayoutGrid leftPanelEnabled={tableOfContentsVisible}>
+          <DocsLayoutLeftPanel>
             {tableOfContentsVisible && (
-              <TableOfContents
-                getDocumentUrl={getDocumentUrl}
-                replaceDocumentUrl={replaceDocumentUrl}
-                reportTelemetry={reportTelemetry}
-              />
+              <TableOfContentsPlugin editorHidden={hidden} />
             )}
-          </DocsLayout.LeftPanel>
-          <DocsLayout.CenterPanel>
+          </DocsLayoutLeftPanel>
+          <DocsLayoutCenterPanel>
             <RichTextPlugin
               contentEditable={
                 <>
@@ -274,10 +241,15 @@ export function Editor({
               placeholder={null}
               ErrorBoundary={LexicalErrorBoundary}
             />
-          </DocsLayout.CenterPanel>
-          <DocsLayout.RightPanel />
-        </DocsLayout.Grid>
+          </DocsLayoutCenterPanel>
+          <DocsLayoutRightPanel />
+        </DocsLayoutGrid>
 
+        {emojiPickerEnabled && (
+          <Suspense fallback={null}>
+            <EmojiAutocompletePlugin />
+          </Suspense>
+        )}
         <FixBrokenTabNode />
         <KeyboardShortcutsPlugin />
         <FormattingPlugin />
@@ -327,7 +299,7 @@ export function Editor({
         <EditorRefPlugin editorRef={setEditorRef} />
         <WordCountPlugin
           onWordCountChange={(wordCountInfo) =>
-            systemMode !== EditorSystemMode.Revision && clientInvoker.reportWordCount(wordCountInfo)
+            systemMode !== EditorSystemMode.Revision && reportWordCount(wordCountInfo)
           }
         />
         {showTreeView && <TreeViewPlugin />}
@@ -335,7 +307,8 @@ export function Editor({
           {systemMode !== EditorSystemMode.Revision && userMode !== EditorUserMode.Preview && (
             <CommentPlugin
               key={userMode} // force rerender of comments when user mode changes
-              controller={clientInvoker}
+              documentId={documentId}
+              isSuggestionMode={isSuggestionMode}
               userAddress={userAddress}
             />
           )}
@@ -351,7 +324,6 @@ export function Editor({
               showAlert={showAlert}
             />
           )}
-          {alertModal}
         </MarkNodesProvider>
       </SafeLexicalComposer>
     </CustomCollaborationContextProvider>

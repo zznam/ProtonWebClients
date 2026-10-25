@@ -11,13 +11,13 @@ import useModalState from '@proton/components/components/modalTwo/useModalState'
 import Prompt from '@proton/components/components/prompt/Prompt';
 import HolidaysCalendarModal from '@proton/components/containers/calendar/calendarModal/holidaysCalendarModal/HolidaysCalendarModal';
 import { CALENDAR_MODAL_TYPE } from '@proton/components/containers/calendar/calendarModal/interface';
-import PersonalCalendarModal from '@proton/components/containers/calendar/calendarModal/personalCalendarModal/PersonalCalendarModal';
+import { PersonalCalendarModal } from '@proton/components/containers/calendar/calendarModal/personalCalendarModal/PersonalCalendarModal';
 import ImportModal from '@proton/components/containers/calendar/importModal/ImportModal';
 import ShareCalendarModal from '@proton/components/containers/calendar/shareProton/ShareCalendarModal';
 import ShareLinkModal from '@proton/components/containers/calendar/shareURL/ShareLinkModal';
 import ShareLinkSuccessModal from '@proton/components/containers/calendar/shareURL/ShareLinkSuccessModal';
 import { useModalsMap } from '@proton/components/hooks/useModalsMap';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import type { LoadingByKey } from '@proton/hooks/useLoading';
 import { getAllMembers, getCalendarInvitations, getPublicLinks } from '@proton/shared/lib/api/calendars';
 import { getIsHolidaysCalendar, getIsOwnedCalendar } from '@proton/shared/lib/calendar/calendar';
@@ -30,19 +30,18 @@ import { MEMBER_PERMISSIONS } from '@proton/shared/lib/calendar/permissions';
 import { getCalendarSubpagePath } from '@proton/shared/lib/calendar/settingsRoutes';
 import { APPS, BRAND_NAME } from '@proton/shared/lib/constants';
 import { textToClipboard } from '@proton/shared/lib/helpers/browser';
-import type { Address, Nullable } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
 import type { ModalWithProps } from '@proton/shared/lib/interfaces/Modal';
 import type {
-    ACCESS_LEVEL,
-    CalendarMember,
-    CalendarMemberInvitation,
-    CalendarUrlsResponse,
     GetAllMembersApiResponse,
     GetCalendarInvitationsResponse,
-    SubscribedCalendar,
-    VisualCalendar,
-} from '@proton/shared/lib/interfaces/calendar';
-import { MEMBER_INVITATION_STATUS } from '@proton/shared/lib/interfaces/calendar';
+} from '@proton/shared/lib/interfaces/calendar/Api';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { CalendarMember, CalendarMemberInvitation } from '@proton/shared/lib/interfaces/calendar/CalendarMember';
+import { MEMBER_INVITATION_STATUS } from '@proton/shared/lib/interfaces/calendar/CalendarMember';
+import type { ACCESS_LEVEL, CalendarUrlsResponse } from '@proton/shared/lib/interfaces/calendar/Link';
+import type { SubscribedCalendar } from '@proton/shared/lib/interfaces/calendar/Subscription';
+import type { Nullable } from '@proton/shared/lib/interfaces/utils';
 import noop from '@proton/utils/noop';
 
 import CalendarSidebarListItem from './CalendarSidebarListItem';

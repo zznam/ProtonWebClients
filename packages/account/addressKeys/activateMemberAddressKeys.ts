@@ -1,10 +1,13 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
 import { createKTVerifier } from '@proton/key-transparency/helpers';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
-import { activateMemberAddressKeys, getAddressesWithKeysToActivate } from '@proton/shared/lib/keys';
+import {
+    activateMemberAddressKeys,
+    getAddressesWithKeysToActivate,
+} from '@proton/shared/lib/keys/activateMemberAddressKeys';
 
 import { type AddressesState, addressesThunk } from '../addresses';
 import type { KtState } from '../kt';

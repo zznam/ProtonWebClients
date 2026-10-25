@@ -26,7 +26,8 @@ import { useEffect, useRef } from 'react'
 import { ProtonNode, $isSuggestionNode } from './ProtonNode'
 import { SuggestionTypesThatCanBeEmpty, type SuggestionID } from './Types'
 import { BEFOREINPUT_EVENT_COMMAND, COMPOSITION_START_EVENT_COMMAND, INSERT_FILE_COMMAND } from '../../Commands/Events'
-import type { CommentThreadInterface, SuggestionSummaryType } from '@proton/docs-shared'
+import type { DocsCommentThread } from '../../contract/DocsCommentThread'
+import type { SuggestionSummaryType } from '../../contract/SuggestionType'
 import { useMarkNodesContext } from '../MarkNodesContext'
 import { ACCEPT_SUGGESTION_COMMAND, REJECT_SUGGESTION_COMMAND, TOGGLE_SUGGESTION_MODE_COMMAND } from './Commands'
 import debounce from 'lodash/debounce'
@@ -35,7 +36,7 @@ import { $acceptSuggestion } from './acceptSuggestion'
 import { $rejectSuggestion } from './rejectSuggestion'
 import { $handleBeforeInputEvent } from './handleBeforeInputEvent'
 import { $formatTextAsSuggestion } from './formatTextAsSuggestion'
-import { useDocsDependencies } from '../../DocsDependenciesProvider'
+import { useDocsDependencies, useDocsMessages } from '../../DocsDependenciesProvider'
 import { $selectionInsertClipboardNodes } from './selectionInsertClipboardNodes'
 import { KEYBOARD_SHORTCUT_COMMAND } from '../KeyboardShortcuts/Command'
 import { getShortcutFromKeyboardEvent } from '../KeyboardShortcuts/Utils'
@@ -46,9 +47,8 @@ import { $patchStyleAsSuggestion } from './patchStyleAsSuggestion'
 import { generateSuggestionSummary } from './generateSuggestionSummary'
 import { INSERT_IMAGE_NODE_COMMAND, SET_IMAGE_SIZE_COMMAND } from '../Image/ImagePlugin'
 import { $handleImageDragAndDropAsSuggestion, $handleImageSizeChangeAsSuggestion } from './imageHandling'
-import { EditorUserMode } from '../../../../Lib/EditorUserMode'
+import { EditorUserMode } from '../../contract/EditorUserMode'
 import { $handleIndentOutdentAsSuggestion } from './handleIndentOutdent'
-import { c } from 'ttag'
 import {
   DELETE_TABLE_COLUMN_COMMAND,
   DELETE_TABLE_COMMAND,
@@ -100,8 +100,8 @@ export function SuggestionModePlugin({
     suggestionID: string,
     commentContent: string,
     suggestionType: SuggestionSummaryType,
-  ): Promise<CommentThreadInterface | undefined>
-  getAllThreads(): Promise<CommentThreadInterface[]>
+  ): Promise<DocsCommentThread | undefined>
+  getAllThreads(): Promise<DocsCommentThread[]>
   reopenSuggestion(threadId: string): Promise<boolean>
   rejectSuggestion(threadId: string): Promise<boolean>
   onUserModeChange: (mode: EditorUserMode) => void
@@ -113,6 +113,7 @@ export function SuggestionModePlugin({
   const { markNodeMap } = useMarkNodesContext()
 
   const { logger: suggestionModeLogger, reportError } = useDocsDependencies()
+  const messages = useDocsMessages().suggestions
 
   /**
    * Set of suggestion IDs created during the current session.
@@ -422,6 +423,7 @@ export function SuggestionModePlugin({
             addCreatedIDtoSet,
             suggestionModeLogger,
             createWarningNotification,
+            messages.codeBlocksNotSupported,
           )
         },
         COMMAND_PRIORITY_CRITICAL,
@@ -605,11 +607,7 @@ export function SuggestionModePlugin({
           editor.setEditable(false)
           editor._compositionKey = null
           onUserModeChange(EditorUserMode.Preview)
-          showAlert(
-            c('Title').t`Language not supported`,
-            c('Info')
-              .t`The language you're using isn’t currently supported in suggestion mode. Please switch to edit mode or change the language.`,
-          )
+          showAlert(messages.languageNotSupportedTitle, messages.languageNotSupportedMessage)
           return true
         },
         COMMAND_PRIORITY_CRITICAL,
@@ -730,7 +728,7 @@ export function SuggestionModePlugin({
         COMMAND_PRIORITY_CRITICAL,
       ),
     )
-  }, [createWarningNotification, editor, isSuggestionMode, onUserModeChange, showAlert, suggestionModeLogger])
+  }, [createWarningNotification, editor, isSuggestionMode, messages, onUserModeChange, showAlert, suggestionModeLogger])
 
   return null
 }

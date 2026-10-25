@@ -1,8 +1,10 @@
-import type { ItemRevisionContentsResponse, VaultShareKey } from '../../../../types';
-import { ItemState } from '../../../../types';
+import type { ItemRevisionContentsResponse } from '../../../../types/api/pass';
+import type { VaultShareKey } from '../../../../types/crypto/pass-types';
+import { ItemState } from '../../../../types/data/items';
+import { uniqueId } from '../../../../utils/string/unique-id';
+import { TEST_USER_KEY_ID, randomContents } from '../../../../utils/tests/fixtures/crypto';
 import { generateKey, importSymmetricKey } from '../../utils/crypto-helpers';
 import { PassCryptoItemError } from '../../utils/errors';
-import { TEST_USER_KEY_ID, randomContents } from '../../utils/testing';
 import { createItem } from './create-item';
 import { openItem } from './open-item';
 import { openItemKey } from './open-item-key';
@@ -11,7 +13,7 @@ describe('openItem crypto process', () => {
     const key = generateKey();
     const content = randomContents();
     const timestamp = Math.floor(Date.now() / 1000);
-    const itemId = `itemId-${Math.random()}`;
+    const itemId = `itemId-${uniqueId()}`;
 
     test('should decrypt item accordingly', async () => {
         const vaultKey: VaultShareKey = {

@@ -1,11 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit';
 
 import { ES_EXTRA_RESULTS_LIMIT } from '@proton/encrypted-search/constants';
-import type { ESStatus, NormalizedSearchParams } from '@proton/encrypted-search/models';
+import type { ESStatus } from '@proton/encrypted-search/models/interfaces';
+import type { NormalizedSearchParams } from '@proton/encrypted-search/models/mail';
 import type { MailSettingState } from '@proton/mail/store/mailSettings';
 import type { CategoryLabelID } from '@proton/shared/lib/constants';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import type { LabelCount } from '@proton/shared/lib/interfaces';
+import type { LabelCount } from '@proton/shared/lib/interfaces/Label';
 import { CUSTOM_VIEWS_LABELS } from '@proton/shared/lib/mail/constants';
 import { MAIL_PAGE_SIZE } from '@proton/shared/lib/mail/mailSettings';
 import type { SearchParameters } from '@proton/shared/lib/mail/search';
@@ -70,6 +71,7 @@ export const pendingActions = (state: MailState) => state.elements.pendingAction
 const retry = (state: MailState) => state.elements.retry;
 export const selectRetry = retry;
 const invalidated = (state: MailState) => state.elements.invalidated;
+const apiOffline = (state: MailState) => state.apiStatus.offline;
 const total = (state: MailState) => state.elements.total;
 export const taskRunning = (state: MailState) => state.elements.taskRunning;
 const awaitingStaleRetryMap = (state: MailState) => state.elements.awaitingStaleRetry;
@@ -418,10 +420,16 @@ export const placeholderCount = createSelector(
 );
 
 export const selectLoading = createSelector(
-    [beforeFirstLoad, pendingRequest, shouldLoadElements, invalidated, pageCached],
-    (beforeFirstLoad, pendingRequest, shouldLoadElements, invalidated, pageCached) =>
+    [beforeFirstLoad, pendingRequest, shouldLoadElements, invalidated, pageCached, apiOffline],
+    (beforeFirstLoad, pendingRequest, shouldLoadElements, invalidated, pageCached, offline) => {
+        // Offline with no cached page: fetches cannot succeed — show an empty list instead of count-based skeletons.
+        if (offline && !pageCached) {
+            return false;
+        }
+
         // A page that was never cached has an unknown content: keep loading rather than claiming it's empty.
-        (beforeFirstLoad || pendingRequest || shouldLoadElements || !pageCached) && !invalidated
+        return (beforeFirstLoad || pendingRequest || shouldLoadElements || !pageCached) && !invalidated;
+    }
 );
 
 export const totalReturned = createSelector([contextTotal, dynamicTotal], (contextTotal, dynamicTotal) => {

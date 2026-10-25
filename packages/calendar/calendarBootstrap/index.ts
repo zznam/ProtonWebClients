@@ -6,8 +6,9 @@ import {
     miniSerializeError,
 } from '@reduxjs/toolkit';
 
-import type { AddressKeysState, AddressesState } from '@proton/account';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { AddressKeysState } from '@proton/account/addressKeys';
+import type { AddressesState } from '@proton/account/addresses';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { getFetchedAt, getFetchedEphemeral } from '@proton/redux-utilities/fetchedAt';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import type { CacheType } from '@proton/redux-utilities/interface';
@@ -18,7 +19,7 @@ import {
     getIsCalendarMemberEventManagerDelete,
     getIsCalendarMemberEventManagerUpdate,
 } from '@proton/shared/lib/eventManager/calendar/helpers';
-import type { CalendarBootstrap } from '@proton/shared/lib/interfaces/calendar';
+import type { CalendarBootstrap } from '@proton/shared/lib/interfaces/calendar/Calendar';
 import type { CalendarMemberEventManager } from '@proton/shared/lib/interfaces/calendar/EventManager';
 
 import { calendarServerEvent } from '../calendarServerEvent';

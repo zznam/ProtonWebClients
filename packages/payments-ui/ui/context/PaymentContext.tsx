@@ -3,6 +3,7 @@ import { type ReactNode, createContext, useContext, useEffect, useRef, useState 
 import { createSelector } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
+import { entitlementCatalogThunk, selectEntitlementCatalog } from '@proton/account/entitlementCatalog';
 import { paymentStatusThunk, selectPaymentStatus } from '@proton/account/paymentStatus';
 import { plansThunk, selectPlans } from '@proton/account/plans';
 import { selectSubscription, subscriptionThunk } from '@proton/account/subscription';
@@ -11,7 +12,7 @@ import type { CreateNotificationOptions } from '@proton/app-context/notification
 import { useApi } from '@proton/app-context/useApi';
 import { useConfig } from '@proton/app-context/useConfig';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useHandler } from '@proton/components/hooks/useHandler';
+import { useHandler } from '@proton/hooks/useHandler';
 import {
     type BillingAddressExtended,
     DEFAULT_TAX_BILLING_ADDRESS,
@@ -26,6 +27,8 @@ import {
     type getPreferredCurrency,
     mainCurrencies,
 } from '@proton/payments/core/currencies';
+import { emptyEntitlementCatalog } from '@proton/payments/core/entitlements/empty-entitlement-catalog';
+import type { EntitlementCatalog } from '@proton/payments/core/entitlements/interface';
 import type {
     Currency,
     Cycle,
@@ -38,7 +41,13 @@ import type {
 import { getPlanFromPlanIDs, hasFreePlanIDs } from '@proton/payments/core/plan/helpers';
 import type { FreePlanDefault, Plan, PlansMap } from '@proton/payments/core/plan/interface';
 import { FREE_PLAN } from '@proton/payments/core/subscription/freePlans';
-import { isSubscriptionCheckForbiddenWithReason, shouldPassIsTrial } from '@proton/payments/core/subscription/helpers';
+import {
+    type SubscriptionSelection,
+    isModifyingPaidSubscriptionSelection,
+    isSubscriptionCheckForbiddenWithReason,
+    isSubscriptionSelectionEqual,
+    shouldPassIsTrial,
+} from '@proton/payments/core/subscription/helpers';
 import { getPlanIDs } from '@proton/payments/core/subscription/helpers/plan-ids';
 import type { FullPlansMap, Subscription, SubscriptionEstimation } from '@proton/payments/core/subscription/interface';
 import type { PlanToCheck } from '@proton/payments/core/subscription/plan-to-check';
@@ -49,7 +58,7 @@ import type { EstimationChangeAction } from '@proton/payments/telemetry/shared-c
 import { checkoutTelemetry } from '@proton/payments/telemetry/telemetry';
 import { useDispatch, useSelector } from '@proton/redux-shared-store/sharedProvider';
 import type { ProductParam } from '@proton/shared/lib/apps/product';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import noop from '@proton/utils/noop';
 
 import { useCurrencies } from '../../client-extensions/useCurrencies';
@@ -159,6 +168,7 @@ interface PaymentsContextProviderProps {
     preload?: boolean;
     authenticated?: boolean;
     cachedPlans?: Plan[];
+    withGuards?: boolean;
 }
 
 interface PaymentsContextProviderState {
@@ -166,6 +176,7 @@ interface PaymentsContextProviderState {
     product: ProductParam;
     billingAddress: BillingAddressExtended;
     subscription: Subscription | FreeSubscription;
+    entitlementCatalog: EntitlementCatalog;
     plansData: {
         plans: Plan[];
         freePlan: FreePlanDefault;
@@ -180,14 +191,15 @@ interface PaymentsContextProviderState {
 }
 
 const selectInitialPaymentData = createSelector(
-    [selectUser, selectSubscription, selectPlans, selectPaymentStatus],
-    (user, subscription, plans, paymentStatus) => {
+    [selectUser, selectSubscription, selectPlans, selectPaymentStatus, selectEntitlementCatalog],
+    (user, subscription, plans, paymentStatus, entitlementCatalog) => {
         return {
             // NOTE: with optionals due to user, subscription not being initialized in account's public app
             user: user?.value,
             subscription: subscription?.value,
             plans: plans?.value,
             paymentStatus: paymentStatus?.value,
+            entitlementCatalog: entitlementCatalog?.value,
         };
     }
 );
@@ -197,12 +209,19 @@ export const PaymentsContextProvider = ({
     preload = true,
     authenticated = true,
     cachedPlans,
+    withGuards = false,
 }: PaymentsContextProviderProps) => {
     const { APP_NAME } = useConfig();
 
     const defaultApi = useApi();
 
-    const { user, paymentStatus: paymentStatusInitial, subscription: subscriptionInitial, plans: plansInitial } =
+    const {
+        user,
+        paymentStatus: paymentStatusInitial,
+        subscription: subscriptionInitial,
+        plans: plansInitial,
+        entitlementCatalog: entitlementCatalogInitial,
+    } =
         // Avoid using model hooks to avoid fetching data
         useSelector(selectInitialPaymentData);
     const dispatch = useDispatch();
@@ -237,6 +256,7 @@ export const PaymentsContextProvider = ({
                 freePlan: FREE_PLAN,
             };
             const paymentStatus = paymentStatusInitial;
+            const entitlementCatalog = entitlementCatalogInitial ?? emptyEntitlementCatalog;
             const billingAddress = paymentStatus
                 ? getBillingAddressFromPaymentStatus(paymentStatus, { shouldRestoreZipCode: !authenticated })
                 : DEFAULT_TAX_BILLING_ADDRESS;
@@ -270,6 +290,7 @@ export const PaymentsContextProvider = ({
                 newCycle: cycle,
                 downgradeIsTrial: true,
                 subscription,
+                entitlementCatalog,
             });
             const planToCheck = {
                 cycle,
@@ -302,6 +323,7 @@ export const PaymentsContextProvider = ({
                 checkResult,
                 vatNumber: undefined,
                 loading: false,
+                entitlementCatalog,
             };
         })()
     );
@@ -312,6 +334,7 @@ export const PaymentsContextProvider = ({
     };
 
     const abortControllerRef = useRef<AbortController | undefined>(undefined);
+    const guardedSelectionRef = useRef<SubscriptionSelection | undefined>(undefined);
 
     const getLocalizedPlansMap = (params: { paramCurrency?: Currency }) => {
         return getLocalizedPlansMapParametrized({
@@ -359,6 +382,7 @@ export const PaymentsContextProvider = ({
             newCycle: cycle,
             downgradeIsTrial: canDowngrade,
             subscription: stateRef.current.subscription,
+            entitlementCatalog: stateRef.current.entitlementCatalog,
         });
     };
 
@@ -385,6 +409,8 @@ export const PaymentsContextProvider = ({
         });
 
         if (paymentForbiddenReason.forbidden) {
+            abortControllerRef.current?.abort();
+            guardedSelectionRef.current = undefined;
             const newCheckResult = getOptimisticCheckResult(newPlanToCheck);
 
             setState({
@@ -409,11 +435,27 @@ export const PaymentsContextProvider = ({
         }
 
         try {
-            setState({ loading: true });
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
+            abortControllerRef.current?.abort();
             abortControllerRef.current = new AbortController();
+
+            const selection = { planIDs: newPlanToCheck.planIDs, cycle: newPlanToCheck.cycle };
+            const shouldValidateGuards =
+                withGuards &&
+                isModifyingPaidSubscriptionSelection(
+                    stateRef.current.subscription,
+                    selection.planIDs,
+                    selection.cycle
+                ) &&
+                !(guardedSelectionRef.current && isSubscriptionSelectionEqual(guardedSelectionRef.current, selection));
+            const checkResult = stateRef.current.checkResult;
+            const previousGuardResult = checkResult.GuardResult;
+
+            if (shouldValidateGuards) {
+                guardedSelectionRef.current = undefined;
+                setState({ loading: true, checkResult: { ...checkResult, GuardResult: [] } });
+            } else {
+                setState({ loading: true });
+            }
 
             const subscriptionData = getSubscriptionDataFromPlanToCheck({
                 ...newPlanToCheck,
@@ -422,19 +464,31 @@ export const PaymentsContextProvider = ({
                 VatId: newVatNumber,
                 trial: newPlanToCheck.trial || getShouldPassTrial(newPlanToCheck.planIDs, newPlanToCheck.cycle, true),
             });
+            if (shouldValidateGuards) {
+                subscriptionData.ValidateGuards = true;
+            }
 
             const newCheckResult = await paymentsApiRef.current.checkSubscription(subscriptionData, {
                 signal: abortControllerRef.current.signal,
                 previousEstimation: stateRef.current.checkResult,
             });
+            // An optimistic result is built by the frontend after a recoverable error and carries no guard verdict.
+            if (shouldValidateGuards) {
+                guardedSelectionRef.current = newCheckResult.optimistic ? undefined : selection;
+            }
+            const shouldCarryGuardResult = !shouldValidateGuards && !!guardedSelectionRef.current;
+            const displayedCheckResult = shouldCarryGuardResult
+                ? { ...newCheckResult, GuardResult: previousGuardResult }
+                : newCheckResult;
             setState({
                 planToCheck: newPlanToCheck,
                 billingAddress: newBillingAddress,
                 vatNumber: newVatNumber,
-                checkResult: newCheckResult,
+                checkResult: displayedCheckResult,
             });
             paymentsApiRef.current.cacheMultiCheck(subscriptionData, newCheckResult);
-            return newCheckResult;
+
+            return displayedCheckResult;
         } catch (error) {
             throw error;
         } finally {
@@ -505,6 +559,8 @@ export const PaymentsContextProvider = ({
 
         const isFree = hasFreePlanIDs(newPlanToCheck.planIDs);
         if (isFree) {
+            abortControllerRef.current?.abort();
+            guardedSelectionRef.current = undefined;
             const newCheckResult = getOptimisticCheckResult(newPlanToCheck);
             setState({ planToCheck: newPlanToCheck, checkResult: newCheckResult });
             return newCheckResult;
@@ -516,7 +572,7 @@ export const PaymentsContextProvider = ({
     const preloadPaymentsData = async ({ api: apiOverride }: { api?: Api } = {}) => {
         const api = apiOverride ?? defaultApi;
 
-        const [plansData, { paymentStatus, billingAddress }, subscription] = await Promise.all([
+        const [plansData, { paymentStatus, billingAddress }, subscription, entitlementCatalog] = await Promise.all([
             dispatch(plansThunk({ api })),
             loadInitialBillingAddress({
                 getPaymentStatus: () => dispatch(paymentStatusThunk({ api })),
@@ -524,6 +580,7 @@ export const PaymentsContextProvider = ({
                 isAuthenticated: authenticated,
             }),
             authenticated ? dispatch(subscriptionThunk()) : Promise.resolve(FREE_SUBSCRIPTION as FreeSubscription),
+            dispatch(entitlementCatalogThunk({ api })),
         ]);
 
         const result = {
@@ -531,9 +588,10 @@ export const PaymentsContextProvider = ({
             paymentStatus,
             subscription,
             billingAddress,
+            entitlementCatalog,
         };
 
-        setState(result);
+        setState(result satisfies Partial<PaymentsContextProviderState>);
         return result;
     };
 

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 
 import type { IconComponent } from '@proton/icons/component';
 import type { PLANS } from '@proton/payments/core/constants';
-import type { Audience } from '@proton/shared/lib/interfaces';
+import type { Audience } from '@proton/shared/lib/interfaces/Subscription';
 
 export type PlanCardFeatureIcon = IconComponent;
 
@@ -64,16 +64,6 @@ export interface PlanCardFeature {
         [PLANS.MEET_BUSINESS]: PlanCardFeatureDefinition | null;
         [PLANS.MEET]: PlanCardFeatureDefinition | null;
     };
-}
-
-export enum PlanCardFeatureType {
-    highlight = 0,
-    mail = 1,
-    calendar = 2,
-    drive = 3,
-    vpn = 4,
-    team = 5,
-    support = 6,
 }
 
 export interface ShortPlan {

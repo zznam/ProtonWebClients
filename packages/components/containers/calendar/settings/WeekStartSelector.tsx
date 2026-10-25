@@ -4,13 +4,13 @@ import { userSettingsActions } from '@proton/account/userSettings';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { updateWeekStart } from '@proton/shared/lib/api/settings';
 import { dateLocaleCode } from '@proton/shared/lib/i18n';
 import { getBrowserLocale } from '@proton/shared/lib/i18n/helper';
 import { loadDateLocale } from '@proton/shared/lib/i18n/loadLocale';
-import { SETTINGS_WEEK_START, type UserSettings } from '@proton/shared/lib/interfaces';
+import { SETTINGS_WEEK_START, type UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import { getDefaultWeekStartsOn } from '@proton/shared/lib/settings/helper';
 
 import { DropdownSizeUnit } from '../../../components/dropdown/utils';

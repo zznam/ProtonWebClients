@@ -3,13 +3,14 @@ import { c } from 'ttag';
 
 import { useUser } from '@proton/account/user/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { FeatureCode, useFeature } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 
 import useAssistantTelemetry from './useAssistantTelemetry';
 
 export const ASSISTANT_TRIAL_TIME_DAYS = 14;
 
-export type TrialStatus = 'trial-ongoing' | 'trial-ended' | 'trial-not-started' | 'is-paid' | 'no-trial';
+type TrialStatus = 'trial-ongoing' | 'trial-ended' | 'trial-not-started' | 'is-paid' | 'no-trial';
 
 // Prevent multiple starts in case of multiple start calls
 let started = false;

@@ -4,11 +4,11 @@ import { userSettingsActions } from '@proton/account/userSettings';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { updateCrashReports } from '@proton/shared/lib/api/settings';
 import { setSentryEnabled } from '@proton/shared/lib/helpers/sentry';
-import type { UserSettings } from '@proton/shared/lib/interfaces';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import noop from '@proton/utils/noop';
 
 import Toggle from '../../components/toggle/Toggle';

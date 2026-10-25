@@ -4,13 +4,17 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { LinkNode } from '@lexical/link'
 import { getDOMRangeRect } from '../../Utils/getDOMRangeRect'
 import { createPortal } from 'react-dom'
-import { Button } from '@proton/atoms/Button/Button'
-import { Input } from '@proton/atoms/Input/Input'
 import { Icon } from '../../Components/Icon'
 import * as Icons from '../../Components/icons'
 import { mergeRegister } from '@lexical/utils'
-import { c } from 'ttag'
+import { useDocsMessages } from '../../DocsDependenciesProvider'
+import { clsx } from 'clsx'
 import { LINK_CHANGE_COMMAND } from './LinkPlugin'
+
+const inputClassName =
+  'min-w-0 flex-1 rounded border border-[--border-weak] bg-[--background-norm] px-3 py-1.5 text-sm text-[--text-norm] placeholder:text-[--text-weak] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--focus-outline]'
+const buttonClassName =
+  'inline-flex min-h-8 items-center justify-center rounded border px-3 py-1 text-sm text-[--text-norm] hover:bg-[--interaction-weak] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--focus-outline]'
 
 export function LinkInfoEditor({
   editor,
@@ -23,6 +27,7 @@ export function LinkInfoEditor({
   linkNode: LinkNode | null
   linkTextNode: TextNode | null
 }) {
+  const messages = useDocsMessages().link
   const [position, setPosition] = useState<{
     top: number
     left: number
@@ -140,7 +145,7 @@ export function LinkInfoEditor({
 
   return createPortal(
     <div
-      className="bg-norm shadow-norm border-weak absolute left-0 top-0 rounded border px-3 py-1.5 text-sm print:hidden"
+      className="absolute left-0 top-0 rounded border border-[--border-weak] bg-[--background-norm] px-3 py-1.5 text-sm shadow-[shadow:--shadow-norm] print:hidden"
       style={{
         top: position.top,
         left: position.left,
@@ -163,9 +168,15 @@ export function LinkInfoEditor({
         {shouldShowLinkTextInput && (
           <div className="flex items-center gap-3">
             <Icon data={Icons.infoCircle} className="flex-shrink-0" />
-            <Input
-              aria-label={c('Label').t`Link text`}
-              placeholder={c('Placeholder').t`Text`}
+            <input
+              type="text"
+              autoComplete="off"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
+              className={inputClassName}
+              aria-label={messages.textLabel}
+              placeholder={messages.textPlaceholder}
               value={text}
               onChange={(event) => {
                 setText(event.target.value)
@@ -175,10 +186,16 @@ export function LinkInfoEditor({
         )}
         <div className="flex items-center gap-3">
           <Icon data={Icons.link} className="flex-shrink-0" />
-          <Input
+          <input
+            type="text"
+            autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
+            className={inputClassName}
             value={url}
-            aria-label={c('Label').t`Link URL`}
-            placeholder={c('Placeholder').t`Paste link`}
+            aria-label={messages.urlLabel}
+            placeholder={messages.urlPlaceholder}
             onChange={(event) => {
               setURL(event.target.value)
             }}
@@ -192,8 +209,12 @@ export function LinkInfoEditor({
           />
         </div>
         <div className="flex items-center justify-end gap-1.5">
-          <Button shape="ghost" onClick={cancelLinkEdit}>{c('Action').t`Cancel`}</Button>
-          <Button onClick={handleSubmission}>{c('Action').t`Apply`}</Button>
+          <button type="button" className={clsx(buttonClassName, 'border-[transparent]')} onClick={cancelLinkEdit}>
+            {messages.cancel}
+          </button>
+          <button type="button" className={clsx(buttonClassName, 'border-[--border-weak]')} onClick={handleSubmission}>
+            {messages.apply}
+          </button>
         </div>
       </form>
     </div>,

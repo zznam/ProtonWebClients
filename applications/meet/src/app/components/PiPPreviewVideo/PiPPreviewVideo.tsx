@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Feedback } from '@dnd-kit/dom';
 import { DragDropProvider, type DragEndEvent, useDraggable } from '@dnd-kit/react';
+import { logger } from '@protontech/logger';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
@@ -58,9 +59,7 @@ const PiPPreviewVideoInternal = ({
 
             void video.play();
         } catch (error) {
-            // Logging error
-            // eslint-disable-next-line no-console
-            console.error('Failed to set up canvas stream:', error);
+            logger.error('Failed to set up canvas stream:', error);
         }
 
         return () => {

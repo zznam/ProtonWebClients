@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } til Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } til iOS"
-      ],
       "Accept": [
         "Accepter"
       ],
@@ -346,6 +340,15 @@
       "Done": [
         "Udført"
       ],
+      "Download for Linux": [
+        "Download til Linux"
+      ],
+      "Download for macOS": [
+        "Download til macOS"
+      ],
+      "Download for Windows": [
+        "Download til Windows"
+      ],
       "Download this CSV template": [
         "Download denne CSV-skabelon"
       ],
@@ -556,6 +559,9 @@
       "Open navigation": [
         "Åbn navigation"
       ],
+      "Open platform selection dropdown": [
+        "Åbn platform-vælgeren"
+      ],
       "Organize vaults": [
         "Organisér bokse"
       ],
@@ -718,6 +724,12 @@
       "Show Less": [
         "Vis færre"
       ],
+      "Show less": [
+        "Vis mindre"
+      ],
+      "Show more": [
+        "Vis mere"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Log ind på ${ BRAND_NAME }"
       ],
@@ -879,8 +891,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } skrivebordsapp"
+      "${ appName } Desktop application": [
+        "${ appName } skrivebordsapp"
       ]
     },
     "Button": {
@@ -1054,6 +1066,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "Godkendelse mislykkedes. Bekræft din anden adgangskode for at fortsætte med eksporten"
       ],
+      "Biometric authentication cancelled.": [
+        "Biometrisk godkendelse annulleret."
+      ],
       "Biometric authentication failed.": [
         "Biometrisk godkendelse mislykkedes."
       ],
@@ -1134,6 +1149,9 @@
       "Editing item failed": [
         "Redigering af element mislykkedes"
       ],
+      "Email is not valid": [
+        "E-mail er ikke gyldig"
+      ],
       "Empty CSV file": [
         "Tom CSV-fil"
       ],
@@ -1145,6 +1163,9 @@
       ],
       "Encrypted JSON not supported": [
         "Krypteret JSON er ikke understøttet"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Indtast dit brugernavn uden domænet (@example.com)"
       ],
       "Error reporting problem": [
         "Problem med fejlrapportering"
@@ -1336,6 +1357,9 @@
       "Incorrect backup password. Please try again.": [
         "Forkert backupadgangskode. Prøv igen."
       ],
+      "Incorrect password. Please try again.": [
+        "Forkert adgangskode. Prøv venligst igen."
+      ],
       "Incorrect second password. Please try again.": [
         "Forkert anden adgangskode. Prøv igen."
       ],
@@ -1369,8 +1393,14 @@
       "Network error": [
         "Netværksfejl"
       ],
+      "Not a valid number": [
+        "Ikke et gyldigt nummer"
+      ],
       "Passphrase is incorrect": [
         "Adgangssætning er forkert"
+      ],
+      "Passwords do not match": [
+        "Adgangskoder stemmer ikke overens"
       ],
       "PIN codes do not match": [
         "Pinkoder stemmer ikke overens"
@@ -1435,11 +1465,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME }-skrivebordsappen burde være logget in."
       ],
+      "The email addresses do not match": [
+        "E-mailadresserne stemmer ikke overens"
+      ],
       "The session has expired. Please sign in again.": [
         "Sessionen er udløbet. Log ind igen."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Der opstod en fejl under fjernelse af det sikre link. Prøv igen om et par minutter."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Dette felt overskrider det maksimale antal tegn på ${ maximumLength }."
+      ],
+      "This field is required": [
+        "Feltet er påkrævet"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Dette felt kræver minimum ${ minimumLength } tegn."
       ],
       "This invite is no longer available": [
         "Denne invitation findes ikke længere"
@@ -1452,6 +1494,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Prøv at kontakte linkets ejer."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Prøv kun at bruge bogstaver, tal og _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Kunne ikke generere en OTP-kode for dette element"
@@ -1486,6 +1531,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Opdatering af boksen \"${ payload.content.name }\" mislykkedes"
       ],
+      "Username must begin with a letter or digit": [
+        "Brugernavn skal begynde med et bogstav eller et tal"
+      ],
+      "Username must end with a letter or digit": [
+        "Brugernavn skal ende på et bogstav eller et tal"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Oprettelse af boksen \"${ payload.content.name }\" mislykkedes"
       ],
@@ -1509,6 +1560,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Forkert pinkode. Prøv igen."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Forkert gendannelsessætning. Prøv igen eller brug en anden gendannelsesmetode."
       ],
       "Wrong second password": [
         "Forkert anden adgangskode"
@@ -1882,9 +1936,6 @@
       "Can view this item.": [
         "Kan se dette element."
       ],
-      "Change your password": [
-        "Skift din adgangskode"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Tjekker ${ compromised.progress.completed } af ${ compromised.progress.total } adgangskoder"
       ],
@@ -1971,9 +2022,6 @@
       ],
       "Editor": [
         "Redaktør"
-      ],
-      "email": [
-        "e-mail"
       ],
       "Email address successfully deleted from monitoring": [
         "E-mail-adresse slettet fra monitorering"
@@ -2067,9 +2115,6 @@
       ],
       "Fill in the CSV with your data": [
         "Udfyld CSV-filen med dine data"
-      ],
-      "finance": [
-        "finans"
       ],
       "Find \"OpenSSH Authentication Agent\", right-click Properties.": [
         "Find \"OpenSSH Authentication Agent\", og højre-klik Egenskaber."
@@ -2172,6 +2217,9 @@
       "invites you to access items in": [
         "inviterer dig til at tilgå elementer i"
       ],
+      "iOS and Android Apps": [
+        "iOS- og Android-apps"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Det ser ud til, at du allerede er logget ind på ${ PASS_APP_NAME }. Hvis du prøver at logge ind med en anden konto, bedes du logge ud af udvidelsen først."
       ],
@@ -2257,9 +2305,6 @@
       "Medium Priority": [
         "Mellem prioritet"
       ],
-      "Monitor accounts": [
-        "Overvåg konti"
-      ],
       "Monitoring settings successfully updated": [
         "Indstillinger for monitorering opdateret"
       ],
@@ -2277,8 +2322,7 @@
         "Flytter alle elementer fra \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Flyttes et element til en anden boks, slettes dets sikre links.",
-        "Flyttes elementer til en anden boks, slettes deres sikre links."
+        "Hvis du flytter et element til en anden boks, slettes dets sikre links."
       ],
       "Moving items": [
         "Flytter elementer"
@@ -2368,9 +2412,6 @@
       ],
       "Pass Plus trial": [
         "Pass Plus prøveversion"
-      ],
-      "password": [
-        "adgangskode"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Adgangskodelås er blevet registreret. Brug den til at oplåse ${ PASS_APP_NAME }."
@@ -2577,6 +2618,12 @@
       "Restoring trashed items...": [
         "Gendanner elementer i papirkurven..."
       ],
+      "Scan to download": [
+        "Skan for at downloade"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "Scan for at downloade ${ PASS_APP_NAME } til iOS og Android"
+      ],
       "Secure links": [
         "Sikre links"
       ],
@@ -2779,6 +2826,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "For at gennemgå dine importerede data skal du klikke på ${ PASS_APP_NAME } i din browsers værktøjslinje."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "${ PASS_APP_NAME } kræver en ny browsertilladelse for at aktivere adgang med biometri."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "${ PASS_APP_NAME } kræver en ny browsertilladelse for at aktivere adgang med biometri. Efter du har accepteret den genindlæser browserudvidelsen. Åbn denne side igen bagefter."
       ],
@@ -2838,9 +2888,6 @@
       ],
       "User's access successfully updated": [
         "Brugers adgang opdateret"
-      ],
-      "username": [
-        "brugernavn"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Boksen \"${ payload.content.name }\" blev slettet"
@@ -3055,6 +3102,9 @@
       "${ hours } hour": [
         "${ hours } time",
         "${ hours } timer"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } tegn"
       ],
       "${ minutes } minute": [
         "${ minutes } minut",
@@ -3695,11 +3745,17 @@
       "LinkedIn account": [
         "LinkedIn-konto"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Login"
       ],
       "Logins": [
         "Logins"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Postkasser"
@@ -4288,6 +4344,9 @@
       ],
       "WiFi network": [
         "WiFi-netværk"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Arbejdsdetaljer"
@@ -5088,6 +5147,12 @@
       "Folder options": [
         "Mappeindstillinger"
       ],
+      "Get mobile and desktop apps": [
+        "Få mobil- og desktop-apps"
+      ],
+      "Get mobile apps": [
+        "Hent mobilapps"
+      ],
       "Get Started": [
         "Kom i gang"
       ],
@@ -5487,8 +5552,16 @@
       "OTP secret or URI is invalid": [
         "OTP-hemmelighed eller URI er ugyldig"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Adgangskode skal indeholde mindst ${ MIN_PASSWORD_LENGTH } tegn",
+        "Adgangskode skal indeholde mindst ${ MIN_PASSWORD_LENGTH } tegn"
+      ],
       "Section name cannot be empty": [
         "Sektionsnavn kan ikke være tomt"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Prøv et kortere brugernavn (maks. ${ n } tegn)",
+        "Prøv et kortere brugernavn (maks. ${ n } tegn)"
       ],
       "URL already exists": [
         "URL findes allerede"
@@ -5509,6 +5582,22 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "Adgangskoden til ${ BRAND_NAME } kræves"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "${ count } mappe blev flettet ind i dens overordnede mappe, fordi det nåede det dybeste niveau for undermapper.",
+        "${ count } mapper blev flettet ind i dens overordnede mappe, fordi det nåede det dybeste niveau for undermapper."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "${ count } mappe blev ikke importeret, fordi der ikke kunne være flere undermapper i dens overordnede mappe. Dens elementer blev importeret til den nærmeste ledige mappe.",
+        "${ count } mapper blev ikke importeret, fordi der ikke kunne være flere undermapper i deres overordnede mappe. Deres elementer blev importeret til den nærmeste ledige mappe."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "${ count } mappe blev ikke importeret, fordi der ikke kan være flere mapper i denne boks. Dens elementer blev importeret til den nærmeste ledige mappe.",
+        "${ count } mapper blev ikke importeret, fordi der ikke kan være flere mapper i denne boks. Deres elementer blev importeret til den nærmeste ledige mappe."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "${ failed } mappe kunne ikke oprettes. Dens elementer blev importeret til den nærmeste ledige mappe.",
+        "${ failed } mapper kunne ikke oprettes. Deres elementer blev importeret til den nærmeste ledige mappe."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } giver stærk kontrol, men en enkelt fejl kan få autofyld til at matche og udfylde data på svindel- eller phishing-websteder."
@@ -5650,9 +5739,6 @@
       ],
       "Move to trash": [
         "Flyt til papirkurv"
-      ],
-      "Name is required": [
-        "Navn er påkrævet"
       ],
       "No items": [
         "Ingen elementer"

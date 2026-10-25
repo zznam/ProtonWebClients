@@ -16,7 +16,13 @@ import { useSubscriptionModal } from '@proton/components/containers/payments/sub
 import type { OpenCallbackProps } from '@proton/components/containers/payments/subscription/subscriptionModalTypes';
 import getBoldFormattedText from '@proton/components/helpers/getBoldFormattedText';
 import useLoad from '@proton/components/hooks/useLoad';
-import { ADDON_GENERIC_NAMES, ADDON_PREFIXES, DEFAULT_CYCLE, type PLANS } from '@proton/payments/core/constants';
+import {
+    ADDON_PREFIXES,
+    ADDON_TOTAL_PARAM_NAMES,
+    DEFAULT_CYCLE,
+    type PLANS,
+    URL_CONFIGURABLE_ADDON_PREFIXES,
+} from '@proton/payments/core/constants';
 import type { FreeSubscription, PaymentStatus } from '@proton/payments/core/interface';
 import type { Plan } from '@proton/payments/core/plan/interface';
 import { getPlanName } from '@proton/payments/core/subscription/helpers';
@@ -146,6 +152,10 @@ export const getParameters = (
     const cycle = (() => {
         if (parsedCycle) {
             return parsedCycle;
+        }
+
+        if (expandsSubscription && subscription?.Cycle) {
+            return subscription.Cycle;
         }
 
         if (subscription?.Cycle) {
@@ -338,8 +348,8 @@ export const AutomaticSubscriptionModal = () => {
                         preferredCurrency
                     );
 
-                    for (const addon of Object.values(ADDON_PREFIXES)) {
-                        const totalFromParams = totals[`total${ADDON_GENERIC_NAMES[addon]}`];
+                    for (const addon of URL_CONFIGURABLE_ADDON_PREFIXES) {
+                        const totalFromParams = totals[`total${ADDON_TOTAL_PARAM_NAMES[addon]}`];
 
                         if (!totalFromParams) {
                             continue;

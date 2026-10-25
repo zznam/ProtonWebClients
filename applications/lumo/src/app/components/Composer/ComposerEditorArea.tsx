@@ -74,6 +74,7 @@ export const ComposerEditorArea = ({
                         id: node.nodeUid,
                         name: node.name,
                         type: node.type,
+                        mediaType: node.mediaType,
                     }));
                 },
                 downloadFile,
@@ -234,6 +235,7 @@ export const ComposerEditorArea = ({
                         >
                             <img
                                 src={isGenerating ? lumoStop : lumoStart}
+                                draggable={false}
                                 alt={
                                     isGenerating
                                         ? c('collider_2025: Action').t`Stop generating`

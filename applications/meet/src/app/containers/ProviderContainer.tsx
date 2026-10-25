@@ -5,14 +5,13 @@ import { Router } from 'react-router-dom';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import ApiProvider from '@proton/components/containers/api/ApiProvider';
 import ErrorBoundary from '@proton/components/containers/app/ErrorBoundary';
-import LoaderPage from '@proton/components/containers/app/LoaderPage';
 import StandardErrorPage from '@proton/components/containers/app/StandardErrorPage';
 import StandardLoadErrorPage from '@proton/components/containers/app/StandardLoadErrorPage';
 import StandardPrivateApp from '@proton/components/containers/app/StandardPrivateApp';
 import AuthenticationProvider from '@proton/components/containers/authentication/Provider';
 import EventManagerProvider from '@proton/components/containers/eventManager/EventManagerProvider';
 import type { MeetExtraThunkArguments, MeetStore } from '@proton/meet/store/store';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import { getNonEmptyErrorMessage } from '@proton/shared/lib/helpers/error';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
@@ -21,6 +20,8 @@ import { FlagProvider } from '@proton/unleash/proxy';
 import { bootstrapApp } from '../bootstrap';
 import config from '../config';
 import { MeetCoreClientContext } from '../contexts/MeetCoreClientContext';
+import { TrackedLoaderPage } from '../telemetry/TrackedLoaderPage';
+import { markBootstrapLoaderUnmount } from '../telemetry/loadPerformance';
 import type { MeetCoreClient } from '../wasm/MeetCoreClient';
 
 type ExtraThunkArguments = Omit<MeetExtraThunkArguments, 'config' | 'notificationsManager'>;
@@ -94,7 +95,7 @@ export const ProviderContainer = ({ children }: { children: ReactNode }) => {
     }
 
     if (!initialised) {
-        return <LoaderPage />;
+        return <TrackedLoaderPage onUnmount={markBootstrapLoaderUnmount} />;
     }
 
     const { authentication, unleashClient, eventManager, api, history } = extraThunkArgumentsRef.current as Omit<

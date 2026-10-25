@@ -6,21 +6,21 @@ import { useAddresses } from '@proton/account/addresses/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useModalState } from '@proton/components';
+import useModalState from '@proton/components/components/modalTwo/useModalState';
 import { hasPaidMail } from '@proton/shared/lib/user/helpers';
 import googleLogo from '@proton/styles/assets/img/import/providers/google.svg';
-import { useFlag } from '@proton/unleash/useFlag';
 
-import { MAX_SYNC_FREE_USER, MAX_SYNC_PAID_USER } from '../../constants';
+import { useBYOEGating } from '../../byoe/useBYOEGating';
+import { getBYOEDisabledNotification } from '../../constants';
 import useBYOEAddressesCounts from '../../hooks/useBYOEAddressesCounts';
-import useBYOEFeatureStatus from '../../hooks/useBYOEFeatureStatus';
 import useSetupGmailBYOEAddress from '../../hooks/useSetupGmailBYOEAddress';
-import type { EASY_SWITCH_SOURCES } from '../../interface';
+import type { EASY_SWITCH_SOURCES, TIME_PERIOD } from '../../interface';
 import { setBYOEFlowResult } from '../../logic/byoeFlow/byoeFlow.slice';
 import { useEasySwitchDispatch } from '../../logic/store';
 import { changeCreateLoadingState } from '../../logic/sync/sync.actions';
 import AddressLinkedToAnotherAccountModal from '../Modals/AddressLinkedToAnotherAccountModal/AddressLinkedToAnotherAccountModal';
 import BYOEConversionModal from '../Modals/BYOEConversionModal/BYOEConversionModal';
+import { ClaimableAddressModal } from '../Modals/ClaimableAddressModal/ClaimableAddressModal';
 import GmailSyncModal from '../Modals/GmailSyncModal/GmailSyncModal';
 import ReachedLimitForwardingModal from '../Modals/ReachedLimitForwardingModal/ReachedLimitForwardingModal';
 import RemoveForwardingModal from '../Modals/RemoveForwardingModal/RemoveForwardingModal';
@@ -45,14 +45,14 @@ const ConnectGmailButton = ({
     source,
 }: Props) => {
     const { createNotification } = useNotifications();
-    const [hasAccessToBYOE, loadingBYOEFeatureStatus] = useBYOEFeatureStatus();
     const easySwitchDispatch = useEasySwitchDispatch();
-    const createBYOEDisabled = useFlag('CreateInboxBringYourOwnEmailDisabled');
 
-    const [user, loadingUser] = useUser();
-    const [addresses, loadingAddresses] = useAddresses();
+    const [user] = useUser();
+    const [addresses] = useAddresses();
 
-    const { activeBYOEAddresses, forwardingList, isLoadingAddressesCount } = useBYOEAddressesCounts();
+    const { hasAccessToBYOE, isLoadingGating, checkGating, isInMaintenance } = useBYOEGating();
+    const { forwardingList } = useBYOEAddressesCounts();
+    const disabled = isLoadingGating || isInMaintenance || !addresses;
 
     const [syncModalProps, setSyncModalOpen, renderSyncModal] = useModalState();
     const [reachedLimitForwardingModalProps, setReachedLimitForwardingModalOpen, renderReachedLimitForwardingModal] =
@@ -66,10 +66,14 @@ const ConnectGmailButton = ({
         setAddressLinkedToAnotherAccountModalOpen,
         renderAddressLinkedToAnotherAccountModal,
     ] = useModalState();
+    const [claimableAddressModalProps, setClaimableAddressModalOpen, renderClaimableAddressModal] = useModalState();
 
     const [expectedEmailAddress, setExpectedEmailAddress] = useState<string | undefined>();
+    const [claimableAddress, setClaimableAddress] = useState<
+        { email: string; importEmails: boolean; importPeriod: TIME_PERIOD | undefined } | undefined
+    >();
 
-    const { isInMaintenance, handleBYOEWithImportCallback } = useSetupGmailBYOEAddress({
+    const { handleBYOEWithImportCallback, handleClaimAddress } = useSetupGmailBYOEAddress({
         showSuccessModal: (connectedAddress: string, importEmails: boolean) => {
             easySwitchDispatch(
                 setBYOEFlowResult({
@@ -82,6 +86,10 @@ const ConnectGmailButton = ({
         showAddressLinkedToAnotherAccountModal: () => {
             setAddressLinkedToAnotherAccountModalOpen(true);
         },
+        showClaimableAddressModal: (email: string, importEmails: boolean, importPeriod: TIME_PERIOD | undefined) => {
+            setClaimableAddress({ email, importEmails, importPeriod });
+            setClaimableAddressModalOpen(true);
+        },
         onComplete: () => {
             easySwitchDispatch(changeCreateLoadingState('idle'));
             setSyncModalOpen(false);
@@ -89,9 +97,6 @@ const ConnectGmailButton = ({
         },
         source,
     });
-
-    const disabled =
-        loadingUser || loadingAddresses || loadingBYOEFeatureStatus || isInMaintenance || isLoadingAddressesCount;
 
     const handleCloseForwardingModal = (hasError?: boolean) => {
         if (!hasError) {
@@ -104,18 +109,12 @@ const ConnectGmailButton = ({
             return;
         }
 
-        if (hasAccessToBYOE && createBYOEDisabled) {
-            createNotification({
-                type: 'info',
-                text: c('Info').t`Temporarily unavailable due to high demand. Please try again later.`,
-            });
-            return;
-        }
-
-        // Users should see a limit or upsell modal if reaching the maximum of BYOE addresses included in their plan.
-        if (!hasPaidMail(user) && activeBYOEAddresses.length >= MAX_SYNC_FREE_USER) {
+        const outcome = checkGating();
+        if (outcome === 'feature-disabled') {
+            createNotification(getBYOEDisabledNotification());
+        } else if (outcome === 'free-limit') {
             setUpsellForwardingModalOpen(true);
-        } else if (activeBYOEAddresses.length >= MAX_SYNC_PAID_USER) {
+        } else if (outcome === 'paid-limit') {
             setReachedLimitForwardingModalOpen(true);
         } else {
             onBYOEFlowStart?.();
@@ -175,6 +174,19 @@ const ConnectGmailButton = ({
             {renderRemoveForwardingModal && <RemoveForwardingModal {...removeForwardingModalProps} />}
             {renderAddressLinkedToAnotherAccountModal && (
                 <AddressLinkedToAnotherAccountModal {...addressLinkedToAnotherAccountModalProps} />
+            )}
+            {renderClaimableAddressModal && claimableAddress && (
+                <ClaimableAddressModal
+                    emailAddress={claimableAddress.email}
+                    onClaim={() =>
+                        handleClaimAddress({
+                            account: claimableAddress.email,
+                            importEmails: claimableAddress.importEmails,
+                            importPeriod: claimableAddress.importPeriod,
+                        })
+                    }
+                    {...claimableAddressModalProps}
+                />
             )}
         </>
     );

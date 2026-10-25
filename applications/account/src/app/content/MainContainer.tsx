@@ -4,6 +4,8 @@ import { Redirect, Route, Switch, matchPath, useLocation } from 'react-router-do
 import { c } from 'ttag';
 
 import { useAddresses } from '@proton/account/addresses/hooks';
+import { useAllSubscriptions } from '@proton/account/allSubscriptions/hooks';
+import { useAvailableApps } from '@proton/account/availableApps/hooks';
 import {
     getIsIncomingDelegatedAccessAvailable,
     getIsOutgoingDelegatedAccessAvailable,
@@ -12,6 +14,7 @@ import { OutgoingEmergencyContactTopBanner } from '@proton/account/delegatedAcce
 import { IncomingRecoveryContactTopBanner } from '@proton/account/delegatedAccess/recoveryContact/incoming/IncomingRecoveryContactTopBanner';
 import { OutgoingRecoveryContactTopBanner } from '@proton/account/delegatedAccess/recoveryContact/outgoing/OutgoingRecoveryContactTopBanner';
 import { getTrustedContactRoute } from '@proton/account/delegatedAccess/routes';
+import { useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import { useGroupMemberships } from '@proton/account/groupMemberships/hooks';
 import { useGroups } from '@proton/account/groups/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
@@ -24,7 +27,7 @@ import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useUserInvitations } from '@proton/account/userInvitations/hooks';
 import { EMPTY_ORG_PERMISSIONS } from '@proton/account/userPermissions';
-import { useUserPermissions } from '@proton/account/userPermissions/hooks';
+import { useIsOrganizationOwner, useUserPermissions } from '@proton/account/userPermissions/hooks';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import FeatureTour from '@proton/components/components/featureTour/FeatureTour';
 import AppLink from '@proton/components/components/link/AppLink';
@@ -62,9 +65,6 @@ import useShowThemeSelection from '@proton/components/hooks/useShowThemeSelectio
 import useShowVPNDashboard from '@proton/components/hooks/useShowVPNDashboard';
 import useToggle from '@proton/hooks/useToggle';
 import { useCategoriesData } from '@proton/mail/features/categoriesView/useCategoriesData';
-import { useEntitlementChecks } from '@proton/payments-ui/entitlements/hooks';
-import { getHasPassB2BPlan, hasAIAssistant, hasAllProductsB2CPlan } from '@proton/payments/core/subscription/helpers';
-import { getAvailableApps } from '@proton/shared/lib/apps/apps';
 import { getAppFromPathnameSafe, getSlugFromApp } from '@proton/shared/lib/apps/slugHelper';
 import { getToApp } from '@proton/shared/lib/authentication/apps';
 import { stripLocalBasenameFromPathname } from '@proton/shared/lib/authentication/pathnameHelper';
@@ -74,12 +74,13 @@ import { getIsAccountRecoveryAvailable } from '@proton/shared/lib/helpers/recove
 import { stripLeadingAndTrailingSlash } from '@proton/shared/lib/helpers/string';
 import { getPathFromLocation } from '@proton/shared/lib/helpers/url';
 import { localeCode } from '@proton/shared/lib/i18n';
-import type { UserModel } from '@proton/shared/lib/interfaces';
-import { getRequiresAddressSetup } from '@proton/shared/lib/keys';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import { getRequiresAddressSetup } from '@proton/shared/lib/keys/setupAddress';
 import { hasPaidPass } from '@proton/shared/lib/user/helpers';
 import { useFlag } from '@proton/unleash/useFlag';
 import { GetStartedOnboarding } from '@proton/vpn/components/Onboarding';
-import { TVContainer, TvContainerSignedIn } from '@proton/vpn/components/tv';
+import { TVContainer } from '@proton/vpn/components/tv/containers/TVContainer';
+import { TvContainerSignedIn } from '@proton/vpn/components/tv/containers/TvContainerSignedIn';
 import { NavigationProvider, useB2BAdminNavigation } from '@proton/vpn/contexts/navigation';
 
 import AccountSettingsRouter from '../containers/account/AccountSettingsRouter';
@@ -91,6 +92,7 @@ import Main from '../public/Main';
 import AccountSidebar from './AccountSidebar';
 import AccountStartupModals from './AccountStartupModals';
 import SettingsSearch, { AutocompleteSettingsSearch } from './SettingsSearch';
+import { getAssistantKillSwitch } from './assistantKillSwitch';
 import type {
     AccountRecoveryRouterFlags,
     AccountSettingsRouterParams,
@@ -123,13 +125,6 @@ const WalletSettingsRouter = lazy(
     () => import(/* webpackChunkName: "routers/WalletSettingsRouter" */ '../containers/wallet/WalletSettingsRouter')
 );
 
-const AuthenticatorSettingsRouter = lazy(
-    () =>
-        import(
-            /* webpackChunkName: "routers/AuthenticatorSettingsRouter" */ '../containers/authenticator/AuthenticatorSettingsRouter'
-        )
-);
-
 const mailSlug = getSlugFromApp(APPS.PROTONMAIL);
 const calendarSlug = getSlugFromApp(APPS.PROTONCALENDAR);
 const vpnSlug = getSlugFromApp(APPS.PROTONVPN_SETTINGS);
@@ -137,7 +132,6 @@ const driveSlug = getSlugFromApp(APPS.PROTONDRIVE);
 const docsSlug = getSlugFromApp(APPS.PROTONDOCS);
 const walletSlug = getSlugFromApp(APPS.PROTONWALLET);
 const passSlug = getSlugFromApp(APPS.PROTONPASS);
-const authenticatorSlug = getSlugFromApp(APPS.PROTONAUTHENTICATOR);
 
 const getDefaultPassRedirect = (
     user: UserModel,
@@ -148,10 +142,6 @@ const getDefaultPassRedirect = (
         return passRoutes.routes.downloads.to;
     }
     return accountRoutes.routes.dashboard.to;
-};
-
-const getDefaultAuthenticatorRedirect = (authenticatorRoutes: ReturnType<typeof getRoutes>['authenticator']) => {
-    return authenticatorRoutes.routes.downloads.to;
 };
 
 const getDefaultMspRedirect = (organizationRoutes: ReturnType<typeof getRoutes>['organization']) => {
@@ -200,15 +190,17 @@ const MainContainer = () => {
     const [addresses] = useAddresses();
     const [organization, loadingOrganization] = useOrganization();
     const [subscription, loadingSubscription] = useSubscription();
-    const [entitlements, loadingEntitlements] = useEntitlementChecks();
+    const [allSubscriptions = [], loadingAllSubscriptions] = useAllSubscriptions();
+    const [entitlements, loadingEntitlements] = useEntitlementChecksForOrgAndUser();
     const [{ permissions }] = useUserPermissions();
+    const [isOrganizationOwner] = useIsOrganizationOwner();
+    const availableApps = useAvailableApps();
     const location = useLocation();
 
     const { state: expanded, toggle: onToggleExpand, set: setExpand } = useToggle();
     const { viewportWidth } = useActiveBreakpoint();
 
     const showThemeSelection = useShowThemeSelection();
-    const isUserGroupsNoCustomDomainEnabled = useFlag('UserGroupsNoCustomDomain');
     const { paymentsEnabled: isScribePaymentEnabled } = useAssistantFeatureEnabled();
     const isScribeAdminSettingFeatureEnabled = useFlag('ScribeAdminSetting');
     const isZoomIntegrationDisabled = useFlag('ZoomIntegrationDisabled');
@@ -216,12 +208,10 @@ const MainContainer = () => {
     const isAlwaysOnVpnEnabled = useFlag('B2BAlwaysOnEnabled');
     const isCryptoPostQuantumOptInEnabled =
         (useFlag('CryptoPostQuantumOptIn') && user.isPrivate) || !!userSettings.Flags.SupportPgpV6Keys;
-    const isDocsHomepageAvailable = useFlag('DriveDocsLandingPageEnabled');
-    const isSheetsAvailable = useFlag('DocsSheetsEnabled');
     const isSsoForPbsEnabled = useFlag('SsoForPbs');
+    const showSignInRestrictionToggle = useFlag('ShowSignInRestrictionToggle');
     const isRetentionPoliciesEnabled = useFlag('DataRetentionPolicy');
-    const isAuthenticatorAvailable = useFlag('AuthenticatorSettingsEnabled');
-    const isSpacesAvailable = useFlag('SpacesAvailable');
+    const isLumoApiEnabled = useFlag('LumoAPIKeyManagement');
     const isDriveEasySwitchEnabled = useFlag('EasySwitchB2CForDriveWeb');
     const isDriveEasySwitchNewUIEnabled = useFlag('EasySwitchB2CForDriveWebNewUI') && isDriveEasySwitchEnabled;
 
@@ -240,11 +230,11 @@ const MainContainer = () => {
     const appSlug = isGenericSettings ? '' : getSlugFromApp(app);
 
     // We hide the assistant upsell for users on Mail and Calendar app without the assistant when the kill switch is enabled
-    const hasAssistant = hasAIAssistant(subscription);
-    const hasAllProducts = hasAllProductsB2CPlan(subscription);
     const isInAllowedApps =
-        hasAllProducts || appFromPathname === APPS.PROTONMAIL || appFromPathname === APPS.PROTONCALENDAR;
-    const assistantKillSwitch = isInAllowedApps ? !hasAssistant : true;
+        entitlements.hasAllCoreProductsB2C ||
+        appFromPathname === APPS.PROTONMAIL ||
+        appFromPathname === APPS.PROTONCALENDAR;
+    const assistantKillSwitch = getAssistantKillSwitch({ isInAllowedApps, subscriptions: allSubscriptions });
 
     const organizationTheme = useOrganizationTheme();
     const [memberships, loadingGroupMembership] = useGroupMemberships();
@@ -298,13 +288,13 @@ const MainContainer = () => {
         organization,
         isB2BDrive,
         isGroupOwner,
+        isOrganizationOwner,
         permissions: permissions ?? EMPTY_ORG_PERMISSIONS,
         memberships,
     };
 
     const flags: Flags = {
         canDisplayNonPrivateEmailPhone,
-        isUserGroupsNoCustomDomainEnabled,
         isScribeEnabled: isScribePaymentEnabled && isScribeAdminSettingFeatureEnabled,
         isZoomIntegrationEnabled: !isZoomIntegrationDisabled,
         isProtonMeetIntegrationEnabled,
@@ -312,10 +302,11 @@ const MainContainer = () => {
         isCryptoPostQuantumOptInEnabled,
         isSsoForPbsEnabled,
         isRetentionPoliciesEnabled,
-        isAuthenticatorAvailable,
         isCategoryViewEnabled: canUseCategoryView,
+        isLumoApiEnabled,
         isReferralProgramEnabled,
         isDriveEasySwitchNewUIEnabled,
+        showSignInRestrictionToggle,
     };
 
     const routes = getRoutes({
@@ -323,6 +314,7 @@ const MainContainer = () => {
         user,
         addresses,
         subscription,
+        allSubscriptions,
         entitlements,
         accountSettingsRouterParams,
         organizationSettingsRouterParams,
@@ -343,8 +335,6 @@ const MainContainer = () => {
     const to = isLocal ? `/${getSlugFromApp(app)}` : '/';
     const pathPrefix = isGenericSettings ? '' : `/${appSlug}`;
 
-    const hasPassB2bPlan = getHasPassB2BPlan(subscription);
-
     // Zendesk Chat Integration
     const { handleOpenZendeskChat, showZendeskChat, zendeskRef } = useZendeskChat(user);
 
@@ -360,7 +350,7 @@ const MainContainer = () => {
             );
         }
 
-        if (app === APPS.PROTONPASS && hasPassB2bPlan) {
+        if (app === APPS.PROTONPASS && entitlements.isPassB2B) {
             return <PassForBusinessLogo />;
         }
 
@@ -437,6 +427,7 @@ const MainContainer = () => {
         if (
             loadingOrganization ||
             loadingSubscription ||
+            loadingAllSubscriptions ||
             loadingEntitlements ||
             permissions === null ||
             loadingDataRecovery ||
@@ -459,9 +450,6 @@ const MainContainer = () => {
             }
             if (app === APPS.PROTONPASS) {
                 return getDefaultPassRedirect(user, routes.account, routes.pass);
-            }
-            if (app === APPS.PROTONAUTHENTICATOR) {
-                return getDefaultAuthenticatorRedirect(routes.authenticator);
             }
             return getDefaultRedirect(routes.account);
         })();
@@ -493,21 +481,12 @@ const MainContainer = () => {
         return <TVContainer />;
     }
 
-    const availableApps = getAvailableApps({
-        user,
-        context: 'app',
-        organization,
-        isDocsHomepageAvailable,
-        isSheetsAvailable,
-        isAuthenticatorAvailable,
-        isSpacesAvailable,
-    });
-
-    // Should never happen that available apps is empty, but just as a safety mechanism anyway
+    // Redirect away from an app the user can't access, to the first one they can
     if (
+        // The list is empty while it's loading, before it's first computed
+        availableApps.length &&
         !availableApps.includes(app) &&
-        appFromPathname /* wait for app in pathname to ensure replacement works */ &&
-        availableApps.length
+        appFromPathname /* wait for app in pathname to ensure replacement works */
     ) {
         const [firstAvailableApp] = availableApps;
         const locationWithNewApp = getPathFromLocation(location).replace(
@@ -594,14 +573,6 @@ const MainContainer = () => {
                         <Route path={`/${passSlug}`}>
                             <Suspense fallback={<PrivateMainAreaLoading />}>
                                 <PassSettingsRouter passAppRoutes={routes.pass} redirect={redirect} />
-                            </Suspense>
-                        </Route>
-                        <Route path={`/${authenticatorSlug}`}>
-                            <Suspense fallback={<PrivateMainAreaLoading />}>
-                                <AuthenticatorSettingsRouter
-                                    authenticatorAppRoutes={routes.authenticator}
-                                    redirect={redirect}
-                                />
                             </Suspense>
                         </Route>
                         {redirect}

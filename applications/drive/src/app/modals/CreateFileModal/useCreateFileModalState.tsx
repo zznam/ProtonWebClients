@@ -2,11 +2,11 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import type React from 'react';
 import { useState } from 'react';
 
-import type { ModalStateProps } from '@proton/components';
-import { useFormErrors } from '@proton/components';
-import { generateNodeUid } from '@proton/drive';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
+import useFormErrors from '@proton/components/components/v2/useFormErrors';
 import { uploadManager } from '@proton/drive/modules/upload';
 import { validateNodeName } from '@proton/drive/modules/validation';
+import { generateNodeUid } from '@proton/drive/sdk';
 
 import { useActiveShare } from '../../legacy/hooks/drive/useActiveShare';
 

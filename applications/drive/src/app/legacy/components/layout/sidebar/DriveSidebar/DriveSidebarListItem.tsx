@@ -1,8 +1,10 @@
 import type { MouseEventHandler } from 'react';
 import * as React from 'react';
 
-import { SidebarListItem, SidebarListItemContent, SidebarListItemContentIcon } from '@proton/components';
-import { useLoading } from '@proton/hooks';
+import SidebarListItem from '@proton/components/components/sidebar/SidebarListItem';
+import SidebarListItemContent from '@proton/components/components/sidebar/SidebarListItemContent';
+import SidebarListItemContentIcon from '@proton/components/components/sidebar/SidebarListItemContentIcon';
+import useLoading from '@proton/hooks/useLoading';
 import type { IconComponent } from '@proton/icons/component';
 import { wait } from '@proton/shared/lib/helpers/promise';
 import clsx from '@proton/utils/clsx';

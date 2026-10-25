@@ -8,7 +8,8 @@ import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent
 import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
 import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import type { ContactEditProps } from '@proton/components/containers/contacts/edit/ContactEditModal';
-import { FeatureCode, useFeatures } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import useFeatures from '@proton/features/useFeatures';
 import { IcCalendarGrid } from '@proton/icons/icons/IcCalendarGrid';
 import { IcFilingCabinet } from '@proton/icons/icons/IcFilingCabinet';
 import { CategoryIcon } from '@proton/mail/features/categoriesView/CategoryIcon';
@@ -21,7 +22,7 @@ import type { MessageState } from '@proton/mail/store/messages/messagesTypes';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
 import humanSize from '@proton/shared/lib/helpers/humanSize';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { getAttachments } from '@proton/shared/lib/mail/messages';
 
 import { getSize } from '../../../helpers/elements';

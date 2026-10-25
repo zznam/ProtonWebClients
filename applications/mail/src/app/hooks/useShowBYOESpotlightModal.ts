@@ -9,11 +9,12 @@ import useBYOEFeatureStatus from '@proton/activation/src/hooks/useBYOEFeatureSta
 import { useEasySwitchSelector } from '@proton/activation/src/logic/store';
 import type { Sync } from '@proton/activation/src/logic/sync/sync.interface';
 import { getAllSync, selectSyncListLoadingState } from '@proton/activation/src/logic/sync/sync.selectors';
-import { FeatureCode, useFeature } from '@proton/features';
-import { domIsBusy } from '@proton/shared/lib/busy';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
+import { domIsBusy } from '@proton/shared/lib/busy/busy';
 import { getIsBYOEOnlyAccount } from '@proton/shared/lib/helpers/address';
-import { hasBit } from '@proton/shared/lib/helpers/bitset.ts';
-import { NEWSLETTER_SUBSCRIPTIONS_BITS } from '@proton/shared/lib/helpers/newsletter.ts';
+import { hasBit } from '@proton/shared/lib/helpers/bitset';
+import { NEWSLETTER_SUBSCRIPTIONS_BITS } from '@proton/shared/lib/helpers/newsletter';
 
 import { useMailGlobalModals } from '../containers/globalModals/globalModalContext';
 import { ModalType } from '../containers/globalModals/inteface';

@@ -19,6 +19,7 @@ import type { PauseListEntry } from '@proton/pass/lib/settings/pause-list';
 import type { Notification } from '@proton/pass/store/actions/enhancers/notification';
 import type { FeatureFlagState, FoldersByShareId, VaultShareItem } from '@proton/pass/store/reducers';
 import type { ProxiedSettings } from '@proton/pass/store/reducers/settings';
+import type { ToolbarPinState } from '@proton/pass/types/browser';
 import type { ShareId } from '@proton/pass/types/crypto/pass-types';
 import type { AliasOptionsResult } from '@proton/pass/types/data/alias';
 import type { B2BEvent } from '@proton/pass/types/data/b2b';
@@ -26,7 +27,8 @@ import type { FileTransferErrorDTO, FileTransferWriteDTO } from '@proton/pass/ty
 import type { UniqueItem } from '@proton/pass/types/data/items';
 import type { AliasCreateRequest } from '@proton/pass/types/data/items.dto';
 import type { TelemetryEventDTO } from '@proton/pass/types/data/telemetry';
-import type { Maybe, MaybeNull, Result } from '@proton/pass/types/utils/index';
+import type { NativeMessageErrorType } from '@proton/pass/types/desktop';
+import type { Maybe, MaybeNull, Result } from '@proton/pass/types/utils';
 import type {
     AutofillCCResult,
     AutofillIdentityResult,
@@ -45,7 +47,7 @@ import type {
     ExtensionForkResultPayload,
 } from '@proton/shared/lib/authentication/fork/extension';
 import type { PullForkResponse } from '@proton/shared/lib/authentication/interface';
-import type { User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
 import type { NotificationRequest } from '../app/content/services/inline/notification/notification.app';
 import type { ClusterFrame } from '../app/worker/services/autofill.cc';
@@ -87,6 +89,7 @@ export enum WorkerMessageType {
     ACCOUNT_FORK = 'fork',
     ACCOUNT_ONBOARDING = 'pass-onboarding',
     ACCOUNT_PROBE = 'pass-installed',
+    ACCOUNT_PROBE_2 = 'pass-account-probe',
     ALIAS_CREATE = 'ALIAS_CREATE',
     ALIAS_OPTIONS = 'ALIAS_OPTIONS',
 
@@ -120,7 +123,6 @@ export enum WorkerMessageType {
     CONNECTIVITY_SYNC = 'CONNECTIVITY_SYNC',
 
     DEBUG = 'DEBUG',
-    DESKTOP_UNLOCK_SECRET = 'DESKTOP_UNLOCK_SECRET',
     ENDPOINT_INIT = 'ENDPOINT_INIT',
     FEATURE_FLAGS_UPDATE = 'FEATURE_FLAGS_UPDATE',
     FETCH_ABORT = 'FETCH_ABORT',
@@ -194,6 +196,7 @@ type AccountAuthExtMessage = { type: WorkerMessageType.ACCOUNT_EXTENSION };
 type AccountForkMessage = WithPayload<WorkerMessageType.ACCOUNT_FORK, ExtensionForkPayload>;
 type AccountPassOnboardingMessage = { type: WorkerMessageType.ACCOUNT_ONBOARDING };
 type AccountProbeMessage = { type: WorkerMessageType.ACCOUNT_PROBE };
+type AccountProbe2Message = { type: WorkerMessageType.ACCOUNT_PROBE_2 };
 
 type AliasCreateMessage = WithPayload<WorkerMessageType.ALIAS_CREATE, AliasCreateRequest>;
 type AliasOptionsMessage = { type: WorkerMessageType.ALIAS_OPTIONS };
@@ -227,8 +230,8 @@ type ConnectivityStatusMessage = WithPayload<WorkerMessageType.CONNECTIVITY, { s
 type ConnectivitySyncMessage = WithPayload<WorkerMessageType.CONNECTIVITY_SYNC, { online: boolean }>;
 
 type DebugMessage = WithPayload<WorkerMessageType.DEBUG, { debug: string }>;
-type DesktopUnlockSecretMessage = { type: WorkerMessageType.DESKTOP_UNLOCK_SECRET };
 type EndpointInitMessage = WithPayload<WorkerMessageType.ENDPOINT_INIT, { popup?: boolean }>;
+
 export type FeatureFlagsUpdateMessage = WithPayload<WorkerMessageType.FEATURE_FLAGS_UPDATE, FeatureFlagState>;
 type FetchAbortMessage = WithPayload<WorkerMessageType.FETCH_ABORT, { requestId: string }>;
 type FetchDomainImageMessage = WithPayload<WorkerMessageType.FETCH_DOMAINIMAGE, { url: string }>;
@@ -301,6 +304,7 @@ export type WorkerMessage =
     | AccountForkMessage
     | AccountPassOnboardingMessage
     | AccountProbeMessage
+    | AccountProbe2Message
     | AliasCreateMessage
     | AliasOptionsMessage
     | AuthChangedMessage
@@ -328,7 +332,6 @@ export type WorkerMessage =
     | ConnectivityStatusMessage
     | ConnectivitySyncMessage
     | DebugMessage
-    | DesktopUnlockSecretMessage
     | EndpointInitMessage
     | FeatureFlagsUpdateMessage
     | FetchAbortMessage
@@ -398,6 +401,11 @@ export type MessageSuccess<T> = T extends { [key: string]: any } ? T & { type: '
 export type MaybeMessage<T> = MessageSuccess<T> | MessageFailure;
 
 type WorkerMessageResponseMap = {
+    [WorkerMessageType.ACCOUNT_PROBE_2]: {
+        authenticated: boolean;
+        pinned: ToolbarPinState;
+        url: MaybeNull<string>;
+    };
     [WorkerMessageType.ACCOUNT_FORK]: { payload: ExtensionForkResultPayload };
     [WorkerMessageType.ALIAS_CREATE]: Result;
     [WorkerMessageType.ALIAS_OPTIONS]: Result<AliasOptionsResult>;
@@ -405,7 +413,7 @@ type WorkerMessageResponseMap = {
     [WorkerMessageType.AUTH_CONFIRM_PASSWORD]: Result;
     [WorkerMessageType.AUTH_INIT]: AppState;
     [WorkerMessageType.AUTH_PULL_FORK]: Result<PullForkResponse>;
-    [WorkerMessageType.AUTH_UNLOCK]: Result;
+    [WorkerMessageType.AUTH_UNLOCK]: Result<{}, { errorType?: NativeMessageErrorType }>;
     [WorkerMessageType.AUTOFILL_CC_QUERY]: AutofillCCResult;
     [WorkerMessageType.AUTOFILL_IDENTITY_QUERY]: AutofillIdentityResult;
     [WorkerMessageType.AUTOFILL_LOGIN_QUERY]: AutofillLoginResult;
@@ -415,7 +423,6 @@ type WorkerMessageResponseMap = {
     [WorkerMessageType.AUTOSUGGEST_PASSWORD]: PasswordAutosuggestOptions;
     [WorkerMessageType.CLIENT_INIT]: ClientInitResult;
     [WorkerMessageType.CLIPBOARD_OFFSCREEN_READ]: { content: string };
-    [WorkerMessageType.DESKTOP_UNLOCK_SECRET]: { secret: string };
     [WorkerMessageType.ENDPOINT_INIT]: EndpointContext;
     [WorkerMessageType.FETCH_DOMAINIMAGE]: { result: Maybe<string> };
     [WorkerMessageType.FORM_ENTRY_COMMIT]: { submission: MaybeNull<AutosaveFormEntry> };

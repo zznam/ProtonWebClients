@@ -1,14 +1,16 @@
 import { renderHook } from '@testing-library/react';
 
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { useConversationCounts } from '@proton/mail/store/counts/conversationCountsSlice';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { useMessageCounts } from '@proton/mail/store/counts/messageCountsSlice';
 import { useFolders, useLabels, useSystemFolders } from '@proton/mail/store/labels/hooks';
 import { selectDisabledCategoriesIDs } from '@proton/mail/store/labels/selector';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import type { Folder, Label, MailSettings } from '@proton/shared/lib/interfaces';
+import type { Folder } from '@proton/shared/lib/interfaces/Folder';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { DEFAULT_MAIL_SETTINGS, VIEW_MODE } from '@proton/shared/lib/mail/mailSettings';
 
 import { useCategoriesView } from '../../components/categoryView/useCategoriesView';
@@ -56,6 +58,7 @@ const getMockCategoryView = (override: Partial<CategoryViewType> = {}): Category
     isCategoryViewEnabled: false,
     isCategoryViewEnabledSettled: true,
     shouldShowTabs: false,
+    canMoveToCategories: false,
     categoriesStore: [],
     activeCategoriesTabs: [],
     canUseCategoryView: false,

@@ -1,6 +1,7 @@
 import { CYCLE } from '@proton/payments/core/constants';
 import {
     getIsVariableCycleOffer,
+    hasBlackFriday2026Coupon,
     hasBundle,
     hasDeprecatedVPN,
     hasDrive,
@@ -11,7 +12,6 @@ import {
     hasMail,
     hasPass,
     hasPassFamily,
-    hasQ3Sale2026Coupon,
     hasVPN2024,
     hasVPNPassBundle,
     hasVisionary,
@@ -190,12 +190,12 @@ class OfferSubscription {
         return this.subscription.IsTrial;
     }
 
-    usedQ3Sale2026() {
+    usedBlackFriday2026() {
         if (this.upcomingSubscription) {
-            return hasQ3Sale2026Coupon(this.upcomingSubscription) || hasQ3Sale2026Coupon(this.subscription);
+            return hasBlackFriday2026Coupon(this.upcomingSubscription) || hasBlackFriday2026Coupon(this.subscription);
         }
 
-        return hasQ3Sale2026Coupon(this.subscription);
+        return hasBlackFriday2026Coupon(this.subscription);
     }
 }
 

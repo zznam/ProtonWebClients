@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { configureStore } from '@reduxjs/toolkit';
 
-import { apiStatusReducer } from '@proton/account';
+import { apiStatusReducer } from '@proton/account/apiStatus';
 import { createAuthentication, createUnauthenticatedApi, createUnleash } from '@proton/account/bootstrap';
 import { initStandaloneSession } from '@proton/account/bootstrap/standaloneSession';
 import useInstance from '@proton/hooks/useInstance';
@@ -12,7 +12,7 @@ import { ignoredActions, ignoredPaths } from '@proton/redux-shared-store/sharedS
 import createApi from '@proton/shared/lib/api/createApi';
 import { APPS } from '@proton/shared/lib/constants';
 import { replaceUrl } from '@proton/shared/lib/helpers/browser';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { FlagProvider } from '@proton/unleash/proxy';
 import noop from '@proton/utils/noop';
 
@@ -46,7 +46,7 @@ const locales = {};
  * This store is both accessible on public and private apps.
  * Only basic reducers are meant to be added there.
  */
-export const setupStore = () => {
+const setupStore = () => {
     return configureStore({
         reducer: { ...apiStatusReducer },
         devTools: process.env.NODE_ENV !== 'production',

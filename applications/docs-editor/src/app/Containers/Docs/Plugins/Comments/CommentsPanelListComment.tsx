@@ -1,19 +1,16 @@
-import DropdownMenu from '@proton/components/components/dropdown/DropdownMenu'
-import DropdownMenuButton from '@proton/components/components/dropdown/DropdownMenuButton'
-import SimpleDropdown from '@proton/components/components/dropdown/SimpleDropdown'
-import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton'
-import { Button } from '@proton/atoms/Button/Button'
-import { Tooltip } from '@proton/atoms/Tooltip/Tooltip'
-import { UserAvatar, UserAvatarSizeEnum } from '@proton/atoms/UserAvatar/UserAvatar'
-import type { MouseEventHandler } from 'react'
-import { useCallback, useState } from 'react'
-import type { CommentInterface, CommentThreadInterface } from '@proton/docs-shared'
+import { DropdownMenu, DropdownMenuButton, SimpleDropdown } from '../../Components/Dropdown'
+import * as Ariakit from '@ariakit/react'
+import type { MouseEventHandler, ReactElement } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Icon } from '../../Components/Icon'
+import { Avatar } from '../../Components/atoms'
+import { IconButton, Tooltip } from '../../Components/ui'
 import * as Icons from '../../Components/icons'
-import { AnonymousUserEmail, CommentThreadState } from '@proton/docs-shared'
+import type { DocsComment, DocsCommentThread } from '../../contract/DocsCommentThread'
+import { CommentThreadStates } from '../../contract/DocsCommentThread'
+import { AnonymousUserEmail } from '../../Utils/AnonymousUser'
 import { clsx } from 'clsx'
-import { c } from 'ttag'
-import { useDocsDependencies } from '../../DocsDependenciesProvider'
+import { useDocsDependencies, useDocsMessages } from '../../DocsDependenciesProvider'
 import { CommentsComposer } from './CommentsComposer'
 import { useCommentsContext } from './CommentsContext'
 import { CommentTime } from './CommentTime'
@@ -30,13 +27,14 @@ export function CommentsPanelListComment({
   isSuggestionThread,
   setIsDeletingThread,
 }: {
-  comment: CommentInterface
-  thread: CommentThreadInterface
+  comment: DocsComment
+  thread: DocsCommentThread
   isFirstComment: boolean
   isSuggestionThread: boolean
   setIsDeletingThread: (isDeleting: boolean) => void
 }): JSX.Element {
   const { reportError } = useDocsDependencies()
+  const messages = useDocsMessages().comments
   const [editor] = useLexicalComposerContext()
 
   const {
@@ -52,9 +50,10 @@ export function CommentsPanelListComment({
     markNodeMap,
     removeMarkNode,
     awarenessStates,
-    showConfirmModal,
+    showDeleteDialog,
     canEdit,
     languageCode,
+    dateFormat,
     logger,
     userName,
     suggestionsEnabled,
@@ -65,6 +64,7 @@ export function CommentsPanelListComment({
   const [isDeleting, setIsDeleting] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false)
+  const optionsButtonRef = useRef<HTMLButtonElement>(null)
 
   const isSuggestionComment = isFirstComment && isSuggestionThread
   const suggestionID = isSuggestionComment ? thread.markID : null
@@ -102,21 +102,20 @@ export function CommentsPanelListComment({
     editor.focus()
   }
 
-  const handleDeleteThread = async () => {
-    showConfirmModal({
-      title: c('Title').t`Delete thread`,
-      submitText: c('Action').t`Delete`,
-      message: c('Info').t`Are you sure you want to delete this thread?`,
-      onSubmit: async () => {
+  const handleDeleteThread = () => {
+    showDeleteDialog({
+      title: messages.deleteThreadTitle,
+      message: messages.deleteThreadMessage,
+      finalFocus: optionsButtonRef,
+      onDelete: () => {
         setIsDeleting(true)
         setIsDeletingThread(true)
-        deleteThread(thread.id)
+        return deleteThread(thread.id)
           .then((deleted) => {
             if (deleted) {
               removeMarkNode(thread.markID)
             }
           })
-          .catch(reportError)
           .finally(() => {
             setIsDeleting(false)
             setIsDeletingThread(false)
@@ -126,24 +125,22 @@ export function CommentsPanelListComment({
   }
 
   const handleDeleteComment = () => {
-    showConfirmModal({
-      title: c('Title').t`Delete comment`,
-      submitText: c('Action').t`Delete`,
-      message: c('Info').t`Are you sure you want to delete this comment?`,
-      onSubmit: async () => {
+    showDeleteDialog({
+      title: messages.deleteCommentTitle,
+      message: messages.deleteCommentMessage,
+      finalFocus: optionsButtonRef,
+      onDelete: () => {
         setIsDeleting(true)
-        deleteComment(thread.id, comment.id)
-          .catch(reportError)
-          .finally(() => {
-            setIsDeleting(false)
-          })
+        return deleteComment(thread.id, comment.id).finally(() => {
+          setIsDeleting(false)
+        })
       },
     })
   }
 
   const isAuthorCurrentUser = comment.author === userAddress || (!comment.author && userAddress === AnonymousUserEmail)
 
-  const isThreadActive = thread.state === CommentThreadState.Active
+  const isThreadActive = thread.state === CommentThreadStates.Active
 
   const authorDisplayName = isAuthorCurrentUser ? userName : getDisplayNameForEmail(comment.author)
   const color = awarenessStates.find((state) => state.name === comment.author)?.color
@@ -177,20 +174,13 @@ export function CommentsPanelListComment({
         data-testid="thread-comments-list"
       >
         <div className="mb-1.5 flex flex-nowrap items-center gap-1.5">
+          {/* The author's name is shown beside the avatar, so the avatar repeats nothing to a screen reader. */}
           {comment.author ? (
-            <UserAvatar
-              size={UserAvatarSizeEnum.Small}
-              name={authorDisplayName}
-              color={color ? { hsl: color } : undefined}
-              className="mr-1 flex-shrink-0 rounded-[--border-radius-md] text-[0.75rem]"
-            />
+            <Avatar name={authorDisplayName} color={color} className="mr-1" aria-hidden />
           ) : (
-            <div
-              className="h-custom w-custom bg-strong mr-1 flex flex-shrink-0 items-center justify-center rounded-lg"
-              style={{ '--h-custom': '1.75rem', '--w-custom': '1.75rem' }}
-            >
+            <Avatar className="mr-1" aria-hidden>
               <Icon data={Icons.user} />
-            </div>
+            </Avatar>
           )}
           <div className="mr-auto flex flex-col overflow-hidden">
             <span
@@ -200,48 +190,45 @@ export function CommentsPanelListComment({
               {authorDisplayName}
             </span>
             <span className="select-none text-xs opacity-50" data-testid="comment-creation-time">
-              <CommentTime createTime={comment.createTime} languageCode={languageCode} />
-              {comment.createTime.milliseconds !== comment.modifyTime.milliseconds && ' • Edited'}
+              <CommentTime createTime={comment.createTime} languageCode={languageCode} dateFormat={dateFormat} />
             </span>
           </div>
 
-          {isSuggestionComment && suggestionsEnabled && thread.state === CommentThreadState.Active && (
+          {isSuggestionComment && suggestionsEnabled && thread.state === CommentThreadStates.Active && (
             <>
-              <Tooltip title={c('Action').t`Decline suggestion`} onClick={handleRejectSuggestion}>
-                <Button
-                  icon
-                  pill
-                  shape="ghost"
-                  size="small"
-                  className={clsx(
-                    'pointer-events-auto flex-shrink-0 opacity-0 hover:opacity-100 focus:opacity-100 group-hover/comment:opacity-100',
-                    isFirstComment && 'group-focus-within/thread:opacity-100',
-                  )}
-                  data-testid="suggestion-reject-button"
-                >
-                  <Icon data={Icons.cross} size={4.5} />
-                </Button>
-              </Tooltip>
-              <Tooltip title={c('Action').t`Accept suggestion`} onClick={handleAcceptSuggestion}>
-                <Button
-                  icon
-                  pill
-                  shape="ghost"
-                  size="small"
-                  className={clsx(
-                    'pointer-events-auto flex-shrink-0 opacity-0 hover:opacity-100 focus:opacity-100 group-hover/comment:opacity-100',
-                    isFirstComment && 'group-focus-within/thread:opacity-100',
-                  )}
-                  data-testid="suggestion-accept-button"
-                >
-                  <Icon data={Icons.checkmark} size={4.5} />
-                </Button>
-              </Tooltip>
+              <IconButton
+                label={messages.declineSuggestion}
+                onClick={handleRejectSuggestion}
+                pill
+                shape="ghost"
+                size="small"
+                className={clsx(
+                  'pointer-events-auto flex-shrink-0 opacity-0 hover:opacity-100 focus:opacity-100 group-hover/comment:opacity-100',
+                  isFirstComment && 'group-focus-within/thread:opacity-100',
+                )}
+                data-testid="suggestion-reject-button"
+              >
+                <Icon data={Icons.cross} size={4.5} />
+              </IconButton>
+              <IconButton
+                label={messages.acceptSuggestion}
+                onClick={handleAcceptSuggestion}
+                pill
+                shape="ghost"
+                size="small"
+                className={clsx(
+                  'pointer-events-auto flex-shrink-0 opacity-0 hover:opacity-100 focus:opacity-100 group-hover/comment:opacity-100',
+                  isFirstComment && 'group-focus-within/thread:opacity-100',
+                )}
+                data-testid="suggestion-accept-button"
+              >
+                <Icon data={Icons.checkmark} size={4.5} />
+              </IconButton>
             </>
           )}
           {canShowOptions && (
             <SimpleDropdown
-              as={Button}
+              ref={optionsButtonRef}
               shape="ghost"
               size="small"
               icon
@@ -249,10 +236,10 @@ export function CommentsPanelListComment({
                 pointerEvents: 'auto',
               }}
               className={clsx(
-                'opacity-0 hover:opacity-100 focus:opacity-100 group-hover/comment:opacity-100',
+                'opacity-0 hover:opacity-100 focus:opacity-100 group-hover/comment:opacity-100 aria-expanded:opacity-100',
                 isFirstComment && 'group-focus-within/thread:opacity-100',
               )}
-              content={<Icon data={Icons.threeDotsVertical} size={4.5} alt={c('Label').t`More options`} />}
+              content={<Icon data={Icons.threeDotsVertical} size={4.5} alt={messages.moreOptions} />}
               hasCaret={false}
               onToggle={setIsOptionsMenuOpen}
             >
@@ -266,7 +253,7 @@ export function CommentsPanelListComment({
                     data-testid="edit-button"
                   >
                     <Icon data={Icons.pencil} size={4.5} />
-                    {c('Action').t`Edit`}
+                    {messages.edit}
                   </DropdownMenuButton>
                 )}
                 {showResolveButton && (
@@ -278,7 +265,7 @@ export function CommentsPanelListComment({
                     data-testid="resolve-button"
                   >
                     <Icon data={Icons.checkmarkCircle} size={4.5} />
-                    {c('Action').t`Resolve`}
+                    {messages.resolve}
                   </DropdownMenuButton>
                 )}
                 {showReOpenButton && (
@@ -289,7 +276,7 @@ export function CommentsPanelListComment({
                     }}
                     data-testid="reopen-button"
                   >
-                    {c('Action').t`Re-open`}
+                    {messages.reopen}
                   </DropdownMenuButton>
                 )}
                 {showDeleteButton && (
@@ -297,7 +284,7 @@ export function CommentsPanelListComment({
                     className="flex items-center gap-3 text-left text-sm hover:text-[color:--signal-danger]"
                     onClick={() => {
                       if (isFirstComment) {
-                        handleDeleteThread().catch(reportError)
+                        handleDeleteThread()
                         return
                       }
 
@@ -306,20 +293,22 @@ export function CommentsPanelListComment({
                     data-testid="delete-button"
                   >
                     <Icon data={Icons.trash} size={4.5} />
-                    {isFirstComment ? c('Action').t`Delete thread` : c('Action').t`Delete comment`}
+                    {isFirstComment ? messages.deleteThread : messages.deleteComment}
                   </DropdownMenuButton>
                 )}
               </DropdownMenu>
             </SimpleDropdown>
           )}
           {!comment.verificationResult.verified && comment.verificationResult.verificationAvailable && (
-            <Tooltip
-              title={c('Action').t`Signature could not be verified`}
-              className="flex-shrink-0"
-              data-testid="comment-signature-unverified"
-            >
-              <Icon data={Icons.exclamationTriangleFilled} size={4.5} />
-            </Tooltip>
+            <LabelTooltip label={messages.signatureUnverified}>
+              <Icon
+                data={Icons.exclamationTriangleFilled}
+                size={4.5}
+                className="flex-shrink-0"
+                aria-hidden={false}
+                data-testid="comment-signature-unverified"
+              />
+            </LabelTooltip>
           )}
         </div>
         {/* eslint-disable-next-line no-nested-ternary */}
@@ -327,8 +316,8 @@ export function CommentsPanelListComment({
           <CommentsComposer
             autoFocus
             initialContent={comment.content}
-            className="border-weak border ring-[--primary] focus-within:border-[--primary] focus-within:ring focus-within:ring-[--primary-minor-1]"
-            placeholder={c('Placeholder').t`Edit comment...`}
+            className="border border-[--border-weak] ring-[--primary] focus-within:border-[--primary] focus-within:ring focus-within:ring-[--primary-minor-1]"
+            placeholder={messages.editCommentPlaceholder}
             onSubmit={async (content) => {
               const success = await editComment(thread.id, comment.id, content)
               if (success) {
@@ -350,21 +339,27 @@ export function CommentsPanelListComment({
             onCancel={cancelEditing}
             buttons={(canSubmit, submitComment) => (
               <>
-                <ToolbarButton
-                  className="rounded-full border-none"
-                  title={c('Action').t`Cancel`}
-                  icon={<Icon data={Icons.crossCircleFilled} size={6} />}
+                <IconButton
+                  label={messages.cancel}
+                  shape="ghost"
+                  size="small"
+                  pill
                   onClick={cancelEditing}
                   data-testid="edit-comment-cancel-button"
-                />
-                <ToolbarButton
-                  className="rounded-full border-none"
-                  title={c('Action').t`Save`}
-                  icon={<Icon data={Icons.checkmarkCircleFilled} size={6} className="fill-[--primary]" />}
+                >
+                  <Icon data={Icons.crossCircleFilled} size={6} />
+                </IconButton>
+                <IconButton
+                  label={messages.save}
+                  shape="ghost"
+                  size="small"
+                  pill
                   disabled={!canSubmit}
                   onClick={submitComment}
                   data-testid="edit-comment-save-button"
-                />
+                >
+                  <Icon data={Icons.checkmarkCircleFilled} size={6} className="fill-[--primary]" />
+                </IconButton>
               </>
             )}
           />
@@ -380,5 +375,21 @@ export function CommentsPanelListComment({
         )}
       </li>
     </>
+  )
+}
+
+type LabelTooltipProps = {
+  label: string
+  children: ReactElement
+}
+
+function LabelTooltip({ label, children }: LabelTooltipProps) {
+  return (
+    <Ariakit.TooltipProvider>
+      <Ariakit.TooltipAnchor render={children} aria-label={label} />
+      <Tooltip aria-hidden="true" portal gutter={4}>
+        {label}
+      </Tooltip>
+    </Ariakit.TooltipProvider>
   )
 }

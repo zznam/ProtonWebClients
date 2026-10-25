@@ -1,10 +1,10 @@
 import { differenceInDays, fromUnixTime } from 'date-fns';
 
-import { FeatureCode } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
 
 import { NPSApplication } from './interface';
 
-export const NPS_FEATURE_CODE_MAP: Record<NPSApplication, FeatureCode> = {
+const NPS_FEATURE_CODE_MAP: Record<NPSApplication, FeatureCode> = {
     [NPSApplication.WebMail]: FeatureCode.NPSFeedbackWebMail,
     [NPSApplication.WebCalendar]: FeatureCode.NPSFeedbackWebCalendar,
     [NPSApplication.WebDrive]: FeatureCode.NPSFeedbackWebDrive,

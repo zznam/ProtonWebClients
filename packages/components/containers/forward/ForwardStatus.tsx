@@ -1,9 +1,12 @@
 import { c } from 'ttag';
 
-import type { IncomingAddressForwarding, OutgoingAddressForwarding } from '@proton/shared/lib/interfaces';
-import { ForwardingState } from '@proton/shared/lib/interfaces';
+import type {
+    IncomingAddressForwarding,
+    OutgoingAddressForwarding,
+} from '@proton/shared/lib/interfaces/AddressForwarding';
+import { ForwardingState } from '@proton/shared/lib/interfaces/AddressForwarding';
 
-import Badge from '../../components/badge/Badge';
+import { Badge } from '../../components/badge/Badge';
 
 interface Props {
     forwardingConfig: IncomingAddressForwarding | OutgoingAddressForwarding;

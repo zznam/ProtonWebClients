@@ -1,7 +1,7 @@
 import { type PayloadAction, type ThunkAction, type UnknownAction, createSlice } from '@reduxjs/toolkit';
 
-import { serverEvent } from '@proton/account';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import { serverEvent } from '@proton/account/eventLoop';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
@@ -11,7 +11,8 @@ import { getByIds, getContactGroup, getFolders, getLabels, getSystemFolders } fr
 import { updateCollectionAsyncV6 } from '@proton/shared/lib/eventManager/updateCollectionAsyncV6';
 import { type UpdateCollectionV6, updateCollectionV6 } from '@proton/shared/lib/eventManager/updateCollectionV6';
 import updateCollection, { sortCollection } from '@proton/shared/lib/helpers/updateCollection';
-import type { Api, Category } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { Category } from '@proton/shared/lib/interfaces/Category';
 import { removeById } from '@proton/utils/removeById';
 import { upsertById } from '@proton/utils/upsertById';
 

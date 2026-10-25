@@ -8,23 +8,22 @@ import { useUserKeys } from '@proton/account/userKeys/hooks';
 import { driveOAuthViewsOverride } from '@proton/activation/src/components/Modals/OAuth/Drive/driveOAuthViews';
 import EasySwitchProvider from '@proton/activation/src/logic/StoreProvider';
 import { useApi } from '@proton/app-context/useApi';
-import {
-    GlobalLoader,
-    GlobalLoaderProvider,
-    LoaderPage,
-    ModalsChildren,
-    SubscriptionModalProvider,
-    useDrawerWidth,
-    useEventManager,
-} from '@proton/components';
+import GlobalLoader from '@proton/components/components/globalLoader/GlobalLoader';
+import GlobalLoaderProvider from '@proton/components/components/globalLoader/GlobalLoaderProvider';
+import LoaderPage from '@proton/components/containers/app/LoaderPage';
+import ModalsChildren from '@proton/components/containers/modals/Children';
+import SubscriptionModalProvider from '@proton/components/containers/payments/subscription/SubscriptionModalProvider';
+import useDrawerWidth from '@proton/components/hooks/drawer/useDrawerWidth';
 import { QuickSettingsRemindersProvider } from '@proton/components/hooks/drawer/useQuickSettingsReminders';
-import { getDrive, getDriveForPhotos, splitNodeUid, useDrive } from '@proton/drive';
+import useEventManager from '@proton/components/hooks/useEventManager';
 import { getNodeEntity } from '@proton/drive/legacy/sdkUtils/getNodeEntity';
 import { getBusDriver } from '@proton/drive/modules/busDriver';
 import { logging } from '@proton/drive/modules/logging';
 import { driveMetrics } from '@proton/drive/modules/metrics';
+import { recentlyAccessed } from '@proton/drive/modules/recentlyAccessed';
 import { useInitEncryptedThumbnailCache } from '@proton/drive/modules/thumbnails';
-import { useLoading } from '@proton/hooks';
+import { getDrive, getDriveForPhotos, splitNodeUid, useDrive } from '@proton/drive/sdk';
+import useLoading from '@proton/hooks/useLoading';
 import { isPaid } from '@proton/shared/lib/user/helpers';
 import { useFlag } from '@proton/unleash/useFlag';
 
@@ -256,6 +255,7 @@ const MainContainer: FunctionComponent = () => {
     const [user] = useUser();
     const [loading, setLoading] = useState(true);
     const coreEventManager = useEventManager();
+    const isRecentlyAccessedEnabled = useFlag('DriveWebRecentlyAccessed');
 
     useEffect(() => {
         if (loading) {
@@ -288,12 +288,16 @@ const MainContainer: FunctionComponent = () => {
             const photos = getDriveForPhotos();
             await photos.getMyPhotosRootFolder();
 
+            if (isRecentlyAccessedEnabled) {
+                recentlyAccessed.start();
+            }
+
             setLoading(false);
         };
         if (!drive) {
             void initializeSDK();
         }
-    }, [init, user]);
+    }, [init, user, isRecentlyAccessedEnabled]);
 
     if (loading) {
         return <LoaderPage />;

@@ -1,11 +1,11 @@
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { CYCLE, PLANS } from '@proton/payments/core/constants';
 import type { Subscription } from '@proton/payments/core/subscription/interface';
 import { buildSubscription } from '@proton/payments/testing/buildSubscription';
 import { getSubscriptionState } from '@proton/payments/testing/redux-state';
 import { APPS } from '@proton/shared/lib/constants';
 
-import { userDefault } from '../../hooks/helpers/tests/index';
+import { userDefault } from '../../hooks/helpers/tests/useUser';
 import { applyHOCs } from '../../testing/hocs/helpers';
 import { withApi } from '../../testing/hocs/with-api';
 import { renderWithProviders } from '../../testing/renderWithProviders';

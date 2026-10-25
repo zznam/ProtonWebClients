@@ -1,11 +1,12 @@
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { getTestStore } from '@proton/redux-shared-store/test';
 import { USER_ROLES } from '@proton/shared/lib/constants';
-import type { Permission, UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { Permission } from '@proton/shared/lib/interfaces/UserPermission';
 import { formatUser } from '@proton/shared/lib/user/helpers';
 
 import { addressesReducer } from '../addresses';
-import { getModelState } from '../tests';
+import { getModelState } from '../testing/getModelState';
 import { userReducer } from '../user';
 import { userPermissionsReducer } from '../userPermissions';
 import { membersReducer, membersThunk, selectMembers } from './index';

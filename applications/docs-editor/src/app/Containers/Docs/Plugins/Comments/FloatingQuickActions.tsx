@@ -1,17 +1,18 @@
-import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint'
 import type { LexicalEditor, NodeKey } from 'lexical'
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-import { c } from 'ttag'
 import { Icon } from '../../Components/Icon'
 import * as Icons from '../../Components/icons'
 import ToolbarTooltip from '../../Toolbar/ToolbarTooltip'
 import { ShortcutLabel } from '../KeyboardShortcuts/ShortcutLabel'
 import { TOGGLE_SUGGESTION_MODE_COMMAND } from '../Suggestions/Commands'
-import clsx from 'clsx'
-import { useEditorState } from '../../../EditorStateProvider'
-import { useStore } from 'zustand'
-import { EditorUserMode } from '../../../../Lib/EditorUserMode'
-import { useSyncedState } from '../../../../Hooks/useSyncedState'
+import { clsx } from 'clsx'
+import { useDocsUserMode } from '../../DocsPresentationProvider'
+import { EditorUserMode } from '../../contract/EditorUserMode'
+import { useDocsDependencies, useDocsMessages } from '../../DocsDependenciesProvider'
+import { useViewportWidth } from '../../Layout/DocsLayout'
+
+// Proton's "small" breakpoint, at a 16px root font size.
+const SMALL_VIEWPORT_MAX_WIDTH = 680
 
 export function FloatingQuickActions({
   anchorKey,
@@ -22,12 +23,13 @@ export function FloatingQuickActions({
   editor: LexicalEditor
   onAddComment: () => void
 }): JSX.Element {
-  const { suggestionsEnabled } = useSyncedState()
-  const userMode = useStore(useEditorState(), (state) => state.userMode)
+  const { suggestionsEnabled } = useDocsDependencies()
+  const messages = useDocsMessages().comments
+  const userMode = useDocsUserMode()
   const isSuggestionMode = userMode === EditorUserMode.Suggest
 
   const boxRef = useRef<HTMLDivElement>(null)
-  const { viewportWidth } = useActiveBreakpoint()
+  const isSmallViewport = useViewportWidth() <= SMALL_VIEWPORT_MAX_WIDTH
 
   const updatePosition = useCallback(() => {
     const boxElem = boxRef.current
@@ -44,7 +46,7 @@ export function FloatingQuickActions({
       const rootRect = rootElement.getBoundingClientRect()
       const containerRect = positionContainer.getBoundingClientRect()
       const { top: anchorTop } = anchorElement.getBoundingClientRect()
-      if (viewportWidth['<=small']) {
+      if (isSmallViewport) {
         boxElem.style.left = ''
         boxElem.style.right = '5px'
       } else {
@@ -53,7 +55,7 @@ export function FloatingQuickActions({
       }
       boxElem.style.top = `${anchorTop - containerRect.top}px`
     }
-  }, [anchorKey, editor, viewportWidth])
+  }, [anchorKey, editor, isSmallViewport])
 
   useEffect(() => {
     window.addEventListener('resize', updatePosition)
@@ -67,13 +69,13 @@ export function FloatingQuickActions({
     updatePosition()
   }, [anchorKey, editor, updatePosition])
 
-  const addCommentLabel = c('Action').t`Add comment`
+  const addCommentLabel = messages.addComment
 
-  const suggestionToggleLabel = c('Action').t`Add suggestion`
+  const suggestionToggleLabel = messages.addSuggestion
 
   return (
     <div
-      className="shadow-raised border-weak bg-norm pointer-events-auto absolute z-10 flex flex-col gap-1 rounded-lg border p-1"
+      className="pointer-events-auto absolute z-10 flex flex-col gap-1 rounded-lg border border-[--border-weak] bg-[--background-norm] p-1 shadow-[shadow:--shadow-raised]"
       ref={boxRef}
     >
       <ToolbarTooltip
@@ -91,7 +93,7 @@ export function FloatingQuickActions({
       </ToolbarTooltip>
       {suggestionsEnabled && !isSuggestionMode && (
         <>
-          <hr className="min-h-px bg-[--border-weak]" />
+          <hr className="min-h-px border-0 bg-[--border-weak]" />
           <ToolbarTooltip
             originalPlacement="right"
             title={<ShortcutLabel label={suggestionToggleLabel} shortcut="SUGGESTION_MODE_SHORTCUT" />}

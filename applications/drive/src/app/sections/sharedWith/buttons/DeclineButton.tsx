@@ -1,8 +1,8 @@
 import { c } from 'ttag';
 
-import type { useConfirmActionModal } from '@proton/components';
-import { ToolbarButton } from '@proton/components';
-import type { NodeType } from '@proton/drive';
+import type { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal';
+import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton';
+import type { NodeType } from '@proton/drive/sdk';
 import { IcCross } from '@proton/icons/icons/IcCross';
 
 import { ContextMenuButton } from '../../../statelessComponents/ContextMenu';

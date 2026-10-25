@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcChevronRight } from '@proton/icons/icons/IcChevronRight';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import { selectBackgroundBlur } from '@proton/meet/store/slices/backgroundSlice';
@@ -17,6 +17,7 @@ import {
     toggleShowDuration,
     toggleSideBarState as toggleSideBarStateAction,
 } from '@proton/meet/store/slices/uiStateSlice';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { useFlag } from '@proton/unleash/useFlag';
 
 import { ConditionalTooltip } from '../../atoms/ConditionalTooltip/ConditionalTooltip';
@@ -31,6 +32,7 @@ import { useCaptionsPreference } from '../../hooks/captions/useCaptionsPreferenc
 import { useLiveCaptionsFeatureEnabled } from '../../hooks/captions/useLiveCaptionsFeatureEnabled';
 import { BackgroundBlurToggle } from './BackgroundBlurToggle';
 import { CaptionLanguageSelect } from './CaptionLanguageSelect';
+import { JoinLeaveSoundsToggle } from './JoinLeaveSoundsToggle';
 import { LiveCaptionsHostAvailabilityToggle } from './LiveCaptionsHostAvailabilityToggle';
 import { LiveCaptionsToggle } from './LiveCaptionsToggle';
 import { NoiseCancellingToggle } from './NoiseCancellingToggle';
@@ -57,6 +59,7 @@ export const Settings = () => {
 
     const isVirtualBackgroundEnabled = useFlag('MeetVirtualBackground');
     const canPickCaptionLanguage = useFlag('MeetSaveCaptionLanguagePreference');
+    const isJoinLeaveSoundsEnabled = useFlag('MeetJoinLeaveSoundsNotifications');
 
     const [loadingLock, withLoadingLock] = useLoading();
     const [loadingBackgroundBlur, withLoadingBackgroundBlur] = useLoading();
@@ -147,6 +150,7 @@ export const Settings = () => {
                             noiseFilter={noiseFilter}
                             toggleNoiseFilter={toggleNoiseFilter}
                         />
+                        {isJoinLeaveSoundsEnabled && <JoinLeaveSoundsToggle />}
                     </SideBarSection>
 
                     <SideBarSection title={c('Title').t`Background`}>
@@ -155,6 +159,10 @@ export const Settings = () => {
                             loadingBackgroundBlur={loadingBackgroundBlur}
                             isBackgroundBlurSupported={isBackgroundBlurSupported}
                             onChange={() => {
+                                sendMeetActionsEvent(TelemetryMeetActionsEvents.background_effect_selected, {
+                                    effectType: backgroundBlur ? 'none' : 'blur',
+                                    source: 'settings',
+                                });
                                 void withLoadingBackgroundBlur(toggleBackgroundBlur());
                             }}
                             withTooltip={true}

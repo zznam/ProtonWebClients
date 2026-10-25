@@ -15,7 +15,7 @@ import StandardLoadErrorPage from '@proton/components/containers/app/StandardLoa
 import UnAuthenticated from '@proton/components/containers/authentication/UnAuthenticated';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import useErrorHandler from '@proton/components/hooks/useErrorHandler';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import observeApiError from '@proton/metrics/observeApiError';
 import { useCurrencies } from '@proton/payments-ui/client-extensions/useCurrencies';
 import { usePaymentsTelemetry } from '@proton/payments-ui/client-extensions/usePaymentsTelemetry';
@@ -33,7 +33,7 @@ import { getPlansMap } from '@proton/payments/core/subscription/plans-map-wrappe
 import { checkoutTelemetry } from '@proton/payments/telemetry/telemetry';
 import { checkReferrer } from '@proton/shared/lib/api/core/referrals';
 import { queryAvailableDomains } from '@proton/shared/lib/api/domains';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { getSilentApi, getUIDApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { TelemetryAccountSignupEvents, TelemetryMeasurementGroups } from '@proton/shared/lib/api/telemetry';
 import { getUser } from '@proton/shared/lib/api/user';
@@ -52,9 +52,9 @@ import { sendTelemetryReport } from '@proton/shared/lib/helpers/metrics';
 import { wait } from '@proton/shared/lib/helpers/promise';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
 import { getPathFromLocation, stringifySearchParams } from '@proton/shared/lib/helpers/url';
-import { Audience } from '@proton/shared/lib/interfaces';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
 import type { User } from '@proton/shared/lib/interfaces/User';
-import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys';
+import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys/getDecryptedUserKeys';
 import { formatUser } from '@proton/shared/lib/user/helpers';
 import { useFlag } from '@proton/unleash/useFlag';
 import isTruthy from '@proton/utils/isTruthy';
@@ -343,6 +343,7 @@ const SingleSignupContainerV2 = ({
         generateMnemonic,
         CustomStep,
     } = signupConfiguration;
+    const visionaryPlan = model.plansMap[PLANS.VISIONARY];
 
     useEffect(() => {
         const run = async () => {
@@ -1319,10 +1320,10 @@ const SingleSignupContainerV2 = ({
                     }}
                 />
             )}
-            {renderVisionaryModal && (
+            {renderVisionaryModal && visionaryPlan && (
                 <VisionaryUpsellModal
                     {...visionaryModalProps}
-                    plan={model.plansMap[PLANS.VISIONARY]?.Title || ''}
+                    plan={visionaryPlan}
                     appName={productAppName}
                     onUpgrade={async () => {
                         visionaryModalProps.onClose();

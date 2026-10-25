@@ -1,12 +1,12 @@
 import { CryptoProxy, VERIFICATION_STATUS } from '@protontech/crypto';
 
-import { PassSignatureContext } from '../../../../types';
+import { PassSignatureContext } from '../../../../types/crypto/pass-types';
 import {
     createRandomKey,
     createRandomVaultKey,
     releaseCryptoProxy,
     setupCryptoProxyForTesting,
-} from '../../utils/testing';
+} from '../../../../utils/tests/fixtures/crypto';
 import { createInviteKeys } from './create-invite-keys';
 
 describe('create invite keys crypto process', () => {

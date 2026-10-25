@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { c } from 'ttag';
 
 import { InlineLinkButton } from '@proton/atoms/InlineLinkButton/InlineLinkButton';
-import { TopBanner } from '@proton/components';
-import { useLoading } from '@proton/hooks';
+import TopBanner from '@proton/components/containers/topBanners/TopBanner';
+import useLoading from '@proton/hooks/useLoading';
 
 import { useLockedVolume } from '../../../legacy/store';
 import { useFilesRecoveryModal } from '../modals/FilesRecoveryModal/FilesRecoveryModal';

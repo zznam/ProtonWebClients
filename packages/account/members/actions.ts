@@ -2,7 +2,7 @@ import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
 import { createKTVerifier } from '@proton/key-transparency/helpers';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
@@ -34,18 +34,16 @@ import {
     VPN_CONNECTIONS,
 } from '@proton/shared/lib/constants';
 import { validateEmailAddress } from '@proton/shared/lib/helpers/email';
-import type {
-    Address,
-    Api,
-    Domain,
-    EnhancedMember,
-    Member,
-    Organization,
-    RoleAssignment,
-} from '@proton/shared/lib/interfaces';
-import { CreateMemberMode } from '@proton/shared/lib/interfaces';
-import { getIsPasswordless, setupMemberKeys } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
+import type { EnhancedMember, Member } from '@proton/shared/lib/interfaces/Member';
+import { CreateMemberMode } from '@proton/shared/lib/interfaces/Member';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import type { RoleAssignment } from '@proton/shared/lib/interfaces/OrganizationRole';
 import { getIsMemberSetup } from '@proton/shared/lib/keys/memberHelper';
+import { setupMemberKeys } from '@proton/shared/lib/keys/memberKeys';
+import { getIsPasswordless } from '@proton/shared/lib/keys/organizationKeys';
 import { getHasIncompleteOrgKeyGrant, getOrganizationKeyInfo } from '@proton/shared/lib/organization/helper';
 import { srpVerify } from '@proton/shared/lib/srp';
 import noop from '@proton/utils/noop';
@@ -66,7 +64,7 @@ import {
     getPrivateAdminError,
     setAdminRoles,
 } from '../organizationKey/actions';
-import { classifyRoleChange } from '../organizationKey/classifyRoleChange';
+import { classifyRoleChange, getIsMemberAdminOrPendingAdmin } from '../organizationKey/classifyRoleChange';
 import { type OrganizationRolesState, organizationRolesThunk } from '../organizationRoles';
 import {
     hasUserSourcedOwnerRole,
@@ -77,10 +75,10 @@ import {
 import { userThunk } from '../user';
 import { userKeysThunk } from '../userKeys';
 import InvalidAddressesError from './errors/InvalidAddressesError';
+import MemberCreationValidationError from './errors/MemberCreationValidationError';
 import UnavailableAddressesError from './errors/UnavailableAddressesError';
 import { getMember } from './getMember';
 import {
-    MemberCreationValidationError,
     type MembersState,
     type RoleAssignmentsResult,
     getMemberRoles,
@@ -223,7 +221,7 @@ export const assignMemberRoles = ({
         );
         const currentRolesRequireOrgKey = currentRoles.some(({ Role }) => isOrgKeyRequired(Role));
 
-        if (!desiredRolesRequireOrgKey || currentRolesRequireOrgKey || member.Role === MEMBER_ROLE.ORGANIZATION_ADMIN) {
+        if (!desiredRolesRequireOrgKey || currentRolesRequireOrgKey || getIsMemberAdminOrPendingAdmin(member)) {
             return dispatch(updateMemberRoles({ member, currentRoles, desiredRoleIds, api }));
         }
 
@@ -266,7 +264,7 @@ export const provideOrgKeyAccessToMember = ({
     UnknownAction
 > => {
     return async (dispatch) => {
-        if (member.Role === MEMBER_ROLE.ORGANIZATION_ADMIN) {
+        if (getIsMemberAdminOrPendingAdmin(member)) {
             return;
         }
         const organizationKey = await dispatch(organizationKeyThunk());
@@ -310,7 +308,7 @@ export const resumeMemberRoleAssignment = ({
         // Refresh the roles to clear pending flag
         await dispatch(getMemberRoles({ member, cache: CacheType.None }));
         const refreshed = (await dispatch(membersThunk())).find(({ ID }) => ID === memberID);
-        if (refreshed && getHasIncompleteOrgKeyGrant(refreshed)) {
+        if (refreshed && getHasIncompleteOrgKeyGrant(refreshed) && !getMemberUnprivatizationMode(refreshed).makeAdmin) {
             // TODO: provideOrgKeyAccessToMember no-ops for a member who is already an admin but lost access to
             // the org key. To fix that, we need to change `classifyRoleChange` to allow admin -> admin.
             throw new Error(c('Error').t`Could not grant access to the organization key`);

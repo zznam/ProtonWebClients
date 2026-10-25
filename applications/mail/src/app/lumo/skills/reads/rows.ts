@@ -16,8 +16,8 @@ import {
     selectLabelID,
     taskRunningInLabel,
 } from '../../../store/elements/elementsSelectors';
-
 import { formatLocalDate, formatSender } from '../../helpers/formatting';
+import { emailReferenceFor } from '../../helpers/references';
 import type { MailToolDeps } from '../../toolModule';
 
 /** One on-screen email, metadata only — the shared row shape every list-style read returns. */
@@ -52,7 +52,7 @@ export interface AgentEmailPage {
  * the emptiness reads as an authoritative "there is no mail here".
  */
 export const BULK_ACTION_NOTE =
-    'A bulk action is still running in this location: its list stays cleared until the server finishes, so an empty list here says nothing about how much mail the location holds, and the emails in it cannot be read or changed individually yet.';
+    'A bulk action was still running in this location when this was read, which keeps its list empty until the server finishes, so this empty list said nothing about how much mail the location holds.';
 
 const formatRow = (row: AgentEmailRow): string => {
     const parts = [row.reference, row.from, row.subject, row.date, row.unread ? 'unread' : 'read', row.folder];
@@ -79,8 +79,8 @@ export const formatAgentEmailRows = (rows: AgentEmailRow[], total: number): stri
     const notShown = total - rows.length;
     const header =
         notShown > 0
-            ? `${rows.length} of ${total} emails shown (${notShown} more not shown):`
-            : `${rows.length} email${rows.length === 1 ? '' : 's'} shown:`;
+            ? `${rows.length} of ${total} emails listed (${notShown} more not listed):`
+            : `${rows.length} email${rows.length === 1 ? '' : 's'} listed:`;
     return [header, ...rows.map(formatRow)].join('\n');
 };
 
@@ -114,7 +114,7 @@ export const buildAgentEmailRows = (deps: RowDeps, references: ReferenceRegistry
         // `getDate` resolves a conversation's label-contextual time, so this matches the day on screen.
         const date = getDate(element, labelID);
         return {
-            reference: references.referenceFor('email', element.ID || '', {
+            reference: emailReferenceFor(references, element, {
                 title: subject,
                 subtitle: from,
                 // The epoch stands for "no time", so there is nothing here for a card to show.

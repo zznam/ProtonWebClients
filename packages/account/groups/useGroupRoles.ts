@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 
 import { type Action, type ThunkDispatch, createSelector } from '@reduxjs/toolkit';
 
-import { baseUseDispatch, baseUseSelector } from '@proton/react-redux-store';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
-import type { EnhancedGroup, RoleAssignment } from '@proton/shared/lib/interfaces';
+import { baseUseDispatch, baseUseSelector } from '@proton/react-redux-store/ProtonStoreContext';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
+import type { EnhancedGroup } from '@proton/shared/lib/interfaces/Group';
+import type { RoleAssignment } from '@proton/shared/lib/interfaces/OrganizationRole';
 import noop from '@proton/utils/noop';
 
 import { AdminRolesUIState, useAdminRolesUI } from '../userPermissions/hooks';

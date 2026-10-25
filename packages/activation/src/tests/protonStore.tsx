@@ -1,12 +1,13 @@
 import { combineReducers, configureStore, createListenerMiddleware } from '@reduxjs/toolkit';
 
-import { addressesReducer, userReducer } from '@proton/account';
+import { addressesReducer } from '@proton/account/addresses';
+import { userReducer } from '@proton/account/user';
 import { calendarsReducer } from '@proton/calendar/calendars';
-import { featuresReducer } from '@proton/features';
-import { categoriesReducer } from '@proton/mail/store/labels';
+import { featuresReducer } from '@proton/features/reducer';
 import { importerConfigReducer } from '@proton/mail/store/importerConfig';
+import { categoriesReducer } from '@proton/mail/store/labels';
 import { mailSettingsReducer } from '@proton/mail/store/mailSettings';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 
 const extraThunkArguments = {} as ProtonThunkArguments;
 

@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { serverEvent } from '@proton/account';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import { serverEvent } from '@proton/account/eventLoop';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import { getApiEnvConfig } from '@proton/shared/lib/api/apiEnvironmentConfig';
 import updateObject from '@proton/shared/lib/helpers/updateObject';
-import type { ApiEnvironmentConfig } from '@proton/shared/lib/interfaces';
+import type { ApiEnvironmentConfig } from '@proton/shared/lib/interfaces/ApiEnvironmentConfig';
 
 interface State {
     importerConfig: ModelState<ApiEnvironmentConfig>;

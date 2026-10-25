@@ -1,6 +1,7 @@
 import type { ReactNode, RefObject } from 'react';
 
-import { Table, TableBody } from '@proton/components';
+import Table from '@proton/components/components/table/Table';
+import TableBody from '@proton/components/components/table/TableBody';
 import clsx from '@proton/utils/clsx';
 
 import { VirtualListItem } from './VirtualListItem';
@@ -75,7 +76,8 @@ export const DriveExplorerBody = ({
     // hook to compute scrollTop directly when the target row is outside the
     // virtualizer's window (no DOM node to scrollIntoView - we scroll first, then
     // refocus on the next frame once the virtualizer renders the row).
-    const rowHeightWithGap = (config?.itemHeight ?? defaultConfig.itemHeight) + (config?.gap ?? defaultConfig.gap);
+    const itemHeight = config?.itemHeight ?? defaultConfig.itemHeight;
+    const rowHeightWithGap = itemHeight + (config?.gap ?? defaultConfig.gap);
     useArrowKeyNavigation({
         containerRef,
         itemIds,
@@ -113,6 +115,7 @@ export const DriveExplorerBody = ({
                                         <VirtualListItem
                                             key={itemId || 'loading'}
                                             virtualItem={virtualItem}
+                                            minItemHeight={itemHeight}
                                             itemId={itemId}
                                             cells={cells}
                                             loading={loading}

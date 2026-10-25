@@ -7,8 +7,10 @@ import { getUser } from '@proton/shared/lib/authentication/getUser';
 import { handleUnlockKey } from '@proton/shared/lib/authentication/unlockKey';
 import { wait } from '@proton/shared/lib/helpers/promise';
 import { captureMessage, getSentryError } from '@proton/shared/lib/helpers/sentry';
-import type { Address, KeySalt as tsKeySalt, User as tsUser } from '@proton/shared/lib/interfaces';
-import { migrateUser } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { KeySalt as tsKeySalt } from '@proton/shared/lib/interfaces/KeySalt';
+import type { User as tsUser } from '@proton/shared/lib/interfaces/User';
+import { migrateUser } from '@proton/shared/lib/keys/keyMigration';
 import { handleSetupAddressKeys } from '@proton/shared/lib/keys/setupAddressKeys';
 import { getHasV2KeysToUpgrade, upgradeV2KeysHelper } from '@proton/shared/lib/keys/upgradeKeysV2';
 
@@ -20,7 +22,7 @@ import type { LoginFlowContext } from './loginFlowContext';
  * Upgrades legacy keys and migrates the account if needed, then creates the session.
  * Upgrade and migration failures are reported but don't block the sign-in.
  */
-const upgradeKeysAndFinalize = async (
+export const upgradeKeysAndFinalize = async (
     context: LoginFlowContext,
     {
         user: maybeUser,
@@ -96,6 +98,28 @@ const upgradeKeysAndFinalize = async (
 };
 
 /**
+ * Decrypts the primary private key with the password and returns the key password, without signing in.
+ * A wrong password throws a `PasswordError`, so the caller can let the user retry.
+ */
+export const unlockKeyPassword = async ({
+    user,
+    salts,
+    clearKeyPassword,
+}: {
+    user: tsUser;
+    salts: tsKeySalt[];
+    clearKeyPassword: string;
+}) => {
+    await wait(500);
+
+    const unlockResult = await handleUnlockKey(user, salts, clearKeyPassword).catch(() => undefined);
+    if (!unlockResult) {
+        throw new SecondPasswordError();
+    }
+    return unlockResult.keyPassword;
+};
+
+/**
  * Decrypts the primary private key with the password, then signs in.
  * A wrong password throws a `PasswordError`, so the caller can let the user retry.
  */
@@ -117,19 +141,14 @@ export const unlockAccountKeys = async (
         isOnePasswordMode: boolean;
     }
 ): Promise<AuthSession> => {
-    await wait(500);
-
-    const unlockResult = await handleUnlockKey(user, salts, clearKeyPassword).catch(() => undefined);
-    if (!unlockResult) {
-        throw new SecondPasswordError();
-    }
+    const keyPassword = await unlockKeyPassword({ user, salts, clearKeyPassword });
 
     return upgradeKeysAndFinalize(context, {
         user,
         addresses,
         loginPassword,
         clearKeyPassword,
-        keyPassword: unlockResult.keyPassword,
+        keyPassword,
         isOnePasswordMode,
     });
 };

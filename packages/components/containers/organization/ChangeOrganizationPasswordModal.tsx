@@ -6,7 +6,7 @@ import { c } from 'ttag';
 import { organizationKeyThunk } from '@proton/account/organizationKey';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { updateBackupKey } from '@proton/shared/lib/api/organization';
@@ -15,7 +15,7 @@ import {
     passwordLengthValidator,
     requiredValidator,
 } from '@proton/shared/lib/helpers/formValidators';
-import { getBackupKeyData } from '@proton/shared/lib/keys';
+import { getBackupKeyData } from '@proton/shared/lib/keys/organizationKeys';
 import noop from '@proton/utils/noop';
 
 import Alert from '../../components/alert/Alert';
@@ -26,7 +26,7 @@ import ModalContent from '../../components/modalTwo/ModalContent';
 import ModalFooter from '../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../components/modalTwo/ModalHeader';
 import useModalState from '../../components/modalTwo/useModalState';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import PasswordInputTwo from '../../components/v2/input/PasswordInput';
 import useFormErrors from '../../components/v2/useFormErrors';
 import AuthModal from '../password/AuthModal';

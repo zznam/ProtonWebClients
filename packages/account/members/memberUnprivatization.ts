@@ -1,4 +1,5 @@
 import type {
+    EnhancedMember,
     Member,
     MemberInvitationData,
     MemberReadyForAutomaticUnprivatization,
@@ -7,9 +8,10 @@ import type {
     MemberUnprivatizationAcceptState,
     MemberUnprivatizationAutomaticApproveState,
     MemberUnprivatizationManualApproveState,
-} from '@proton/shared/lib/interfaces';
-import { MemberUnprivatizationState } from '@proton/shared/lib/interfaces';
+} from '@proton/shared/lib/interfaces/Member';
+import { MemberUnprivatizationState } from '@proton/shared/lib/interfaces/Member';
 import { getIsMemberSetup } from '@proton/shared/lib/keys/memberHelper';
+import { getHasPausedRoleAssignment } from '@proton/shared/lib/organization/helper';
 
 export const parseInvitationData = (data: string): MemberInvitationData => {
     return JSON.parse(data);
@@ -61,6 +63,15 @@ export const getMemberUnprivatizationMode = (member?: Member) => {
         pending: false,
     };
 };
+
+export const getHasPausedMemberRoleAssignment = ({
+    member,
+    requiresOrgKeyPromotion,
+}: {
+    member: EnhancedMember;
+    requiresOrgKeyPromotion?: boolean;
+}) =>
+    getHasPausedRoleAssignment({ member, requiresOrgKeyPromotion }) && !getMemberUnprivatizationMode(member).makeAdmin;
 
 const getIsMemberUnprivatizationInAutomaticApproveState = (
     unprivatizationData: MemberUnprivatization | null

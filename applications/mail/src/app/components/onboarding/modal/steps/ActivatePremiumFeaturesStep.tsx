@@ -2,9 +2,13 @@ import { useState } from 'react';
 
 import { c } from 'ttag';
 
-import { memberThunk, organizationThunk, subscriptionThunk, useUserSettings, userThunk } from '@proton/account';
 import { useAddresses } from '@proton/account/addresses/hooks';
+import { memberThunk } from '@proton/account/member';
+import { organizationThunk } from '@proton/account/organization';
+import { subscriptionThunk } from '@proton/account/subscription';
+import { userThunk } from '@proton/account/user';
 import { useUser } from '@proton/account/user/hooks';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { Button } from '@proton/atoms/Button/Button';
 import LabelStack from '@proton/components/components/labelStack/LabelStack';
@@ -21,11 +25,11 @@ import { getIsB2BAudienceFromPlan } from '@proton/payments/core/plan/helpers';
 import { getIsB2BAudienceFromSubscription, hasVisionary, isTrial } from '@proton/payments/core/subscription/helpers';
 import { updateAutoDelete } from '@proton/shared/lib/api/mailSettings';
 import { enableBreachAlert } from '@proton/shared/lib/api/settings';
-import { TelemetryMailOnboardingEvents } from '@proton/shared/lib/api/telemetry';
+import { OldTelemetryMailOnboardingEvents } from '@proton/shared/lib/api/telemetry';
 import { BRAND_NAME, DARK_WEB_MONITORING_NAME, MEMBER_SUBSCRIBER } from '@proton/shared/lib/constants';
 import { traceInitiativeError } from '@proton/shared/lib/helpers/sentry';
-import { DARK_WEB_MONITORING_STATE } from '@proton/shared/lib/interfaces';
-import { getIsBYOEAccount } from '@proton/shared/lib/keys';
+import { DARK_WEB_MONITORING_STATE } from '@proton/shared/lib/interfaces/UserSettings';
+import { getIsBYOEAccount } from '@proton/shared/lib/keys/accountType';
 import { AUTO_DELETE_SPAM_AND_TRASH_DAYS } from '@proton/shared/lib/mail/mailSettings';
 import aliasesIcon from '@proton/styles/assets/img/onboarding/mail_onboarding_aliases.svg';
 import autoDeleteIcon from '@proton/styles/assets/img/onboarding/mail_onboarding_auto_delete.svg';
@@ -33,11 +37,19 @@ import monitoringIcon from '@proton/styles/assets/img/onboarding/mail_onboarding
 import clsx from '@proton/utils/clsx';
 import isTruthy from '@proton/utils/isTruthy';
 
+import { TrackOnboardingStepLoad } from '../../../../telemetry/TrackOnboardingStepLoad';
+import { ONBOARDING_SETTINGS, ONBOARDING_STEPS, useOnboardingTracking } from '../../../../telemetry/onboardingEvents';
 import { useMailOnboardingTelemetry } from '../../useMailOnboardingTelemetry';
 import type { OnboardingStepEligibleCallback } from '../interface';
 import OnboardingContent from '../layout/OnboardingContent';
 
 type FeatureID = 'aliases' | 'monitoring' | 'autoDelete';
+
+const FEATURE_SETTINGS: Record<FeatureID, ONBOARDING_SETTINGS> = {
+    aliases: ONBOARDING_SETTINGS.shortDomain,
+    monitoring: ONBOARDING_SETTINGS.darkWebMonitoring,
+    autoDelete: ONBOARDING_SETTINGS.autoDelete,
+};
 
 interface Feature {
     id: FeatureID;
@@ -145,6 +157,7 @@ export const isActivatePremiumFeaturesStepEligible: OnboardingStepEligibleCallba
 const ActivatePremiumFeaturesStep = ({ onNext }: OnboardingStepRenderCallback) => {
     const api = useApi();
     const sendMailOnboardingTelemetry = useMailOnboardingTelemetry();
+    const { trackSettingToggled, trackStepCompleted } = useOnboardingTracking();
     const [addresses, addressesLoading] = useAddresses();
     const [userSettings, userSettingsLoading] = useUserSettings();
     const [mailSettings, mailSettingsLoading] = useMailSettings();
@@ -170,14 +183,18 @@ const ActivatePremiumFeaturesStep = ({ onNext }: OnboardingStepRenderCallback) =
     const loadingDeps = addressesLoading || userSettingsLoading || mailSettingsLoading || loadingDependencies;
     const hasAllItemsActivated = Object.values(activeFeatures).every(Boolean);
 
-    const handleToggleFeature = (id: FeatureID) => (isChecked: boolean) =>
+    const handleToggleFeature = (id: FeatureID) => (isChecked: boolean) => {
+        trackSettingToggled(ONBOARDING_STEPS.premiumFeatures, FEATURE_SETTINGS[id], isChecked);
         setCheckedFeatures((prev) => ({ ...prev, [id]: isChecked }));
+    };
 
     const hasNoItemsChecked = !Object.values(checkedFeatures).some(Boolean);
 
     const handleNext = () => {
+        trackStepCompleted(ONBOARDING_STEPS.premiumFeatures);
+
         const promises: Promise<any>[] = [
-            sendMailOnboardingTelemetry(TelemetryMailOnboardingEvents.premium_features, {
+            sendMailOnboardingTelemetry(OldTelemetryMailOnboardingEvents.premium_features, {
                 feature_auto_delete: checkedFeatures.autoDelete ? 'yes' : 'no',
                 feature_dark_web_monitoring: checkedFeatures.monitoring ? 'yes' : 'no',
                 feature_short_domain: checkedFeatures.aliases ? 'yes' : 'no',
@@ -209,6 +226,7 @@ const ActivatePremiumFeaturesStep = ({ onNext }: OnboardingStepRenderCallback) =
 
     return (
         <OnboardingStep>
+            <TrackOnboardingStepLoad step={ONBOARDING_STEPS.premiumFeatures} />
             <OnboardingContent
                 title={
                     // translator: Keep this title short. Avoid making char length bigger than english one.

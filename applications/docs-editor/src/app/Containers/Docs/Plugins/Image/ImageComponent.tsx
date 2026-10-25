@@ -1,7 +1,7 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection'
 import { mergeRegister } from '@lexical/utils'
-import clsx from 'clsx'
+import { clsx } from 'clsx'
 import type { BaseSelection, LexicalCommand, LexicalEditor, NodeKey } from 'lexical'
 import {
   $getNodeByKey,
@@ -20,19 +20,37 @@ import {
   createCommand,
 } from 'lexical'
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
-import { c } from 'ttag'
 
-import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader'
-import { useCombinedRefs } from '@proton/hooks'
-import { useDocsDependencies } from '../../DocsDependenciesProvider'
+import { useDocsDependencies, useDocsMessages } from '../../DocsDependenciesProvider'
 import { getRemoteImageUrl, isAllowedImageSrc } from '../../Conversion/ImageSrcUtils'
 import { getElementDimensionsWithoutPadding } from '../../Utils/getEditorWidthWithoutPadding'
 import { SET_IMAGE_SIZE_COMMAND } from './ImageCommands'
 import ImageResizer from './ImageResizer'
 
+import './ImageComponent.scss'
+
 const imageCache = new Set()
 
 const RIGHT_CLICK_IMAGE_COMMAND: LexicalCommand<MouseEvent> = createCommand('RIGHT_CLICK_IMAGE_COMMAND')
+
+function ImageLoadingIndicator(): JSX.Element {
+  const messages = useDocsMessages().image
+  return (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="docs-image-loader"
+        viewBox="0 0 16 16"
+        style={{ width: '15%', height: '15%' }}
+        aria-hidden="true"
+      >
+        <circle className="docs-image-loader-track" cx="8" cy="8" r="7" />
+        <circle className="docs-image-loader-circle" cx="8" cy="8" r="7" />
+      </svg>
+      <span className="sr-only">{messages.loading}</span>
+    </>
+  )
+}
 
 function ensureImageLoaded(src: string) {
   if (!isAllowedImageSrc(src)) {
@@ -61,6 +79,7 @@ function BlockedImagePlaceholder({
   imageRef: { current: null | HTMLImageElement }
 }): JSX.Element {
   const { openLink } = useDocsDependencies()
+  const messages = useDocsMessages().image
   const remoteUrl = getRemoteImageUrl(src)
   return (
     <span
@@ -70,7 +89,7 @@ function BlockedImagePlaceholder({
         className,
       )}
     >
-      {c('Info').t`Remote image blocked`}
+      {messages.remoteImageBlocked}
       {remoteUrl && (
         <>
           <a
@@ -86,9 +105,7 @@ function BlockedImagePlaceholder({
           >
             {remoteUrl}
           </a>
-          <span className="text-sm">
-            {c('Info').t`Open the link to download the image, then use "Insert image" to add it to this document.`}
-          </span>
+          <span className="text-sm">{messages.remoteImageDownloadHint}</span>
         </>
       )}
     </span>
@@ -122,7 +139,8 @@ function LoadedLazyImage({
     setImgHeight(height)
   }, [width, height])
 
-  const combinedRef = useCombinedRefs(imageRef, (image) => {
+  const setImageRef = (image: HTMLImageElement | null) => {
+    imageRef.current = image
     const editorDimensions = getElementDimensionsWithoutPadding(editor.getRootElement())
     if (image && editorDimensions) {
       const naturalWidth = image.naturalWidth
@@ -139,7 +157,7 @@ function LoadedLazyImage({
         }
       }
     }
-  })
+  }
 
   ensureImageLoaded(src)
 
@@ -148,7 +166,7 @@ function LoadedLazyImage({
       className={className || undefined}
       src={src}
       alt={altText}
-      ref={combinedRef}
+      ref={setImageRef}
       style={{
         height: imgHeight === 'inherit' ? 'inherit' : `${imgHeight}px`,
         maxWidth: maxWidth ? `${maxWidth}px` : '100%',
@@ -393,12 +411,7 @@ export default function ImageComponent({
             height,
           }}
         >
-          <CircleLoader
-            style={{
-              width: '15%',
-              height: '15%',
-            }}
-          />
+          <ImageLoadingIndicator />
         </div>
       }
     >

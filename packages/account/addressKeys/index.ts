@@ -8,13 +8,13 @@ import {
     miniSerializeError,
 } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { defaultLongExpiry, getFetchedAt, getFetchedEphemeral } from '@proton/redux-utilities/fetchedAt';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import type { CacheType } from '@proton/redux-utilities/interface';
 import { cacheHelper, createPromiseMapStore } from '@proton/redux-utilities/promiseStore';
-import type { DecryptedAddressKey } from '@proton/shared/lib/interfaces';
-import { getDecryptedAddressKeysHelper } from '@proton/shared/lib/keys';
+import type { DecryptedAddressKey } from '@proton/shared/lib/interfaces/Key';
+import { getDecryptedAddressKeysHelper } from '@proton/shared/lib/keys/getDecryptedAddressKeys';
 import { getInactiveKeys } from '@proton/shared/lib/keys/getInactiveKeys';
 
 import { type AddressesState, addressesThunk } from '../addresses';

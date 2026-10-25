@@ -6,14 +6,15 @@ import { BYOE_CLAIM_PROTON_ADDRESS_SOURCE } from '@proton/activation/src/constan
 import useModalState from '@proton/components/components/modalTwo/useModalState';
 import AuthModal from '@proton/components/containers/password/AuthModal';
 import useErrorHandler from '@proton/components/hooks/useErrorHandler';
+import useLoading from '@proton/hooks/useLoading';
 import { TelemetryBringYourOwnEmailEvents, TelemetryMeasurementGroups } from '@proton/shared/lib/api/telemetry';
 import { queryCheckUsernameAvailability, queryUnlock } from '@proton/shared/lib/api/user';
 import { APPS, APPS_CONFIGURATION, BRAND_NAME, MAIL_APP_NAME } from '@proton/shared/lib/constants';
 import { getIsBYOEAddress } from '@proton/shared/lib/helpers/address';
 import { sendTelemetryReport } from '@proton/shared/lib/helpers/metrics';
-import type { Api } from '@proton/shared/lib/interfaces';
-import type { AddressGenerationPayload } from '@proton/shared/lib/keys';
-import { ClaimableAddressType } from '@proton/shared/lib/keys';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { AddressGenerationPayload } from '@proton/shared/lib/keys/setupAddress';
+import { ClaimableAddressType } from '@proton/shared/lib/keys/setupAddress';
 import noop from '@proton/utils/noop';
 
 import Content from '../public/Content';
@@ -40,6 +41,7 @@ const GenerateAddressStep = ({
 }: Props) => {
     const payloadRef = useRef<{ username: string; domain: string; address: string } | null>(null);
     const errorHandler = useErrorHandler();
+    const [loading, withLoading] = useLoading();
     const [step, setStep] = useState<0 | 1>(0);
     const payload = payloadRef.current;
     const [unlockModalProps, setUnlockModalOpen, renderUnlockModal] = useModalState();
@@ -90,6 +92,10 @@ const GenerateAddressStep = ({
         });
     };
 
+    const submit = (username: string, domain: string) => {
+        withLoading(handleSubmit(username, domain)).catch(noop);
+    };
+
     return (
         <>
             {renderUnlockModal && payload && (
@@ -134,13 +140,15 @@ const GenerateAddressStep = ({
                 </Text>
                 {!claimableAddress || step === 1 ? (
                     <GenerateAddressForm
-                        onSubmit={handleSubmit}
+                        onSubmit={submit}
+                        loading={loading}
                         defaultUsername={payload?.username}
                         availableDomains={availableDomains}
                     />
                 ) : (
                     <ClaimInternalAddressForm
-                        onSubmit={handleSubmit}
+                        onSubmit={submit}
+                        loading={loading}
                         domain={claimableAddress.domain}
                         username={claimableAddress.username}
                         onEdit={

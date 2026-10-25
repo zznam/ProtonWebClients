@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { Form, FormikProvider } from 'formik';
 import { c } from 'ttag';
 
-import { getUpgradeForAdminRolesText } from '@proton/account';
 import { getIsScimGroup } from '@proton/account/groups/groupFlags';
 import { useOrganization } from '@proton/account/organization/hooks';
+import { getUpgradeForAdminRolesText } from '@proton/account/organizationKey/actions';
 import { AdminRolesUIState, useAdminRolesUI } from '@proton/account/userPermissions/hooks';
 import { Button } from '@proton/atoms/Button/Button';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
@@ -18,7 +18,7 @@ import { IcUser } from '@proton/icons/icons/IcUser';
 import { KEY_FLAG } from '@proton/shared/lib/constants';
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
 import { stripWhitespace } from '@proton/shared/lib/helpers/string';
-import { GroupPermissions } from '@proton/shared/lib/interfaces';
+import { GroupPermissions } from '@proton/shared/lib/interfaces/Group';
 
 import InputFieldStacked from '../../../components/inputFieldStacked/InputFieldStacked';
 import InputFieldStackedGroup from '../../../components/inputFieldStacked/InputFieldStackedGroup';
@@ -27,7 +27,7 @@ import ModalTwoFooter from '../../../components/modalTwo/ModalFooter';
 import useModalState from '../../../components/modalTwo/useModalState';
 import Option from '../../../components/option/Option';
 import SelectTwo from '../../../components/selectTwo/SelectTwo';
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import TextAreaTwo from '../../../components/v2/input/TextArea';
 import ModalHeaderWithTabs from '../../members/rolesAndPermissions/ModalHeaderWithTabs';
 import RolesAndPermissionsTab from '../../members/rolesAndPermissions/RolesAndPermissionsTab';
@@ -250,7 +250,7 @@ const EditGroupModal = () => {
                                               selectedRoles={new Set(formValues.adminRoles)}
                                               onChange={(roles) => setFieldValue('adminRoles', Array.from(roles))}
                                               isGroupContext
-                                              disabled={adminRolesUIState !== AdminRolesUIState.Enabled}
+                                              disabled={loading || adminRolesUIState !== AdminRolesUIState.Enabled}
                                               banner={
                                                   adminRolesUIState === AdminRolesUIState.Disabled &&
                                                   !loadingAdminRolesUI

@@ -1,4 +1,5 @@
 import type { Config } from 'jest'
+import { getTransformIgnorePatterns } from '@proton/jest-swc-preset/transformIgnorePatterns.js'
 
 const { JEST_CACHE_DIRECTORY } = process.env
 
@@ -6,13 +7,10 @@ const jestConfig: Config = {
   ...(JEST_CACHE_DIRECTORY ? { cacheDirectory: JEST_CACHE_DIRECTORY } : {}),
   collectCoverage: process.env.COLLECT_COVERAGE === 'true',
   setupFilesAfterEnv: ['./jest.setup.js'],
-  moduleDirectories: ['<rootDir>/node_modules', 'node_modules'],
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!src/app/locales.ts'],
   testEnvironment: '@proton/jest-env',
   resolver: './jest.resolver.js',
-  transformIgnorePatterns: [
-    'node_modules/(?!(@proton/shared|@proton/components|@protontech/telemetry|@protontech/mutex-browser|@protontech/crypto|openpgp|@openpgp/web-stream-tools|@protontech/bip39|emoji-mart|@preact/signals-core|@scure/base|odf-kit)/|client-zip|uuid)',
-  ],
+  transformIgnorePatterns: getTransformIgnorePatterns(['odf-kit', 'client-zip', 'uuid']),
   transform: {
     '^.+\\.(m?js|tsx?)$': '<rootDir>/jest.transform.js',
   },

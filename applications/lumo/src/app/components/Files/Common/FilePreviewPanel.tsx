@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
 
@@ -314,6 +314,7 @@ export const FilePreviewPanel = ({ attachment: attachmentProp, onBack, onClose, 
                 <LazyProgressiveMarkdownRenderer
                     content={truncatedContent.content}
                     isStreaming={false}
+                    enableVegaCharts={false}
                     message={{
                         id: 'file-content',
                         content: truncatedContent.content,
@@ -331,6 +332,14 @@ export const FilePreviewPanel = ({ attachment: attachmentProp, onBack, onClose, 
             </div>
         );
     };
+
+    const characterCount = attachment.markdown?.length ?? 0;
+    // translator: File-preview status. ${characterCount} is the number of text characters processed.
+    const processedCharactersLabel = c('collider_2025: Info').ngettext(
+        msgid`${characterCount} character processed`,
+        `${characterCount} characters processed`,
+        characterCount
+    );
 
     return (
         <div className="flex flex-column h-full">
@@ -379,9 +388,7 @@ export const FilePreviewPanel = ({ attachment: attachmentProp, onBack, onClose, 
             {hasContent && !imageUrl && (
                 <div className="shrink-0 flex flex-row items-center justify-space-between px-3 py-2">
                     <span className="text-xs color-weak">
-                        {isCSVOrExcel
-                            ? c('collider_2025: Info').t`Table view`
-                            : `${attachment.markdown?.length ?? 0} ${c('collider_2025: Info').t`characters processed`}`}
+                        {isCSVOrExcel ? c('collider_2025: Info').t`Table view` : processedCharactersLabel}
                     </span>
                 </div>
             )}

@@ -3,21 +3,20 @@ import { Fragment, forwardRef } from 'react';
 
 import { c } from 'ttag';
 
-import { useOrganization } from '@proton/account/organization/hooks';
+import { unauthenticatedApps } from '@proton/account/availableApps/apps';
+import { useAvailableApps } from '@proton/account/availableApps/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useConfig } from '@proton/app-context/useConfig';
 import { IcAppSwitch } from '@proton/icons/icons/IcAppSwitch';
 import { TelemetryAppSwitcher, TelemetryMeasurementGroups } from '@proton/shared/lib/api/telemetry';
-import { getAvailableApps } from '@proton/shared/lib/apps/apps';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS, BRAND_NAME } from '@proton/shared/lib/constants';
-import { isElectronMail, isElectronOnInboxApps, isElectronOnMac } from '@proton/shared/lib/helpers/desktop';
+import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
 import { sendTelemetryReport } from '@proton/shared/lib/helpers/metrics';
 import { isPassUser } from '@proton/shared/lib/helpers/usedClientsFlags';
-import type { OrganizationExtended, UserModel } from '@proton/shared/lib/interfaces';
-import { useFlag } from '@proton/unleash/useFlag';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import SimpleDropdown from '../../components/dropdown/SimpleDropdown';
 import type { AppLinkProps } from '../../components/link/AppLink';
@@ -29,32 +28,28 @@ interface AppsDropdownProps {
     onDropdownClick?: () => void;
     app?: APP_NAMES;
     user?: UserModel;
-    organization?: OrganizationExtended;
     title?: string;
     reloadDocument?: AppLinkProps['reloadDocument'];
     onAppClick?: (appToLinkTo: APP_NAMES) => void;
 }
 
-const AppsDropdown = forwardRef<HTMLButtonElement, AppsDropdownProps>(
+type AppsDropdownListProps = AppsDropdownProps & { availableApps: APP_NAMES[] };
+
+const AppsDropdown = forwardRef<HTMLButtonElement, AppsDropdownListProps>(
     (
-        { onDropdownClick, app, user, organization, title, reloadDocument, onAppClick, ...rest }: AppsDropdownProps,
+        {
+            onDropdownClick,
+            app,
+            user,
+            title,
+            reloadDocument,
+            onAppClick,
+            availableApps,
+            ...rest
+        }: AppsDropdownListProps,
         ref: ForwardedRef<HTMLButtonElement>
     ) => {
         const { APP_NAME } = useConfig();
-        const isDocsHomepageAvailable = useFlag('DriveDocsLandingPageEnabled');
-        const isSheetsAvailable = useFlag('DocsSheetsEnabled');
-        const isAuthenticatorAvailable = useFlag('AuthenticatorSettingsEnabled');
-        const isSpacesAvailable = useFlag('SpacesAvailable');
-
-        const availableApps = getAvailableApps({
-            context: 'dropdown',
-            user,
-            organization,
-            isDocsHomepageAvailable,
-            isSheetsAvailable,
-            isAuthenticatorAvailable,
-            isSpacesAvailable,
-        });
 
         if (availableApps.length <= 1) {
             return null;
@@ -111,15 +106,20 @@ const AppsDropdown = forwardRef<HTMLButtonElement, AppsDropdownProps>(
 
 AppsDropdown.displayName = 'AppsDropdown';
 
-export const UnAuthenticatedAppsDropdown = AppsDropdown;
+export const UnAuthenticatedAppsDropdown = forwardRef<HTMLButtonElement, AppsDropdownProps>(
+    (props: AppsDropdownProps, ref: ForwardedRef<HTMLButtonElement>) => (
+        <AppsDropdown ref={ref} {...props} availableApps={unauthenticatedApps} />
+    )
+);
+
+UnAuthenticatedAppsDropdown.displayName = 'UnAuthenticatedAppsDropdown';
 
 const AuthenticatedAppsDropdown = forwardRef<HTMLButtonElement, AppsDropdownProps>(
     (props: AppsDropdownProps, ref: ForwardedRef<HTMLButtonElement>) => {
         const [user] = useUser();
-        const [organization] = useOrganization();
+        const availableApps = useAvailableApps();
         const { APP_NAME } = useConfig();
         const api = useApi();
-        const isInboxCustomAppSwitcher = useFlag('InboxDesktopWinLinNewAppSwitcher');
         const [userSettings] = useUserSettings();
 
         const handleAppClick = (toApp: APP_NAMES) => {
@@ -147,13 +147,13 @@ const AuthenticatedAppsDropdown = forwardRef<HTMLButtonElement, AppsDropdownProp
             } catch {}
         };
 
-        // The app swicher on Mail, Calendar and account desktop application is different
-        if (isElectronOnInboxApps(APP_NAME) && (isElectronOnMac || (isInboxCustomAppSwitcher && isElectronMail))) {
+        // The desktop Mail app (Mail, Calendar, Account) has its own app switcher
+        if (isElectronMail) {
             return <InboxDesktopAppSwitcher appToLinkTo={props.app} />;
         }
 
         return (
-            <AppsDropdown ref={ref} {...props} user={user} organization={organization} onAppClick={handleAppClick} />
+            <AppsDropdown ref={ref} {...props} user={user} availableApps={availableApps} onAppClick={handleAppClick} />
         );
     }
 );

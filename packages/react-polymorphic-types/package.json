@@ -16,12 +16,18 @@
         "empty.js"
     ],
     "scripts": {
-        "check-types": "tsc --checkers 1"
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet"
     },
     "devDependencies": {
-        "@types/react": "^18.3.31",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
+        "@proton/oxlint-config": "workspace:^",
+        "@types/node": "catalog:",
+        "@types/react": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:"
     },
     "peerDependencies": {
         "@types/react": ">=18.3.31"

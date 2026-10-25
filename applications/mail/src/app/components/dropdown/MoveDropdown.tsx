@@ -15,7 +15,7 @@ import FolderIcon from '@proton/components/containers/labels/FolderIcon';
 import type { LabelModel } from '@proton/components/containers/labels/modals/EditLabelModal';
 import EditLabelModal from '@proton/components/containers/labels/modals/EditLabelModal';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcArchiveBox } from '@proton/icons/icons/IcArchiveBox';
 import { IcFire } from '@proton/icons/icons/IcFire';
 import { IcFolder } from '@proton/icons/icons/IcFolder';
@@ -98,7 +98,7 @@ const MoveDropdown = ({
 
     const { list: treeview } = useMailFolderTreeView();
     const categoryIDs = useMailSelector(selectCategoryIDs);
-    const { shouldShowTabs, activeCategoriesTabs } = useCategoriesView();
+    const { canMoveToCategories, activeCategoriesTabs } = useCategoriesView();
     const { sendReportRecategorizeEmail } = useCategoriesTelemetry();
 
     /*
@@ -150,7 +150,7 @@ const MoveDropdown = ({
             ...getInboxCategoriesItems({
                 selectAll: selectAll || false,
                 canMoveToInbox,
-                shouldShowTabs,
+                canMoveToCategories,
                 activeCategoriesTabs,
             }),
             { ID: MAILBOX_LABEL_IDS.ARCHIVE, Name: c('Mailbox').t`Archive`, icon: IcArchiveBox },

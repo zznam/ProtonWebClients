@@ -119,9 +119,6 @@
       "Fit table to page width": [
         "讓表格符合頁面寬度"
       ],
-      "Go to label": [
-        "跳至標籤"
-      ],
       "Indent": [
         "增加縮排"
       ],
@@ -133,6 +130,9 @@
       ],
       "Insert comment": [
         "插入註解"
+      ],
+      "Insert emoji": [
+        "插入表情符號"
       ],
       "Insert image": [
         "插入圖片"
@@ -191,9 +191,6 @@
       "Refresh the page": [
         "重新整理此頁面"
       ],
-      "Remove": [
-        "移除"
-      ],
       "Remove link": [
         "移除連結"
       ],
@@ -221,9 +218,6 @@
       "Strike-through": [
         "刪除線"
       ],
-      "Submit": [
-        "送出"
-      ],
       "Subscript": [
         "下標"
       ],
@@ -241,143 +235,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "apple"
-      ],
-      "azureish white": [
-        "天藍白"
-      ],
       "black": [
         "黑色"
-      ],
-      "blanched almond": [
-        "杏仁黃"
-      ],
-      "blue-gray": [
-        "藍灰色"
-      ],
-      "caramel": [
-        "焦糖"
       ],
       "carrot": [
         "胡蘿蔔"
       ],
-      "cerise": [
-        "櫻桃"
-      ],
-      "cinnabar": [
-        "硃砂色"
-      ],
-      "cobalt": [
-        "鈷"
-      ],
-      "copper": [
-        "銅"
-      ],
-      "cyan-blue azure": [
-        "青藍色"
-      ],
-      "dandelion": [
-        "蒲公英"
-      ],
-      "dark cerulean": [
-        "深藍色"
-      ],
-      "dark midnight blue": [
-        "深午夜藍"
-      ],
-      "dim gray": [
-        "昏灰色"
-      ],
-      "enzian": [
-        "龍膽"
-      ],
-      "fern": [
-        "蕨類"
-      ],
-      "field drab": [
-        "黃褐色"
-      ],
-      "forest": [
-        "森林"
-      ],
-      "gainsboro": [
-        "庚斯博羅灰色"
-      ],
       "gray": [
         "灰色"
-      ],
-      "japanese laurel": [
-        "日本月桂綠"
-      ],
-      "kiwi": [
-        "奇異果綠"
-      ],
-      "lemon yellow": [
-        "檸檬黃"
-      ],
-      "light carmine pink": [
-        "淡胭脂紅"
-      ],
-      "light moss green": [
-        "淺苔綠色"
-      ],
-      "light red": [
-        "淡紅色"
-      ],
-      "maize": [
-        "玉米"
-      ],
-      "mughal green": [
-        "蒙兀兒綠"
-      ],
-      "ocean": [
-        "海洋"
       ],
       "olive": [
         "橄欖"
       ],
-      "outer space": [
-        "外太空"
-      ],
       "pacific": [
         "太平洋"
       ],
-      "palatinate blue": [
-        "帕拉蒂藍"
-      ],
-      "pale cerulean": [
-        "淡藍色"
-      ],
-      "pastel gray": [
-        "柔和灰"
-      ],
-      "persian plum": [
-        "波斯梅色"
-      ],
-      "persian red": [
-        "波斯紅"
-      ],
-      "philippine gray": [
-        "菲律賓灰色"
-      ],
-      "philippine silver": [
-        "菲律賓銀色"
-      ],
-      "pickle": [
-        "泡菜"
-      ],
-      "pine": [
-        "松樹"
-      ],
       "pink": [
         "粉紅色"
-      ],
-      "pistachio": [
-        "開心果綠"
-      ],
-      "plum": [
-        "梅子"
       ],
       "purple": [
         "紫色"
@@ -388,29 +262,8 @@
       "reef": [
         "礁石"
       ],
-      "ruddy pink": [
-        "紅潤的粉紅色"
-      ],
-      "sahara": [
-        "撒哈拉"
-      ],
-      "satin sheen gold": [
-        "緞面金"
-      ],
       "slateblue": [
         "板岩藍"
-      ],
-      "soil": [
-        "土壤"
-      ],
-      "strawberry": [
-        "草莓"
-      ],
-      "vivid auburn": [
-        "鮮豔的赤褐色"
-      ],
-      "white": [
-        "白色"
       ]
     },
     "Confirm": {
@@ -427,9 +280,6 @@
       ],
       "Read or print final document": [
         "閱讀或列印定稿文件"
-      ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "使用上方的下拉式功能表切換並開始提出建議。"
       ]
     },
     "Error": {
@@ -459,9 +309,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "此試算表與目前的使用端版本不相容。請嘗試重新載入使用端。如果錯誤仍然存在，請聯絡支援部門。"
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "嘗試將活頁表資料匯入至 Lexical 中"
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "無法轉換 Word 文件。其是否有密碼保護？如果是，請移除密碼並重試。"
@@ -536,9 +383,6 @@
       ],
       "Just now": [
         "剛剛"
-      ],
-      "Labels:": [
-        "標籤："
       ],
       "Loading": [
         "正在載入"
@@ -667,6 +511,9 @@
       ],
       "Page break": [
         "分頁符號"
+      ],
+      "Recent": [
+        "最近"
       ],
       "Replace": [
         "取代"
@@ -1663,9 +1510,6 @@
       "Bold": [
         "粗體"
       ],
-      "Border": [
-        "框線"
-      ],
       "Clear formatting": [
         "清除格式"
       ],
@@ -1680,9 +1524,6 @@
       ],
       "Default (${ defaultFont })": [
         "預設 (${ defaultFont })"
-      ],
-      "Fill color": [
-        "填色"
       ],
       "Find": [
         "尋找"
@@ -1746,9 +1587,6 @@
       ],
       "Strikethrough": [
         "刪除線"
-      ],
-      "Text color": [
-        "文字顏色"
       ],
       "Text wrapping": [
         "自動換行"
@@ -1848,23 +1686,8 @@
       "Cancel": [
         "取消"
       ],
-      "column": [
-        "欄"
-      ],
-      "column width": [
-        "列寬"
-      ],
-      "Default": [
-        "預設"
-      ],
       "OK": [
         "確定"
-      ],
-      "row": [
-        "列"
-      ],
-      "row height": [
-        "列高"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2310,9 +2133,6 @@
       ],
       "Delete thread": [
         "刪除討論串"
-      ],
-      "Explore the New Suggestion Mode": [
-        "探索新增建議模式"
       ],
       "Language not supported": [
         "不支援的語言"

@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { logger } from '@protontech/logger';
+
 import { isFirefox, isSafari } from '@proton/shared/lib/helpers/browser';
 
 import type { ToggleAudioType, ToggleVideoType } from '../../types';
@@ -52,8 +54,7 @@ export function usePiPMediaSession({
                 });
             }
         } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(error);
+            logger.error('Failed to set up the PiP media session', error);
         }
     };
 

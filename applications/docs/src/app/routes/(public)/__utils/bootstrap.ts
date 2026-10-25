@@ -1,21 +1,20 @@
 import * as bootstrap from '@proton/account/bootstrap'
 import createApi from '@proton/shared/lib/api/createApi'
-import type { ProtonConfig } from '@proton/shared/lib/interfaces'
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config'
 
 import { locales } from '~/utils/locales'
 import { extendStore, setupStore } from '~/redux-store/store'
 import { createBrowserHistory } from 'history'
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig'
-import { requestFork } from '@proton/shared/lib/authentication/fork'
+import { requestFork } from '@proton/shared/lib/authentication/fork/consume'
 import { APPS } from '@proton/shared/lib/constants'
 import { getLastUsedLocalID } from '@proton/account/bootstrap/lastUsedLocalID'
 import { readAccountSessions } from '@proton/account/accountSessions/storage'
 import { getLocalIDFromPathname } from '@proton/shared/lib/authentication/pathnameHelper'
-import { CacheService } from '@proton/docs-core/lib/Services/CacheService'
+import { CacheService } from '@proton/docs-core/Services/CacheService'
 import { getDecryptedPersistedState } from '@proton/account/persist/helper'
 import type { DocsState } from '~/redux-store/rootReducer'
-import { getLocalID as _getLocalID } from '@proton/drive-store/utils/url/localid'
-import OpenTracer from '@proton/docs-shared/lib/Tracer/Module'
+import OpenTracer from '@proton/docs-shared/Tracer/Module'
 
 function getLocalID(token: string | null) {
   if (token) {

@@ -4,7 +4,7 @@ import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { usePaymentsApi } from '@proton/payments-ui/react-extensions/usePaymentsApi';
 import { useVatPrefixSync } from '@proton/payments-ui/ui/billing-address/hooks/useVatPrefixSync';
 import type { FullBillingAddress } from '@proton/payments/core/billing-address/billing-address';
@@ -23,7 +23,7 @@ import ModalTwoContent from '../../../components/modalTwo/ModalContent';
 import ModalTwoFooter from '../../../components/modalTwo/ModalFooter';
 import ModalTwoHeader from '../../../components/modalTwo/ModalHeader';
 import type { ModalTwoPromiseHandlers } from '../../../components/modalTwo/useModalTwo';
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import useFormErrors from '../../../components/v2/useFormErrors';
 
 export type EditInvoiceModalInputs = {

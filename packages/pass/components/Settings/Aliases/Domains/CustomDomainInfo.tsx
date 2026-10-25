@@ -6,7 +6,7 @@ import { Button } from '@proton/atoms/Button/Button';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
 import { Href } from '@proton/atoms/Href/Href';
 import Toggle from '@proton/components/components/toggle/Toggle';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import clsx from '@proton/utils/clsx';
 
 import { SIMPLELOGIN_DOMAIN_SETTINGS_URL } from '../../../../constants';
@@ -17,8 +17,9 @@ import {
     updateCustomDomainDisplayName,
     updateCustomDomainMailboxes,
     updateRandomPrefix,
-} from '../../../../store/actions';
-import type { CustomDomainSettingsOutput, MaybeNull } from '../../../../types';
+} from '../../../../store/actions/creators/alias';
+import type { CustomDomainSettingsOutput } from '../../../../types/api/pass';
+import type { MaybeNull } from '../../../../types/utils';
 import { Card } from '../../../Layout/Card/Card';
 import { DomainMailboxesSelector } from '../Mailboxes/AliasMailboxesSelect';
 import { useCustomDomain } from './AliasDomainsContext';

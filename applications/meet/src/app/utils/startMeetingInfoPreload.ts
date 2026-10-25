@@ -1,7 +1,8 @@
 import { meetingInfoThunk } from '@proton/meet/store/slices/meetingInfoModel';
 import type { MeetDispatch } from '@proton/meet/store/store';
 
-import { getPublicToken, getUrlPassword } from '../hooks/srp/usePublicToken';
+import { getUrlMeetingLinkName, getUrlMeetingPassword } from '../hooks/srp/getUrlMeetingParams';
+import { trackMeetingInfoPreload } from '../telemetry/loadPerformance';
 
 /**
  * Kicks off the meeting info request for the meeting link in the current URL.
@@ -20,8 +21,8 @@ export const startMeetingInfoPreload = ({
     let meetingPassword = '';
 
     try {
-        meetingLinkName = getPublicToken();
-        meetingPassword = getUrlPassword();
+        meetingLinkName = getUrlMeetingLinkName();
+        meetingPassword = getUrlMeetingPassword();
     } catch {
         // Not a valid meeting link, nothing to preload.
         return;
@@ -32,5 +33,7 @@ export const startMeetingInfoPreload = ({
     }
 
     // Nothing awaits the thunk until the prejoin mounts.
-    void dispatch(meetingInfoThunk({ meetingLinkName, meetingPassword, cryptoReady })).catch(() => {});
+    const preload = dispatch(meetingInfoThunk({ meetingLinkName, meetingPassword, cryptoReady }));
+    trackMeetingInfoPreload(preload);
+    void preload.catch(() => {});
 };

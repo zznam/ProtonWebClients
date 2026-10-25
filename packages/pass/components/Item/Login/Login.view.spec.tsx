@@ -1,10 +1,10 @@
 import noop from '@proton/utils/noop';
 
 import { itemBuilder } from '../../../lib/items/item.builder';
-import { createTestItem } from '../../../lib/items/item.test.utils';
-import type { ShareItem } from '../../../store/reducers';
-import { ShareRole, ShareType } from '../../../types';
-import { uniqueId } from '../../../utils/string/unique-id';
+import { PassFeature } from '../../../types/api/features';
+import { ShareFlags, ShareRole } from '../../../types/data/shares';
+import { createTestItem, createTestLogin } from '../../../utils/tests/fixtures/items';
+import { createTestShare } from '../../../utils/tests/fixtures/shares';
 import { render } from '../../../utils/tests/render';
 import { LoginView } from './Login.view';
 
@@ -26,32 +26,8 @@ const itemActions = {
     handleToggleFlagsClick: noop,
 };
 
-jest.mock('webextension-polyfill', () => ({}));
-jest.mock('imask/esm/masked/range', () => ({}));
-
 describe('Login.view', () => {
-    const mockShareId = uniqueId();
-
-    const mockShare: ShareItem = {
-        addressId: uniqueId(),
-        content: '',
-        createTime: 0,
-        eventId: uniqueId(),
-        newUserInvitesReady: 0,
-        owner: true,
-        shared: false,
-        shareId: mockShareId,
-        shareRoleId: ShareRole.MANAGER,
-        targetId: uniqueId(),
-        targetMaxMembers: 1,
-        targetMembers: 1,
-        targetType: ShareType.Vault,
-        vaultId: uniqueId(),
-        canAutofill: true,
-        flags: 0,
-        permission: 0,
-        groupId: null,
-    };
+    const mockShare = createTestShare({ shareRoleId: ShareRole.MANAGER, owner: true, canAutofill: true });
 
     test('Happy path', async () => {
         const itemEmail = 'user@example.com';
@@ -67,5 +43,56 @@ describe('Login.view', () => {
 
         const { getByText } = render(<LoginView revision={login} share={mockShare} {...itemActions} />);
         expect(getByText(itemEmail)).toBeDefined();
+    });
+
+    test('hides the reveal control and shows the hint when the share hides sensitive content', () => {
+        const shareId = 'hidden-share';
+        const login = {
+            ...createTestLogin({ shareId, name: 'Test', password: 'hunter2' }),
+            optimistic: false,
+            failed: false,
+        };
+        const hiddenShare = createTestShare({
+            shareId,
+            shareRoleId: ShareRole.READ,
+            flags: ShareFlags.HIDE_SENSITIVE_CONTENT,
+        });
+
+        const { getByText, queryByTitle } = render(
+            <LoginView revision={login} share={hiddenShare} {...itemActions} />,
+            {
+                state: {
+                    shares: [hiddenShare],
+                    features: { [PassFeature.Pass__V1_44__ShareWithHiddenPassword]: true },
+                },
+            }
+        );
+
+        expect(queryByTitle('Show')).toBeNull();
+        expect(getByText('Password hidden. You can still autofill it.')).toBeDefined();
+    });
+
+    test('keeps the password revealable when the feature flag is off, even if the share hides sensitive content', () => {
+        const shareId = 'hidden-share-flag-off';
+        const login = {
+            ...createTestLogin({ shareId, name: 'Test', password: 'hunter2' }),
+            optimistic: false,
+            failed: false,
+        };
+        const hiddenShare = createTestShare({
+            shareId,
+            shareRoleId: ShareRole.READ,
+            flags: ShareFlags.HIDE_SENSITIVE_CONTENT,
+        });
+
+        const { getByTitle, queryByText } = render(
+            <LoginView revision={login} share={hiddenShare} {...itemActions} />,
+            {
+                state: { shares: [hiddenShare] },
+            }
+        );
+
+        expect(getByTitle('Show')).toBeDefined();
+        expect(queryByText('Password hidden. You can still autofill it.')).toBeNull();
     });
 });

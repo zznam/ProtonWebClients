@@ -1,6 +1,9 @@
 import { type PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit';
 
+import { HARD_LIMIT_EXCEEDED_CODE } from '../../../constants/limits';
 import type { ActionParams, ConversationId, LUMO_API_ERRORS, LUMO_USER_TYPE, SpaceId } from '../../../types';
+import { deleteConversation } from '../core/conversations';
+import { deleteAllSpacesSuccess } from '../core/spaces';
 
 // Base error interface for consistent error structure
 interface BaseError {
@@ -32,6 +35,29 @@ export interface ResourceLimitError {
     conversationId?: ConversationId;
     spaceId?: SpaceId;
     serverMessage?: string;
+    /** `Code` from the backend response body. */
+    code?: number;
+    timestamp: number;
+}
+
+/**
+ * Whether a limit error means the conversation is full, as opposed to any other 422 on the
+ * messages endpoint. Only this one locks the conversation.
+ */
+export const isConversationMessageLimitError = (
+    error: Pick<ResourceLimitError, 'resource' | 'conversationId' | 'code'>
+): error is Pick<ResourceLimitError, 'resource' | 'code'> & { conversationId: ConversationId } =>
+    error.resource === 'messages' && !!error.conversationId && error.code === HARD_LIMIT_EXCEEDED_CODE;
+
+/**
+ * Raised when the master key could not be recovered from any existing envelope (typically a
+ * password reset without a data-recovery method, which permanently destroys the old keys) and a
+ * fresh master key was minted so the app stays usable. Surfaced once as a dismissible toast —
+ * unlike `MasterKeyBanner`, which blocks on a genuine, ongoing failure, this is informational: the
+ * user is back up and running, but their pre-reset data is unrecoverable.
+ */
+interface DataLossWarning {
+    id: string;
     timestamp: number;
 }
 
@@ -48,6 +74,14 @@ interface ErrorState {
     conversationErrors: Record<ConversationId, ConversationError[]>;
     tierErrors: TierError[];
     resourceLimitErrors: ResourceLimitError[];
+    /**
+     * Conversations the server refused new messages for. Unlike `resourceLimitErrors` (toasts that
+     * are dismissed once shown), this sticks so the composer stays locked even when the local message
+     * count is below the limit. Persisted to `LocalFlagsDb` by the `messageLimit` saga, and dropped
+     * when the conversation is deleted.
+     */
+    messageLimitReachedConversations: Record<ConversationId, true>;
+    dataLossWarnings: DataLossWarning[];
     // Dev-only: lets the Debug View force the resource-limit banner state.
     debugLimitOverrides: Record<ResourceLimitType, DebugLimitOverrideState>;
 }
@@ -56,6 +90,8 @@ const initialState: ErrorState = {
     conversationErrors: {},
     tierErrors: [],
     resourceLimitErrors: [],
+    messageLimitReachedConversations: {},
+    dataLossWarnings: [],
     debugLimitOverrides: {
         messages: { override: null },
         assets: { override: null },
@@ -112,10 +148,10 @@ const errorsSlice = createSlice({
             state.tierErrors = [];
         },
 
-        addResourceLimitError: (
-            state,
-            action: PayloadAction<Omit<ResourceLimitError, 'id' | 'timestamp'>>
-        ) => {
+        addResourceLimitError: (state, action: PayloadAction<Omit<ResourceLimitError, 'id' | 'timestamp'>>) => {
+            if (isConversationMessageLimitError(action.payload)) {
+                state.messageLimitReachedConversations[action.payload.conversationId] = true;
+            }
             // Deduplicate: if there's already a recent error for this resource, don't pile them up.
             const now = Date.now();
             const existing = state.resourceLimitErrors.find(
@@ -135,6 +171,27 @@ const errorsSlice = createSlice({
 
         dismissResourceLimitError: (state, action: PayloadAction<string>) => {
             state.resourceLimitErrors = state.resourceLimitErrors.filter((e) => e.id !== action.payload);
+        },
+
+        hydrateMessageLimitReached: (state, action: PayloadAction<ConversationId[]>) => {
+            for (const conversationId of action.payload) {
+                state.messageLimitReachedConversations[conversationId] = true;
+            }
+        },
+
+        clearMessageLimitReached: (state, action: PayloadAction<ConversationId>) => {
+            delete state.messageLimitReachedConversations[action.payload];
+        },
+
+        addDataLossWarning: (state) => {
+            state.dataLossWarnings.push({
+                id: crypto.randomUUID(),
+                timestamp: Date.now(),
+            });
+        },
+
+        dismissDataLossWarning: (state, action: PayloadAction<string>) => {
+            state.dataLossWarnings = state.dataLossWarnings.filter((w) => w.id !== action.payload);
         },
 
         setDebugLimitOverride: (
@@ -162,6 +219,15 @@ const errorsSlice = createSlice({
             };
         },
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(deleteConversation, (state, action) => {
+                delete state.messageLimitReachedConversations[action.payload];
+            })
+            .addCase(deleteAllSpacesSuccess, (state) => {
+                state.messageLimitReachedConversations = {};
+            });
+    },
 });
 
 export const {
@@ -172,6 +238,10 @@ export const {
     clearTierErrors,
     addResourceLimitError,
     dismissResourceLimitError,
+    hydrateMessageLimitReached,
+    clearMessageLimitReached,
+    addDataLossWarning,
+    dismissDataLossWarning,
     setDebugLimitOverride,
     clearAllDebugLimitOverrides,
 } = errorsSlice.actions;
@@ -194,6 +264,16 @@ export const selectHasTierErrors = createSelector(
 export const selectResourceLimitErrors = createSelector(
     [selectErrorsState],
     (errorsState) => errorsState.resourceLimitErrors
+);
+
+export const selectIsMessageLimitReached =
+    (conversationId: ConversationId | null | undefined) =>
+    (state: { errors: ErrorState }): boolean =>
+        Boolean(conversationId && state.errors.messageLimitReachedConversations[conversationId]);
+
+export const selectDataLossWarnings = createSelector(
+    [selectErrorsState],
+    (errorsState) => errorsState.dataLossWarnings
 );
 
 export const selectDebugLimitOverride =

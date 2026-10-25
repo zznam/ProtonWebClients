@@ -1,22 +1,22 @@
 import useAuthentication from '@proton/components/hooks/useAuthentication'
 import { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal'
 import { useNotifications } from '@proton/app-context/useNotifications'
-import type { RecentDocumentsItem } from '@proton/docs-core'
+import type { RecentDocumentsItem } from '@proton/docs-core/Services/recent-documents'
 import { TelemetryDocsHomepageEvents } from '@proton/shared/lib/api/telemetry'
 import { getAppHref } from '@proton/shared/lib/apps/helper'
 import { APPS } from '@proton/shared/lib/constants'
 import { type ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { useApplication } from '~/utils/application-context'
-import { useMoveModalDriveSdkEnabled, useRenameWithSDK, useTrashWithSDK } from '~/utils/flags'
+import { useMoveModalDriveSdkEnabled, useTrashWithSDK } from '~/utils/flags'
 import { constructDriveFolderUrl } from '~/utils/open-drive-folder'
 import { useEvent } from '~/utils/misc'
-import { getDrive, generateNodeUid } from '@proton/drive'
+import { getDrive, generateNodeUid } from '@proton/drive/sdk'
 import { useSharingModal } from '@proton/drive/public/sharingModal'
 import { useMoveItemsModal } from '@proton/drive/public/moveItemsModal'
 import { c } from 'ttag'
-import { deleteDocument, reportTrashError } from '@proton/docs-core/lib/DriveSDK/trash'
+import { deleteDocument, reportTrashError } from '@proton/docs-core/DriveSDK/trash'
 import { trashAndNotify, restoreAndNotify, handleRestoreError } from '~/drive-sdk/trash-restore-notify'
-import { SentryRealtimeInitiatives, traceError } from '@proton/shared/lib/helpers/sentry'
+import { traceErrorSDK } from '@proton/docs-core/DriveSDK/traceErrorSDK'
 
 export type DocumentActionsContextValue = {
   open: (document: RecentDocumentsItem, type?: 'normal' | 'trash') => void
@@ -64,7 +64,6 @@ export function DocumentActionsProvider({ children }: DocumentActionsProviderPro
 
   const drive = getDrive()
   const moveModalDriveSdkEnabled = useMoveModalDriveSdkEnabled()
-  const renameWithSDK = useRenameWithSDK()
   const trashWithSDK = useTrashWithSDK()
 
   const { showSharingModal, sharingModal } = useSharingModal()
@@ -116,24 +115,15 @@ export function DocumentActionsProvider({ children }: DocumentActionsProviderPro
   const rename = useEvent(async (document: RecentDocumentsItem, newName: string) => {
     setRenameSaving(true)
     try {
-      if (renameWithSDK) {
-        try {
-          await drive.renameNode(generateNodeUid(document.volumeId, document.linkId), newName)
-          const successNotificationText = c('Notification').jt`"${newName}" renamed successfully`
-          createNotification({
-            text: <span className="text-pre-wrap">{successNotificationText}</span>,
-          })
-        } catch (error) {
-          traceError(error, {
-            tags: {
-              initiative: SentryRealtimeInitiatives.SDK_SWITCH,
-              feature: 'DocsRenameWithDriveSDK',
-            },
-          })
-          throw error
-        }
-      } else {
-        await driveCompat.renameDocument(document, newName)
+      try {
+        await drive.renameNode(generateNodeUid(document.volumeId, document.linkId), newName)
+        const successNotificationText = c('Notification').jt`"${newName}" renamed successfully`
+        createNotification({
+          text: <span className="text-pre-wrap">{successNotificationText}</span>,
+        })
+      } catch (error) {
+        traceErrorSDK(error, 'DocsRenameWithDriveSDK')
+        throw error
       }
     } finally {
       cancelRename(true)

@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useConfig } from '@proton/app-context/useConfig';
@@ -12,7 +13,7 @@ import { getTrialInfoForSingleSubscription } from '@proton/payments/core/trials'
 import { getAppFromPathnameSafe } from '@proton/shared/lib/apps/slugHelper';
 import { APPS, BRAND_NAME } from '@proton/shared/lib/constants';
 import { maxLengthValidator, minLengthValidator, requiredValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import clsx from '@proton/utils/clsx';
 import isTruthy from '@proton/utils/isTruthy';
 import shuffle from '@proton/utils/shuffle';
@@ -23,7 +24,7 @@ import ModalHeader from '../../../../components/modalTwo/ModalHeader';
 import type { ModalTwoPromiseHandlers } from '../../../../components/modalTwo/useModalTwo';
 import Option from '../../../../components/option/Option';
 import SelectTwo from '../../../../components/selectTwo/SelectTwo';
-import InputFieldTwo from '../../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../../components/v2/field/InputField';
 import TextAreaTwo from '../../../../components/v2/input/TextArea';
 import useFormErrors from '../../../../components/v2/useFormErrors';
 import { getCharacterCountText } from '../../../../helpers/getCharacterCountText';
@@ -78,7 +79,8 @@ const InputLimit = ({ maxLength, value }: { maxLength: number; value: string }) 
 const FeedbackDowngradeContent = ({ onResolve, onClose, user }: FeedbackDowngradeContentProps) => {
     const [subscription] = useSubscription();
     const [organization] = useOrganization();
-    const { isB2BTrial } = getTrialInfoForSingleSubscription(subscription);
+    const [entitlementCatalog] = useEntitlementCatalog();
+    const { isB2BTrial } = getTrialInfoForSingleSubscription(entitlementCatalog, subscription);
     const { APP_NAME } = useConfig();
     const { hasB2CAccess, hasB2BAccess } = useFeedbackFirstEligibility();
     const isEligibleForFeedbackFirst = hasB2CAccess || hasB2BAccess;

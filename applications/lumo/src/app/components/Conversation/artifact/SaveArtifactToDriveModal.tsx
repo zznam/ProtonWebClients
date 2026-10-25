@@ -5,14 +5,18 @@ import { c } from 'ttag';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { ButtonLikeSizeEnum } from '@proton/atoms/Button/ButtonLike';
-import type { ModalStateProps } from '@proton/components';
-import { ModalTwo, ModalTwoContent, ModalTwoFooter, ModalTwoHeader } from '@proton/components';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
 import { IcBrandProtonDriveFilled } from '@proton/icons/icons/IcBrandProtonDriveFilled';
 import { DRIVE_SHORT_APP_NAME } from '@proton/shared/lib/constants';
 import noop from '@proton/utils/noop';
 
 import { useDriveSDK } from '../../../hooks/useDriveSDK';
 import { createThrottledProgressCallback } from '../../../util/export/exportUiHelpers';
+import { sendArtifactSaveToDriveCompletedEvent } from '../../../util/telemetry';
 import { DriveBrowser } from '../../Files';
 import type { BreadcrumbItem } from '../../Files/DriveBrowser/DriveBreadcrumbs';
 import { LumoIcon } from '../../LumoIcon/LumoIcon';
@@ -88,6 +92,11 @@ const SaveArtifactToDriveModal = ({ artifact, format, ...modalProps }: SaveArtif
                 );
             });
 
+            sendArtifactSaveToDriveCompletedEvent({
+                format,
+                artifactType: artifact.type,
+                result: 'success',
+            });
             createNotification({
                 text: c('collider_2025:Success').t`Saved to ${DRIVE_SHORT_APP_NAME}`,
                 type: 'success',
@@ -96,6 +105,11 @@ const SaveArtifactToDriveModal = ({ artifact, format, ...modalProps }: SaveArtif
             modalProps.onClose?.();
         } catch (error) {
             console.error('Failed to save artifact to Drive:', error);
+            sendArtifactSaveToDriveCompletedEvent({
+                format,
+                artifactType: artifact.type,
+                result: 'error',
+            });
             createNotification({
                 text: error instanceof Error ? error.message : c('collider_2025:Error').t`Failed to save file`,
                 type: 'error',

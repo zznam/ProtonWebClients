@@ -109,6 +109,24 @@ export const canUseNewModel = (): boolean => {
     return true;
 };
 
+export const canUsePreviewModel = (): boolean => {
+    const appInfo = getNativeAppInfo();
+    if (appInfo) {
+        let targetVersion: string | null = null;
+        const { version, platform } = appInfo;
+
+        if (platform === 'ios') {
+            targetVersion = '2.2.0';
+        } else if (platform === 'android') {
+            targetVersion = '2.2.0';
+        }
+
+        return targetVersion !== null && !isNativeVersionOlderThan(version, targetVersion);
+    }
+
+    return true;
+};
+
 /**
  * Returns true if the native app understands `State.sidebar` and can lay its composer out
  * around the sidebar. Older clients would render a full-width composer over an expanded
@@ -169,7 +187,10 @@ export const getNativeAppInfo = (): {
 
     let platform: 'ios' | 'android' | 'unknown';
 
-    if (userAgent.includes('iOS/') || userAgent.includes('iPadOS')) {
+    // Matches both UA generations: `(iOS/18.0; iPhone)` up to 2.1.0 and `(iOS 18.0; Apple
+    // iPhone17,1)` from the shared-builder UA onwards. 'iPadOS' does not contain the substring
+    // 'iOS', hence its own check; Android device segments never contain either.
+    if (userAgent.includes('iOS') || userAgent.includes('iPadOS')) {
         platform = 'ios';
     } else if (userAgent.includes('Android')) {
         platform = 'android';

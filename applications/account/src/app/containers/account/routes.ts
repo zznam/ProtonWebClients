@@ -1,6 +1,7 @@
 import { c } from 'ttag';
 
-import type { ThemeColor } from '@proton/colors';
+import { getCanShowSignInRestriction } from '@proton/account/signInRestriction/helpers';
+import type { ThemeColor } from '@proton/colors/types';
 import { SettingsLayoutVariant } from '@proton/components/containers/layout/interface';
 import type { SectionConfig, SubrouteGroup } from '@proton/components/containers/layout/interface';
 import { IcArrowDownToSquare } from '@proton/icons/icons/IcArrowDownToSquare';
@@ -18,7 +19,6 @@ import { IcUser } from '@proton/icons/icons/IcUser';
 import { getIsConsumerPassPlan } from '@proton/payments/core/plan/helpers';
 import {
     type MaybeFreeSubscription,
-    getHasExternalMemberCapableB2BPlan,
     getHasVpnB2BPlan,
     hasCancellablePlan,
     hasLumo,
@@ -36,13 +36,13 @@ import {
 } from '@proton/shared/lib/constants';
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
 import { hasNoOrgPermissions } from '@proton/shared/lib/helpers/orgPermissions';
-import { UserType } from '@proton/shared/lib/interfaces';
+import { UserType } from '@proton/shared/lib/interfaces/User';
 import {
     getIsBYOEAccount,
     getIsExternalAccount,
     getIsGlobalSSOAccount,
     getIsSSOVPNOnlyAccount,
-} from '@proton/shared/lib/keys';
+} from '@proton/shared/lib/keys/accountType';
 import { getOrganizationDenomination, isOrganizationVisionary } from '@proton/shared/lib/organization/helper';
 import { isSubscriptionRenewEnabled } from '@proton/shared/lib/payments/subscription/helpers/renew';
 import { getHasStorageSplit } from '@proton/shared/lib/user/storage';
@@ -129,8 +129,7 @@ function getV1DashboardSections(
     isMember: boolean,
     cancellablePlan: boolean,
     subscription: MaybeFreeSubscription,
-    cancellableOnlyViaSupport: boolean,
-    hasExternalMemberCapableB2BPlan: boolean
+    cancellableOnlyViaSupport: boolean
 ) {
     return [
         // do not show Your Plan section for Pass users
@@ -238,17 +237,6 @@ function getV1DashboardSections(
                 c('Action').t`Contact us`,
                 c('account_search_index').t`Cancel plan`,
                 c('account_search_index').t`Customer support`,
-            ],
-        },
-        {
-            text: c('Title').t`Cancel subscription`,
-            id: 'downgrade-account',
-            available:
-                isPaid && canPay && !cancellablePlan && !hasExternalMemberCapableB2BPlan && !cancellableOnlyViaSupport,
-            keywords: [
-                c('account_search_index').t`Downgrade plan`,
-                c('account_search_index').t`Downgrade to Free`,
-                c('account_search_index').t`Cancel plan`,
             ],
         },
     ];
@@ -427,6 +415,7 @@ export const getRecoverySettings = ({
 export const getAccountAppRoutes = ({
     app,
     user,
+    addresses,
     subscription,
     organization,
     recoveryNotification,
@@ -457,15 +446,12 @@ export const getAccountAppRoutes = ({
         isPassConsumerOrPassFamilyOrg ||
         (isFree && app === APPS.PROTONPASS) ||
         (isFree && app === APPS.PROTONLUMO) ||
-        (isFree && app === APPS.PROTONAUTHENTICATOR) ||
         (isFree && app === APPS.PROTONMEET)
     );
 
     //Used to determine if a user is on a visionary plan (works for both old and new visionary plans)
     const isVisionaryPlan = !!organization && isOrganizationVisionary(organization);
     const isMemberProton = Type === UserType.PROTON;
-
-    const hasExternalMemberCapableB2BPlan = getHasExternalMemberCapableB2BPlan(subscription);
 
     const cancellablePlan = hasCancellablePlan(subscription);
     const cancellableOnlyViaSupport = isCancellableOnlyViaSupport(subscription);
@@ -483,7 +469,6 @@ export const getAccountAppRoutes = ({
         (!isExternalUser || isBYOEUser) &&
         !(
             app === APPS.PROTONPASS ||
-            app === APPS.PROTONAUTHENTICATOR ||
             app === APPS.PROTONMEET ||
             app === APPS.PROTONACCOUNT ||
             app === APPS.PROTONLUMO
@@ -615,8 +600,7 @@ export const getAccountAppRoutes = ({
                           isMember,
                           cancellablePlan,
                           subscription,
-                          cancellableOnlyViaSupport,
-                          hasExternalMemberCapableB2BPlan
+                          cancellableOnlyViaSupport
                       ),
             },
             subscription: {
@@ -640,7 +624,6 @@ export const getAccountAppRoutes = ({
                     {
                         id: 'assistant-toggle',
                         available: !assistantKillSwitch,
-                        variant: SettingsLayoutVariant.Card,
                         keywords: [
                             c('Info').t`${BRAND_NAME} Scribe writing assistant`,
                             c('account_search_index').t`Writing assistant`,
@@ -733,22 +716,6 @@ export const getAccountAppRoutes = ({
                             c('Action').t`Contact us`,
                             c('account_search_index').t`Cancel plan`,
                             c('account_search_index').t`Customer support`,
-                        ],
-                    },
-                    {
-                        text: c('Title').t`Cancel subscription`,
-                        id: 'downgrade-account',
-                        available:
-                            isPaid &&
-                            canPay &&
-                            !cancellablePlan &&
-                            !hasExternalMemberCapableB2BPlan &&
-                            !cancellableOnlyViaSupport,
-                        variant: SettingsLayoutVariant.Card,
-                        keywords: [
-                            c('account_search_index').t`Downgrade plan`,
-                            c('account_search_index').t`Downgrade to Free`,
-                            c('account_search_index').t`Cancel plan`,
                         ],
                     },
                 ],
@@ -976,6 +943,18 @@ export const getAccountAppRoutes = ({
                         variant: SettingsLayoutVariant.Card,
                     },
                     {
+                        text: c('Title').t`Sign-in protection`,
+                        id: 'sign-in-protection',
+                        available:
+                            flags.showSignInRestrictionToggle && getCanShowSignInRestriction({ user, addresses }),
+                        keywords: [
+                            c('Label').t`Restrict sign-in to primary email address`,
+                            c('Label').t`Restrict sign-in to username`,
+                            c('Label').t`Restrict sign-in to email address`,
+                        ],
+                        variant: SettingsLayoutVariant.Card,
+                    },
+                    {
                         text: c('sso').t`Devices management`,
                         id: 'devices',
                         available: getIsGlobalSSOAccount(user),
@@ -1060,7 +1039,7 @@ export const getAccountAppRoutes = ({
                 text: c('Title').t`Import via ${PRODUCT_NAMES.EASY_SWITCH}`,
                 description:
                     app === APPS.PROTONDRIVE && flags.isDriveEasySwitchNewUIEnabled
-                        ? c('Description').t`Bring over your files from another provider.`
+                        ? c('Description').t`Bring over your files and folders from another provider.`
                         : c('Description')
                               .t`Bring over your email, calendar events, and contacts from another provider.`,
                 to: '/easy-switch',

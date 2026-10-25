@@ -1,19 +1,23 @@
 import { type ReactNode, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useWelcomeFlags } from '@proton/account';
+import { logger } from '@protontech/logger';
+
 import { useAddresses } from '@proton/account/addresses/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useGetUserKeys } from '@proton/account/userKeys/hooks';
+import { useWelcomeFlags } from '@proton/account/welcomeFlags';
 import { useApi } from '@proton/app-context/useApi';
 import { useSubscribeEventManager } from '@proton/components/hooks/useHandler';
 import { useLocalStateSync } from '@proton/components/hooks/useLocalStateSync';
-import { getIndexKey, setESLogger } from '@proton/encrypted-search/esHelpers';
-import { contentIndexingProgress, hasESDB, wrappedGetOldestInfo } from '@proton/encrypted-search/esIDB';
-import type { NormalizedSearchParams } from '@proton/encrypted-search/models';
+import { getIndexKey } from '@proton/encrypted-search/esHelpers/esBuild';
+import { setESLogger } from '@proton/encrypted-search/esHelpers/esLogger';
+import { hasESDB } from '@proton/encrypted-search/esIDB/indexedDB';
+import { contentIndexingProgress } from '@proton/encrypted-search/esIDB/indexingProgress';
+import { wrappedGetOldestInfo } from '@proton/encrypted-search/esIDB/metadata';
+import type { NormalizedSearchParams } from '@proton/encrypted-search/models/mail';
 import { useEncryptedSearch } from '@proton/encrypted-search/useEncryptedSearch';
 import { useIndexedDBSupport } from '@proton/encrypted-search/useIndexedDBSupport';
-import { logger } from '@proton/logger';
 import { useGetMessageCounts } from '@proton/mail/store/counts/messageCountsSlice';
 import { SECOND } from '@proton/shared/lib/constants';
 import { isESEnabledUserChoiceInboxDesktop } from '@proton/shared/lib/desktop/encryptedSearch';
@@ -45,7 +49,7 @@ import { useMailSelector } from '../store/hooks';
 import { extendStore } from '../store/store';
 
 // Encrypted search has no logging implementation of its own (see esLogger.ts) - mail is the one
-// that knows about @proton/logger, so this is where that link is made explicit.
+// that knows about @protontech/logger, so this is where that link is made explicit.
 setESLogger(logger);
 
 const EncryptedSearchContext = createContext<EncryptedSearchFunctionsMail>(defaultESContextMail);
@@ -106,6 +110,7 @@ const EncryptedSearchProvider = ({ children }: Props) => {
         refreshMask: EVENT_ERRORS.MAIL,
         esCallbacks,
         // `MetricService` already reports these for v2 — only report v1's own numbers when it's the active engine.
+        onSearchStarted: isV2Active ? undefined : () => metricService.current?.searchStarted(),
         onSearchCompleted: isV2Active ? undefined : (params) => metricService.current?.searchCompleted(params),
         onIndexCompleted: isV2Active ? undefined : (params) => metricService.current?.mailboxIndexCompleted(params),
         onIndexingStarted: isV2Active ? undefined : () => metricService.current?.startIndexing(),

@@ -1,0 +1,16 @@
+.open-in-desktop-app-hint {
+	inset-block-start: 100%;
+	z-index: 1;
+	background: var(--background-card);
+	border: 1px solid var(--border-card);
+	border-radius: var(--border-radius-xxl);
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset-block-end: 100%;
+		inset-inline-start: calc(50% - 0.5rem);
+		border-inline: 0.5rem solid transparent;
+		border-block-end: 0.5rem solid var(--border-card);
+	}
+}

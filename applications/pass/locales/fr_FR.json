@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } pour Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } pour iOS"
-      ],
       "Accept": [
         "Accepter"
       ],
@@ -327,6 +321,15 @@
       ],
       "Don't show this again": [
         "Ne plus afficher"
+      ],
+      "Download for Linux": [
+        "Télécharger la version pour Linux"
+      ],
+      "Download for macOS": [
+        "Télécharger pour macOS"
+      ],
+      "Download for Windows": [
+        "Télécharger pour Windows"
       ],
       "Download this CSV template": [
         "Télécharger ce modèle CSV"
@@ -688,6 +691,12 @@
       "Show Less": [
         "Afficher moins"
       ],
+      "Show less": [
+        "Afficher moins"
+      ],
+      "Show more": [
+        "Afficher plus"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Se connecter avec ${ BRAND_NAME }"
       ],
@@ -823,8 +832,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Application de bureau ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Application de bureau ${ appName }"
       ]
     },
     "Button": {
@@ -998,6 +1007,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "L'authentification n'a pas abouti. Confirmez votre second mot de passe pour continuer l'exportation."
       ],
+      "Biometric authentication cancelled.": [
+        "L'Authentification biométrique a été annulée."
+      ],
       "Biometric authentication failed.": [
         "L'authentification biométrique n'a pas abouti."
       ],
@@ -1078,6 +1090,9 @@
       "Editing item failed": [
         "La modification de l'élément n'a pas abouti."
       ],
+      "Email is not valid": [
+        "L'adresse e-mail n'est pas valide."
+      ],
       "Empty CSV file": [
         "Le fichier CSV est vide."
       ],
@@ -1089,6 +1104,9 @@
       ],
       "Encrypted JSON not supported": [
         "Le JSON chiffré n'est pas pris en charge."
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Saisissez votre nom d'utilisateur sans le domaine (@example.com)"
       ],
       "Error reporting problem": [
         "Une erreur s'est produite pendant le signalement du bug."
@@ -1280,6 +1298,9 @@
       "Incorrect backup password. Please try again.": [
         "Le mot de passe de secours n'est pas correct. Veuillez réessayer."
       ],
+      "Incorrect password. Please try again.": [
+        "Le mot de passe n'est pas correct. Réessayez."
+      ],
       "Incorrect second password. Please try again.": [
         "Le second mot de passe n'est pas correct. Veuillez réessayer."
       ],
@@ -1313,8 +1334,14 @@
       "Network error": [
         "Erreur de réseau "
       ],
+      "Not a valid number": [
+        "Le numéro n'est pas valide."
+      ],
       "Passphrase is incorrect": [
         "La phrase secrète n'est pas correcte."
+      ],
+      "Passwords do not match": [
+        "Les mots de passe ne correspondent pas."
       ],
       "PIN codes do not match": [
         "Les codes PIN ne correspondent pas."
@@ -1379,11 +1406,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "L'application de bureau ${ PASS_APP_NAME } devrait être connectée."
       ],
+      "The email addresses do not match": [
+        "Les adresses e-mail ne correspondent pas."
+      ],
       "The session has expired. Please sign in again.": [
         "La session a expiré. Nous vous invitons à vous reconnecter."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Une erreur s'est produite lors du retrait du lien sécurisé. Nous vous invitons à réessayer dans quelques minutes."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Ce champ dépasse le maximum de ${ maximumLength } caractères."
+      ],
+      "This field is required": [
+        "Ce champ est nécessaire."
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Ce champ nécessite un minimum de ${ minimumLength } caractères."
       ],
       "This invite is no longer available": [
         "Cette invitation n'est plus disponible"
@@ -1396,6 +1435,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Essayez de contacter le propriétaire du lien."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Essayez d'utiliser uniquement des lettres, des chiffres et ces signes : _ . -"
       ],
       "Unable to generate an OTP code for this item": [
         "Impossible de générer un mot de passe à usage unique (code OTP) pour cet élément."
@@ -1430,6 +1472,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "La mise à jour du coffre-fort « ${ payload.content.name } » n'a pas abouti."
       ],
+      "Username must begin with a letter or digit": [
+        "Le nom d'utilisateur doit commencer par une lettre ou un chiffre."
+      ],
+      "Username must end with a letter or digit": [
+        "Le nom d'utilisateur doit se terminer par une lettre ou un chiffre."
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "La création du coffre-fort « ${ payload.content.name } » n'a pas abouti."
       ],
@@ -1453,6 +1501,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Le code PIN n'est pas correct. Veuillez réessayer."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "La phrase de récupération n'est pas correcte. Réessayez ou utilisez une autre méthode de récupération."
       ],
       "Wrong second password": [
         "Le second mot de passe du compte n'est pas correct."
@@ -1801,9 +1852,6 @@
       "Can view this item.": [
         "Peut afficher cet élément."
       ],
-      "Change your password": [
-        "Modifier votre mot de passe"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Vérification de ${ compromised.progress.completed } mots de passe sur ${ compromised.progress.total }"
       ],
@@ -1890,9 +1938,6 @@
       ],
       "Editor": [
         "Éditeur"
-      ],
-      "email": [
-        "e-mail"
       ],
       "Email address successfully deleted from monitoring": [
         "L'adresse e-mail a été supprimée de la surveillance."
@@ -1989,9 +2034,6 @@
       ],
       "Fill in the CSV with your data": [
         "Remplir le fichier CSV avec vos données"
-      ],
-      "finance": [
-        "finance"
       ],
       "Finish signing in in the browser window that just opened. ${ PASS_APP_NAME } will pick up automatically once you're done.": [
         "Terminez la connexion dans la fenêtre du navigateur qui vient de s'ouvrir. ${ PASS_APP_NAME } reprendra automatiquement une fois que vous aurez terminé."
@@ -2161,9 +2203,6 @@
       "Medium Priority": [
         "Priorité moyenne"
       ],
-      "Monitor accounts": [
-        "Surveiller les comptes"
-      ],
       "Monitoring settings successfully updated": [
         "Les paramètres de surveillance ont été mis à jour."
       ],
@@ -2181,7 +2220,8 @@
         "Déplacement de tous les éléments depuis « ${ payload.content.name } »"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Déplacer un élément vers un autre coffre-fort supprimera ses liens sécurisés."
+        "Déplacer un élément vers un autre coffre-fort effacera ses liens sécurisés.",
+        "Déplacer des éléments vers un autre coffre-fort effacera leurs liens sécurisés."
       ],
       "Moving items": [
         "Déplacement des éléments"
@@ -2265,9 +2305,6 @@
       ],
       "Pass Plus trial": [
         "Version d'essai de Proton Pass Plus"
-      ],
-      "password": [
-        "mot de passe"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Le verrouillage par mot de passe a été enregistré. Utilisez-le pour débloquer ${ PASS_APP_NAME }."
@@ -2658,6 +2695,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "Pour consulter les données importées, cliquez sur l'icône ${ PASS_APP_NAME } dans la barre d'outils de votre navigateur."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "Pour configurer le déverrouillage biométrique, ${ PASS_APP_NAME } nécessite une nouvelle autorisation du navigateur."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "Afin de configurer le déverrouillage biométrique, ${ PASS_APP_NAME } a besoin d'une nouvelle autorisation de navigateur. Une fois acceptée, l'extension sera rechargée. Veuillez rouvrir cette page après l'opération."
       ],
@@ -2717,9 +2757,6 @@
       ],
       "User's access successfully updated": [
         "L'accès de l'utilisateur a été mis à jour."
-      ],
-      "username": [
-        "nom d'utilisateur"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Le coffre-fort « ${ payload.content.name } » a été supprimé."
@@ -2928,6 +2965,9 @@
       "${ hours } hour": [
         "${ hours } heure",
         "${ hours } heures"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } caractères"
       ],
       "${ minutes } minute": [
         "${ minutes } minute",
@@ -3544,11 +3584,17 @@
       "LinkedIn account": [
         "Compte LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Identifiant"
       ],
       "Logins": [
         "Identifiants"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Messageries"
@@ -4107,6 +4153,9 @@
       ],
       "WiFi network": [
         "Réseau wifi"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Informations sur le poste"
@@ -4893,6 +4942,9 @@
       "Folder options": [
         "Options de dossier"
       ],
+      "Get mobile apps": [
+        "Télécharger les applications mobiles"
+      ],
       "Get Started": [
         "Commencer"
       ],
@@ -5286,8 +5338,16 @@
       "OTP secret or URI is invalid": [
         "La clé secrète du mot de passe à usage unique (OTP) ou l'URI (Uniform Resource Identifier) n'est pas valide."
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Le mot de passe doit comporter au moins ${ MIN_PASSWORD_LENGTH } caractère.",
+        "Le mot de passe doit comporter au moins ${ MIN_PASSWORD_LENGTH } caractères."
+      ],
       "Section name cannot be empty": [
         "Le nom de la section ne peut pas être vide."
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Essayez d'utiliser un nom d'utilisateur plus court (${ n } caractère maximum).",
+        "Essayez d'utiliser un nom d'utilisateur plus court (${ n } caractères maximum)."
       ],
       "URL already exists": [
         "L'URL existe déjà."
@@ -5308,6 +5368,22 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "Le mot de passe de ${ BRAND_NAME } est nécessaire."
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "${ count } dossier a été fusionné dans son dossier parent car le niveau d'imbrication maximum a été atteint.",
+        "${ count } dossiers ont été fusionnés dans leur dossier parent car le niveau d'imbrication maximum a été atteint."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "${ count } dossier n'a pas été importé car son dossier parent a atteint le nombre maximum de sous-dossiers. Ses éléments ont été importés dans le dossier disponible le plus proche.",
+        "${ count } dossiers n'ont pas été importés car leur dossier parent a atteint le nombre maximum de sous-dossiers. Leurs éléments ont été importés dans le dossier disponible le plus proche."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "${ count } dossier n'a pas été importé car ce coffre-fort a atteint sa limite de dossiers. Ses éléments ont été importés dans le dossier disponible le plus proche.",
+        "${ count } dossiers n'ont pas été importés car ce coffre-fort a atteint sa limite de dossiers. Ses éléments ont été importés dans le dossier disponible le plus proche."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "${ failed } dossier n'a pas pu être créé. Ses éléments ont été importés dans le dossier disponible le plus proche.",
+        "${ failed } dossiers n'ont pas pu être créés. Leurs éléments ont été importés dans le dossier disponible le plus proche."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } offre un contrôle très efficace, mais une seule erreur peut entraîner la saisie automatique de données sur des sites frauduleux ou d'hameçonnage."
@@ -5446,9 +5522,6 @@
       ],
       "Move to trash": [
         "Déplacer dans la corbeille"
-      ],
-      "Name is required": [
-        "Veuillez indiquer un nom."
       ],
       "No items": [
         "Aucun élément"

@@ -6,14 +6,14 @@ import { Button } from '@proton/atoms/Button/Button';
 import Checkbox from '@proton/components/components/input/Checkbox';
 import TableCell from '@proton/components/components/table/TableCell';
 import TableRow from '@proton/components/components/table/TableRow';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import useFormErrors from '@proton/components/components/v2/useFormErrors';
 import { IcCrossBig } from '@proton/icons/icons/IcCrossBig';
 import isTruthy from '@proton/utils/isTruthy';
 
 import type { PauseListEntryDeleteDTO } from '../../../../lib/organization/types';
 import { intoCleanHostname } from '../../../../lib/urls/utils/utils';
-import type { OrganizationUrlPauseEntryDto, OrganizationUrlPauseEntryValues } from '../../../../types';
+import type { OrganizationUrlPauseEntryDto, OrganizationUrlPauseEntryValues } from '../../../../types/api/pass';
 
 type NewEntry = Pick<OrganizationUrlPauseEntryDto, 'Url' | 'Values'>;
 

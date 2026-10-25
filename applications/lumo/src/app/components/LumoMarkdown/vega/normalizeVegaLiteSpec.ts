@@ -1,3 +1,5 @@
+import { c } from 'ttag';
+
 import { scaleChartFontSize } from '../../../util/scaleChartFontSize';
 import { PROTON_DRIVE_RED, PROTON_PURPLE, PROTON_STATIC_COLOR_BAND_FIELD } from './protonChartTokens';
 
@@ -527,6 +529,7 @@ function buildSubchart(
     total: number,
     xEncoding: Record<string, unknown>
 ): Record<string, unknown> {
+    const seriesNumber = index + 1;
     const flattened = { ...layer };
     flattenYAxis(flattened);
 
@@ -545,7 +548,8 @@ function buildSubchart(
         width: 'container',
         height: 130,
         title: {
-            text: getYFieldTitle(flattened) ?? `Series ${index + 1}`,
+            // translator: Chart heading. A series is a set of related data points; ${seriesNumber} is its one-based number.
+            text: getYFieldTitle(flattened) ?? c('collider_2025:Label').t`Series ${seriesNumber}`,
             fontSize: scaleChartFontSize(12, true),
             anchor: 'start',
         },
@@ -652,8 +656,18 @@ function inferChartFromValues(values: Record<string, unknown>[]): Record<string,
             mark: 'line',
             encoding: {
                 x: xEncoding,
-                y: { field: 'value', type: 'quantitative', title: 'Value' },
-                color: { field: 'series', type: 'nominal', title: 'Series' },
+                y: {
+                    field: 'value',
+                    type: 'quantitative',
+                    // translator: Chart axis label for a numerical measurement.
+                    title: c('collider_2025:Label').t`Value`,
+                },
+                color: {
+                    field: 'series',
+                    type: 'nominal',
+                    // translator: Chart legend title. A series is a set of related data points.
+                    title: c('collider_2025:Label').t`Series`,
+                },
             },
         });
     }
@@ -818,7 +832,8 @@ function configureArcLegendAndTooltips(arcLayer: Record<string, unknown>): void 
             field: thetaField,
             type: 'quantitative',
             format: '.0f',
-            title: 'Share (%)',
+            // translator: Chart tooltip label for the percentage of the total.
+            title: c('collider_2025:Label').t`Share (%)`,
         });
     }
 
@@ -1185,11 +1200,8 @@ function repairInteractiveSpec(spec: Record<string, unknown>): void {
 
     definedParams = collectParamNames(spec);
 
-    if (compositionChildren && compositionChildren.length === 2) {
-        return;
-    }
-
-    // Single-panel specs with leftover selection params are almost always accidental.
+    // Single-panel specs and dual-panel compositions with leftover selection params are stripped.
+    // Dual-panel linked-brush specs previously kept params for UX; that enabled Vega signal abuse.
     stripAllInteractiveFeatures(spec);
 }
 
@@ -1542,8 +1554,34 @@ function normalizeSelectionFilters(spec: Record<string, unknown>): void {
 
 const UNSAFE_METHOD_CALL_PATTERN = /\.\s*[A-Za-z_$][\w$]*\s*\(/;
 
+/** Vega-Lite user expressions must not touch host internals or Vega dataflow mutation APIs. */
+const HOSTILE_VEGA_EXPRESSION_FRAGMENTS = [
+    'event.dataflow',
+    'memoizedProps',
+    '__reactFiber',
+    'defaultView.Object',
+    'backgroundImage',
+    'lumo/space/list/request',
+    'lumo/conversation/pullRequest',
+    'masterKeyState',
+    'modify(',
+] as const;
+
+function isBlockedVegaExpression(expression: unknown): expression is string {
+    if (typeof expression !== 'string') {
+        return false;
+    }
+
+    if (UNSAFE_METHOD_CALL_PATTERN.test(expression)) {
+        return true;
+    }
+
+    return HOSTILE_VEGA_EXPRESSION_FRAGMENTS.some((fragment) => expression.includes(fragment));
+}
+
+/** @deprecated Use isBlockedVegaExpression — kept as alias for existing call sites in this file. */
 function isUnsafeVegaExpression(expression: unknown): expression is string {
-    return typeof expression === 'string' && UNSAFE_METHOD_CALL_PATTERN.test(expression);
+    return isBlockedVegaExpression(expression);
 }
 
 function stripUnsafeExpressionProperties(container: Record<string, unknown>): void {
@@ -1580,12 +1618,23 @@ function visitUnsafeVegaExpressions(value: unknown): void {
         }
     }
 
-    if (isUnsafeVegaExpression(objectValue.filter)) {
+    if (isBlockedVegaExpression(objectValue.filter)) {
         delete objectValue.filter;
     }
 
-    if (isUnsafeVegaExpression(objectValue.calculate)) {
+    if (isBlockedVegaExpression(objectValue.calculate)) {
         delete objectValue.calculate;
+    }
+
+    const select = objectValue.select;
+    if (select && typeof select === 'object' && !Array.isArray(select)) {
+        const on = (select as Record<string, unknown>).on;
+        if (on && typeof on === 'object' && !Array.isArray(on)) {
+            const timerFilter = (on as Record<string, unknown>).filter;
+            if (isBlockedVegaExpression(timerFilter)) {
+                delete (select as Record<string, unknown>).on;
+            }
+        }
     }
 
     for (const nestedValue of Object.values(objectValue)) {
@@ -1599,6 +1648,15 @@ function visitUnsafeVegaExpressions(value: unknown): void {
  */
 export function normalizeUnsafeVegaExpressions(spec: Record<string, unknown>): void {
     visitUnsafeVegaExpressions(spec);
+}
+
+/**
+ * Lumo charts are static visuals only. Strip any interactivity or dataset-mutation hooks
+ * that remain after normalization (defense-in-depth against sandbox-escape PoCs).
+ */
+export function enforceStaticVegaLiteSecurity(spec: Record<string, unknown>): void {
+    stripAllInteractiveFeatures(spec);
+    delete spec.datasets;
 }
 
 function isDescendingSort(sort: unknown): boolean {

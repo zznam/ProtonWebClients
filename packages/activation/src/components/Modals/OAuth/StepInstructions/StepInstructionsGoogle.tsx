@@ -1,14 +1,25 @@
+import { useEffect } from 'react';
+
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { ModalTwo, ModalTwoContent, ModalTwoFooter, ModalTwoHeader, VideoInstructions } from '@proton/components';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
+import VideoInstructions from '@proton/components/components/videoInstructions/VideoInstructions';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
 import oauthInstructionsMp4 from '@proton/styles/assets/videos/easySwitch/oauth-instructions.mp4';
 import oauthInstructionsWebm from '@proton/styles/assets/videos/easySwitch/oauth-instructions.webm';
 
 import { displayConfirmLeaveModal } from '../../../../logic/draft/imapDraft/imapDraft.actions';
 import { changeOAuthStep, resetOauthDraft } from '../../../../logic/draft/oauthDraft/oauthDraft.actions';
-import { useEasySwitchDispatch } from '../../../../logic/store';
+import {
+    selectOauthDraftProvider,
+    selectOauthImportStateProducts,
+} from '../../../../logic/draft/oauthDraft/oauthDraft.selector';
+import { useEasySwitchDispatch, useEasySwitchSelector } from '../../../../logic/store';
+import { trackEasySwitchInstructionsViewed } from '../../../../telemetry/easySwitchCreationFunnel';
 
 interface Props {
     triggerOAuth: () => void;
@@ -16,6 +27,12 @@ interface Props {
 
 const StepInstructionsGoogle = ({ triggerOAuth }: Props) => {
     const dispatch = useEasySwitchDispatch();
+    const provider = useEasySwitchSelector(selectOauthDraftProvider);
+    const products = useEasySwitchSelector(selectOauthImportStateProducts);
+
+    useEffect(() => {
+        trackEasySwitchInstructionsViewed({ provider, products });
+    }, []);
 
     const handleQuit = () => {
         dispatch(displayConfirmLeaveModal(false));

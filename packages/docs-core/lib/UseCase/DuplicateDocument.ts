@@ -1,6 +1,7 @@
-import type { DocumentNodeMeta, DriveCompat } from '@proton/drive-store'
-import type { NodeMeta, DocumentType } from '@proton/docs-shared'
-import { Result } from '@proton/docs-shared'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
+import type { NodeMeta, DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { DocumentNodeMeta } from '@proton/docs-shared/CryptoTypes'
+import { Result } from '@proton/docs-shared/Result'
 
 import type { SeedInitialCommit } from './SeedInitialCommit'
 import type { GetDocumentMeta } from './GetDocumentMeta'
@@ -24,16 +25,16 @@ export class DuplicateDocument {
   /** Execute for a private document */
   async executePrivate(nodeMeta: NodeMeta, state: Uint8Array<ArrayBuffer>): Promise<Result<DocumentNodeMeta>> {
     try {
-      const useSDK = isDriveCompatSDKEnabled(this.unleashClient)
+      const replaceDriveCompat = isDriveCompatSDKEnabled(this.unleashClient)
 
       let node
-      if (useSDK) {
+      if (replaceDriveCompat) {
         node = await getDecryptedNode(nodeMeta)
       } else {
         node = await this.driveCompat.getNode(nodeMeta)
       }
 
-      const parentMetaGetter = useSDK ? getMyFilesNodeMeta : () => this.driveCompat.getMyFilesNodeMeta()
+      const parentMetaGetter = replaceDriveCompat ? getMyFilesNodeMeta : () => this.driveCompat.getMyFilesNodeMeta()
       const parentMeta: NodeMeta = node.parentNodeId
         ? {
             volumeId: node.volumeId,

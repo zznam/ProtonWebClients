@@ -5,8 +5,8 @@ import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import Badge from '@proton/components/components/badge/Badge';
-import ButtonGroup from '@proton/components/components/button/ButtonGroup';
+import { Badge } from '@proton/components/components/badge/Badge';
+import { ButtonGroup } from '@proton/components/components/button/ButtonGroup';
 import useModalState from '@proton/components/components/modalTwo/useModalState';
 import Prompt from '@proton/components/components/prompt/Prompt';
 import Table from '@proton/components/components/table/Table';
@@ -19,8 +19,8 @@ import useErrorHandler from '@proton/components/hooks/useErrorHandler';
 import useLoading, { useLoadingByKey } from '@proton/hooks/useLoading';
 import { IcCheckmark } from '@proton/icons/icons/IcCheckmark';
 import { IcCross } from '@proton/icons/icons/IcCross';
-import { baseUseDispatch } from '@proton/react-redux-store';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import { baseUseDispatch } from '@proton/react-redux-store/ProtonStoreContext';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import {
     type AuthDeviceOutput,
     AuthDeviceState,

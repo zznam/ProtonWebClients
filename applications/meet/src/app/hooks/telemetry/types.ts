@@ -1,8 +1,9 @@
 import type { Track } from 'livekit-client';
 
 export interface ParticipantQualityStats extends Record<string, unknown> {
-    identity: string;
     roomId: string;
+    identity: string;
+    meetingLinkName: string;
     type: Track.Source;
     trackSid: string;
     isLocal: boolean;
@@ -82,6 +83,7 @@ export interface ParticipantQualityStats extends Record<string, unknown> {
 
 export interface JoinStats extends Record<string, unknown> {
     roomId: string;
+    meetingLinkName: string;
     isReconnect: boolean;
     isInstantJoin: boolean;
     participantCount: number;
@@ -111,8 +113,19 @@ export interface JoinStats extends Record<string, unknown> {
     networkDownlink?: number;
 }
 
-export interface RecordingStats extends Record<string, unknown> {
+export interface RecordingStopTelemetry {
+    recordingBackend: 'webcodecs' | 'mediarecorder';
+    recordingBytesBeforeStop: number;
+    recordingBytesFlushedAtStop: number;
+    recordingStallCount: number;
+    recordingStallTotalMs: number;
+    recordingStallLongestMs: number;
+    recordingLongestStallCause: string | null;
+}
+
+export interface RecordingStats extends RecordingStopTelemetry, Record<string, unknown> {
     roomId: string;
+    meetingLinkName: string;
     identity: string;
     recordingDuration: number;
     recordingSize: number;

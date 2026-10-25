@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { c } from 'ttag';
 
-import { useUserSettings } from '@proton/account';
 import { getKTUserContext } from '@proton/account/kt/actions';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcChevronDown } from '@proton/icons/icons/IcChevronDown';
 import { getPublicKeysEmailHelper } from '@proton/key-transparency/keys';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
@@ -22,7 +22,7 @@ import {
     fromVCardProperties,
     getVCardProperties,
 } from '@proton/shared/lib/contacts/properties';
-import type { ContactPublicKeyModelWithApiKeySource } from '@proton/shared/lib/interfaces';
+import type { ContactPublicKeyModelWithApiKeySource } from '@proton/shared/lib/interfaces/EncryptionPreferences';
 import type { VCardContact, VCardProperty } from '@proton/shared/lib/interfaces/contacts/VCard';
 import {
     getContactPublicKeyModel,

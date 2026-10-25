@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "Android için ${ PASS_SHORT_APP_NAME }"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "iOS için ${ PASS_SHORT_APP_NAME }"
-      ],
       "Accept": [
         "Kabul et"
       ],
@@ -328,6 +322,15 @@
       "Don't show this again": [
         "Bunu yeniden gösterme"
       ],
+      "Download for Linux": [
+        "Linux için indir"
+      ],
+      "Download for macOS": [
+        "macOS için indirin"
+      ],
+      "Download for Windows": [
+        "Windows için indirin"
+      ],
       "Download this CSV template": [
         "Bu CSV kalıbını indir"
       ],
@@ -532,6 +535,9 @@
       "Open navigation": [
         "Gezinmeyi aç"
       ],
+      "Open platform selection dropdown": [
+        "Platform seçimi listesini aç"
+      ],
       "Organize vaults": [
         "Kasaları düzenle"
       ],
@@ -688,6 +694,12 @@
       "Show Less": [
         "Daha az görüntüle"
       ],
+      "Show less": [
+        "Daha az görüntüle"
+      ],
+      "Show more": [
+        "Daha fazla görüntüle"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "${ BRAND_NAME } ile oturum aç"
       ],
@@ -826,8 +838,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } bilgisayar uygulaması"
+      "${ appName } Desktop application": [
+        "${ appName } bilgisayar uygulaması"
       ]
     },
     "Button": {
@@ -1001,6 +1013,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "Kimlik doğrulanamadı. Dışa aktarma işlemini yapabilmek için ikinci parolanızı yazın"
       ],
+      "Biometric authentication cancelled.": [
+        "Biyometrik kimlik doğrulama iptal edildi."
+      ],
       "Biometric authentication failed.": [
         "Biyometrik kimlik doğrulanamadı."
       ],
@@ -1081,6 +1096,9 @@
       "Editing item failed": [
         "Öge düzenlenemedi"
       ],
+      "Email is not valid": [
+        "E-posta geçersiz"
+      ],
       "Empty CSV file": [
         "CSV dosyası boş"
       ],
@@ -1092,6 +1110,9 @@
       ],
       "Encrypted JSON not supported": [
         "Şifrelenmiş JSON desteklenmiyor"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Kullanıcı adınızı etki alanı (@example.com) olmadan yazın"
       ],
       "Error reporting problem": [
         "Sorun bildirilirken sorun çıktı"
@@ -1283,6 +1304,9 @@
       "Incorrect backup password. Please try again.": [
         "Yedek parola yanlış. Lütfen yeniden deneyin."
       ],
+      "Incorrect password. Please try again.": [
+        "Parola yanlış. Lütfen yeniden deneyin."
+      ],
       "Incorrect second password. Please try again.": [
         "İkinci parola yanlış. Lütfen yeniden deneyin."
       ],
@@ -1316,8 +1340,14 @@
       "Network error": [
         "Ağ sorunu"
       ],
+      "Not a valid number": [
+        "Numara geçerli değil"
+      ],
       "Passphrase is incorrect": [
         "Parola ifadesi doğru değil"
+      ],
+      "Passwords do not match": [
+        "Parola ile onayı aynı değil"
       ],
       "PIN codes do not match": [
         "PIN kodu ile onayı aynı değil"
@@ -1382,11 +1412,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME } bilgisayar uygulamasında oturum açılmış olmalıdır."
       ],
+      "The email addresses do not match": [
+        "E-posta adresleri eşleşmiyor"
+      ],
       "The session has expired. Please sign in again.": [
         "Oturumun geçerlilik süresi dolmuş. Lütfen yeniden oturum açın."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Güvenli bağlantı kaldırılırken bir hata oluştu. Lütfen birkaç dakika içinde tekrar deneyin."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Bu alan için izin verilen en fazla ${ maximumLength } karakter uzunluğu aşıldı."
+      ],
+      "This field is required": [
+        "Bu alanın doldurulması zorunludur"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Bu alana en az ${ minimumLength } karakter yazılmalıdır."
       ],
       "This invite is no longer available": [
         "Bu davet artık kullanılamıyor"
@@ -1399,6 +1441,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Bağlantının sahibiyle görüşmeyi deneyin."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Yalnızca harfleri, rakamları ve _.- karakterlerini kullanmayı deneyin"
       ],
       "Unable to generate an OTP code for this item": [
         "Bu öge için tek kullanımlık parola üretilemedi"
@@ -1433,6 +1478,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "\"${ payload.content.name }\" kasası güncellenemedi"
       ],
+      "Username must begin with a letter or digit": [
+        "Kullanıcı adı bir harf ya da rakam ile başlamalı"
+      ],
+      "Username must end with a letter or digit": [
+        "Kullanıcı adı bir harf ya da rakam ile bitmeli"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "\"${ payload.content.name }\" kasası oluşturulamadı"
       ],
@@ -1456,6 +1507,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "PIN kodu yanlış. Yeniden deneyin."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Kurtarma ifadesi yanlış. Yeniden deneyin ya da başka bir kurtarma yöntemi kullanın."
       ],
       "Wrong second password": [
         "İkinci parola yanlış"
@@ -1804,9 +1858,6 @@
       "Can view this item.": [
         "Bu ögeyi görüntüleyebilir."
       ],
-      "Change your password": [
-        "Parolanızı değiştirin"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "${ compromised.progress.completed } / ${ compromised.progress.total } parola denetleniyor"
       ],
@@ -1893,9 +1944,6 @@
       ],
       "Editor": [
         "Düzenleyici"
-      ],
-      "email": [
-        "e-posta"
       ],
       "Email address successfully deleted from monitoring": [
         "E-posta adresi izlemeden çıkarıldı"
@@ -1993,9 +2041,6 @@
       "Fill in the CSV with your data": [
         "CSV dosyasına verilerinizi ekleyin"
       ],
-      "finance": [
-        "finans"
-      ],
       "Finish signing in in the browser window that just opened. ${ PASS_APP_NAME } will pick up automatically once you're done.": [
         "Az önce açılan tarayıcı penceresinde oturum açmayı tamamlayın. Oturumu açtığınızda ${ PASS_APP_NAME } kaldığı yerden ilerleyecek."
       ],
@@ -2085,6 +2130,9 @@
       "invites you to access items in": [
         "sizi şu kasadaki ögelere erişmeye davet ediyor:"
       ],
+      "iOS and Android Apps": [
+        "iOS ve Android uygulamaları"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Görünüşe göre ${ PASS_APP_NAME } uygulamasında zaten oturum açmışsınız. Farklı bir hesapla oturum açmaya çalışıyorsanız, lütfen önce eklentideki oturumunuzu kapatın."
       ],
@@ -2164,9 +2212,6 @@
       "Medium Priority": [
         "Orta öncelik"
       ],
-      "Monitor accounts": [
-        "Hesapları izle"
-      ],
       "Monitoring settings successfully updated": [
         "İzleme ayarları güncellendi"
       ],
@@ -2184,7 +2229,8 @@
         "\"${ payload.content.name }\" içindeki tüm ögeler taşınıyor"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Bir ögeyi başka bir kasaya taşımak ögenin güvenli bağlantılarını siler."
+        "Bir ögeyi başka bir kasaya taşımak onun güvenli bağlantılarını siler.",
+        "Ögeleri başka bir kasaya taşımak onların güvenli bağlantılarını siler."
       ],
       "Moving items": [
         "Ögeler taşınıyor"
@@ -2268,9 +2314,6 @@
       ],
       "Pass Plus trial": [
         "Proton Pass Plus denemesi"
-      ],
-      "password": [
-        "parola"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Parola ile kilitleme kullanıma alındı. ${ PASS_APP_NAME } uygulamasının kilidini açmak için kullanabilirsiniz"
@@ -2468,6 +2511,12 @@
       "Restoring trashed items...": [
         "Çöpe atılmış ögeler geri yükleniyor..."
       ],
+      "Scan to download": [
+        "İndirmek için tara"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "iOS ve Android için ${ PASS_APP_NAME } indirmek için tarayın"
+      ],
       "Secure links": [
         "Güvenli bağlantılar"
       ],
@@ -2661,6 +2710,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "İçe aktarılan verilerinizi gözden geçirmek için tarayıcınızın araç çubuğundaki ${ PASS_APP_NAME } simgesine tıklayın."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "${ PASS_APP_NAME } ile biyometrik kilit açmayı ayarlamak için yeni bir tarayıcı izni verilmesi gerekir."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "Biyometri ile kilit açmak için ${ PASS_APP_NAME } uygulamasına yeni bir tarayıcı izni verilmesi gerekiyor. İzni verdikten sonra eklenti yeniden yüklenecek. Ardından bu sayfayı yeniden açın."
       ],
@@ -2720,9 +2772,6 @@
       ],
       "User's access successfully updated": [
         "Kullanıcının erişimi güncellendi"
-      ],
-      "username": [
-        "kullanıcı adı"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "\"${ payload.content.name }\" kasası silindi"
@@ -2931,6 +2980,9 @@
       "${ hours } hour": [
         "${ hours } saat",
         "${ hours } saat"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } karakter"
       ],
       "${ minutes } minute": [
         "${ minutes } dakika",
@@ -3547,11 +3599,17 @@
       "LinkedIn account": [
         "LinkedIn hesabı"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Oturum açma"
       ],
       "Logins": [
         "Oturum açma kayıtları"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "E-posta kutuları"
@@ -4110,6 +4168,9 @@
       ],
       "WiFi network": [
         "Kablosuz ağ"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "İş bilgileri"
@@ -4896,6 +4957,12 @@
       "Folder options": [
         "Klasör ayarları"
       ],
+      "Get mobile and desktop apps": [
+        "Mobil ve bilgisayar uygulamalarını edinin"
+      ],
+      "Get mobile apps": [
+        "Mobil uygulamaları edinin"
+      ],
       "Get Started": [
         "Başlayalım"
       ],
@@ -5289,8 +5356,16 @@
       "OTP secret or URI is invalid": [
         "Tek kullanımlık parola kodu ya da adresi geçersiz"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Parola en az ${ MIN_PASSWORD_LENGTH } karakter uzunluğunda olmalıdır",
+        "Parola en az ${ MIN_PASSWORD_LENGTH } karakter uzunluğunda olmalıdır"
+      ],
       "Section name cannot be empty": [
         "Bölüm adı boş olamaz"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Daha kısa bir kullanıcı adı deneyin (en fazla ${ n } karakter)",
+        "Daha kısa bir kullanıcı adı deneyin (en fazla ${ n } karakter)"
       ],
       "URL already exists": [
         "Adres zaten var"
@@ -5311,6 +5386,22 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "${ BRAND_NAME } parolası gereklidir"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "Olabilecek en fazla içe içe düzeye ulaşıldığı için ${ count } klasör üst klasörü ile birleştirildi.",
+        "Olabilecek en fazla içe içe düzeye ulaşıldığı için ${ count } klasör üst klasörü ile birleştirildi."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "Üst klasörü en fazla alt klasör sayısına ulaştığından ${ count } klasör içe aktarılmadı. Ögeleri kullanılabilecek en yakın klasör içine aktarıldı.",
+        "Üst klasörü en fazla alt klasör sayısına ulaştığından ${ count } klasör içe aktarılmadı. Ögeleri kullanılabilecek en yakın klasör içine aktarıldı."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "Bu kasa klasör sayısı sınırına ulaştığından ${ count } klasör içe aktarılmadı. Ögeleri kullanılabilecek en yakın klasör içine aktarıldı.",
+        "Bu kasa klasör sayısı sınırına ulaştığından ${ count } klasör içe aktarılmadı. Ögeleri kullanılabilecek en yakın klasör içine aktarıldı."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "${ failed } klasör oluşturulamadı. Ögeleri en yakın klasör içine aktarıldı.",
+        "${ failed } klasör oluşturulamadı. Ögeleri en yakın klasör içine aktarıldı."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } güçlü bir denetim sağlar, ancak tek bir hata bile otomatik doldurma özelliğinin sahte veya kimlik avı amaçlı siteler ile eşleşmesine ve bu verilerin doldurulmasına neden olabilir."
@@ -5449,9 +5540,6 @@
       ],
       "Move to trash": [
         "Çöpe at"
-      ],
-      "Name is required": [
-        "Adın yazılması zorunludur"
       ],
       "No items": [
         "Herhangi bir öge yok"

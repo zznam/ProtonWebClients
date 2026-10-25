@@ -1,12 +1,12 @@
-import type { ESCalendarSearchParams, EncryptedSearchFunctions } from '@proton/encrypted-search/models';
+import type { ESCalendarSearchParams } from '@proton/encrypted-search/models/calendar';
+import type { EncryptedSearchFunctions } from '@proton/encrypted-search/models/esFunctions';
 import type {
     AttendeeModel,
     CalendarEventMetadata,
     CalendarEventSharedData,
     OrganizerModel,
-    VcalAttendeeProperty,
-    VcalOrganizerProperty,
-} from '@proton/shared/lib/interfaces/calendar';
+} from '@proton/shared/lib/interfaces/calendar/Event';
+import type { VcalAttendeeProperty, VcalOrganizerProperty } from '@proton/shared/lib/interfaces/calendar/VcalModel';
 
 export interface ESOrganizerModel extends Pick<OrganizerModel, 'email' | 'cn'> {}
 export interface ESAttendeeModel extends Pick<AttendeeModel, 'email' | 'cn' | 'role' | 'partstat'> {}

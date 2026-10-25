@@ -7,7 +7,7 @@ import { c } from 'ttag';
 import { useGetAddressKeys } from '@proton/account/addressKeys/hooks';
 import { useGetAddresses } from '@proton/account/addresses/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useAuthentication } from '@proton/components';
+import useAuthentication from '@proton/components/hooks/useAuthentication';
 import { ADDRESS_STATUS } from '@proton/shared/lib/constants';
 import { type VerificationKeysCallback, decryptPassphrase } from '@proton/shared/lib/keys/drivePassphrase';
 
@@ -49,14 +49,6 @@ function useDriveCrypto() {
     // This should be used for encryption and signing of any content.
     const getOwnAddressAndPrimaryKeys = useCallback(
         async (addressId: string) => getOwnAddressAndPrimaryKeysAsync(addressId, getAddresses, getAddressKeys),
-        [getAddresses, getAddressKeys]
-    );
-
-    const getPrivateAddressKeys = useCallback(
-        async (addressId: string) => {
-            const result = await getOwnAddressKeysAsync(addressId, getAddresses, getAddressKeys);
-            return result?.privateKeys || [];
-        },
         [getAddresses, getAddressKeys]
     );
 
@@ -178,7 +170,6 @@ function useDriveCrypto() {
     return {
         getPrimaryAddressKey,
         getOwnAddressAndPrimaryKeys,
-        getPrivateAddressKeys,
         getVerificationKey,
         decryptSharePassphrase,
     };

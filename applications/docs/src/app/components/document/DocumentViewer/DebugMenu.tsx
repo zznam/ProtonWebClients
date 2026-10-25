@@ -12,15 +12,12 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { c } from 'ttag'
 import { useApplication } from '~/utils/application-context'
 import { downloadLogsAsJSON } from '~/utils/downloadLogs'
-import type {
-  EditorControllerInterface,
-  AuthenticatedDocControllerInterface,
-  DocumentState,
-  PublicDocumentState,
-} from '@proton/docs-core'
-import type { DocumentType } from '@proton/docs-shared'
+import type { AuthenticatedDocControllerInterface } from '@proton/docs-core/AuthenticatedDocController/AuthenticatedDocControllerInterface'
+import type { EditorControllerInterface } from '@proton/docs-core/EditorController/EditorController'
+import type { DocumentState, PublicDocumentState } from '@proton/docs-core/State/DocumentState'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
 import clsx from '@proton/utils/clsx'
-import { ConnectionCloseReason } from '@proton/docs-proto'
+import { ConnectionCloseReason } from '@proton/docs-proto/ConnectionCloseReason/ConnectionCloseReason'
 import { Tooltip } from '@proton/docs-shared/components/ui/ui'
 import * as Ariakit from '@ariakit/react'
 
@@ -29,9 +26,10 @@ const UpdateReplayTool = lazy(() => import('./UpdateReplayTool'))
 type FileInputButtonProps = {
   children: ReactNode
   onFileSelect: (file: File) => Promise<void>
+  inputTestId?: string
 }
 
-function FileInputButton({ children, onFileSelect }: FileInputButtonProps) {
+function FileInputButton({ children, onFileSelect, inputTestId }: FileInputButtonProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const { createNotification } = useNotifications()
 
@@ -42,6 +40,7 @@ function FileInputButton({ children, onFileSelect }: FileInputButtonProps) {
         type="file"
         className="sr-only"
         aria-label="Choose a file to apply"
+        data-testid={inputTestId}
         onChange={(event) => {
           const input = event.currentTarget
           const file = input.files?.[0]
@@ -405,6 +404,7 @@ export function DebugMenu({ docController, editorController, documentState, docu
               {isSpreadsheet && (
                 <>
                   <FileInputButton
+                    inputTestId="apply-spreadsheet-state-input"
                     onFileSelect={async (file) => {
                       const spreadsheetState = JSON.parse(await file.text())
                       await editorController.replaceLocalSpreadsheetState(spreadsheetState, false)
@@ -416,6 +416,7 @@ export function DebugMenu({ docController, editorController, documentState, docu
                     Remove Stored Patches
                   </Button>
                   <FileInputButton
+                    inputTestId="apply-spreadsheet-patches-input"
                     onFileSelect={async (file) => {
                       const patches = JSON.parse(await file.text())
                       await editorController.applyPatches(patches)

@@ -1,14 +1,18 @@
-import { useSubscription } from '@proton/account/subscription/hooks';
+import { useMemo } from 'react';
+
+import { useAllSubscriptions } from '@proton/account/allSubscriptions/hooks';
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { type SubscriptionExistsTrialInfo, getTrialInfo } from '@proton/payments/core/trials';
-import { isFreeSubscription } from '@proton/payments/core/type-guards';
 
 export function useTrialInfo(): Partial<SubscriptionExistsTrialInfo> {
-    const [subscription] = useSubscription();
+    const [subscriptions] = useAllSubscriptions();
+    const [entitlementCatalog] = useEntitlementCatalog();
 
-    if (!subscription || isFreeSubscription(subscription)) {
-        return {};
-    }
+    return useMemo(() => {
+        if (!subscriptions || subscriptions.length === 0) {
+            return {};
+        }
 
-    // Once we have multi-subs, simply pass an array of all subscriptions here.
-    return getTrialInfo([subscription]) as SubscriptionExistsTrialInfo;
+        return getTrialInfo(entitlementCatalog, subscriptions) as SubscriptionExistsTrialInfo;
+    }, [subscriptions, entitlementCatalog]);
 }

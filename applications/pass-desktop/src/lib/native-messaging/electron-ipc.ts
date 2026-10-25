@@ -1,7 +1,12 @@
 import type { BrowserWindow } from 'electron';
 
-import type { MaybeNull, NativeMessagePayload, NativeMessageRequest, NativeMessageResponse } from '@proton/pass/types';
-import { NativeMessageErrorType } from '@proton/pass/types';
+import type {
+    NativeMessagePayload,
+    NativeMessageRequest,
+    NativeMessageResponse,
+} from '@proton/pass/types/desktop/extension-unlock-with-desktop';
+import { NativeMessageErrorType } from '@proton/pass/types/desktop/extension-unlock-with-desktop';
+import type { MaybeNull } from '@proton/pass/types/utils';
 
 import logger from '../../utils/logger';
 import { isMainWindowEntry } from '../../utils/navigation';
@@ -25,7 +30,8 @@ export const setupElectronIpcHandlers = (getWindow: () => MaybeNull<BrowserWindo
         request: NativeMessagePayload<NativeMessageRequest>,
         sendResponse: (response: NativeMessagePayload<NativeMessageResponse>) => void
     ) => {
-        if (!isMainWindowEntry(getWindow()?.webContents.getURL() ?? '')) {
+        const currentURL = getWindow()?.webContents.getURL() ?? '';
+        if (!isMainWindowEntry(currentURL)) {
             info('App not on main URL, responding not logged in');
             sendResponse({
                 type: request.type,

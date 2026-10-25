@@ -61,9 +61,6 @@
       "A participant reacted with ${ emoji }": [
         "Účastník reagoval pomocí ${ emoji }"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Připojeno přes režim přenosu TURN z důvodu síťových omezení. To může zvýšit latenci a ovlivnit kvalitu hovoru."
-      ],
       "Connection lost. Reconnecting…": [
         "Připojení ztraceno. Probíhá opětovné připojování…"
       ],
@@ -279,9 +276,6 @@
       "Download": [
         "Stáhnout"
       ],
-      "Download app": [
-        "Stáhnout aplikaci"
-      ],
       "Download local participant report": [
         "Stáhnout hlášení místní účasti"
       ],
@@ -384,6 +378,9 @@
       "Minimize preview": [
         "Minimalizovat náhled"
       ],
+      "More info": [
+        "Více informací"
+      ],
       "More info: ${ safeTitle }": [
         "Více informací: ${ safeTitle }"
       ],
@@ -402,8 +399,8 @@
       "Noise cancellation": [
         "Potlačení šumu"
       ],
-      "Open app": [
-        "Otevřít aplikaci"
+      "Not now": [
+        "Nyní ne"
       ],
       "Open link": [
         "Otevřít odkaz"
@@ -576,9 +573,6 @@
       "Stay in meeting": [
         "Zůstat na schůzce"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Ukončit otevírání schůzek v desktopové aplikaci"
-      ],
       "Stop receiving video": [
         "Ukončit příjem videa"
       ],
@@ -590,6 +584,9 @@
       ],
       "Stop Recording Track Stats": [
         "Zastavit nahrávání statistik sledování"
+      ],
+      "Stop sharing": [
+        "Zrušit sdílení"
       ],
       "Submit": [
         "Odeslat"
@@ -662,9 +659,6 @@
       "Blur background": [
         "Rozostřit pozadí"
       ],
-      "Chat": [
-        "Chat"
-      ],
       "Close": [
         "Zavřít"
       ],
@@ -677,9 +671,6 @@
       "Copy meeting link": [
         "Kopírovat odkaz na schůzku"
       ],
-      "Debug overlay": [
-        "Okno ladění"
-      ],
       "Go to dashboard": [
         "Přejít na ovládací panel"
       ],
@@ -688,12 +679,6 @@
       ],
       "Lock meeting": [
         "Zamknout schůzku"
-      ],
-      "Lower hand": [
-        "Dát ruku dolů"
-      ],
-      "Meeting details": [
-        "Detaily schůzky"
       ],
       "More options": [
         "Více možností"
@@ -710,23 +695,11 @@
       "Participant host control options": [
         "Možnosti ovládání účastníků hostitelem"
       ],
-      "Participants": [
-        "Účastníci"
-      ],
-      "Raise hand": [
-        "Zvednout ruku"
-      ],
       "Rotate camera": [
         "Otočit fotoaparát"
       ],
       "Save my name on this device": [
         "Uložit mé jméno na tomto zařízení"
-      ],
-      "Screen share": [
-        "Sdílení obrazovky"
-      ],
-      "Settings": [
-        "Nastavení"
       ],
       "Stop recording and download.": [
         "Zastavit nahrávání a stáhnout."
@@ -737,17 +710,11 @@
       "Toggle emoji reactions": [
         "Přepnout reakce pomocí emoji"
       ],
-      "Toggle meeting details": [
-        "Přepnout detaily schůzky"
-      ],
       "Toggle participants": [
         "Přepnout účastníky"
       ],
       "Toggle screen share": [
         "Přepnout sdílení obrazovky"
-      ],
-      "Toggle settings": [
-        "Přepnout nastavení"
       ],
       "Video settings": [
         "Nastavení videa"
@@ -802,16 +769,6 @@
     "Badge": {
       "Active": [
         "Aktivní"
-      ]
-    },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Připojeno přes režim předávání TURN kvůli omezením vaší sítě. To může zvýšit latenci a ovlivnit kvalitu hovoru."
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } desktopová aplikace"
       ]
     },
     "Bug category": {
@@ -1851,6 +1808,9 @@
       "Incorrect backup password. Please try again.": [
         "Nesprávné záložní heslo. Zkuste to prosím znovu."
       ],
+      "Incorrect password. Please try again.": [
+        "Nesprávné heslo. Zkuste to znovu."
+      ],
       "Incorrect second password. Please try again.": [
         "Nesprávné druhé heslo. Zkuste to prosím znovu."
       ],
@@ -1934,6 +1894,9 @@
       ],
       "We couldn’t send a verification code using this method.": [
         "Pomocí této metody se nám nepodařilo odeslat ověřovací kód."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Špatná obnovovací fráze. Zkuste znovu použít další obnovovací metodu."
       ],
       "Your browser ran out of storage space. We saved the recording up to this point.": [
         "Ve vašem prohlížeči došlo místo v úložném prostoru. Nahrávku jsme uložili do tohoto okamžiku."
@@ -2352,9 +2315,6 @@
       "Get a secure meeting link then add it to your calendar": [
         "Získejte zabezpečený odkaz na schůzku a poté jej přidejte do svého kalendáře"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Získejte nejlepší zážitek s desktopovou aplikací ${ protonMeet }"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Přejděte na about:config, vyhledejte media.peerconnection.enabled a nastavte na true."
       ],
@@ -2640,9 +2600,6 @@
       "Share screen": [
         "Sdílet obrazovku"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Sdílejte tento odkaz k pozvání ostatních. Můžete jej také kdykoli najít kliknutím na ikonu informací na panelu nástrojů."
-      ],
       "Sign in": [
         "Přihlásit se"
       ],
@@ -2651,9 +2608,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "V tomto prohlížeči nelze vybrat reproduktor. Chcete-li vybrat jiný reproduktor, použijte nastavení systému."
-      ],
-      "Start recording": [
-        "Spustit nahrávání"
       ],
       "Starting camera…": [
         "Spouštění kamery…"
@@ -2693,9 +2647,6 @@
       ],
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "Tato schůzka dosáhla časového limitu bezplatného plánu. Upgradujte svůj plán, abyste v budoucích hovorech prodloužili délku schůzek."
-      ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "Tato schůzka byla zahájena v desktopové aplikaci ${ MEET_APP_NAME }."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "Tato nahrávka bude trvale smazána z tohoto zařízení. Tuto akci nelze vrátit zpět."
@@ -2780,9 +2731,6 @@
       ],
       "You are almost there": [
         "Už to bude"
-      ],
-      "You can close this tab.": [
-        "Tuto kartu můžete zavřít."
       ],
       "You can now return to the application to continue": [
         "Nyní se můžete vrátit do aplikace a pokračovat"
@@ -2986,6 +2934,9 @@
       ],
       "Monday to Friday": [
         "Pondělí až pátek"
+      ],
+      "More options": [
+        "Více možností"
       ],
       "Muted": [
         "Ztlumeno"

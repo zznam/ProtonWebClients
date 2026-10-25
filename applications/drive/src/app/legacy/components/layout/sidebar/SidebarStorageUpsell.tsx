@@ -12,6 +12,7 @@ import useLocalState from '@proton/components/hooks/useLocalState';
 import { IcBriefcase } from '@proton/icons/icons/IcBriefcase';
 import { IcCloud } from '@proton/icons/icons/IcCloud';
 import { IcCrossBig } from '@proton/icons/icons/IcCrossBig';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import {
     APPS,
@@ -21,8 +22,8 @@ import {
     PRODUCT_BIT,
     UPSELL_COMPONENT,
 } from '@proton/shared/lib/constants';
-import { addUpsellPath, getUpgradePath, getUpsellRefFromApp } from '@proton/shared/lib/helpers/upsell';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import { getUpsellRefFromApp } from '@proton/shared/lib/helpers/ref';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import {
     SpaceState,
     getAppSpace,
@@ -166,8 +167,8 @@ const SidebarStorageUpsell = ({ app, storageRef }: Props) => {
             as={SettingsLink}
             color="norm"
             shape="outline"
-            path={addUpsellPath(
-                getUpgradePath({ user, plan: upsellOutsideOfDrive?.plan }),
+            path={getUpgradePath(
+                { user, plan: upsellOutsideOfDrive?.plan },
                 getUpsellRefFromApp({
                     app,
                     feature: DRIVE_UPSELL_PATHS.SIDEBAR,

@@ -2,23 +2,20 @@ import type { ReactNode } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import type { CreateNotificationOptions } from '@proton/app-context/notifications/interfaces';
-import {
-    ApiProvider,
-    ConfigProvider,
-    ModalsChildren,
-    ModalsProvider,
-    NotificationsChildren,
-    NotificationsHijack,
-    NotificationsProvider,
-    PreventLeaveProvider,
-    RightToLeftProvider,
-    ThemeProvider,
-} from '@proton/components';
+import ApiProvider from '@proton/components/containers/api/ApiProvider';
+import ConfigProvider from '@proton/components/containers/config/Provider';
+import ModalsChildren from '@proton/components/containers/modals/Children';
+import ModalsProvider from '@proton/components/containers/modals/Provider';
+import NotificationsChildren from '@proton/components/containers/notifications/Children';
+import NotificationsHijack from '@proton/components/containers/notifications/NotificationsHijack';
+import NotificationsProvider from '@proton/components/containers/notifications/Provider';
+import { RightToLeftProvider } from '@proton/components/containers/rightToLeft/Provider';
+import ThemeProvider from '@proton/components/containers/themes/ThemeProvider';
+import { PreventLeaveProvider } from '@proton/components/hooks/usePreventLeave';
 import useInstance from '@proton/hooks/useInstance';
-import Icons from '@proton/icons/Icons';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import createApi from '@proton/shared/lib/api/createApi';
-import { isWebView } from '@proton/shared/lib/broadcast';
+import { isWebView } from '@proton/shared/lib/broadcast/broadcast';
 
 import Verify from './Verify';
 import broadcast, { MessageType } from './broadcast';
@@ -48,7 +45,6 @@ const App = () => {
         <ConfigProvider config={config}>
             <Router>
                 <RightToLeftProvider>
-                    <Icons />
                     <ThemeProvider appName={config.APP_NAME}>
                         <PreventLeaveProvider>
                             <VerifyNotificationsProvider>

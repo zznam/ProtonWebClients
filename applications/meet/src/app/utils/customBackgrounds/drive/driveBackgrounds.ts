@@ -1,4 +1,4 @@
-import { NodeType, NodeWithSameNameExistsValidationError, ThumbnailType, getDrive } from '@proton/drive';
+import { NodeType, NodeWithSameNameExistsValidationError, ThumbnailType, getDrive } from '@proton/drive/sdk';
 
 import type { PreparedBackground } from '../backgroundPreview';
 import { isAllowedBackgroundMediaType } from '../constants';
@@ -153,7 +153,7 @@ export const uploadDriveBackground = async ({
             throw error;
         }
 
-        return upload(await drive.getAvailableName(folderUid, requestedName));
+        return upload(await drive.getAvailableName(folderUid, requestedName, NodeType.File));
     }
 };
 

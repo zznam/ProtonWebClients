@@ -1,0 +1,33 @@
+{
+    "name": "@proton/telemetry-tracker",
+    "description": "Type-safe telemetry tracker: one singleton, typed event definitions, keyed funnel timers",
+    "license": "GPL-3.0",
+    "sideEffects": false,
+    "type": "module",
+    "exports": {
+        "./events": "./events/index.ts",
+        "./tracker": "./tracker/index.ts",
+        "./testing": "./testing/index.ts"
+    },
+    "scripts": {
+        "check:types": "tsc --checkers 1",
+        "lint": "eslint --quiet",
+        "test": "jest",
+        "test:ci": "jest --runInBand --ci --logHeapUsage",
+        "test:watch": "jest --watch"
+    },
+    "dependencies": {
+        "@proton/shared": "workspace:^"
+    },
+    "devDependencies": {
+        "@proton/eslint-config-proton": "workspace:^",
+        "@proton/jest-swc-preset": "workspace:^",
+        "@types/jest": "catalog:",
+        "@types/node": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "eslint": "catalog:",
+        "jest": "catalog:",
+        "typescript": "catalog:"
+    }
+}

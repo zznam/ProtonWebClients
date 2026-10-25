@@ -10,9 +10,10 @@ import { createAuthStore, exposeAuthStore } from '@proton/pass/lib/auth/store';
 import { clientBooted, clientStatusResolved } from '@proton/pass/lib/client';
 import { exposePassCrypto } from '@proton/pass/lib/crypto';
 import { createPassCrypto } from '@proton/pass/lib/crypto/pass-crypto';
+import { createNativeMessagingService } from '@proton/pass/lib/native-messaging/native-messaging.extension';
 import { QA_SERVICE } from '@proton/pass/lib/qa/service';
-import { settingsEditIntent } from '@proton/pass/store/actions';
 import { resolveModelArtifact } from '@proton/pass/store/actions/creators/model-artifact';
+import { settingsEditIntent } from '@proton/pass/store/actions/creators/settings';
 import { registerStoreEffect } from '@proton/pass/store/connect/effect';
 import { selectAssignedModelId } from '@proton/pass/store/selectors/assigned-model-id';
 import { selectLockSetupRequired } from '@proton/pass/store/selectors/settings';
@@ -22,7 +23,7 @@ import { coalesce } from '@proton/pass/utils/fp/control';
 import { waitUntil } from '@proton/pass/utils/fp/wait-until';
 import { logger } from '@proton/pass/utils/logger';
 import { createMemoryStore } from '@proton/pass/utils/store';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import noop from '@proton/utils/noop';
 
 import { backgroundMessage } from '../../../lib/message/send-message';
@@ -47,7 +48,6 @@ import { createContentScriptService } from '../services/injection';
 import { createInlineService } from '../services/inline';
 import { createLoggerService } from '../services/logger';
 import { createMonitorService } from '../services/monitor';
-import { createNativeMessagingService } from '../services/native-messaging';
 import { createOTPService } from '../services/otp';
 import { createPasskeyService } from '../services/passkey';
 import { createSentryService } from '../services/sentry';
@@ -73,11 +73,17 @@ export const createWorkerContext = (config: ProtonConfig) => {
     const core = createPassCoreProxyService();
     const auth = createAuthService(api, authStore);
     const store = createStoreService();
-    const nativeMessaging = createNativeMessagingService(authStore);
+    const nativeMessaging = createNativeMessagingService();
 
     if (ENV === 'development') QA_SERVICE?.init(storage.local);
     auth.registerLockAdapter(sessionLockAdapterFactory(auth));
-    auth.registerLockAdapter(desktopLockAdapterFactory(auth, nativeMessaging));
+    auth.registerLockAdapter(
+        desktopLockAdapterFactory(
+            auth,
+            nativeMessaging,
+            withContext((ctx) => ctx.setUnlockDeclined(true))
+        )
+    );
     auth.registerLockAdapter(passwordLockAdapterFactory(auth));
 
     exposePassCrypto(createPassCrypto(core, store));
@@ -96,6 +102,7 @@ export const createWorkerContext = (config: ProtonConfig) => {
     const context = WorkerContext.set({
         status: AppStatus.IDLE,
         booted: false,
+        unlockDeclined: false,
         authStore,
         service: {
             activation: createActivationService(),
@@ -145,6 +152,7 @@ export const createWorkerContext = (config: ProtonConfig) => {
                 lockSetup,
                 status: context.status,
                 UID: authStore.getUID(),
+                unlockDeclined: context.unlockDeclined,
             };
         },
 
@@ -152,6 +160,7 @@ export const createWorkerContext = (config: ProtonConfig) => {
             if (context.status !== status) {
                 logger.info(`[Worker::Context] Status update : ${context.status} -> ${status}`);
                 context.status = status;
+                context.unlockDeclined = false;
                 setPopupIcon(status);
                 onStateUpdate();
             }
@@ -160,6 +169,13 @@ export const createWorkerContext = (config: ProtonConfig) => {
         setBooted(booted) {
             if (context.booted !== booted) {
                 context.booted = booted;
+                onStateUpdate();
+            }
+        },
+
+        setUnlockDeclined(declined) {
+            if (context.unlockDeclined !== declined) {
+                context.unlockDeclined = declined;
                 onStateUpdate();
             }
         },

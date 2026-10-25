@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { Mock } from 'vitest';
 
-import { useMeetErrorReporting } from '@proton/meet';
+import { useMeetErrorReporting } from '@proton/meet/hooks/useMeetErrorReporting';
 import {
     currentMeetingReducer,
     initialState as initialCurrentMeetingState,
@@ -13,7 +13,7 @@ import {
 } from '@proton/meet/store/slices/currentMeeting';
 import { meetingInfoThunk } from '@proton/meet/store/slices/meetingInfoModel';
 import { initialState as initialSettingsState, settingsReducer } from '@proton/meet/store/slices/settings';
-import { ProtonStoreContext } from '@proton/react-redux-store';
+import { ProtonStoreContext } from '@proton/react-redux-store/ProtonStoreContext';
 
 import type { JoinLocationState } from '../../types';
 import { useInvalidMeetingLink } from './useInvalidMeetingLink';
@@ -23,7 +23,7 @@ vi.mock('react-router-dom', () => ({
     useLocation: vi.fn(),
 }));
 
-vi.mock('@proton/meet', () => ({
+vi.mock('@proton/meet/hooks/useMeetErrorReporting', () => ({
     useMeetErrorReporting: vi.fn(),
 }));
 

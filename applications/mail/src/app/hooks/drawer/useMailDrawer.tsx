@@ -13,14 +13,18 @@ import { DRAWER_NATIVE_APPS } from '@proton/shared/lib/drawer/interfaces';
 import isTruthy from '@proton/utils/isTruthy';
 
 import FeatureTourDrawerButton from '../../components/drawer/FeatureTourDrawerButton';
+import LumoSidebarButton from '../../components/drawer/LumoSidebarButton';
+import { useHasLumoFloatingPanel } from '../../lumo/floating/LumoFloatingPanelProvider';
 
 const useMailDrawer = () => {
     const { appInView, showDrawerSidebar } = useDrawer();
     const canShowFeatureTourDrawerButton = useDisplayFeatureTourDrawerButton();
+    const hasLumo = useHasLumoFloatingPanel();
 
     const [allowedProducts, loadingAllowedProducts] = useAllowedProducts();
 
     const drawerSidebarButtons = [
+        hasLumo && <LumoSidebarButton />,
         <ContactDrawerAppButton aria-expanded={isAppInView(DRAWER_NATIVE_APPS.CONTACTS, appInView)} />,
         allowedProducts.has(Product.Calendar) && (
             <CalendarDrawerAppButton

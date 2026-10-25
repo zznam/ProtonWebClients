@@ -1,7 +1,7 @@
 import type { PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
@@ -14,16 +14,13 @@ import { updateCollectionAsyncV6 } from '@proton/shared/lib/eventManager/updateC
 import { type UpdateCollectionV6, updateCollectionV6 } from '@proton/shared/lib/eventManager/updateCollectionV6';
 import { clearBit, setBit } from '@proton/shared/lib/helpers/bitset';
 import updateCollection from '@proton/shared/lib/helpers/updateCollection';
-import type {
-    Api,
-    EnhancedGroup,
-    Group,
-    GroupMembershipReturn,
-    Organization,
-    RoleAssignment,
-    UserModel,
-} from '@proton/shared/lib/interfaces';
-import { GROUP_MEMBER_PERMISSIONS } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { EnhancedGroup, Group } from '@proton/shared/lib/interfaces/Group';
+import type { GroupMembershipReturn } from '@proton/shared/lib/interfaces/GroupMember';
+import { GROUP_MEMBER_PERMISSIONS } from '@proton/shared/lib/interfaces/GroupMember';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import type { RoleAssignment } from '@proton/shared/lib/interfaces/OrganizationRole';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import type { DomainsState } from '../domains';
 import { serverEvent } from '../eventLoop';

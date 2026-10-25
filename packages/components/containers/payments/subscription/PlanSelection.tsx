@@ -50,7 +50,9 @@ import { isFreeSubscription as getIsFreeSubscription, isFreeSubscription } from 
 import type { ProductParam } from '@proton/shared/lib/apps/product';
 import { APPS } from '@proton/shared/lib/constants';
 import { selectPlanOrAppNameText } from '@proton/shared/lib/i18n/ttag';
-import { Audience, type Organization, type UserModel } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { isFree } from '@proton/shared/lib/user/helpers';
 import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';
@@ -79,8 +81,8 @@ import PlanCardFeatures, { PlanCardFeatureList, PlanCardFeaturesShort } from './
 import PlanSelectionPlanCard, { type HocPrice } from './PlanSelectionPlanCard';
 import useCancellationFlow from './cancellationFlow/useCancellationFlow';
 import useCancellationTelemetry from './cancellationFlow/useCancellationTelemetry';
-import { getAllowedCycles } from './helpers';
 import VpnEnterpriseAction from './helpers/VpnEnterpriseAction';
+import { getAllowedCycles } from './helpers/getAllowedCycles';
 
 import './PlanSelection.scss';
 

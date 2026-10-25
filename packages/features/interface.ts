@@ -85,17 +85,20 @@ export enum FeatureCode {
     CategoryViewB2COnboardingViewFlags = 'CategoryViewB2COnboardingViewFlags',
     CategoryViewB2BOnboardingViewFlags = 'CategoryViewB2BOnboardingViewFlags',
     CategoryViewOnboardingAccountDateThreshold = 'CategoryViewOnboardingAccountDateThreshold',
+    SpotlightCategoriesImproved = 'SpotlightCategoriesImproved',
 
     OfferPassFamilyPlan2024Yearly = 'OfferPassFamilyPlan2024Yearly',
     OfferGoUnlimited2022 = 'OfferGoUnlimited2022',
     OfferMailTrial2023 = 'OfferMailTrial2023',
 
-    // Q3 Sale 2026 — one flag per audience, each shown in both Inbox and Drive
-    OfferQ3Sale2026FreeToUnlimited = 'OfferQ3Sale2026FreeToUnlimited',
-    OfferQ3Sale2026PlusToUnlimited = 'OfferQ3Sale2026PlusToUnlimited',
-    OfferQ3Sale2026UnlimitedToDuo = 'OfferQ3Sale2026UnlimitedToDuo',
-    OfferQ3Sale2026DuoToFamily = 'OfferQ3Sale2026DuoToFamily',
-    OfferQ3Sale2026FamilyMonthlyToYearly = 'OfferQ3Sale2026FamilyMonthlyToYearly',
+    // Black Friday 2026: one flag per offer
+    OfferBlackFriday2026FreeToUnlimited = 'OfferBlackFriday2026FreeToUnlimited',
+    OfferBlackFriday2026PlusToUnlimited = 'OfferBlackFriday2026PlusToUnlimited',
+    OfferBlackFriday2026UnlimitedToDuo = 'OfferBlackFriday2026UnlimitedToDuo',
+    OfferBlackFriday2026DuoToFamily = 'OfferBlackFriday2026DuoToFamily',
+    OfferBlackFriday2026FreeToMailPlus = 'OfferBlackFriday2026FreeToMailPlus',
+    OfferBlackFriday2026FreeToDrivePlus = 'OfferBlackFriday2026FreeToDrivePlus',
+    OfferBlackFriday2026FreeToPassPlus = 'OfferBlackFriday2026FreeToPassPlus',
 
     // Unlimited to Duo discounted pre-renewal offer
     OfferUnlimitedToDuoDiscounted = 'OfferUnlimitedToDuoDiscounted',

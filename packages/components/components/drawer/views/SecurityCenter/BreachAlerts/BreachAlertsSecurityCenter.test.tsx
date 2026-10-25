@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
-import { useUserSettings } from '@proton/account/index';
 import { useUser } from '@proton/account/user/hooks';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 
 import BreachAlertsSecurityCenter from './BreachAlertsSecurityCenter';
 
@@ -17,7 +17,7 @@ jest.mock('../../../../../containers/credentialLeak/useBreaches', () => ({
     useBreaches: jest.fn().mockReturnValue({ breaches: [], actions: jest.fn() }),
 }));
 
-jest.mock('@proton/react-redux-store', () => ({
+jest.mock('@proton/react-redux-store/ProtonStoreContext', () => ({
     __esModule: true,
     baseUseDispatch: jest.fn(),
     baseUseSelector: jest.fn(),
@@ -28,9 +28,9 @@ jest.mock('../../../../../hooks/useEventManager', () => ({
     default: jest.fn().mockReturnValue({ call: jest.fn() }),
 }));
 
-jest.mock('@proton/hooks', () => ({
+jest.mock('@proton/hooks/useLoading', () => ({
     __esModule: true,
-    useLoading: jest.fn().mockReturnValue([false, jest.fn().mockResolvedValue(() => {})]),
+    default: jest.fn().mockReturnValue([false, jest.fn().mockResolvedValue(() => {})]),
 }));
 
 jest.mock('@proton/account/user/hooks');

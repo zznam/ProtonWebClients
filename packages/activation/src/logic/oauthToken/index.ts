@@ -1,11 +1,11 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 
-import { deleteToken, getTokens } from '../../api';
+import { deleteToken, getTokens } from '../../api/api';
 
 export interface OAuthToken {
     Account: string;

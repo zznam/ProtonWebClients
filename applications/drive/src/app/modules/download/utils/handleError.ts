@@ -1,8 +1,8 @@
 import { c } from 'ttag';
 
-import type { NodeEntity } from '@proton/drive/index';
 import { EnrichedError, sendErrorReport } from '@proton/drive/legacy/errorHandling';
 import { getNodeName } from '@proton/drive/modules/nodes';
+import type { NodeEntity } from '@proton/drive/sdk';
 import { getFileExtension } from '@proton/shared/lib/helpers/mimetype';
 
 import { getNodeStorageSize } from '../../../utils/sdk/getNodeStorageSize';
@@ -14,7 +14,12 @@ function trackError(error: unknown, downloadId: string, nodes: NodeEntity[]) {
     const errorMessage = c('Info').t`Unexpected download error`;
     const { updateDownloadItem } = useDownloadManagerStore.getState();
     const errorToHandle = error instanceof Error ? error : new Error(errorMessage);
-    updateDownloadItem(downloadId, { status: DownloadStatus.Failed, error: errorToHandle });
+    // The browser's quota message is too long for the transfer row; error reports keep the original
+    const errorToShow =
+        errorToHandle.name === 'QuotaExceededError'
+            ? new Error(c('Error').t`Not enough browser storage`, { cause: errorToHandle })
+            : errorToHandle;
+    updateDownloadItem(downloadId, { status: DownloadStatus.Failed, error: errorToShow });
 
     sendErrorReport(
         new EnrichedError(errorToHandle.message, {

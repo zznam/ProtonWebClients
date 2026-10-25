@@ -23,7 +23,6 @@ import ModalsChildren from '@proton/components/containers/modals/Children';
 import ModalsProvider from '@proton/components/containers/modals/Provider';
 import NotificationsChildren from '@proton/components/containers/notifications/Children';
 import NotificationsProvider from '@proton/components/containers/notifications/Provider';
-import Icons from '@proton/icons/Icons';
 import { ContextMenuProvider } from '@proton/pass/components/ContextMenu/ContextMenuProvider';
 import { AuthStoreProvider } from '@proton/pass/components/Core/AuthStoreProvider';
 import { ConnectivityProvider } from '@proton/pass/components/Core/ConnectivityProvider';
@@ -56,7 +55,7 @@ import { createConnectivityService } from '@proton/pass/lib/network/connectivity
 import { generateTOTPCode } from '@proton/pass/lib/otp/otp';
 import { QA_SERVICE } from '@proton/pass/lib/qa/service';
 import { createTelemetryEvent } from '@proton/pass/lib/telemetry/utils';
-import type { Maybe } from '@proton/pass/types';
+import type { Maybe } from '@proton/pass/types/utils';
 import { pipe } from '@proton/pass/utils/fp/pipe';
 import createSecureSessionStorage from '@proton/shared/lib/authentication/createSecureSessionStorage';
 import sentry from '@proton/shared/lib/helpers/sentry';
@@ -176,8 +175,6 @@ export const App = () => (
             {(sw) => (
                 <PassCoreProvider {...getPassCoreProps(sw?.client)} wasm>
                     <CompatibilityCheck compatibilities={PASS_WEB_COMPAT}>
-                        <Icons />
-
                         <ErrorBoundary
                             component={<StandardErrorPageDisplay big errorComponent={GenericErrorDisplay} />}
                         >

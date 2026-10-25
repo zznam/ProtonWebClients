@@ -1,7 +1,8 @@
 import type { UseCaseInterface } from '../Domain/UseCase/UseCaseInterface'
-import { Result } from '@proton/docs-shared'
-import type { DriveCompat } from '@proton/drive-store'
-import type { NodeMeta, DocumentKeys } from '@proton/docs-shared'
+import { Result } from '@proton/docs-shared/Result'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
+import type { NodeMeta } from '@proton/docs-shared/BasicTypes'
+import type { DocumentKeys } from '@proton/docs-shared/CryptoTypes'
 import { getErrorString } from '../Util/GetErrorString'
 import type { DriveCompatWrapper } from '@proton/drive-store/lib/DriveCompatWrapper'
 import type { CacheService } from '../Services/CacheService'
@@ -48,14 +49,14 @@ export class GetDocumentKeys implements UseCaseInterface<GetDocumentKeysResult> 
     }
 
     try {
-      const useSDK = isDriveCompatSDKEnabled(this.unleashClient)
+      const replaceDriveCompat = isDriveCompatSDKEnabled(this.unleashClient)
 
-      const documentContentKeyPromise = useSDK
+      const documentContentKeyPromise = replaceDriveCompat
         ? getDocumentKeys(nodeMeta)
         : this.compatWrapper.getCompat<DriveCompat>().getDocumentKeys(nodeMeta)
       const addressWithKeysPromise = primaryAddressKeys
         ? Promise.resolve(primaryAddressKeys)
-        : this.compatWrapper.getCompat<DriveCompat>().getPrimaryAddressKeys()
+        : this.compatWrapper.getCompat<DriveCompat>().getMemberAddressKeys(nodeMeta)
       const [documentContentKey, addressWithKeys] = await Promise.all([
         documentContentKeyPromise,
         addressWithKeysPromise,
@@ -103,7 +104,7 @@ export class GetDocumentKeys implements UseCaseInterface<GetDocumentKeysResult> 
     }
 
     const addressWithKeys =
-      primaryAddressKeys ?? (await this.compatWrapper.getCompat<DriveCompat>().getPrimaryAddressKeys())
+      primaryAddressKeys ?? (await this.compatWrapper.getCompat<DriveCompat>().getMemberAddressKeys(nodeMeta))
     if (!addressWithKeys) {
       return Result.fail('No primary address keys found')
     }
