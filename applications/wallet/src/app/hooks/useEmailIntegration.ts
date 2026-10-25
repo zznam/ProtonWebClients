@@ -6,13 +6,14 @@ import { useAddresses } from '@proton/account/addresses/hooks';
 import type { WasmApiWalletAccount } from '@proton/andromeda';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import useLoading from '@proton/hooks/useLoading';
-import { useWalletApiClients } from '@proton/wallet/contexts';
-import { useWalletDispatch } from '@proton/wallet/store/hooks';
+import { useWalletApiClients } from '@proton/wallet/contexts/ExtendedApiContext';
+import { useWalletDispatch } from '@proton/wallet/store/hooks/app';
 import { walletAccountUpdate } from '@proton/wallet/store/slices';
-import type { IWasmApiWalletData } from '@proton/wallet/types';
+import type { IWasmApiWalletData } from '@proton/wallet/types/wasm';
 
 import { useBitcoinBlockchainContext } from '../contexts';
 import { getAccountWithChainDataFromManyWallets } from '../utils';
+import { getBitcoinViaEmailAddresses } from '../utils/email';
 
 export const useEmailIntegration = (
     wallet: IWasmApiWalletData,
@@ -33,7 +34,9 @@ export const useEmailIntegration = (
             WalletAccounts.flatMap(({ Addresses }) => Addresses.flatMap(({ ID }) => ID))
         );
 
-        return addresses?.map((addr) => [addr, !alreadyUsedAddresses.includes(addr.ID)] as const) ?? [];
+        return getBitcoinViaEmailAddresses(addresses).map(
+            (addr) => [addr, !alreadyUsedAddresses.includes(addr.ID)] as const
+        );
     }, [wallet, otherWallets, addresses]);
 
     const onAddEmailAddress = (emailAddressId: string) => {

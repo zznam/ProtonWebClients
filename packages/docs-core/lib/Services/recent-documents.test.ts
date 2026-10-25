@@ -1,10 +1,12 @@
-import { Result, ServerTime, type DecryptedNode } from '@proton/docs-shared'
+import type { DecryptedNode } from '@proton/docs-shared/DecryptedNode'
+import { Result } from '@proton/docs-shared/Result'
+import { ServerTime } from '@proton/docs-shared/ServerTime'
 import { RecentDocumentsItem, RecentDocumentsService } from './recent-documents'
-import type { DriveCompat } from '@proton/drive-store/lib'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
 import type { DocsApi } from './../Api/DocsApi'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import type { RecentDocumentAPIItem } from './../Api/Types/GetRecentsResponse'
-import type { DecryptedAddressKey } from '@proton/shared/lib/interfaces'
+import type { DecryptedAddressKey } from '@proton/shared/lib/interfaces/Key'
 import type { CacheService } from './CacheService'
 
 describe('RecentDocumentsService', () => {

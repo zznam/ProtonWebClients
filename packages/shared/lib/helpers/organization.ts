@@ -1,5 +1,5 @@
 import { ORGANIZATION_FLAGS, ORGANIZATION_TWOFA_SETTING, OrganizationPlanFlag } from '../constants';
-import type { Organization } from '../interfaces';
+import type { Organization } from '../interfaces/Organization';
 import { hasBit } from './bitset';
 
 export const isLoyal = (organization: Partial<Organization> = {}) => {
@@ -32,10 +32,6 @@ export const hasToMigrateOrgKey = (organization: Partial<Organization> = {}) => 
 
 export const hasDeletionWhitelisted = (organization: Partial<Organization> = {}) => {
     return hasBit(organization.Flags, ORGANIZATION_FLAGS.DELETION_WHITELISTED);
-};
-
-export const hasBonuses = (organization: Partial<Organization> = {}) => {
-    return !!organization.Flags || !!organization.LoyaltyCounter;
 };
 
 export const hasTwoFARequiredForAdminOnly = (organization: Partial<Organization> = {}) => {

@@ -1,20 +1,18 @@
 import {
+    AppendOnlyStreamTarget,
     type AudioCodec,
     AudioSample,
     AudioSampleSource,
     CanvasSource,
     Mp4OutputFormat,
     Output,
-    StreamTarget,
-    type StreamTargetChunk,
 } from 'mediabunny';
 
-import { ENCODER_AUDIO_BITRATE, ENCODER_VIDEO_BITRATE, KEYFRAME_INTERVAL_SEC } from './constants';
+import { AUDIO_STALL_MS, ENCODER_AUDIO_BITRATE, ENCODER_VIDEO_BITRATE, KEYFRAME_INTERVAL_SEC } from './constants';
 import type { AudioTapSamples } from './types';
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-const AUDIO_STALL_MS = 500; // audio silent this long → fall back to the wall clock
 const AUDIO_POLL_MS = 4; // re-check cadence while waiting for the clock to advance
 
 // Encodes the live OffscreenCanvas to a fragmented MP4 at constant frame rate:
@@ -41,22 +39,21 @@ export class EncoderPipeline {
         canvas: OffscreenCanvas,
         fps: number,
         audioCodec: AudioCodec,
-        onChunk: (data: Uint8Array<ArrayBuffer>, position: number) => void,
+        onChunk: (data: Uint8Array<ArrayBuffer>) => void,
         onError: (error: unknown) => void
     ) {
         this.fps = fps;
         this.onError = onError;
 
-        const writable = new WritableStream<StreamTargetChunk>({
+        const writable = new WritableStream<Uint8Array<ArrayBuffer>>({
             write(chunk) {
-                // Copy out of Mediabunny's buffer before handing ownership off.
-                onChunk(chunk.data.slice(), chunk.position);
+                onChunk(chunk.slice());
             },
         });
 
         this.output = new Output({
             format: new Mp4OutputFormat({ fastStart: 'fragmented' }),
-            target: new StreamTarget(writable),
+            target: new AppendOnlyStreamTarget(writable),
         });
 
         this.videoSource = new CanvasSource(canvas, {

@@ -6,7 +6,6 @@ import type { DevicePayload } from '@proton/shared/lib/interfaces/drive/device';
 import type { DriveEventsResult } from '@proton/shared/lib/interfaces/drive/events';
 import { type DriveFileRevisionPayload, PhotoTag } from '@proton/shared/lib/interfaces/drive/file';
 import type {
-    ShareExternalInvitationPayload,
     ShareInvitationDetailsPayload,
     ShareInvitationPayload,
 } from '@proton/shared/lib/interfaces/drive/invitation';
@@ -16,13 +15,12 @@ import type { ShareMembershipPayload } from '@proton/shared/lib/interfaces/drive
 import type { ShareMeta, ShareMetaShort } from '@proton/shared/lib/interfaces/drive/share';
 import type { ShareURL as ShareURLPayload, SharedURLInfoPayload } from '@proton/shared/lib/interfaces/drive/sharing';
 
-import type { Device } from '../_devices';
+import type { Device } from '../_devices/interface';
 import type { DriveEvents } from '../_events/interface';
 import type { EncryptedLink } from '../_links/interface';
-import type { DriveFileRevision } from '../_revisions';
+import type { DriveFileRevision } from '../_revisions/interface';
 import type {
     Share,
-    ShareExternalInvitation,
     ShareInvitation,
     ShareInvitationDetails,
     ShareMembership,
@@ -30,7 +28,7 @@ import type {
     SharedUrlInfo,
 } from '../_shares/interface';
 import { ShareType } from '../_shares/interface';
-import { ThumbnailType } from '../_uploads/media';
+import { ThumbnailType } from '../_uploads/media/interface';
 
 // LinkMetaWithShareURL is used when loading shared links.
 // We need this to load information about number of accesses.
@@ -269,7 +267,7 @@ export const revisionPayloadToRevision = (revision: DriveFileRevisionPayload): D
     };
 };
 
-export const shareInvitationPayloadToShareInvitation = (shareInvitation: ShareInvitationPayload): ShareInvitation => {
+const shareInvitationPayloadToShareInvitation = (shareInvitation: ShareInvitationPayload): ShareInvitation => {
     return {
         invitationId: shareInvitation.InvitationID,
         inviterEmail: shareInvitation.InviterEmail,
@@ -279,20 +277,6 @@ export const shareInvitationPayloadToShareInvitation = (shareInvitation: ShareIn
         keyPacketSignature: shareInvitation.KeyPacketSignature,
         createTime: shareInvitation.CreateTime,
         state: shareInvitation.State,
-    };
-};
-
-export const shareExternalInvitationPayloadToShareExternalInvitation = (
-    shareExternalInvitation: ShareExternalInvitationPayload
-): ShareExternalInvitation => {
-    return {
-        externalInvitationId: shareExternalInvitation.ExternalInvitationID,
-        inviterEmail: shareExternalInvitation.InviterEmail,
-        inviteeEmail: shareExternalInvitation.InviteeEmail,
-        permissions: shareExternalInvitation.Permissions,
-        createTime: shareExternalInvitation.CreateTime,
-        state: shareExternalInvitation.State,
-        externalInvitationSignature: shareExternalInvitation.ExternalInvitationSignature,
     };
 };
 

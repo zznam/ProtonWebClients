@@ -4,7 +4,7 @@ import { Button } from '@proton/atoms/Button/Button';
 import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
 import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 
-import { InAppNotificationState } from '../../types';
+import { InAppNotificationState } from '../../types/api/pass';
 import { PassModal } from '../Layout/Modal/PassModal';
 import { WithInAppNotification } from './WithInAppNotification';
 
@@ -12,7 +12,7 @@ export const InAppNotificationModal = WithInAppNotification(({ setNotificationSt
     const { content } = notification;
 
     return (
-        <PassModal className="overflow-auto" size="small" open>
+        <PassModal className="overflow-auto" size="small" open data-testid="modal:auto-open">
             <ModalTwoHeader
                 className="w-full"
                 hasClose={false}
@@ -51,6 +51,7 @@ export const InAppNotificationModal = WithInAppNotification(({ setNotificationSt
                     color="weak"
                     shape="solid"
                     size="large"
+                    data-testid="modal:dismiss"
                     onClick={() => setNotificationState(InAppNotificationState.DISMISSED)}
                     pill
                 >

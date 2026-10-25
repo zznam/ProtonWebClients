@@ -9,11 +9,15 @@ import {
     canModify,
     getAutoCoupon,
     getAvailableSubscriptionActions,
+    getSoonestEndingSubscription,
     getSubscriptionPlanTitle,
+    hasBlackFriday2026Coupon,
     isAddonDowngrade,
     isDangerouslyAllowedSubscriptionEstimation,
+    isModifyingPaidSubscriptionSelection,
     isSubscriptionCheckForbidden,
     isSubscriptionCheckForbiddenWithReason,
+    isSubscriptionSelectionEqual,
     isSubscriptionUnchanged,
     isUpcomingSubscriptionUnpaid,
 } from './helpers';
@@ -190,6 +194,59 @@ describe('isSubscriptionUnchanged', () => {
 
         const upcomingSubscriptionUnchangedTwoYears = isSubscriptionUnchanged(subscription, planIDs, CYCLE.TWO_YEARS);
         expect(upcomingSubscriptionUnchangedTwoYears).toBe(false);
+    });
+});
+
+describe('isSubscriptionSelectionEqual', () => {
+    it('returns true when planIDs and cycle match', () => {
+        const selection = { planIDs: { [PLANS.MAIL]: 1 }, cycle: CYCLE.YEARLY };
+
+        expect(isSubscriptionSelectionEqual(selection, { ...selection })).toBe(true);
+    });
+
+    it('returns false when cycle differs', () => {
+        const planIDs = { [PLANS.MAIL]: 1 };
+
+        expect(isSubscriptionSelectionEqual({ planIDs, cycle: CYCLE.MONTHLY }, { planIDs, cycle: CYCLE.YEARLY })).toBe(
+            false
+        );
+    });
+
+    it('returns false when planIDs differ', () => {
+        expect(
+            isSubscriptionSelectionEqual(
+                { planIDs: { [PLANS.MAIL]: 1 }, cycle: CYCLE.YEARLY },
+                { planIDs: { [PLANS.DRIVE]: 1 }, cycle: CYCLE.YEARLY }
+            )
+        ).toBe(false);
+    });
+
+    it('returns false when addon quantity differs', () => {
+        expect(
+            isSubscriptionSelectionEqual(
+                { planIDs: { [PLANS.MAIL]: 1, [ADDON_NAMES.MEMBER_MAIL_PRO]: 2 }, cycle: CYCLE.YEARLY },
+                { planIDs: { [PLANS.MAIL]: 1, [ADDON_NAMES.MEMBER_MAIL_PRO]: 3 }, cycle: CYCLE.YEARLY }
+            )
+        ).toBe(false);
+    });
+});
+
+describe('isModifyingPaidSubscriptionSelection', () => {
+    it('returns false for free subscribers', () => {
+        expect(isModifyingPaidSubscriptionSelection(FREE_SUBSCRIPTION, { [PLANS.MAIL]: 1 }, CYCLE.YEARLY)).toBe(false);
+    });
+
+    it('returns false when the paid selection matches the current subscription', () => {
+        const subscription = buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' });
+        const planIDs = getPlanIDs(subscription);
+
+        expect(isModifyingPaidSubscriptionSelection(subscription, planIDs, subscription.Cycle)).toBe(false);
+    });
+
+    it('returns true when a paid subscriber changes plan or cycle', () => {
+        const subscription = buildSubscription({ planName: PLANS.MAIL, cycle: CYCLE.YEARLY, currency: 'EUR' });
+
+        expect(isModifyingPaidSubscriptionSelection(subscription, { [PLANS.DRIVE]: 1 }, CYCLE.YEARLY)).toBe(true);
     });
 });
 
@@ -1261,5 +1318,74 @@ describe('isAddonDowngrade', () => {
     it('is false for an unchanged or increased addon quantity', () => {
         expect(isAddonDowngrade(withMembers(2), withMembers(2))).toBe(false);
         expect(isAddonDowngrade(withMembers(2), withMembers(5))).toBe(false);
+    });
+});
+
+describe('hasBlackFriday2026Coupon', () => {
+    it.each([
+        COUPON_CODES.BLACK_FRIDAY_2026_NEW,
+        COUPON_CODES.BLACK_FRIDAY_2026_BUNDLE,
+        COUPON_CODES.BLACK_FRIDAY_2026_PARTNERS,
+        COUPON_CODES.BLACK_FRIDAY_2026_BUSINESS,
+        COUPON_CODES.BLACK_FRIDAY_2026_TRIAL,
+        COUPON_CODES.BLACK_FRIDAY_2026_NEW_CS,
+        COUPON_CODES.BLACK_FRIDAY_2026_BUNDLE_CS,
+        COUPON_CODES.BLACK_FRIDAY_2026_PARTNERS_CS,
+        COUPON_CODES.BLACK_FRIDAY_2026_BUSINESS_CS,
+        COUPON_CODES.BLACK_FRIDAY_2026_TRIAL_CS,
+    ])('is true for %s', (couponCode) => {
+        expect(hasBlackFriday2026Coupon(buildSubscription(PLANS.BUNDLE, { CouponCode: couponCode }))).toBe(true);
+    });
+
+    it('matches the coupon regardless of case', () => {
+        expect(hasBlackFriday2026Coupon(buildSubscription(PLANS.BUNDLE, { CouponCode: 'bf2026newcs' }))).toBe(true);
+    });
+
+    it('is false for a coupon from another campaign', () => {
+        expect(hasBlackFriday2026Coupon(buildSubscription(PLANS.BUNDLE, { CouponCode: 'JUNE26BUNDLESALE' }))).toBe(
+            false
+        );
+    });
+
+    it('is false when the subscription has no coupon', () => {
+        expect(hasBlackFriday2026Coupon(buildSubscription(PLANS.BUNDLE, { CouponCode: null }))).toBe(false);
+    });
+
+    it('is false for a free subscription', () => {
+        expect(hasBlackFriday2026Coupon(FREE_SUBSCRIPTION)).toBe(false);
+    });
+});
+
+describe('getSoonestEndingSubscription', () => {
+    const mailEndingLater = buildSubscription(PLANS.MAIL, { ID: 'mail-later', PeriodEnd: 1800000000 });
+    const driveEndingSooner = buildSubscription(PLANS.DRIVE, { ID: 'drive-sooner', PeriodEnd: 1700000000 });
+    const passEndingSoonest = buildSubscription(PLANS.PASS, { ID: 'pass-soonest', PeriodEnd: 1600000000 });
+    const isNotPass = (subscription: Subscription) => subscription.ID !== 'pass-soonest';
+
+    it.each([
+        { name: 'no subscriptions', subscriptions: [], expectedID: undefined },
+        { name: 'no candidate', subscriptions: [passEndingSoonest], expectedID: undefined },
+        { name: 'one candidate', subscriptions: [mailEndingLater], expectedID: 'mail-later' },
+        {
+            name: 'two candidates, soonest last',
+            subscriptions: [mailEndingLater, driveEndingSooner],
+            expectedID: 'drive-sooner',
+        },
+        {
+            name: 'two candidates, soonest first',
+            subscriptions: [driveEndingSooner, mailEndingLater],
+            expectedID: 'drive-sooner',
+        },
+        {
+            name: 'a non-candidate that ends sooner',
+            subscriptions: [passEndingSoonest, mailEndingLater],
+            expectedID: 'mail-later',
+        },
+    ] as const)('returns $expectedID for $name', ({ subscriptions, expectedID }) => {
+        expect(getSoonestEndingSubscription([...subscriptions], isNotPass)?.ID).toBe(expectedID);
+    });
+
+    it('returns the subscription object itself', () => {
+        expect(getSoonestEndingSubscription([mailEndingLater, driveEndingSooner], isNotPass)).toBe(driveEndingSooner);
     });
 });

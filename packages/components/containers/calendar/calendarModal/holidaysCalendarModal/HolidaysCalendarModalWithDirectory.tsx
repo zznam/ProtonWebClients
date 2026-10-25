@@ -9,7 +9,7 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { useGetCalendarBootstrap } from '@proton/calendar/calendarBootstrap/hooks';
 import { useCalendarUserSettings } from '@proton/calendar/calendarUserSettings/hooks';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { removeHolidaysCalendar, updateCalendarSettings } from '@proton/shared/lib/api/calendars';
 import { dedupeNotifications, sortNotificationsByAscendingTrigger } from '@proton/shared/lib/calendar/alarms';
 import { modelToNotifications } from '@proton/shared/lib/calendar/alarms/modelToNotifications';
@@ -30,13 +30,13 @@ import {
 import { getRandomAccentColor } from '@proton/shared/lib/colors';
 import { languageCode } from '@proton/shared/lib/i18n';
 import { getBrowserLanguageTags } from '@proton/shared/lib/i18n/helper';
+import type { CalendarCreateData } from '@proton/shared/lib/interfaces/calendar/Api';
 import type {
     CalendarBootstrap,
-    CalendarCreateData,
     HolidaysDirectoryCalendar,
-    NotificationModel,
     VisualCalendar,
-} from '@proton/shared/lib/interfaces/calendar';
+} from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { NotificationModel } from '@proton/shared/lib/interfaces/calendar/Notification';
 import uniqueBy from '@proton/utils/uniqueBy';
 
 import CountrySelect from '../../../../components/country/CountrySelect';

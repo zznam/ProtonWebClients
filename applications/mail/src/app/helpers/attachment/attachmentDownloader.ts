@@ -1,12 +1,12 @@
+import { logger } from '@protontech/logger';
 import JSZip from 'jszip';
 
-import { logger } from '@proton/logger';
 import type { MessageKeys, MessageVerification } from '@proton/mail/store/messages/messagesTypes';
 import { isFirefox } from '@proton/shared/lib/helpers/browser';
 import downloadFile from '@proton/shared/lib/helpers/downloadFile';
 import { splitExtension } from '@proton/shared/lib/helpers/file';
 import { shortHumanSize } from '@proton/shared/lib/helpers/humanSize';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import type { Attachment, Message } from '@proton/shared/lib/interfaces/mail/Message';
 import { MAIL_VERIFICATION_STATUS } from '@proton/shared/lib/mail/constants';
 

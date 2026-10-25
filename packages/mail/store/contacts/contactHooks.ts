@@ -2,9 +2,9 @@ import { useCallback, useEffect } from 'react';
 
 import { type Action, type ThunkDispatch, createSelector } from '@reduxjs/toolkit';
 
-import { baseUseDispatch, baseUseSelector } from '@proton/react-redux-store';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
-import type { Contact } from '@proton/shared/lib/interfaces/contacts';
+import { baseUseDispatch, baseUseSelector } from '@proton/react-redux-store/ProtonStoreContext';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
+import type { Contact } from '@proton/shared/lib/interfaces/contacts/Contact';
 
 import { type ContactState, contactThunk, selectContact } from './contactSlice';
 

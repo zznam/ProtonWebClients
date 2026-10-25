@@ -1,5 +1,5 @@
 import { buildUser } from '@proton/account/testing/buildUser';
-import { UNPAID_STATE } from '@proton/shared/lib/interfaces';
+import { UNPAID_STATE } from '@proton/shared/lib/interfaces/User';
 
 import { buildSubscription } from '../../testing/buildSubscription';
 import {
@@ -119,11 +119,9 @@ const buildMethods = (overrides: Partial<PaymentMethodsContext> = {}) =>
 const permissive: Partial<PaymentMethodsContext> = {
     amount: 100_000,
     canUseApplePay: true,
-    canUseGooglePay: true,
     enableSepa: true,
     enableSepaB2C: true,
     billingAddress: { CountryCode: 'CH', State: '' },
-    enablePaypalRegionalCurrenciesBatch3: true,
     enablePaypalKrw: true,
 };
 
@@ -1015,6 +1013,7 @@ describe('Apple Pay', () => {
         'signup-v2-upgrade',
         'signup-vpn',
         'subscription',
+        'invoice',
     ] as PaymentMethodFlow[])('should display Apple Pay for allowed flow %s', (flow) => {
         const methods = buildContext({
             paymentStatus: status,
@@ -1032,7 +1031,7 @@ describe('Apple Pay', () => {
         expect(getNewMethods(methods).some((method) => method.type === PAYMENT_METHOD_TYPES.APPLE_PAY)).toBe(true);
     });
 
-    it.each(['credit', 'invoice', 'add-card', 'add-paypal'] as PaymentMethodFlow[])(
+    it.each(['credit', 'add-card', 'add-paypal'] as PaymentMethodFlow[])(
         'should not display Apple Pay for disallowed flow %s',
         (flow) => {
             const methods = buildContext({
@@ -1875,6 +1874,7 @@ describe('availability per flow', () => {
             'signup-v2-upgrade',
             'signup-vpn',
             'subscription',
+            'invoice',
         ],
         [PAYMENT_METHOD_TYPES.GOOGLE_PAY]: [
             'signup',
@@ -1885,6 +1885,7 @@ describe('availability per flow', () => {
             'signup-v2-upgrade',
             'signup-vpn',
             'subscription',
+            'invoice',
             'reservation-donation',
         ],
     };
@@ -1937,26 +1938,14 @@ describe('minimum amounts per currency', () => {
 });
 
 describe('PayPal regional currencies', () => {
-    describe.each(['HKD', 'SGD', 'JPY', 'PLN'] as Currency[])('%s', (currency) => {
-        it.each([true, false])('is gated behind enablePaypalRegionalCurrenciesBatch3=%s', (enabled) => {
-            const available = hasNewMethod(PAYMENT_METHOD_TYPES.CHARGEBEE_PAYPAL, {
-                ...permissive,
-                currency,
-                enablePaypalRegionalCurrenciesBatch3: enabled,
-            });
+    it.each(['HKD', 'SGD', 'JPY', 'PLN'] as Currency[])('should offer paypal for %s without any flag', (currency) => {
+        expect(hasNewMethod(PAYMENT_METHOD_TYPES.CHARGEBEE_PAYPAL, { ...permissive, currency })).toBe(true);
+    });
 
-            expect(available).toBe(enabled);
-        });
-
-        it('is not gated behind enablePaypalKrw', () => {
-            const available = hasNewMethod(PAYMENT_METHOD_TYPES.CHARGEBEE_PAYPAL, {
-                ...permissive,
-                currency,
-                enablePaypalKrw: false,
-            });
-
-            expect(available).toBe(true);
-        });
+    it.each(['HKD', 'SGD', 'JPY', 'PLN'] as Currency[])('should not gate %s behind enablePaypalKrw', (currency) => {
+        expect(
+            hasNewMethod(PAYMENT_METHOD_TYPES.CHARGEBEE_PAYPAL, { ...permissive, currency, enablePaypalKrw: false })
+        ).toBe(true);
     });
 
     it.each([true, false])('KRW is gated behind enablePaypalKrw=%s', (enabled) => {
@@ -1969,11 +1958,10 @@ describe('PayPal regional currencies', () => {
         expect(available).toBe(enabled);
     });
 
-    it('should ignore both flags for currencies that are not gated', () => {
+    it('should ignore the flag for currencies that are not gated', () => {
         const available = hasNewMethod(PAYMENT_METHOD_TYPES.CHARGEBEE_PAYPAL, {
             ...permissive,
             currency: 'EUR',
-            enablePaypalRegionalCurrenciesBatch3: false,
             enablePaypalKrw: false,
         });
 
@@ -2135,10 +2123,6 @@ describe('Google Pay', () => {
         const paymentStatus = { ...status, VendorStates: { ...status.VendorStates, Google: false } };
 
         expect(hasNewMethod(PAYMENT_METHOD_TYPES.GOOGLE_PAY, { ...permissive, paymentStatus })).toBe(false);
-    });
-
-    it.each([false, undefined])('should not be offered when canUseGooglePay is %s', (canUseGooglePay) => {
-        expect(hasNewMethod(PAYMENT_METHOD_TYPES.GOOGLE_PAY, { ...permissive, canUseGooglePay })).toBe(false);
     });
 
     it('should be offered for reservation-donation while Apple Pay is not', () => {

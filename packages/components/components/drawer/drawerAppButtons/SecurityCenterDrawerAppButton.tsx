@@ -5,12 +5,12 @@ import {
     selectAccountSecurityIssuesCount,
     selectCanDisplayAccountSecuritySection,
     selectHasAccountSecurityIssue,
-    selectUnreadBreachesCount,
-} from '@proton/account';
+} from '@proton/account/accountSecurity/accountSecuritySlice';
+import { selectUnreadBreachesCount } from '@proton/account/breaches/breachNotificationsSlice';
 import { ThemeColor } from '@proton/colors/types';
-import { baseUseSelector } from '@proton/react-redux-store';
+import { baseUseSelector } from '@proton/react-redux-store/ProtonStoreContext';
 import { DRAWER_NATIVE_APPS } from '@proton/shared/lib/drawer/interfaces';
-import type { Optional } from '@proton/shared/lib/interfaces';
+import type { Optional } from '@proton/shared/lib/interfaces/utils';
 import { useFlag } from '@proton/unleash/useFlag';
 
 import useDrawer from '../../../hooks/drawer/useDrawer';

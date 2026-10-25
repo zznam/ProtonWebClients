@@ -9,6 +9,7 @@ import { c, msgid } from 'ttag';
 import { useGetAddressKeys } from '@proton/account/addressKeys/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
+import { useWelcomeFlags } from '@proton/account/welcomeFlags';
 import { useApi } from '@proton/app-context/useApi';
 import { useConfig } from '@proton/app-context/useConfig';
 import { useNotifications } from '@proton/app-context/useNotifications';
@@ -20,6 +21,7 @@ import {
 } from '@proton/calendar-video-conferencing/videoConferencing/telemetry';
 import { useGetCalendarBootstrap, useReadCalendarBootstrap } from '@proton/calendar/calendarBootstrap/hooks';
 import { useGetCalendarKeys } from '@proton/calendar/calendarBootstrap/keys';
+import { useGetCalendarEventRaw } from '@proton/calendar/calendarEvent/useGetCalendarEventRaw';
 import { changeCalendarVisiblity } from '@proton/calendar/calendars/actions';
 import { validateDeepLinkParams } from '@proton/calendar/utils';
 import Dropzone from '@proton/components/components/dropzone/Dropzone';
@@ -28,7 +30,6 @@ import { useContactEmailsCache } from '@proton/components/containers/contacts/Co
 import { useCalendarModelEventManager } from '@proton/components/containers/eventManager/calendar/CalendarModelEventManagerProvider';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import useBeforeUnload from '@proton/components/hooks/useBeforeUnload';
-import useGetCalendarEventRaw from '@proton/components/hooks/useGetCalendarEventRaw';
 import { useGetCanonicalEmailsMap } from '@proton/components/hooks/useGetCanonicalEmailsMap';
 import useGetEncryptionPreferences from '@proton/components/hooks/useGetEncryptionPreferences';
 import useGetVerificationPreferences from '@proton/components/hooks/useGetVerificationPreferences';
@@ -81,7 +82,8 @@ import { getProdId } from '@proton/shared/lib/calendar/vcalConfig';
 import { buildVcalOrganizer, propertyToUTCDate } from '@proton/shared/lib/calendar/vcalConverter';
 import { withDtstamp } from '@proton/shared/lib/calendar/veventHelper';
 import { API_CODES, SECOND } from '@proton/shared/lib/constants';
-import { format, isSameDay } from '@proton/shared/lib/date-fns-utc';
+import { isSameDay } from '@proton/shared/lib/date-fns-utc';
+import format from '@proton/shared/lib/date-fns-utc/format';
 import type { WeekStartsOn } from '@proton/shared/lib/date-fns-utc/interface';
 import { getFormattedWeekdays } from '@proton/shared/lib/date/date';
 import { convertUTCDateTimeToZone, fromUTCDate, toLocalDate, toUTCDate } from '@proton/shared/lib/date/timezone';
@@ -91,22 +93,23 @@ import { omit, pick } from '@proton/shared/lib/helpers/object';
 import { wait } from '@proton/shared/lib/helpers/promise';
 import { SentryCalendarInitiatives, traceError, traceInitiativeError } from '@proton/shared/lib/helpers/sentry';
 import { dateLocale } from '@proton/shared/lib/i18n';
-import type { Address } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
 import type { ModalWithProps } from '@proton/shared/lib/interfaces/Modal';
 import type {
-    AttendeeComment,
     AttendeeDeleteSingleEditResponse,
+    SyncMultipleApiResponse,
+    UpdateEventPartApiResponse,
+} from '@proton/shared/lib/interfaces/calendar/Api';
+import type { CalendarBootstrap, VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type {
+    AttendeeComment,
     AttendeeModel,
-    CalendarBootstrap,
     CalendarEvent,
     CalendarEventSharedData,
     DateTimeModel,
     EventModel,
-    SyncMultipleApiResponse,
-    UpdateEventPartApiResponse,
-    VcalVeventComponent,
-    VisualCalendar,
-} from '@proton/shared/lib/interfaces/calendar';
+} from '@proton/shared/lib/interfaces/calendar/Event';
+import type { VcalVeventComponent } from '@proton/shared/lib/interfaces/calendar/VcalModel';
 import type { SendPreferences } from '@proton/shared/lib/interfaces/mail/crypto';
 import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 import getSendPreferences from '@proton/shared/lib/mail/send/getSendPreferences';
@@ -458,8 +461,16 @@ const InteractiveCalendarView = ({
         setEventTargetAction,
     });
 
-    const { isBookingActive, addBookingRange, formData, isIntersectingBookingRange, updateBookingRange } =
-        useBookings();
+    const {
+        isBookingActive,
+        addBookingRange,
+        formData,
+        isIntersectingBookingRange,
+        updateBookingRange,
+        canCreateBooking,
+        openBookingSidebarCreation,
+    } = useBookings();
+    const isWelcomeFlowDone = useWelcomeFlags().welcomeFlags.isDone;
 
     // Handle events coming from outside if calendar app is open in the drawer
     useOpenEventsFromMail({
@@ -2386,6 +2397,9 @@ const InteractiveCalendarView = ({
                 });
             }
         },
+        openBookingCreationSidebar: () => {
+            openBookingSidebarCreation(new Date());
+        },
         dependencies: {
             activeAddresses,
             cachedCalendars: calendarsEventsCacheRef.current.calendars,
@@ -2393,6 +2407,8 @@ const InteractiveCalendarView = ({
             createEventCalendar,
             createEventCalendarBootstrap,
             hasInteractiveData: !!interactiveData,
+            canCreateBooking,
+            isWelcomeFlowDone,
         },
     });
 

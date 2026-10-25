@@ -1,13 +1,15 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
-import { type Address, SETTINGS_PASSWORD_MODE, UserType } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import { UserType } from '@proton/shared/lib/interfaces/User';
+import { SETTINGS_PASSWORD_MODE } from '@proton/shared/lib/interfaces/UserSettings';
 import { AuthDeviceState } from '@proton/shared/lib/keys/device';
 
 import type { AuthStore } from '../../lib/auth/store';
+import { isShareHidingSensitiveContent } from '../../lib/shares/share.predicates';
 import { getPassPlan } from '../../lib/user/user.plan';
 import { isWritableVault } from '../../lib/vaults/vault.predicates';
-import type { Maybe, MaybeNull, Share } from '../../types';
 import {
     type AutofillModelExperimentGroup,
     DEFAULT_AUTOFILL_MODEL_EXPERIMENT_GROUP,
@@ -15,6 +17,8 @@ import {
     isAutofillModelExperimentGroup,
 } from '../../types/api/features';
 import { UserPassPlan } from '../../types/api/plan';
+import type { Share } from '../../types/data/shares';
+import type { Maybe, MaybeNull } from '../../types/utils';
 import { oneOf } from '../../utils/fp/predicates';
 import { sortOn } from '../../utils/fp/sort';
 import { UNIX_DAY } from '../../utils/time/constants';
@@ -22,7 +26,7 @@ import { getEpoch } from '../../utils/time/epoch';
 import type { VaultShareItem } from '../reducers';
 import type { State } from '../types';
 import { selectExtraPasswordEnabled } from './settings';
-import { selectShareState } from './shares';
+import { selectShare, selectShareState } from './shares';
 import { createUncachedSelector } from './utils';
 import { selectDefaultVault } from './vaults';
 
@@ -88,6 +92,15 @@ export const selectFeatureFlagVariant =
     (feature: PassFeature) =>
     ({ user: { featureVariants } }: State) =>
         featureVariants?.[feature] ?? null;
+
+/** Single source of truth for whether a share's sensitive content (e.g. a login
+ * password) should be revealable to the current user. `false` only when the
+ * feature flag is on, the share is known, and it has `HIDE_SENSITIVE_CONTENT` set. */
+export const selectCanRevealSensitiveContent = (shareId: Maybe<string>) =>
+    createSelector(
+        [selectFeatureFlag(PassFeature.Pass__V1_44__ShareWithHiddenPassword), selectShare(shareId)],
+        (hiddenPasswordEnabled, share) => !hiddenPasswordEnabled || !share || !isShareHidingSensitiveContent(share)
+    );
 
 export const selectAutofillModelExperimentGroup = (state: State): AutofillModelExperimentGroup => {
     const name = selectFeatureFlagVariant(PassFeature.PassAutofillModelExperimentGroup)(state)?.name;

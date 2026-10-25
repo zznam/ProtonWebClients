@@ -6,22 +6,19 @@ import { setupExternalUserForProton } from '@proton/account/addresses/actions';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import {
-    Form,
-    InputFieldStacked,
-    InputFieldTwo,
-    type ModalProps,
-    ModalTwo,
-    ModalTwoContent,
-    ModalTwoFooter,
-    ModalTwoHeader,
-    useAuthentication,
-    useErrorHandler,
-    useEventManager,
-    useFormErrors,
-} from '@proton/components';
+import Form from '@proton/components/components/form/Form';
+import InputFieldStacked from '@proton/components/components/inputFieldStacked/InputFieldStacked';
+import ModalTwo, { type ModalProps } from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
+import useFormErrors from '@proton/components/components/v2/useFormErrors';
+import useAuthentication from '@proton/components/hooks/useAuthentication';
+import useErrorHandler from '@proton/components/hooks/useErrorHandler';
+import useEventManager from '@proton/components/hooks/useEventManager';
 import { useSilentApi } from '@proton/components/hooks/useSilentApi';
-import { useLoading } from '@proton/hooks/index';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { TelemetryBringYourOwnEmailEvents, TelemetryMeasurementGroups } from '@proton/shared/lib/api/telemetry';
 import { queryCheckUsernameAvailability } from '@proton/shared/lib/api/user';
@@ -35,7 +32,7 @@ import {
     usernameStartCharacterValidator,
 } from '@proton/shared/lib/helpers/formValidators';
 import { sendTelemetryReport } from '@proton/shared/lib/helpers/metrics';
-import type { CalendarUserSettings, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { CalendarUserSettings, VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
 import claimProtonAddressImg from '@proton/styles/assets/img/illustrations/claim-proton-address.svg';
 
 import type { BYOE_CLAIM_PROTON_ADDRESS_SOURCE } from '../../../constants';

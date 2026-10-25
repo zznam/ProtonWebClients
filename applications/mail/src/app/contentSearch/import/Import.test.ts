@@ -4,9 +4,10 @@
 import type { PrivateKeyReference } from '@protontech/crypto';
 import 'fake-indexeddb/auto';
 
-import { initializeEncryptedSearch, serializeAndEncryptItem } from '@proton/encrypted-search/esHelpers';
-import { openESDB } from '@proton/encrypted-search/esIDB';
-import type { DecryptedKey } from '@proton/shared/lib/interfaces';
+import { initializeEncryptedSearch } from '@proton/encrypted-search/esHelpers/esBuild';
+import { serializeAndEncryptItem } from '@proton/encrypted-search/esHelpers/esUtils';
+import { openESDB } from '@proton/encrypted-search/esIDB/indexedDB';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
 
 import {
     generateKeys,

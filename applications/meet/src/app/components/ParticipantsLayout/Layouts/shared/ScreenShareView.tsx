@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { useRoomContext } from '@livekit/components-react';
+import { logger } from '@protontech/logger';
 import { RemoteTrackPublication } from 'livekit-client';
 import { c } from 'ttag';
 
@@ -51,8 +52,7 @@ export const ScreenShareView = ({ isCompact = false }: { isCompact?: boolean }) 
             publication.setEnabled(wasEnabled);
             await wait(isSafari() ? 200 : 50);
         } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Failed to refresh screen share track', error);
+            logger.error('Failed to refresh screen share track', error);
         } finally {
             setIsRefreshingScreenShare(false);
         }

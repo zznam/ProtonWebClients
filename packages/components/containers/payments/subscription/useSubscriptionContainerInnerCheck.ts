@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import type { PaymentFacade } from '@proton/payments-ui/client-extensions/usePaymentFacade';
 import type { CheckSubscriptionData } from '@proton/payments/core/api/api';
 import { ProrationMode } from '@proton/payments/core/api/api';
@@ -18,14 +18,16 @@ import { getFreeCheckResult } from '@proton/payments/core/subscription/freePlans
 import {
     getAutoCoupon,
     getPlanIDs,
+    isModifyingPaidSubscriptionSelection,
     isSubscriptionCheckForbiddenWithReason,
+    isSubscriptionSelectionEqual,
 } from '@proton/payments/core/subscription/helpers';
 import type { FullPlansMap, Subscription, SubscriptionEstimation } from '@proton/payments/core/subscription/interface';
 import type { PaymentTelemetryContext } from '@proton/payments/telemetry/helpers';
 import { getApiErrorMessage, getIsConnectionIssue } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import type { ProductParam } from '@proton/shared/lib/apps/product';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import isTruthy from '@proton/utils/isTruthy';
 
 import { forceAddonsMinMaxConstraints } from '../planCustomizer/helpers';
@@ -36,7 +38,7 @@ import { switchCycle } from './helpers/switchCycle';
 
 export const getCodes = ({ gift, coupon }: Pick<Model, 'gift' | 'coupon'>): string[] => [gift, coupon].filter(isTruthy);
 
-export interface PlanTransitionCallbacks {
+interface PlanTransitionCallbacks {
     onPlusToPlusTransition: (unlockPlan: Plan | undefined) => void;
     onVisionaryDowngradeWarning: () => Promise<void>;
     onVisionaryDowngradeHide: () => void;
@@ -254,6 +256,18 @@ export function useSubscriptionContainerInnerCheck(props: UseSubscriptionContain
             return;
         }
 
+        // Guards are re-evaluated only on checkout, when modifying a paid subscription, and when
+        // the plan/cycle selection changed (or on the first check). Computed after normalizeModel
+        // so planIDs/cycle reflect what is actually sent to subscriptions/check.
+        const validateGuards =
+            copyNewModel.step === SUBSCRIPTION_STEPS.CHECKOUT &&
+            isModifyingPaidSubscriptionSelection(subscription, copyNewModel.planIDs, copyNewModel.cycle) &&
+            (!model.initialCheckComplete || !isSubscriptionSelectionEqual(model, copyNewModel));
+
+        if (validateGuards && checkResult.GuardResult?.length) {
+            setCheckResult({ ...checkResult, GuardResult: [] });
+        }
+
         const checkPromise = (async () => {
             try {
                 abortControllerRef.current?.abort();
@@ -301,6 +315,7 @@ export function useSubscriptionContainerInnerCheck(props: UseSubscriptionContain
                             : undefined,
                     IsTrial: shouldPassIsTrial(newModel, false),
                     ValidateBillingAddress: true,
+                    ValidateGuards: validateGuards,
                 };
 
                 const newCheckResult = await paymentsApi.checkSubscription(checkPayload, {
@@ -338,9 +353,21 @@ export function useSubscriptionContainerInnerCheck(props: UseSubscriptionContain
                     delete copyNewModel.gift;
                 }
 
-                setCheckResult(newCheckResult);
+                // Guards are only re-validated when the selection changes (see validateGuards above).
+                // Passive re-checks (currency, coupon, address) answer with an empty GuardResult, so
+                // carry the previous verdict forward until the next validating check replaces it.
+                const isPassiveRecheck = !validateGuards && isSubscriptionSelectionEqual(model, copyNewModel);
+
+                const checkResultWithGuards = isPassiveRecheck
+                    ? {
+                          ...newCheckResult,
+                          GuardResult: checkResult.GuardResult,
+                      }
+                    : newCheckResult;
+
+                setCheckResult(checkResultWithGuards);
                 setModel(copyNewModel);
-                onCheck?.({ model, newModel: copyNewModel, type: 'success', result: newCheckResult });
+                onCheck?.({ model, newModel: copyNewModel, type: 'success', result: checkResultWithGuards });
             } catch (error: any) {
                 if (error?.name === 'AbortError') {
                     return;

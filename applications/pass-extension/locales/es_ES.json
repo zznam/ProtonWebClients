@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } para Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } para iOS"
-      ],
       "Accept": [
         "Aceptar"
       ],
@@ -327,6 +321,12 @@
       ],
       "Do not suggest on this website": [
         "No sugerir en este sitio web"
+      ],
+      "Download for macOS": [
+        "Descargar para macOS"
+      ],
+      "Download for Windows": [
+        "Descargar para Windows"
       ],
       "Download this CSV template": [
         "Descargar esta plantilla CSV"
@@ -682,6 +682,12 @@
       "Show Less": [
         "Mostrar menos"
       ],
+      "Show less": [
+        "Mostrar menos"
+      ],
+      "Show more": [
+        "Mostrar más"
+      ],
       "Sign back in": [
         "Volver al inicio de sesión"
       ],
@@ -822,9 +828,10 @@
         "Caja fuerte"
       ]
     },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicación de escritorio de ${ MAIL_APP_NAME }"
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "${ hiddenResultsCount } resultado más no mostrado",
+        "${ hiddenResultsCount } más resultados no mostrados"
       ]
     },
     "Button": {
@@ -1075,6 +1082,9 @@
       "Editing item failed": [
         "Error al editar el elemento"
       ],
+      "Email is not valid": [
+        "El correo no es válido."
+      ],
       "Empty CSV file": [
         "Archivo CSV vacío"
       ],
@@ -1086,6 +1096,9 @@
       ],
       "Encrypted JSON not supported": [
         "JSON cifrado no soportado"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Introduce tu nombre de usuario sin el dominio (@ejemplo.com)"
       ],
       "Error reporting problem": [
         "Error al notificar el problema"
@@ -1264,6 +1277,9 @@
       "Incorrect backup password. Please try again.": [
         "La contraseña de respaldo no es correcta. Inténtalo de nuevo."
       ],
+      "Incorrect password. Please try again.": [
+        "Contraseña incorrecta. Inténtalo de nuevo."
+      ],
       "Incorrect second password. Please try again.": [
         "La segunda contraseña no es correcta. Inténtalo de nuevo."
       ],
@@ -1306,8 +1322,14 @@
       "Network error": [
         "Error de red"
       ],
+      "Not a valid number": [
+        "No es un número válido."
+      ],
       "Passphrase is incorrect": [
         "La frase contraseña es incorrecta."
+      ],
+      "Passwords do not match": [
+        "Las contraseñas no coinciden."
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "Permiso denegado para el acceso al sitio web ${ domainsJSX }."
@@ -1381,6 +1403,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Se debe haber iniciado sesión en la aplicación de escritorio de ${ PASS_APP_NAME }."
       ],
+      "The email addresses do not match": [
+        "Las direcciones de correo electrónico no coinciden"
+      ],
       "The URL is in the list": [
         "La URL está en la lista."
       ],
@@ -1390,6 +1415,15 @@
       "This domain is already managed by your organization": [
         "Tu organización ya gestiona este dominio"
       ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Este campo excede el máximo de ${ maximumLength } caracteres."
+      ],
+      "This field is required": [
+        "Este campo es obligatorio."
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Este campo requiere un mínimo de ${ minimumLength } caracteres."
+      ],
       "This may occur after a long time of not using ${ PASS_SHORT_APP_NAME }, or clearing your Safari history.": [
         "Esto puede ocurrir después de mucho tiempo sin usar ${ PASS_SHORT_APP_NAME } o de borrar el historial de Safari."
       ],
@@ -1398,6 +1432,9 @@
       ],
       "Trashing item failed": [
         "Error al eliminar el elemento"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Utiliza solo letras, números y _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "No se puede generar un código OTP para este elemento."
@@ -1432,6 +1469,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Error al actualizar la caja fuerte \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "El nombre de usuario debe comenzar con una letra o un número."
+      ],
+      "Username must end with a letter or digit": [
+        "El nombre de usuario debe terminar con una letra o un número."
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Error al crear la caja fuerte \"${ payload.content.name }\""
       ],
@@ -1455,6 +1498,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "El código PIN no es correcto. Intenta de nuevo."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase de recuperación incorrecta. Inténtalo de nuevo o utiliza otro método de recuperación."
       ],
       "Wrong second password": [
         "La segunda contraseña no es correcta."
@@ -1543,6 +1589,15 @@
       ],
       "Username": [
         "Nombre de usuario"
+      ]
+    },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Se ha encontrado ${ itemsCount } sugerencia. Usa el teclado para navegar.",
+        "Se han encontrado ${ itemsCount } sugerencias. Usa el teclado para navegar."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "Utiliza las teclas Arriba y Abajo para acceder y navegar por las sugerencias después de la entrada. Pulsa Entrar para confirmar tu elección o Escape para cerrar el cuadro de sugerencias."
       ]
     },
     "Info": {
@@ -1846,9 +1901,6 @@
       "Can view this item.": [
         "Puede ver este elemento."
       ],
-      "Change your password": [
-        "Cambia tu contraseña"
-      ],
       "Choose a saved passkey to sign-in to ${ domain }": [
         "Selecciona una clave de acceso guardada para iniciar sesión en ${ domain }."
       ],
@@ -1948,9 +2000,6 @@
       "Editor": [
         "Editor"
       ],
-      "email": [
-        "correo electrónico"
-      ],
       "Email address successfully deleted from monitoring": [
         "La dirección de correo electrónico ha sido eliminada del monitoreo."
       ],
@@ -2046,9 +2095,6 @@
       ],
       "Fill in the CSV with your data": [
         "Rellenar el CSV con tus datos"
-      ],
-      "finance": [
-        "finanzas"
       ],
       "Follow those steps to import your data with a generic CSV:": [
         "Sigue estos pasos para importar tus datos con un archivo CSV genérico:"
@@ -2206,9 +2252,6 @@
       "Medium Priority": [
         "Prioridad media"
       ],
-      "Monitor accounts": [
-        "Monitoreo de cuentas"
-      ],
       "Monitoring settings successfully updated": [
         "Se han actualizado los ajustes de monitoreo."
       ],
@@ -2226,7 +2269,8 @@
         "Moviendo todos los elementos desde \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Mover un elemento a otra caja fuerte eliminará sus enlaces seguros."
+        "Mover un elemento a otra caja fuerte eliminará sus enlaces seguros.",
+        "Mover elementos a otra caja fuerte eliminará sus enlaces seguros."
       ],
       "Moving items": [
         "Moviendo elementos"
@@ -2320,9 +2364,6 @@
       ],
       "Passkey sign-in": [
         "Inicio de sesión con clave de acceso"
-      ],
-      "password": [
-        "contraseña"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Se ha registrado el bloqueo por contraseña. Utilízalo para desbloquear ${ PASS_APP_NAME }."
@@ -2811,9 +2852,6 @@
       ],
       "User's access successfully updated": [
         "Se ha actualizado el acceso del usuario."
-      ],
-      "username": [
-        "nombre de usuario"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Se ha eliminado la caja fuerte \"${ payload.content.name }\"."
@@ -4904,6 +4942,9 @@
       "Excluded items": [
         "Elementos excluidos"
       ],
+      "Export": [
+        "Exportar"
+      ],
       "Fill & copy password": [
         "Rellenar y copiar la contraseña"
       ],
@@ -4939,6 +4980,9 @@
       ],
       "Import - ${ date }": [
         "Importación - ${ date }"
+      ],
+      "Import failed": [
+        "Error en la importación"
       ],
       "Import to vault(s)": [
         "Importar a las cajas fuertes"
@@ -5288,8 +5332,16 @@
       "OTP secret or URI is invalid": [
         "Clave secreta OTP o URI inválido"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "La contraseña debe contener al menos ${ MIN_PASSWORD_LENGTH } carácter.",
+        "La contraseña debe tener al menos ${ MIN_PASSWORD_LENGTH } caracteres"
+      ],
       "Section name cannot be empty": [
         "El nombre de la sección no puede estar vacío."
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Prueba con un nombre de usuario más corto (máx. ${ n } carácter)",
+        "Prueba con un nombre de usuario más corto (máx. ${ n } caracteres)"
       ],
       "URL already exists": [
         "La URL ya existe."
@@ -5448,9 +5500,6 @@
       ],
       "Move to trash": [
         "Mover a la papelera"
-      ],
-      "Name is required": [
-        "El nombre es obligatorio."
       ],
       "No items": [
         "No hay elementos."

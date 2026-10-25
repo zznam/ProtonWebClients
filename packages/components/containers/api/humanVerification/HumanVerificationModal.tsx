@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors';
-import type { Api, HumanVerificationMethodType } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { HumanVerificationMethodType } from '@proton/shared/lib/interfaces/HumanVerification';
 import noop from '@proton/utils/noop';
 
 import type { ModalProps } from '../../../components/modalTwo/Modal';

@@ -9,14 +9,14 @@ import { Button } from '@proton/atoms/Button/Button';
 import { Href } from '@proton/atoms/Href/Href';
 import { useIncomingAddressForwardings, useOutgoingAddressForwardings } from '@proton/mail/store/forwarding/hooks';
 import { APP_UPSELL_REF_PATH, MAIL_UPSELL_PATHS, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
-import { getUpsellRef } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
 import forwardImg from '@proton/styles/assets/img/illustrations/new-upsells-img/forward.svg';
 import isTruthy from '@proton/utils/isTruthy';
 
 import useModalState from '../../components/modalTwo/useModalState';
 import { useModalTwoStatic } from '../../components/modalTwo/useModalTwo';
-import Tabs from '../../components/tabs/Tabs';
+import { Tabs } from '../../components/tabs/Tabs';
 import MailUpsellButton from '../../components/upsell/MailUpsellButton';
 import UpsellModal from '../../components/upsell/UpsellModal/UpsellModal';
 import SettingsParagraph from '../account/SettingsParagraph';

@@ -6,38 +6,29 @@ import { c } from 'ttag';
 
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import useLoading from '@proton/hooks/useLoading';
-import { IcBug } from '@proton/icons/icons/IcBug';
 import { IcMeetCamera } from '@proton/icons/icons/IcMeetCamera';
 import { IcMeetCameraOff } from '@proton/icons/icons/IcMeetCameraOff';
 import { IcMeetMicrophone } from '@proton/icons/icons/IcMeetMicrophone';
 import { IcMeetMicrophoneOff } from '@proton/icons/icons/IcMeetMicrophoneOff';
-import { IcMeetSettings } from '@proton/icons/icons/IcMeetSettings';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import {
     selectCameraPermission,
     selectCameras,
     selectMicrophonePermission,
+    selectMicrophoneUnavailable,
     selectMicrophones,
 } from '@proton/meet/store/slices/deviceManagementSlice/selectors';
 import { selectIsSpotlightLayout } from '@proton/meet/store/slices/layoutSlice';
 import { selectPage, selectPageCount, setPage } from '@proton/meet/store/slices/participants/sortedParticipantsSlice';
-import {
-    MeetingSideBars,
-    PopUpControls,
-    selectPopupState,
-    selectSideBarState,
-    togglePopupState,
-    toggleSideBarState,
-} from '@proton/meet/store/slices/uiStateSlice';
+import { PopUpControls, selectPopupState, togglePopupState } from '@proton/meet/store/slices/uiStateSlice';
 import { isMobile } from '@proton/shared/lib/helpers/browser';
-import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';
 
 import { CircleButton } from '../../atoms/CircleButton/CircleButton';
 import { Pagination } from '../../atoms/Pagination/Pagination';
-import { useDebugOverlayContext } from '../../contexts/DebugOverlayContext';
 import { useMediaManagementContext } from '../../contexts/MediaManagementProvider/MediaManagementContext';
 import { useIsLargerThanMd } from '../../hooks/useIsLargerThanMd';
+import { useIsLowerMediumWidth } from '../../hooks/useIsLowerMediumWidth';
 import { useIsNarrowHeight } from '../../hooks/useIsNarrowHeight';
 import { useToolbarRovingFocus } from '../../hooks/useToolbarRovingFocus';
 import { getCameraButtonAriaLabel, getMicrophoneButtonAriaLabel } from '../../utils/mediaButtonAriaLabels';
@@ -45,39 +36,35 @@ import { cameraShortcutLabel, microphoneShortcutLabel } from '../../utils/mediaS
 import { AudioPlaybackPrompt } from '../AudioPlaybackPrompt/AudioPlaybackPrompt';
 import { AudioSettings } from '../AudioSettings/AudioSettings';
 import { ChatButton } from '../ChatButton';
-import { DeviceStateReport } from '../DebugOverlay/DeviceStateReport';
-import { useDetachedWindow } from '../DebugOverlay/useDetachedWindow';
 import { EmojiReactionButton } from '../EmojiReactionButton/EmojiReactionButton';
-import { InfoButton } from '../InfoButton/InfoButton';
 import { LeaveMeetingPopup } from '../LeaveMeetingPopup/LeaveMeetingPopup';
+import { MeetingDebug } from '../MeetingDebug/MeetingDebug';
+import { useDetachedWindow } from '../MeetingDebug/useDetachedWindow';
 import { MeetingName } from '../MeetingName/MeetingName';
 import { MeetingSnackbars } from '../MeetingSnackbars/MeetingSnackbars';
 import { MicrophoneWithVolumeWithMicrophoneState } from '../MicrophoneWithVolume';
 import { ParticipantsButton } from '../ParticipantsButton';
-import { LayoutSelector } from '../ParticipantsLayout/LayoutSelector/LayoutSelector';
-import { RecordingControls } from '../RecordingControls/RecordingControls';
 import { ScreenShareButton } from '../ScreenShareButton';
 import { ToggleButton } from '../ToggleButton/ToggleButton';
 import { VideoSettings } from '../VideoSettings/VideoSettings';
-import { MenuButton } from './MenuButton';
+import { MoreMenu } from './MoreMenu/MoreMenu';
 
 import './ParticipantControls.scss';
 
 export const ParticipantControls = () => {
-    const isMeetParticipantsLayoutsEnabled = useFlag('MeetParticipantsLayouts');
-
     const dispatch = useMeetDispatch();
-    const { isEnabled: isDebugEnabled } = useDebugOverlayContext();
-    const { container: deviceStateContainer, open: openDeviceStateWindow } = useDetachedWindow('Device Debugger');
+    const { container: meetingDebugContainer, open: openMeetingDebugWindow } = useDetachedWindow('Meeting Debug');
     const { isMicrophoneEnabled, isCameraEnabled } = useLocalParticipant();
     const [isCameraToggleLoading, withCameraToggleLoading] = useLoading();
     const isSpotlightLayout = useMeetSelector(selectIsSpotlightLayout);
     const page = useMeetSelector(selectPage);
     const isLargerThanMd = useIsLargerThanMd();
     const isNarrowHeight = useIsNarrowHeight();
+    const isLowerMediumWidth = useIsLowerMediumWidth();
     const { viewportWidth } = useActiveBreakpoint();
+    const isSmallScreen = viewportWidth['<=small'];
+    const isLargeDesktop = viewportWidth['>=xlarge'];
 
-    const sideBarState = useMeetSelector(selectSideBarState);
     const popupState = useMeetSelector(selectPopupState);
 
     const pageCount = useMeetSelector(selectPageCount);
@@ -90,6 +77,7 @@ export const ParticipantControls = () => {
     const cameraPermission = useMeetSelector(selectCameraPermission);
     const microphonePermission = useMeetSelector(selectMicrophonePermission);
     const microphones = useMeetSelector(selectMicrophones);
+    const microphoneHasWarning = useMeetSelector(selectMicrophoneUnavailable);
     const cameras = useMeetSelector(selectCameras);
 
     const hasCameraPermission = cameraPermission === 'granted';
@@ -119,8 +107,6 @@ export const ParticipantControls = () => {
 
         prevDevicePermissionsRef.current = { camera: cameraPermission, microphone: microphonePermission };
     }, [cameraPermission, dispatch, microphonePermission, popupState.Camera, popupState.Microphone]);
-
-    const microphoneHasWarning = !hasMicrophonePermission || microphones.length === 0;
 
     const microphoneLabel = getMicrophoneButtonAriaLabel({
         hasPermission: hasMicrophonePermission,
@@ -161,7 +147,9 @@ export const ParticipantControls = () => {
                 style={{ '--h-custom': '5rem' }}
             >
                 <div className={clsx('lg:flex flex-1 justify-start', isLargerThanMd || isNarrowHeight ? '' : 'hidden')}>
-                    <MeetingName classNames={{ root: 'pl-4 h3', duration: 'ml-2' }} />
+                    {(isLargeDesktop || isNarrowHeight) && (
+                        <MeetingName classNames={{ root: 'pl-4 h3', duration: 'ml-2' }} />
+                    )}
                 </div>
 
                 <div
@@ -170,7 +158,7 @@ export const ParticipantControls = () => {
                     aria-label={c('Accessibility').t`Meeting controls`}
                     className="participant-controls-buttons flex flex-nowrap w-full lg:w-auto gap-1 sm:gap-2 items-center"
                 >
-                    {!isMobile() ? (
+                    {!isMobile() && !isSmallScreen ? (
                         <>
                             <ToggleButton
                                 OnIconComponent={MicrophoneWithVolumeWithMicrophoneState}
@@ -256,57 +244,29 @@ export const ParticipantControls = () => {
                         </>
                     )}
 
-                    <div className="flex-nowrap gap-2 hidden lg:flex">
-                        <ScreenShareButton />
-                        <ParticipantsButton />
+                    {isSmallScreen || isLowerMediumWidth ? (
                         <ChatButton />
-                        <EmojiReactionButton />
-                        <CircleButton
-                            IconComponent={IcMeetSettings}
-                            variant={sideBarState[MeetingSideBars.Settings] ? 'active' : 'default'}
-                            onClick={() => {
-                                dispatch(toggleSideBarState(MeetingSideBars.Settings));
-                            }}
-                            ariaLabel={c('Alt').t`Toggle settings`}
-                        />
-                        <RecordingControls />
-                        <InfoButton />
-                        {isMeetParticipantsLayoutsEnabled && <LayoutSelector />}
-                        {isDebugEnabled && (
-                            <CircleButton
-                                IconComponent={IcBug}
-                                onClick={openDeviceStateWindow}
-                                ariaLabel={c('Alt').t`Device Debugger`}
-                            />
-                        )}
-                    </div>
-                    <div className="flex lg:hidden gap-1 sm:gap-2 flex-nowrap">
-                        {isMobile() ? (
-                            <>
-                                <ChatButton />
-                                {!viewportWidth.xsmall && <EmojiReactionButton />}
-                            </>
-                        ) : (
-                            <>
-                                <div className="hidden md:block">
-                                    <ScreenShareButton />
-                                </div>
-                                <EmojiReactionButton />
-                            </>
-                        )}
-                        {!isMobile() && (
-                            <div className="hidden md:block">
-                                <InfoButton />
-                            </div>
-                        )}
-                        <RecordingControls />
-                        {isMeetParticipantsLayoutsEnabled && !viewportWidth['<=small'] && <LayoutSelector />}
-                        <MenuButton onOpenDeviceState={openDeviceStateWindow} />
-                    </div>
-
+                    ) : (
+                        <>
+                            <ScreenShareButton />
+                            <ParticipantsButton />
+                            <ChatButton />
+                            <EmojiReactionButton />
+                        </>
+                    )}
+                    <MoreMenu
+                        variant={isSmallScreen ? 'sheet' : 'popup'}
+                        onOpenMeetingDebug={openMeetingDebugWindow}
+                        showMeetingActions={isLowerMediumWidth}
+                    />
                     <LeaveMeetingPopup />
                 </div>
-                <div className="flex flex-1 justify-end items-center gap-2 pr-4">
+                <div
+                    className={clsx(
+                        'lg:flex flex-1 justify-end items-center gap-2 pr-4',
+                        isLargerThanMd || isNarrowHeight ? 'flex' : 'hidden'
+                    )}
+                >
                     {isLargerThanMd && !isSpotlightLayout && pageCount > 1 && (
                         <Pagination
                             totalPages={pageCount}
@@ -316,15 +276,15 @@ export const ParticipantControls = () => {
                     )}
                 </div>
             </div>
-            {deviceStateContainer &&
+            {meetingDebugContainer &&
                 createPortal(
                     <div
                         className="p-4 overflow-auto max-h-custom"
                         style={{ '--max-h-custom': '100vh' } as React.CSSProperties}
                     >
-                        <DeviceStateReport />
+                        <MeetingDebug />
                     </div>,
-                    deviceStateContainer
+                    meetingDebugContainer
                 )}
         </div>
     );

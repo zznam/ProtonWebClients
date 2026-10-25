@@ -26,68 +26,53 @@ import {
     defaultESProgress,
     defaultESStatus,
 } from './constants';
-import type { IndexingMetrics } from './esHelpers';
 import {
     buildContentDB,
     buildMetadataDB,
-    cacheIDB,
-    esSentryReport,
     estimateIndexingDuration,
-    findItemIndex,
-    gatherIndexingMetrics,
-    getESLogger,
     getIndexKey,
-    getVisibilityState,
-    highlightJSX,
-    hybridSearch,
     initializeEncryptedSearch,
-    insertMarks,
-    refreshESCache,
-    requestPersistence,
-    retryAPICalls,
     retryContentIndexing,
-    syncItemEvents,
-    uncachedSearch,
-} from './esHelpers';
-import type { IndexedDBRow } from './esIDB';
-import {
-    contentIndexingProgress,
-    deleteESDB,
-    hasESDB,
-    metadataIndexingProgress,
-    openESDB,
-    readAllLastEvents,
-    readEnabled,
-    readLimited,
-    readNumContent,
-    readNumMetadata,
-    readSize,
-    setLimited,
-    toggleEnabled,
-    writeAllEvents,
-} from './esIDB';
+} from './esHelpers/esBuild';
+import { cacheIDB, refreshESCache } from './esHelpers/esCache';
+import { highlightJSX, insertMarks } from './esHelpers/esHighlight';
+import { getESLogger } from './esHelpers/esLogger';
+import type { IndexingMetrics } from './esHelpers/esProgress';
+import { gatherIndexingMetrics } from './esHelpers/esProgress';
+import { esSentryReport } from './esHelpers/esReporting';
+import { retryAPICalls } from './esHelpers/esRetries';
+import { hybridSearch, uncachedSearch } from './esHelpers/esSearch';
+import { syncItemEvents } from './esHelpers/esSync';
+import { findItemIndex, getVisibilityState, requestPersistence } from './esHelpers/esUtils';
+import { readEnabled, readLimited, readSize, setLimited, toggleEnabled } from './esIDB/configObjectStore';
+import { readNumContent } from './esIDB/content';
+import { readAllLastEvents, writeAllEvents } from './esIDB/events';
+import { deleteESDB, hasESDB, openESDB } from './esIDB/indexedDB';
+import type { IndexedDBRow } from './esIDB/indexingProgress';
+import { contentIndexingProgress, metadataIndexingProgress } from './esIDB/indexingProgress';
+import { readNumMetadata } from './esIDB/metadata';
+import type { ContentSearchEventStatus, ContentSearchIndexErrorKind } from './models/contentSearchTelemetry';
+import type { ESCallbacks, InternalESCallbacks } from './models/esCallbacks';
 import type {
-    ContentSearchEventStatus,
-    ContentSearchIndexErrorKind,
-    ESCache,
-    ESCallbacks,
-    ESEvent,
     ESInitializeOptions,
+    EnableContentSearch,
+    EnableEncryptedSearch,
+    EncryptedSearch,
+    EncryptedSearchExecution,
+    EncryptedSearchFunctions,
+    HighlightMetadata,
+    HighlightString,
+} from './models/esFunctions';
+import type {
+    ESCache,
+    ESEvent,
     ESItem,
     ESProgress,
     ESStatus,
     ESTimepoint,
-    EnableContentSearch,
-    EnableEncryptedSearch,
-    EncryptedSearch,
     EncryptedSearchDB,
-    EncryptedSearchExecution,
-    EncryptedSearchFunctions,
     EventsObject,
-    HighlightMetadata,
-    HighlightString,
-    InternalESCallbacks,
-} from './models';
+} from './models/interfaces';
 import { useEncryptedSearchIndexingProgress } from './useEncryptedSearchIndexingProgress';
 import { useEncryptedSearchStatus } from './useEncryptedSearchStatus';
 import { SEARCH_TYPE, useSearchTelemetry } from './useSearchTelemetry';
@@ -97,6 +82,8 @@ interface Props<ESItemMetadata, ESSearchParameters, ESItemContent = void> {
     esCallbacks: ESCallbacks<ESItemMetadata, ESSearchParameters, ESItemContent>;
     contentIndexingSuccessMessage?: string;
     onMetadataIndexed?: (metrics: IndexingMetrics) => void;
+    /** Called when a search starts running — pairs with `onSearchCompleted`, which measures `durationMs` from here. */
+    onSearchStarted?: () => void;
     /** Called when a search completes — routing to v1 or v2 telemetry is the caller's call, not this library's. */
     onSearchCompleted?: (params: {
         hasResults: boolean;
@@ -129,6 +116,7 @@ export const useEncryptedSearch = <ESItemMetadata extends Object, ESSearchParame
     esCallbacks: inputESCallbacks,
     contentIndexingSuccessMessage,
     onMetadataIndexed,
+    onSearchStarted,
     onSearchCompleted,
     onIndexCompleted,
     onIndexingStarted,
@@ -1088,6 +1076,8 @@ export const useEncryptedSearch = <ESItemMetadata extends Object, ESSearchParame
             }
         }
 
+        onSearchStarted?.();
+
         setESStatus((esStatus) => ({
             ...esStatus,
             isSearching: true,
@@ -1191,6 +1181,7 @@ export const useEncryptedSearch = <ESItemMetadata extends Object, ESSearchParame
         }
 
         const start = performance.now();
+        onSearchStarted?.();
         const hasApostrophe = (esCallbacks.getKeywords(esSearchParams) || []).some((keyword) => keyword.includes(`'`));
         const { resultsArray, newLastTimePoint } = await uncachedSearch<
             ESItemMetadata,

@@ -5,23 +5,21 @@ import { CompatRouter } from 'react-router-dom-v5-compat';
 import { createBrowserHistory } from 'history';
 
 import * as bootstrap from '@proton/account/bootstrap';
-import {
-    ApiProvider,
-    AuthenticationProvider,
-    ErrorBoundary,
-    LoaderPage,
-    ModalsChildren,
-    NotificationsChildren,
-    ProtonApp,
-    StandardErrorPage,
-    StandardLoadErrorPage,
-} from '@proton/components';
+import ApiProvider from '@proton/components/containers/api/ApiProvider';
+import ErrorBoundary from '@proton/components/containers/app/ErrorBoundary';
+import LoaderPage from '@proton/components/containers/app/LoaderPage';
+import ProtonApp from '@proton/components/containers/app/ProtonApp';
+import StandardErrorPage from '@proton/components/containers/app/StandardErrorPage';
+import StandardLoadErrorPage from '@proton/components/containers/app/StandardLoadErrorPage';
+import AuthenticationProvider from '@proton/components/containers/authentication/Provider';
+import ModalsChildren from '@proton/components/containers/modals/Children';
+import NotificationsChildren from '@proton/components/containers/notifications/Children';
 import { featureFlagStore } from '@proton/drive/modules/flags';
 import { driveMetrics } from '@proton/drive/modules/metrics';
 import useEffectOnce from '@proton/hooks/useEffectOnce';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import createApi from '@proton/shared/lib/api/createApi';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { getNonEmptyErrorMessage } from '@proton/shared/lib/helpers/error';
 import { UnleashFlagProviderWithToolbar } from '@proton/unleash/UnleashFlagProviderWithToolbar';

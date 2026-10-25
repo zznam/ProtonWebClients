@@ -12,9 +12,10 @@ import { useStatefulRef } from '../../../hooks/useStatefulRef';
 import { isTrashed, itemEq } from '../../../lib/items/item.predicates';
 import { sortItems } from '../../../lib/items/item.utils';
 import { isItemShare } from '../../../lib/shares/share.predicates';
-import { selectPinnedItems, selectShare } from '../../../store/selectors';
+import { selectPinnedItems } from '../../../store/selectors/items';
+import { selectShare } from '../../../store/selectors/shares';
 import type { State } from '../../../store/types';
-import type { ItemRevision, ItemSortFilter } from '../../../types';
+import type { ItemRevision, ItemSortFilter } from '../../../types/data/items';
 import { DropdownMenuButton } from '../../Layout/Dropdown/DropdownMenuButton';
 import { QuickActionsDropdown } from '../../Layout/Dropdown/QuickActionsDropdown';
 import { SafeItemIcon } from '../../Layout/Icon/ItemIcon';
@@ -108,7 +109,7 @@ export const PinnedItemsBar: FC = () => {
 
     /** Updates navigation on item select:
      * Trashed items -> trash view with reset filters
-     * Regular items -> share view with preserved/updated shareId filter */
+     * Regular items -> share view with preserved/updated shareId and folder filters */
     const onSelect = useCallback((item: ItemRevision) => {
         const { shareId, itemId } = item;
         const share = selectShare(shareId)(store.getState());
@@ -124,6 +125,7 @@ export const PinnedItemsBar: FC = () => {
         })();
 
         const { type, selectedShareId } = filtersRef?.current ?? {};
+        const vaultSelected = selectedShareId !== null;
 
         selectItem(shareId, itemId, {
             scope,
@@ -132,7 +134,8 @@ export const PinnedItemsBar: FC = () => {
                     ? getInitialFilters()
                     : {
                           search: '',
-                          selectedShareId: selectedShareId !== null ? shareId : null,
+                          selectedShareId: vaultSelected ? shareId : null,
+                          selectedFolderId: vaultSelected ? (item.folderId ?? null) : null,
                           type: type !== '*' && type !== item.data.type ? '*' : type,
                       },
         });

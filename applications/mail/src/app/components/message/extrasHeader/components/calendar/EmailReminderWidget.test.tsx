@@ -7,10 +7,11 @@ import { HttpResponse, type RequestHandler, http } from 'msw';
 import { setupServer } from 'msw/node';
 
 import { useAddresses, useGetAddresses } from '@proton/account/addresses/hooks';
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
+import { useGetCalendarEventRaw } from '@proton/calendar/calendarEvent/useGetCalendarEventRaw';
 import {
     addressBuilder,
     calendarBuilder,
@@ -23,7 +24,6 @@ import { getHandlers } from '@proton/calendar/testing/handlers';
 import AuthenticationProvider from '@proton/components/containers/authentication/Provider';
 import { CacheProvider } from '@proton/components/containers/cache/Provider';
 import { DrawerProvider } from '@proton/components/hooks/drawer/useDrawer';
-import useGetCalendarEventRaw from '@proton/components/hooks/useGetCalendarEventRaw';
 import { mockNotifications } from '@proton/components/testing/mockNotifications';
 import { mockDefaultBreakpoints } from '@proton/components/testing/mockUseActiveBreakpoint';
 import { EVENT_VERIFICATION_STATUS } from '@proton/shared/lib/calendar/constants';
@@ -31,9 +31,10 @@ import { CALENDAR_APP_NAME } from '@proton/shared/lib/constants';
 import { addDays } from '@proton/shared/lib/date-fns-utc';
 import { toUTCDate } from '@proton/shared/lib/date/timezone';
 import createCache from '@proton/shared/lib/helpers/cache';
-import type { Nullable, UserSettings } from '@proton/shared/lib/interfaces';
-import { DRAWER_VISIBILITY } from '@proton/shared/lib/interfaces';
-import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
+import { DRAWER_VISIBILITY } from '@proton/shared/lib/interfaces/UserSettings';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { Nullable } from '@proton/shared/lib/interfaces/utils';
 import { mockApiWithServer } from '@proton/test-api/mockApiWithServer';
 import { useFlag } from '@proton/unleash/useFlag';
 
@@ -46,7 +47,7 @@ const server = setupServer(...(getHandlers() as RequestHandler[]));
 jest.mock('@proton/app-context/useNotifications');
 jest.mock('@proton/components/hooks/useModals');
 jest.mock('@proton/app-context/useApi');
-jest.mock('@proton/components/hooks/useGetCalendarEventRaw');
+jest.mock('@proton/calendar/calendarEvent/useGetCalendarEventRaw');
 jest.mock('@proton/account/userSettings/hooks');
 
 jest.mock('@proton/account/addresses/hooks');

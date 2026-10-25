@@ -1,9 +1,10 @@
-import { utf8StringToUint8Array, uint8ArrayToUtf8String } from '@protontech/crypto/utils';
+import { uint8ArrayToUtf8String, utf8StringToUint8Array } from '@protontech/crypto/utils';
+
 import { getCookie, setCookie } from '@proton/shared/lib/helpers/cookies';
 import { getSecondLevelDomain } from '@proton/shared/lib/helpers/url';
-import type { OrganizationExtended } from '@proton/shared/lib/interfaces';
+import type { OrganizationExtended } from '@proton/shared/lib/interfaces/Organization';
 
-export const COOKIE_NAME = 'OrgTheme';
+const COOKIE_NAME = 'OrgTheme';
 
 export const syncToCookie = (cookieValue: string | undefined) => {
     // Note: We might set `undefined` which will clear the cookie
@@ -35,9 +36,11 @@ export const serializeOrgTheme = (organization: OrganizationExtended | undefined
     return utf8StringToUint8Array(JSON.stringify(value)).toBase64({ alphabet: 'base64url', omitPadding: true });
 };
 
-export const deserializeOrgTheme = (serializedValue: string): OrgThemeCookie | undefined => {
+const deserializeOrgTheme = (serializedValue: string): OrgThemeCookie | undefined => {
     try {
-        const deserializedValue = uint8ArrayToUtf8String(Uint8Array.fromBase64(serializedValue, { alphabet: 'base64url' }));
+        const deserializedValue = uint8ArrayToUtf8String(
+            Uint8Array.fromBase64(serializedValue, { alphabet: 'base64url' })
+        );
         const parsedValue = JSON.parse(deserializedValue);
         const value: OrgThemeCookie = {
             LogoID: String(parsedValue.LogoID),

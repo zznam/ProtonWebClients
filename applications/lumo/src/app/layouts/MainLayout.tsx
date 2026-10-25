@@ -2,12 +2,15 @@ import { type ReactNode, lazy } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
 import { useNativeSidebarLayoutApi } from '../components/Composer/hooks/useNativeSidebarLayoutApi';
+import { ArtifactPanelHost } from '../components/Conversation/artifact/ArtifactPanelHost';
 import { MasterKeyBanner } from '../components/MasterKeyBanner';
 import HighLoadWarning from '../components/Notifications/HighLoadWarning';
 import { RightDrawer } from '../components/RightDrawer';
 import { useGuestMigrationNotification } from '../components/useGuestMigrationNotification';
+import { useDataLossWarningNotification } from '../hooks/useDataLossWarningNotification';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { useResourceLimitNotifications } from '../hooks/useResourceLimitNotifications';
+import { ArtifactPanelHostProvider } from '../providers/ArtifactPanelHostProvider';
 import { DragAreaProvider } from '../providers/DragAreaProvider';
 import { GhostChatProvider } from '../providers/GhostChatProvider';
 import { useIsGuest } from '../providers/IsGuestProvider';
@@ -30,6 +33,7 @@ const MainLayoutContent = ({ children }: Props) => {
 
     useGuestMigrationNotification();
     useResourceLimitNotifications();
+    useDataLossWarningNotification();
     useNativeSidebarLayoutApi();
 
     useKeyboardShortcuts({ onOpenSearch: openSearchModal });
@@ -43,12 +47,13 @@ const MainLayoutContent = ({ children }: Props) => {
                             <div className="lumo-sidebar-shell shrink-0 h-full min-h-0 self-stretch">
                                 <LumoSidebar />
                             </div>
-                            <main className="flex-1 flex flex-column flex-nowrap reset4print md:rounded-xl relative overflow-hidden">
+                            <main className="flex-1 flex flex-column flex-nowrap reset4print md:rounded-xl relative overflow-hidden min-w-0">
                                 {isHomepage && <MainLayoutAnimatedBackground />}
                                 <HighLoadWarning />
                                 <MasterKeyBanner />
                                 {children}
                             </main>
+                            <ArtifactPanelHost />
                             {isOpen && <RightDrawer onClose={toggle} />}
                         </div>
                     </div>
@@ -69,13 +74,15 @@ export const MainLayout = ({ children }: Props) => {
             <SidebarProvider defaultMode={isGuest ? 'expanded' : 'hidden'}>
                 <SearchModalProvider>
                     <RightPanelProvider>
-                        {!isGuest ? (
-                            <DriveIndexingProviderLazy>
+                        <ArtifactPanelHostProvider>
+                            {!isGuest ? (
+                                <DriveIndexingProviderLazy>
+                                    <MainLayoutContent children={children} />
+                                </DriveIndexingProviderLazy>
+                            ) : (
                                 <MainLayoutContent children={children} />
-                            </DriveIndexingProviderLazy>
-                        ) : (
-                            <MainLayoutContent children={children} />
-                        )}
+                            )}
+                        </ArtifactPanelHostProvider>
                     </RightPanelProvider>
                 </SearchModalProvider>
             </SidebarProvider>

@@ -1,9 +1,9 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
 import { getKTActivationValue, getKTFlag } from '@proton/key-transparency/helpers';
-import type { ProtonThunkArguments, SharedStartListening } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments, SharedStartListening } from '@proton/redux-shared-store-types/interface';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 
 import { bootstrapEvent } from '../bootstrap/action';
 import { type KtState, ktSlice } from './index';

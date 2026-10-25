@@ -1,8 +1,8 @@
 import type { Runtime } from 'webextension-polyfill';
 
 import { TelemetryEventName } from '@proton/pass/types/data/telemetry';
+import type { Maybe, MaybeNull } from '@proton/pass/types/utils';
 import type { Dimensions, Rect } from '@proton/pass/types/utils/dom';
-import type { Maybe, MaybeNull } from '@proton/pass/types/utils/index';
 import { animatePositionChange } from '@proton/pass/utils/dom/animation';
 import { pixelEncoder } from '@proton/pass/utils/dom/computed-styles';
 import { createElement } from '@proton/pass/utils/dom/create-element';
@@ -152,7 +152,7 @@ export const createInlineApp = <T extends InlineRequest>({
 
     iframe.style.setProperty(`--frame-animation`, animation);
 
-    const cancel = withContext<() => boolean>((ctx) => Boolean(ctx?.getState().stale));
+    const cancel = withContext<() => boolean>((ctx) => !ctx || ctx.getState().stale);
     const ensureLoaded = asyncLock(() => waitUntil({ check: () => state.loaded, cancel }, 50));
     const ensureReady = asyncLock(() => waitUntil({ check: () => state.ready, cancel }, 20));
 

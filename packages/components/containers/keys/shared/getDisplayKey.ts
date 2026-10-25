@@ -1,9 +1,13 @@
 import type { KeyMetadata } from '@proton/account/addressKeys/getKeyMetadata';
 import { KEY_FLAG } from '@proton/shared/lib/constants';
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
-import type { Address, Key, SignedKeyListItem, UserModel } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Key } from '@proton/shared/lib/interfaces/Key';
+import type { SignedKeyListItem } from '@proton/shared/lib/interfaces/SignedKeyList';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
-import { getDefaultKeyFlags, getFormattedAlgorithmNames } from '@proton/shared/lib/keys';
+import { getFormattedAlgorithmNames } from '@proton/shared/lib/keys/keyAlgorithm';
+import { getDefaultKeyFlags } from '@proton/shared/lib/keys/keyFlags';
 
 import getPermissions from './getPermissions';
 import type { KeyDisplay, KeyStatus } from './interface';
@@ -74,7 +78,10 @@ export const getDisplayKey = ({
 
     const hasUserPermission = isPrivate && isSelf;
     const canModify = isAddressKey && hasUserPermission && !isPrimary;
-    const canDeleteForwarding = (isPrivate || !isSelf) && (AddressForwardingID === null || GroupMemberID === null);
+    // A forwarding key may only be deleted once it is no longer linked to an active address forwarding
+    // nor to a group membership. Use falsy checks so both `null` and missing (`undefined`) fields are handled.
+    const isUnlinkedForwardingKey = !AddressForwardingID && !GroupMemberID;
+    const canDeleteForwarding = (isPrivate || !isSelf) && isUnlinkedForwardingKey;
 
     return {
         ID,

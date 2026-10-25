@@ -1,5 +1,6 @@
-import { selectOrganization, selectUser } from '@proton/account';
-import { baseUseSelector } from '@proton/react-redux-store';
+import { selectOrganization } from '@proton/account/organization';
+import { selectUser } from '@proton/account/user';
+import { baseUseSelector } from '@proton/react-redux-store/ProtonStoreContext';
 import { useFlag } from '@proton/unleash/useFlag';
 
 import { isScribeSupported } from '../../helpers/assistant';

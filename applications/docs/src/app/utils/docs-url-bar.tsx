@@ -1,6 +1,8 @@
 import useAuthentication from '@proton/components/hooks/useAuthentication'
-import type { DocumentAction, DocumentType, RedirectAction } from '@proton/docs-shared'
-import OpenTracer from '@proton/docs-shared/lib/Tracer/Module'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { DocumentAction, RedirectAction } from '@proton/docs-shared/DocumentAction'
+import OpenTracer from '@proton/docs-shared/Tracer/Module'
+import { tmpConvertNewDocTypeToOld } from '@proton/docs-shared/Doc/convert-doc-type'
 import useEffectOnce from '@proton/hooks/useEffectOnce'
 import { getAppHref } from '@proton/shared/lib/apps/helper'
 import { stripLocalBasenameFromPathname } from '@proton/shared/lib/authentication/pathnameHelper'
@@ -92,7 +94,9 @@ export function DocsUrlContextProvider({ children }: { children: React.ReactNode
       throw new Error('Attempting to navigate to private action without user portion')
     }
 
-    const newUrl = new URL(context === 'private' ? location.href : location.origin)
+    const newUrl = new URL(
+      context === 'private' ? location.href : `${location.origin}/${tmpConvertNewDocTypeToOld(action.type)}`,
+    )
 
     newUrl.searchParams.set('mode', action.mode)
     newUrl.searchParams.set('type', action.type)
@@ -177,7 +181,7 @@ export function useDocsUrlBar() {
 
 const SHEET_EDITOR_PATH = '/sheet'
 export const DOCUMENT_EDITOR_PATH = '/doc'
-export const DOCUMENT_NEW_PATH = '/new'
+const DOCUMENT_NEW_PATH = '/new'
 export const DOCUMENT_CREATION_PATHS = [DOCUMENT_EDITOR_PATH, SHEET_EDITOR_PATH, DOCUMENT_NEW_PATH]
 
 export function parseOpenAction(searchParams: URLSearchParams, pathname: string): DocumentAction | null {

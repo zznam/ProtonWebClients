@@ -6,12 +6,15 @@ import { c } from 'ttag';
 import Alert3ds from '@proton/components/containers/payments/Alert3ds';
 import { changeDefaultPaymentMethodBeforePayment } from '@proton/components/containers/payments/DefaultPaymentMethodMessage';
 import PaymentWrapper from '@proton/components/containers/payments/PaymentWrapper';
-import { ProtonPlanCustomizer, getHasPlanCustomizer } from '@proton/components/containers/payments/planCustomizer';
+import { ProtonPlanCustomizer } from '@proton/components/containers/payments/planCustomizer/ProtonPlanCustomizer';
+import { getHasPlanCustomizer } from '@proton/components/containers/payments/planCustomizer/helpers';
 import type { WithLoading } from '@proton/hooks/useLoading';
-import { BilledUserInlineMessage } from '@proton/payments-ui/client-extensions/billed-user/index';
+import { BilledUserInlineMessage } from '@proton/payments-ui/client-extensions/billed-user/BilledUserInlineMessage';
 import { usePaymentFacade } from '@proton/payments-ui/client-extensions/usePaymentFacade';
 import { useBillingAddress } from '@proton/payments-ui/ui/billing-address/hooks/useBillingAddress';
+import { GuardBanner } from '@proton/payments-ui/ui/components/GuardBanner';
 import { PayButton } from '@proton/payments-ui/ui/components/PayButton';
+import { getHeadlessCheckout } from '@proton/payments-ui/ui/headless-checkout/get-headless-checkout';
 import type { FullBillingAddressFlat } from '@proton/payments/core/billing-address/billing-address';
 import { ADDON_PREFIXES, PAYMENT_METHOD_TYPES } from '@proton/payments/core/constants';
 import type { CouponConfigMetadata } from '@proton/payments/core/coupon-config/interface';
@@ -24,7 +27,6 @@ import type {
 } from '@proton/payments/core/interface';
 import { isCurrencyRestrictedMethod } from '@proton/payments/core/payment-methods/currencyOverride';
 import type { PaymentProcessorHook } from '@proton/payments/core/payment-processors/interface';
-import { getIsB2BAudienceFromPlan } from '@proton/payments/core/plan/helpers';
 import type { Plan } from '@proton/payments/core/plan/interface';
 import { SubscriptionMode } from '@proton/payments/core/subscription/constants';
 import { isV5PaymentToken } from '@proton/payments/core/type-guards';
@@ -34,8 +36,9 @@ import type { PaymentTelemetryContext } from '@proton/payments/telemetry/helpers
 import { TelemetryAccountSignupEvents } from '@proton/shared/lib/api/telemetry';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS } from '@proton/shared/lib/constants';
-import type { Api } from '@proton/shared/lib/interfaces';
-import { Audience, isBilledUser } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
+import { isBilledUser } from '@proton/shared/lib/interfaces/User';
 import noop from '@proton/utils/noop';
 
 import AccountStepPaymentSummary from './AccountStepPaymentSummary';
@@ -79,6 +82,7 @@ interface Props {
     telemetryContext: PaymentTelemetryContext;
     onMethodChanged: (method: AvailablePaymentMethod) => void;
     couponConfig: CouponConfigMetadata | undefined;
+    renewalNotice: ReactNode;
 }
 
 const AccountStepPayment = ({
@@ -108,6 +112,7 @@ const AccountStepPayment = ({
     telemetryContext,
     onMethodChanged,
     couponConfig,
+    renewalNotice,
 }: Props) => {
     const signupV2Theme = useSignupV2Theme();
     const formRef = useRef<HTMLFormElement>(null);
@@ -140,8 +145,15 @@ const AccountStepPayment = ({
 
     const { subscriptionData } = model;
 
+    const { isB2B, isGuardBlocked, getItem } = getHeadlessCheckout({
+        planIDs: options.planIDs,
+        plansMap: model.plansMap,
+        checkResult: options.checkResult,
+        app,
+    });
+
     const validatePayment = () => {
-        if (loadingSignup || loadingPaymentDetails) {
+        if (loadingSignup || loadingPaymentDetails || isGuardBlocked) {
             return false;
         }
         return true;
@@ -335,8 +347,6 @@ const AccountStepPayment = ({
         return <BilledUserInlineMessage />;
     }
 
-    const isB2BPlan = getIsB2BAudienceFromPlan(selectedPlan.Name);
-
     const isSignupPass = paymentFacade.flow === 'signup-pass' || paymentFacade.flow === 'signup-pass-upgrade';
 
     const selectedMethodCard = paymentFacade.selectedMethodType === PAYMENT_METHOD_TYPES.CHARGEBEE_CARD;
@@ -381,7 +391,7 @@ const AccountStepPayment = ({
                             plansMap={model.plansMap}
                             selectedPlanIDs={planIDs}
                             onChangePlanIDs={(planIDs) => handleOptimistic({ planIDs })}
-                            audience={isB2BPlan ? Audience.B2B : Audience.B2C}
+                            audience={isB2B ? Audience.B2B : Audience.B2C}
                             showUsersTooltip
                             isTrialMode={signupParameters.trial}
                             addonFlags={{
@@ -418,7 +428,7 @@ const AccountStepPayment = ({
                     // Users who selected bitcoin, can't click "pay" to signup. They need to transfer BTC to the
                     // displayed address, and then the subscription will be created.
                     if (isBitcoin && isAuthenticated) {
-                        return null;
+                        return renewalNotice;
                     }
 
                     const buttonProps = isBitcoin
@@ -454,6 +464,14 @@ const AccountStepPayment = ({
 
                     return (
                         <div>
+                            <GuardBanner
+                                errors={getItem('guard').guards}
+                                telemetry={{
+                                    checkResult: options.checkResult,
+                                    subscriptions: model.session?.subscription,
+                                }}
+                                className="mb-4"
+                            />
                             <PayButton
                                 size="large"
                                 color="norm"
@@ -465,23 +483,18 @@ const AccountStepPayment = ({
                                 pill
                                 data-testid="pay"
                                 className="lumo-payment-trigger" //do not remove `lumo-payment-trigger` it's being used by lumo mobile
-                                suffix={(type) => {
-                                    if (type === PAYMENT_METHOD_TYPES.CHARGEBEE_CARD) {
-                                        return (
-                                            <>
-                                                {guaranteeElement}
-                                                {showAlert3ds && <Alert3ds />}
-                                            </>
-                                        );
-                                    }
-
-                                    return guaranteeElement;
-                                }}
+                                suffix={(type) => (
+                                    <>
+                                        {guaranteeElement}
+                                        {renewalNotice}
+                                        {type === PAYMENT_METHOD_TYPES.CHARGEBEE_CARD && showAlert3ds && <Alert3ds />}
+                                    </>
+                                )}
                                 formInvalid={!isFormValid}
                                 // optimistic check result means that we didn't perform the actual check call because it was
                                 // forbidden due to combination of current subscription and the new plan/cycle/currency.
                                 // We aren't allowed to re-subscribe the same plan.
-                                disabled={model.subscriptionData.checkResult.optimistic}
+                                disabled={model.subscriptionData.checkResult.optimistic || isGuardBlocked}
                                 product={app}
                                 telemetryContext={telemetryContext}
                                 isAuthenticated={isAuthenticated}

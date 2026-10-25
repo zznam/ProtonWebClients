@@ -7,12 +7,12 @@ import type { Input } from '@proton/atoms/Input/Input';
 import { IcCheckmarkCircleFilled } from '@proton/icons/icons/IcCheckmarkCircleFilled';
 import { IcExclamationCircleFilled } from '@proton/icons/icons/IcExclamationCircleFilled';
 import { emailValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { UserSettings } from '@proton/shared/lib/interfaces';
-import { SETTINGS_STATUS } from '@proton/shared/lib/interfaces';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
+import { SETTINGS_STATUS } from '@proton/shared/lib/interfaces/UserSettings';
 import clsx from '@proton/utils/clsx';
 import isTruthy from '@proton/utils/isTruthy';
 
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import type { InputFieldProps } from '../../../components/v2/field/InputField';
 import useFormErrors from '../../../components/v2/useFormErrors';
 

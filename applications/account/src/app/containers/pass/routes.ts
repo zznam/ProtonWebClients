@@ -5,40 +5,22 @@ import { IcArrowDownLine } from '@proton/icons/icons/IcArrowDownLine';
 import { IcChartLine } from '@proton/icons/icons/IcChartLine';
 import { IcCheckmarkTriple } from '@proton/icons/icons/IcCheckmarkTriple';
 import { IcTextTitle } from '@proton/icons/icons/IcTextTitle';
-import { PLANS } from '@proton/payments/core/constants';
-import {
-    getPlanName,
-    hasAnyB2bBundle,
-    hasPassBusiness,
-    hasVPNPassProfessional,
-} from '@proton/payments/core/subscription/helpers';
 import { APPS, PASS_APP_NAME } from '@proton/shared/lib/constants';
 import { hasOrganizationSetup, hasOrganizationSetupWithKeys } from '@proton/shared/lib/helpers/organization';
 
 import type { OrganizationRouterParams } from '../../content/router-params';
 
-export const getPassAppRoutes = ({
-    app,
-    organization,
-    subscription,
-    permissions,
-    entitlements,
-}: OrganizationRouterParams) => {
+export const getPassAppRoutes = ({ app, organization, permissions, entitlements }: OrganizationRouterParams) => {
     const hasOrganizationKey = hasOrganizationSetupWithKeys(organization);
     const hasOrganization = hasOrganizationSetup(organization);
 
-    // passbiz2024 or bundlepro2024 or bundlepro2022 or vpnpassbiz2025
     // MSP subsidiary orgs don't own their subscription (it belongs to the MSP manager), so `subscription`
     // resolves to the free/dummy value for them. Workaround: MSP currently only runs on Pass Pro, which is
     // already a B2B plan, so treat subsidiaries as such directly (same pattern as organization/routes.ts).
-    const hasPassOrBundleB2B =
-        hasPassBusiness(subscription) ||
-        hasAnyB2bBundle(subscription) ||
-        hasVPNPassProfessional(subscription) ||
-        !!organization?.IsSubsidiary;
-
-    // passpro2024 — Pass Essentials admins see these pages with an "Upgrade required" badge.
-    const isPassEssentials = getPlanName(subscription) === PLANS.PASS_PRO;
+    const isMspSubsidiary = !!organization?.IsSubsidiary;
+    const hasPassOrBundleB2B = entitlements.isPassB2B || isMspSubsidiary;
+    const isOrganizationPolicyUpgradeRequired = !isMspSubsidiary && !entitlements.hasOrganizationPolicy;
+    const canUpgradeToPassActivityLog = entitlements.isPassB2BWithoutActivityMonitor;
 
     return <const>{
         available: app === APPS.PROTONPASS || app === APPS.PROTONACCOUNT,
@@ -63,8 +45,8 @@ export const getPassAppRoutes = ({
                 available:
                     (hasOrganizationKey || hasOrganization) &&
                     permissions['account.activity_log.read'] &&
-                    (entitlements.orgHasPassActivityMonitor || isPassEssentials),
-                upgradeRequired: isPassEssentials,
+                    (entitlements.hasPassActivityMonitor || canUpgradeToPassActivityLog),
+                upgradeRequired: !entitlements.hasPassActivityMonitor,
                 subsections: [
                     {
                         id: 'activity-log',
@@ -77,10 +59,8 @@ export const getPassAppRoutes = ({
                 to: '/policies',
                 icon: IcCheckmarkTriple,
                 available:
-                    (hasOrganizationKey || hasOrganization) &&
-                    permissions['pass.policy.read'] &&
-                    (hasPassOrBundleB2B || isPassEssentials),
-                upgradeRequired: isPassEssentials,
+                    (hasOrganizationKey || hasOrganization) && permissions['pass.policy.read'] && hasPassOrBundleB2B,
+                upgradeRequired: isOrganizationPolicyUpgradeRequired,
                 subsections: [
                     {
                         id: 'policies',
@@ -93,10 +73,8 @@ export const getPassAppRoutes = ({
                 to: '/reports',
                 icon: IcChartLine,
                 available:
-                    (hasOrganizationKey || hasOrganization) &&
-                    permissions['pass.report.read'] &&
-                    (hasPassOrBundleB2B || isPassEssentials),
-                upgradeRequired: isPassEssentials,
+                    (hasOrganizationKey || hasOrganization) && permissions['pass.report.read'] && hasPassOrBundleB2B,
+                upgradeRequired: isOrganizationPolicyUpgradeRequired,
                 subsections: [
                     {
                         id: 'reports',

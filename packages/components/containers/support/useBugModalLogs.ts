@@ -1,14 +1,20 @@
 import { useState } from 'react';
 
-import { logger } from '@proton/logger';
+import { logger } from '@protontech/logger';
+
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS } from '@proton/shared/lib/constants';
-import { getInboxDesktopLogsBlob, isInboxDesktopBugReportLogsSupported } from '@proton/shared/lib/desktop/logHelpers';
+import {
+    getInboxDesktopLogsBlob,
+    getInboxDesktopProfilerReportBlobs,
+    isInboxDesktopBugReportLogsSupported,
+} from '@proton/shared/lib/desktop/logHelpers';
 import { useFlag } from '@proton/unleash/useFlag';
 
 const APPS_FOR_LOG_COLLECTION: Partial<Record<APP_NAMES, boolean>> = {
     [APPS.PROTONMAIL]: true,
     [APPS.PROTONCALENDAR]: true,
+    [APPS.PROTONMEET]: true,
 };
 
 const getTimestampedFilename = (prefix: string) => `${prefix}-${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
@@ -21,9 +27,7 @@ export const useBugModalLogs = (app: APP_NAMES) => {
     const isAppCollectingLogs = Boolean(APPS_FOR_LOG_COLLECTION[app]);
     const collectLogs = isCollectingLogsFlagOn && isAppCollectingLogs;
 
-    const isDesktopLogCollectionDisabled = useFlag('InboxDesktopBugReportLogAttachmentDisabled');
-    const collectLogsInboxDesktop = !isDesktopLogCollectionDisabled && isInboxDesktopBugReportLogsSupported();
-
+    const collectLogsInboxDesktop = isInboxDesktopBugReportLogsSupported();
     const [includeLogs, setIncludeLogs] = useState(collectLogs || collectLogsInboxDesktop);
 
     const getLogAttachments = async (existingAttachments: { [key: string]: Blob }) => {
@@ -37,11 +41,12 @@ export const useBugModalLogs = (app: APP_NAMES) => {
         }
 
         if (collectLogsInboxDesktop && includeLogs) {
-            const attachmentSize = Object.values({ ...existingAttachments, ...attachments }).reduce(
-                (sum, blob) => sum + blob.size,
-                0
-            );
-            const inboxDesktopLogs = await getInboxDesktopLogsBlob(attachmentSize);
+            const getAttachmentSize = () =>
+                Object.values({ ...existingAttachments, ...attachments }).reduce((sum, blob) => sum + blob.size, 0);
+
+            Object.assign(attachments, await getInboxDesktopProfilerReportBlobs(getAttachmentSize()));
+
+            const inboxDesktopLogs = await getInboxDesktopLogsBlob(getAttachmentSize());
             if (inboxDesktopLogs) {
                 attachments[getTimestampedFilename('logs-INDA')] = inboxDesktopLogs;
             }

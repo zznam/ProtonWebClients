@@ -24,15 +24,13 @@ import OrganizationGroupsManagementSection from '@proton/components/containers/o
 import OrganizationRetentionPoliciesSection from '@proton/components/containers/organization/retentionPolicy/OrganizationRetentionPoliciesSection';
 import SsoPage from '@proton/components/containers/organization/sso/SsoPage';
 import { SentinelSection } from '@proton/components/containers/sentinel/SentinelSection';
-import type { EntitlementChecks } from '@proton/payments/core/entitlements/resolver';
+import type { EntitlementChecksForOrgAndUser } from '@proton/payments/core/entitlements/interface';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
-import type { OrganizationExtended } from '@proton/shared/lib/interfaces';
-import {
-    AlwaysOnVpnRoute,
-    GatewayMonitorRoute,
-    GatewaysRoute,
-    SharedServersRoute,
-} from '@proton/vpn/routes/organization';
+import type { OrganizationExtended } from '@proton/shared/lib/interfaces/Organization';
+import { AlwaysOnVpnRoute } from '@proton/vpn/routes/organization/AlwaysOnVpnRoute';
+import { GatewayMonitorRoute } from '@proton/vpn/routes/organization/GatewayMonitorRoute';
+import { GatewaysRoute } from '@proton/vpn/routes/organization/GatewaysRoute';
+import { SharedServersRoute } from '@proton/vpn/routes/organization/SharedServersRoute';
 
 import { FeatureAccessSection } from './components/FeatureAccessSection';
 import type { getOrganizationAppRoutes } from './routes';
@@ -52,7 +50,7 @@ const OrganizationSettingsRouter = ({
     organizationAppRoutes: ReturnType<typeof getOrganizationAppRoutes>;
     organization?: OrganizationExtended;
     onOpenChat?: () => void;
-    entitlements: EntitlementChecks;
+    entitlements: EntitlementChecksForOrgAndUser;
 }) => {
     const onceRef = useRef(false);
     // The setup organization route becomes unavailable post organization setup.
@@ -190,7 +188,7 @@ const OrganizationSettingsRouter = ({
                 <Route path={getSectionPath(path, accessControl)}>
                     <PrivateMainSettingsArea config={accessControl}>
                         <AccessControlSettingsSection />
-                        <FeatureAccessSection />
+                        <FeatureAccessSection {...organizationAppRoutes.featureAccess} />
                     </PrivateMainSettingsArea>
                 </Route>
             )}

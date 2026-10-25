@@ -7,12 +7,12 @@ SDK switch flags:
 - DocsLoadRecentsWithDriveSDK - no dependencies
 - DocsDocumentViewerEventsSDK - no dependencies
 - DocsTrashWithDriveSDK - no dependencies
-- DocsRenameWithDriveSDK
-   - careful: used by sharing modal for document title cache
-   - needs DocsLoadRecentsWithDriveSDK and DocsDocumentViewerEventsSDK for the events
-- DocsMoveModalDriveSDK - needs DocsRenameWithDriveSDK because SDK rename updates cache (+ events)
+- DocsMoveModalDriveSDK - no dependencies
 - DocsInvitationsDriveSDK - no dependencies
 - DocsDriveCompatSDK - no dependencies
+
+Other flags:
+- DocsHomepageBulkTrash - requires DocsTrashWithDriveSDK
 */
 
 export function useLoadRecentsWithSdkEnabled() {
@@ -25,10 +25,6 @@ export function useDocsDocumentViewerEventsSDK() {
 
 export function useTrashWithSDK() {
   return useFlag('DocsTrashWithDriveSDK')
-}
-
-export function useRenameWithSDK() {
-  return useFlag('DocsRenameWithDriveSDK')
 }
 
 export function useMoveModalDriveSdkEnabled() {
@@ -44,6 +40,12 @@ export function useDriveCompatSDK() {
 }
 
 // Other flags
+
+export function useBulkTrashEnabled() {
+  const bulk = useFlag('DocsHomepageBulkTrash')
+  const trashWithSDK = useTrashWithSDK()
+  return bulk && trashWithSDK
+}
 
 export function useIsOpenTracerEnabled() {
   return useFlag('DocsOpenTracer')
@@ -72,10 +74,5 @@ export function useIsDownloadLogsAllowed() {
 
 export function useIsSheetsEnabled() {
   const killswitch = useFlag('DocsSheetsDisabled')
-  return (useFlag('DocsSheetsEnabled') || isDevOrBlack()) && !killswitch
-}
-
-export function useIsSheetsEditorEnabled() {
-  const killswitch = useFlag('DocsSheetsDisabled')
-  return (useFlag('SheetsEditorEnabled') || isDevOrBlack()) && !killswitch
+  return !killswitch
 }

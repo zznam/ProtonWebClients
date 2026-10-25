@@ -3,7 +3,7 @@ import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { c } from 'ttag';
 
 import { getVerifiedPublicKeys } from '@proton/key-transparency/keys';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { activatePasswordlessKey, updateRolePasswordless } from '@proton/shared/lib/api/members';
@@ -19,16 +19,21 @@ import {
 import { KEYGEN_CONFIGS, KEYGEN_TYPES, MEMBER_PRIVATE, MEMBER_ROLE } from '@proton/shared/lib/constants';
 import { getIsAddressConfirmed, getIsAddressEnabled } from '@proton/shared/lib/helpers/address';
 import { captureMessage, getSentryError } from '@proton/shared/lib/helpers/sentry';
-import type {
-    Address,
-    Api,
-    CachedOrganizationKey,
-    EnhancedMember,
-    Group,
-    KTUserContext,
-    Member,
-} from '@proton/shared/lib/interfaces';
-import { MEMBER_ORG_KEY_STATE } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { Group } from '@proton/shared/lib/interfaces/Group';
+import type { KTUserContext } from '@proton/shared/lib/interfaces/KeyTransparency';
+import type { EnhancedMember, Member } from '@proton/shared/lib/interfaces/Member';
+import { MEMBER_ORG_KEY_STATE } from '@proton/shared/lib/interfaces/Member';
+import type { CachedOrganizationKey } from '@proton/shared/lib/interfaces/OrganizationKey';
+import { reencryptAddressKeyTokenUsingOrgKey } from '@proton/shared/lib/keys/addressKeys';
+import { getOrganizationKeyToken } from '@proton/shared/lib/keys/getDecryptedOrganizationKey';
+import { getDecryptedUserKeys } from '@proton/shared/lib/keys/getDecryptedUserKeys';
+import { getPrimaryKey } from '@proton/shared/lib/keys/getPrimaryKey';
+import { getHasMigratedAddressKeys } from '@proton/shared/lib/keys/keyMigration';
+import { splitKeys } from '@proton/shared/lib/keys/keys';
+import { getIsMemberSetup, getIsNonPrivateMemberSetup } from '@proton/shared/lib/keys/memberHelper';
+import type { OrganizationKeyActivation, OrganizationKeyInvitation } from '@proton/shared/lib/keys/organizationKeyDto';
 import {
     type OrganizationKeyTokenData,
     type OrganizationKeyTokenDataSigner,
@@ -40,24 +45,17 @@ import {
     generatePrivateMemberInvitation,
     generatePublicMemberActivation,
     getDecryptedOrganizationKeyTokenData,
-    getDecryptedUserKeys,
-    getHasMigratedAddressKeys,
     getIsPasswordless,
-    getOrganizationKeyToken,
     getOrganizationKeyTokenDataSigner,
-    getPrimaryKey,
     getReEncryptedPublicMemberTokensPayloadLegacy,
     getReEncryptedPublicMemberTokensPayloadV2,
-    reencryptAddressKeyTokenUsingOrgKey,
-    splitKeys,
-} from '@proton/shared/lib/keys';
-import { getIsMemberSetup, getIsNonPrivateMemberSetup } from '@proton/shared/lib/keys/memberHelper';
-import type { OrganizationKeyActivation, OrganizationKeyInvitation } from '@proton/shared/lib/keys/organizationKeyDto';
+} from '@proton/shared/lib/keys/organizationKeys';
 import isTruthy from '@proton/utils/isTruthy';
 import noop from '@proton/utils/noop';
 
 import { addressKeysThunk } from '../addressKeys';
 import { addressesThunk } from '../addresses';
+import type { EntitlementCatalogState } from '../entitlementCatalog';
 import type { EntitlementsState } from '../entitlements';
 import type { GroupsState } from '../groups';
 import { groupThunk } from '../groups';
@@ -69,6 +67,7 @@ import { getMemberAddresses, membersThunk } from '../members';
 import { unprivatizeSelfForMsp } from '../members/unprivatizeActions';
 import { organizationActions } from '../organization';
 import type { OrganizationRolesState } from '../organizationRoles';
+import type { SubscriptionState } from '../subscription';
 import { userKeysThunk } from '../userKeys';
 import type { RoleChangeClassification } from './classifyRoleChange';
 import { type OrganizationKeyState, organizationKeyThunk } from './index';
@@ -99,14 +98,20 @@ export const getEditOwnRolesText = () => {
     return c('user_modal').t`You can't change your own roles. Ask another admin to change them.`;
 };
 
+export const getNextSignInForAdminText = () => {
+    return c('user_modal').t`This user gets administrator rights the next time they sign in.`;
+};
+
 export const getRolesTabBanner = ({
     showUpgrade,
     pendingInvitation,
     isEditingSelf = false,
+    requiresSignInForAdmin = false,
 }: {
     showUpgrade: boolean;
     pendingInvitation: boolean;
     isEditingSelf?: boolean;
+    requiresSignInForAdmin?: boolean;
 }): string | undefined => {
     if (showUpgrade) {
         return getUpgradeForAdminRolesText();
@@ -116,6 +121,9 @@ export const getRolesTabBanner = ({
     }
     if (isEditingSelf) {
         return getEditOwnRolesText();
+    }
+    if (requiresSignInForAdmin) {
+        return getNextSignInForAdminText();
     }
     return undefined;
 };
@@ -791,7 +799,13 @@ export const rotateOrganizationKeys = ({
 };
 
 export interface CreatePasswordlessOrganizationKeysState
-    extends RotateOrganizationKeysState, MemberState, EntitlementsState, OrganizationRolesState {}
+    extends
+        RotateOrganizationKeysState,
+        MemberState,
+        EntitlementsState,
+        OrganizationRolesState,
+        SubscriptionState,
+        EntitlementCatalogState {}
 
 export const createPasswordlessOrganizationKeys = ({
     publicMembersToReEncryptPayload,

@@ -1,12 +1,13 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { getIsOfflineError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { getSilentApiWithAbort } from '@proton/shared/lib/api/helpers/customConfig';
 import { MEMBER_PRIVATE, MEMBER_ROLE } from '@proton/shared/lib/constants';
 import { getEmailParts } from '@proton/shared/lib/helpers/email';
-import type { CreateMemberMode, Domain } from '@proton/shared/lib/interfaces';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
+import type { CreateMemberMode } from '@proton/shared/lib/interfaces/Member';
 import { getOrganizationKeyInfo } from '@proton/shared/lib/organization/helper';
 import noop from '@proton/utils/noop';
 

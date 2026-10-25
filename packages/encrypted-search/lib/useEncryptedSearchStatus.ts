@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 
 import { SentryCommonInitiatives, traceInitiativeError } from '@proton/shared/lib/helpers/sentry';
-import type { DecryptedKey } from '@proton/shared/lib/interfaces';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
 
 import { INDEXING_STATUS, defaultESStatus } from './constants';
-import { getIndexKey } from './esHelpers';
-import { contentIndexingProgress, hasESDB, metadataIndexingProgress, readEnabled, readLimited } from './esIDB';
-import type { ESCache, ESStatus } from './models';
+import { getIndexKey } from './esHelpers/esBuild';
+import { readEnabled, readLimited } from './esIDB/configObjectStore';
+import { hasESDB } from './esIDB/indexedDB';
+import { contentIndexingProgress, metadataIndexingProgress } from './esIDB/indexingProgress';
+import type { ESCache, ESStatus } from './models/interfaces';
 
 /**
  * @returns a tuple composed of both the _esStatus_ and a setter for it

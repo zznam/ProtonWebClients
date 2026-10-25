@@ -7,7 +7,7 @@ import { fromPromise } from 'xstate';
 
 import { createKeyMigrationKTVerifier, createPreAuthKTVerifier } from '@proton/key-transparency/shared';
 import { type AuthTypes, getAuthTypes } from '@proton/shared/lib/authentication/twoFactor';
-import type { KeyTransparencyActivation } from '@proton/shared/lib/interfaces';
+import type { KeyTransparencyActivation } from '@proton/shared/lib/interfaces/KeyTransparency';
 
 import type { AuthSession } from '../../content/authSession';
 import type { PrimaryAuthResult } from '../steps/credentials/state-machine/credentialsActors';
@@ -44,6 +44,7 @@ export const createSignInActors = (services: SignInActorServices) => {
                     username: input.username,
                     persistent: input.persistent,
                     loginPassword: input.password,
+                    claimedAddress: input.claimedAddress,
                 },
                 account: {},
                 keyTransparency: {

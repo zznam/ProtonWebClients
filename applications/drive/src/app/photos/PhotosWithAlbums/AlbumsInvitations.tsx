@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { MimeIcon, useConfirmActionModal } from '@proton/components';
+import { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal';
+import { MimeAlbum } from '@proton/file-icons/icons/MimeAlbum';
 import useLoading from '@proton/hooks/useLoading';
 
 // TODO: Move that to common place
@@ -48,7 +49,7 @@ export const AlbumsInvitations = () => {
                                 <div className="banner-invite-inner border border-info rounded m-2 py-1 px-2 flex flex-column md:flex-row flex-nowrap items-center *:min-size-auto">
                                     <div className="flex-1 flex flex-nowrap flex-row items-start py-0.5 mr-2">
                                         <span className="shrink-0 mr-2 p-0.5 ratio-square flex">
-                                            <MimeIcon name="album" size={5} className="m-auto" />
+                                            <MimeAlbum size={5} className="m-auto" />
                                         </span>
                                         <span className="mt-1">
                                             {

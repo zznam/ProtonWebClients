@@ -11,12 +11,12 @@ import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import Option from '@proton/components/components/option/Option';
 import SelectTwo from '@proton/components/components/selectTwo/SelectTwo';
 import Toggle from '@proton/components/components/toggle/Toggle';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 
 import { useRequest } from '../../../hooks/useRequest';
 import type { PersonalAccessToken } from '../../../lib/access-token/access-token.types';
-import { createAccessToken } from '../../../store/actions';
-import { selectWritableVaults } from '../../../store/selectors';
+import { createAccessToken } from '../../../store/actions/creators/access-token';
+import { selectWritableVaults } from '../../../store/selectors/shares';
 import { sortOn } from '../../../utils/fp/sort';
 import {
     DAY_IN_MINUTES,

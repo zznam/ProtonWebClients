@@ -1,4 +1,3 @@
-import Icon from '@proton/components/components/icon/Icon'
 import { Avatar } from '@proton/atoms/Avatar/Avatar'
 import { Button } from '@proton/atoms/Button/Button'
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip'
@@ -6,8 +5,8 @@ import { IcArrowToCenterHorizontal } from '@proton/icons/icons/IcArrowToCenterHo
 import { IcCheckmark } from '@proton/icons/icons/IcCheckmark'
 import { IcChevronDown } from '@proton/icons/icons/IcChevronDown'
 import { IcCross } from '@proton/icons/icons/IcCross'
-import { DateFormatter } from '@proton/docs-core'
-import { ServerTime } from '@proton/docs-shared'
+import { DateFormatter } from '@proton/docs-core/VersionHistory/DateFormatter'
+import { ServerTime } from '@proton/docs-shared/ServerTime'
 import { TelemetryDocsHomepageEvents } from '@proton/shared/lib/api/telemetry'
 import { isProtonDocsDocument } from '@proton/shared/lib/helpers/mimetype'
 import { traceError } from '@proton/shared/lib/helpers/sentry'
@@ -19,12 +18,12 @@ import { useApplication } from '~/utils/application-context'
 import { useHomepageView } from '../../__utils/homepage-view'
 import { COLOR_BY_TYPE, ContentSheet, ICON_BY_TYPE } from './shared'
 import * as Table from './table'
-import type { ExtendedInvitationDetails } from '@proton/drive-store/store'
-import type { DocInvitesHook } from '@proton/drive-store'
+import type { ExtendedInvitationDetails } from '@proton/docs-shared/InvitationTypes'
+import type { DocInvitesHook } from '@proton/drive-store/lib/_invites/useDocInvites'
 import { useDocInvites as useDocInvitesSDK } from '~/drive-sdk/useDocInvites'
-import { useDocInvites as useDocInvitesLegacy } from '@proton/drive-store'
+import { useDocInvites as useDocInvitesLegacy } from '@proton/drive-store/lib/_invites/useDocInvites'
 import { useInvitationsSdkEnabled } from '~/utils/flags'
-import { useOpenInvitedDocument } from '@proton/docs-core/lib/Util/useOpenInvitedDocument'
+import { useOpenInvitedDocument } from '@proton/docs-core/Util/useOpenInvitedDocument'
 
 const MAX_INVITES_WHEN_COLLAPSED = 3
 const WAIT_AFTER_ACCEPT_INVITE = 5000 // ms
@@ -108,6 +107,7 @@ function InvitesTableContent(allProps: InvitesTableProps & { useDocInvites: DocI
             }
 
             const type = isProtonDocsDocument(invite.link.mimeType) ? 'document' : 'spreadsheet'
+            const DocumentTypeIcon = ICON_BY_TYPE[type]
 
             return (
               <Table.Row key={invite.invitation.invitationId} data-testid="invite-row">
@@ -117,8 +117,7 @@ function InvitesTableContent(allProps: InvitesTableProps & { useDocInvites: DocI
                     title={invite.decryptedLinkName}
                   >
                     <span className="flex flex-nowrap items-center gap-3">
-                      <Icon
-                        name={ICON_BY_TYPE[type]}
+                      <DocumentTypeIcon
                         size={5}
                         className="shrink-0 text-[--icon-color]"
                         style={{ '--icon-color': COLOR_BY_TYPE[type] }}

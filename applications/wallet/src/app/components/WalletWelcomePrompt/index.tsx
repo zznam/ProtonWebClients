@@ -1,14 +1,15 @@
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import type { ModalOwnProps } from '@proton/components';
-import { Prompt } from '@proton/components';
+import type { ModalOwnProps } from '@proton/components/components/modalTwo/Modal';
+import Prompt from '@proton/components/components/prompt/Prompt';
 import useLoading from '@proton/hooks/useLoading';
 import { BRAND_NAME, WALLET_APP_NAME } from '@proton/shared/lib/constants';
 import walletBitcoinDark from '@proton/styles/assets/img/wallet/wallet-bitcoin-dark.jpg';
 import walletBitcoin from '@proton/styles/assets/img/wallet/wallet-bitcoin.jpg';
-import { useWalletApiClients } from '@proton/wallet/contexts';
-import { useUserWalletSettings, useWalletDispatch } from '@proton/wallet/store/hooks';
+import { useWalletApiClients } from '@proton/wallet/contexts/ExtendedApiContext';
+import { useWalletDispatch } from '@proton/wallet/store/hooks/app';
+import { useUserWalletSettings } from '@proton/wallet/store/hooks/useUserWalletSettings';
 import { acceptTermsAndConditions } from '@proton/wallet/store/slices';
 import { WalletThemeOption } from '@proton/wallet/utils/theme';
 

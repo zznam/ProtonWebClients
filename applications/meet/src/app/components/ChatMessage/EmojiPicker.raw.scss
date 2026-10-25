@@ -5,6 +5,9 @@
 // emoji-mart applies this to both the host and the picker body.
 :host {
 	--border-radius: 2rem;
+
+	block-size: min(435px, var(--emoji-picker-max-height, 435px));
+	min-block-size: 0;
 }
 
 #root {
@@ -41,6 +44,12 @@
 	// Underline under the selected category icon.
 	.bar {
 		background-color: var(--interaction-norm);
+	}
+
+	img {
+		inline-size: 24px;
+		block-size: 24px;
+		margin: -3px;
 	}
 }
 

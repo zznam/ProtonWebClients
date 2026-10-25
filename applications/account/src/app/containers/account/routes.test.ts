@@ -1,19 +1,20 @@
 import { buildUser } from '@proton/account/testing/buildUser';
 import { getOrgPermissions } from '@proton/account/userPermissions';
-import { createEntitlementResolver } from '@proton/payments/core/entitlements/resolver';
+import { createEntitlementResolverForOrgAndUser } from '@proton/payments/core/entitlements/resolver';
 import { Renew } from '@proton/payments/core/subscription/constants';
 import { hasCancellablePlan, isCancellableOnlyViaSupport } from '@proton/payments/core/subscription/helpers';
 import type { Subscription } from '@proton/payments/core/subscription/interface';
+import { buildEntitlementCatalog } from '@proton/payments/testing/buildEntitlementCatalog';
 import { APPS } from '@proton/shared/lib/constants';
 
 import type { AccountRecoveryRouterFlags, AccountRouterParams, Flags } from '../../content/router-params';
+import { defaultFlags } from '../../content/testing/buildOrganizationRouterParams';
 import { getAccountAppRoutes } from './routes';
 
 jest.mock('@proton/payments/core/subscription/helpers', () => ({
     ...jest.requireActual('@proton/payments/core/subscription/helpers'),
     hasCancellablePlan: jest.fn(),
     isCancellableOnlyViaSupport: jest.fn(),
-    getHasExternalMemberCapableB2BPlan: jest.fn().mockReturnValue(false),
     getHasVpnB2BPlan: jest.fn().mockReturnValue(false),
     isManagedExternally: jest.fn().mockReturnValue(false),
     hasLumo: jest.fn().mockReturnValue(false),
@@ -33,22 +34,6 @@ const accountRecoveryRouterFlags: AccountRecoveryRouterFlags = {
     isRecoveryScoreBannerAvailable: false,
 };
 
-const defaultFlags: Flags = {
-    isAlwaysOnVpnEnabled: false,
-    isReferralProgramEnabled: false,
-    isDriveEasySwitchNewUIEnabled: false,
-    canDisplayNonPrivateEmailPhone: false,
-    isUserGroupsNoCustomDomainEnabled: false,
-    isScribeEnabled: false,
-    isZoomIntegrationEnabled: false,
-    isProtonMeetIntegrationEnabled: false,
-    isCryptoPostQuantumOptInEnabled: false,
-    isSsoForPbsEnabled: false,
-    isRetentionPoliciesEnabled: false,
-    isAuthenticatorAvailable: false,
-    isCategoryViewEnabled: false,
-};
-
 type Overrides = Omit<Partial<AccountRouterParams>, 'flags'> & { flags?: Partial<Flags> };
 
 function buildDefaultParams({ flags: flagOverrides, ...rest }: Overrides = {}): AccountRouterParams {
@@ -56,7 +41,8 @@ function buildDefaultParams({ flags: flagOverrides, ...rest }: Overrides = {}): 
         app: APPS.PROTONMAIL,
         user: buildUser(),
         subscription: { Renew: Renew.Enabled } as Subscription,
-        entitlements: createEntitlementResolver(undefined),
+        allSubscriptions: [],
+        entitlements: createEntitlementResolverForOrgAndUser(buildEntitlementCatalog(), undefined, []),
         recoveryNotification: undefined,
         accountRecoveryRouterFlags,
         organization: undefined,
@@ -67,6 +53,7 @@ function buildDefaultParams({ flags: flagOverrides, ...rest }: Overrides = {}): 
         memberships: undefined,
         isB2BDrive: false,
         isGroupOwner: null,
+        isOrganizationOwner: false,
         referralInfo: { refereeRewardAmount: '0', referrerRewardAmount: '0', maxRewardAmount: '0' },
         showDashboard: true,
         showDriveDashboard: false,

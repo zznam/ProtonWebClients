@@ -1,13 +1,18 @@
+import { useSheetsMessages } from '../../SheetsDependenciesProvider'
 /* eslint-disable no-nested-ternary */
 
 import * as Icons from '../icons'
 import * as Ariakit from '@ariakit/react'
-import { getInitialDataValidationValues, useDataValidationDialogState } from '@rowsncolumns/spreadsheet-state'
+import {
+  getInitialDataValidationValues,
+  useDataValidationDialogState,
+  useDraftDataValidationRuleState,
+  useEditingDataValidationIdState,
+} from '@rowsncolumns/spreadsheet-state'
 import { uuid } from '@rowsncolumns/utils'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { SidebarDialog, SidebarDialogHeader } from './SidebarDialog'
 import {
-  CONDITION_LABELS,
   FormulaInput,
   getUserSelections,
   type SheetRange,
@@ -21,15 +26,12 @@ import {
   shouldShowToValue,
 } from '@rowsncolumns/spreadsheet'
 import { produce } from 'immer'
-import { Fragment, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef } from 'react'
 import { Icon } from '../ui'
-import { createStringifier } from '../../stringifier'
-import { c } from 'ttag'
+
 import { Button, FormCheckbox, FormGroup, FormLabel, Input, Select, SelectItem, SelectPopover } from './shared'
 import { FUNCTION_DESCRIPTIONS } from '../../constants'
 import { useUI } from '../../ui-store'
-
-const { s } = createStringifier(strings)
 
 interface DataValidationRuleProps {
   sheetId: number
@@ -39,11 +41,12 @@ interface DataValidationRuleProps {
 }
 
 function DataValidationRule({ sheetId, rule, onDelete, onSelect }: DataValidationRuleProps) {
+  const messages = useSheetsMessages()
+
   const api = useSpreadsheetApi()
   const { rangeToFormula } = useFormulaRangeHelpers({ sheetId })
 
-  const label =
-    CONDITION_LABELS.find((condition) => condition.condition === rule.condition?.type)?.label ?? rule.condition?.type
+  const label = rule.condition?.type ? (messages.conditions[rule.condition.type] ?? rule.condition.type) : undefined
   const values = rule.condition?.values?.map((value) => value.userEnteredValue).join(',')
 
   return (
@@ -87,7 +90,7 @@ function DataValidationRule({ sheetId, rule, onDelete, onSelect }: DataValidatio
         <Button
           type="button"
           className="flex size-[36px] shrink-0 items-center justify-center rounded-lg"
-          aria-label={s('Delete data validation rule')}
+          aria-label={messages.dataValidationDialog['Delete data validation rule']}
           onClick={(event) => {
             event.stopPropagation()
             api?.unmark()
@@ -110,6 +113,8 @@ interface DataValidationListProps {
 }
 
 function DataValidationList({ rules, sheetId, onDeleteRule, onSelectRule, onNewRule }: DataValidationListProps) {
+  const messages = useSheetsMessages()
+
   return (
     <div className="min-h-0 grow overflow-y-auto">
       <div className="flex flex-col empty:hidden">
@@ -131,7 +136,9 @@ function DataValidationList({ rules, sheetId, onDeleteRule, onSelectRule, onNewR
           onClick={onNewRule}
         >
           <Icon data={Icons.plus} />
-          {rules.length > 0 ? s('Add another named range') : s('Add named range')}
+          {rules.length > 0
+            ? messages.dataValidationDialog['Add another named range']
+            : messages.dataValidationDialog['Add named range']}
         </Button>
       </div>
     </div>
@@ -147,6 +154,8 @@ interface DataValidationRuleEditorProps {
 }
 
 function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: DataValidationRuleEditorProps) {
+  const messages = useSheetsMessages()
+
   const form = useForm({ defaultValues: rule })
   const formValue = form.watch()
   const fromValue = formValue.condition?.values?.[0]?.userEnteredValue
@@ -180,7 +189,7 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
         <div className="py-4">
           <div className="flex flex-col gap-4">
             <FormGroup>
-              <FormLabel>{s('Apply to range')}</FormLabel>
+              <FormLabel>{messages.dataValidationDialog['Apply to range']}</FormLabel>
               <div className="flex flex-col gap-1">
                 <div className="flex flex-col gap-1">
                   {formValue.ranges.map((range, rangeIndex) => {
@@ -202,7 +211,7 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
                             }}
                             value={rangeToFormula(range)}
                             required
-                            placeholder={s('Select a range')}
+                            placeholder={messages.dataValidationDialog['Select a range']}
                             autoFocus={rangeIndex === formValue.ranges.length - 1}
                             className="mb-0 w-full"
                           />
@@ -246,31 +255,35 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
                       )
                     }}
                   >
-                    {s('Add another range')}
+                    {messages.dataValidationDialog['Add another range']}
                   </Button>
                 </div>
               </div>
             </FormGroup>
 
             <FormGroup>
-              <FormLabel>{s('Validation rules')}</FormLabel>
+              <FormLabel>{messages.dataValidationDialog['Validation rules']}</FormLabel>
               <div className="flex flex-col gap-2">
                 <Ariakit.SelectProvider
                   value={formValue?.condition?.type ?? CONDITION_NONE}
-                  setValue={(value: ConditionType) => {
-                    form.setValue('condition.type', value)
+                  setValue={(value: ConditionType | typeof CONDITION_NONE) => {
                     form.setValue(
-                      'condition.values',
-                      getInitialDataValidationValues(value, formValue.condition?.values ?? []),
+                      'condition',
+                      value === CONDITION_NONE
+                        ? {}
+                        : {
+                            type: value,
+                            values: getInitialDataValidationValues(value, formValue.condition?.values ?? []),
+                          },
                     )
                   }}
                 >
                   <Select />
                   <SelectPopover sameWidth>
                     <Ariakit.SelectGroup className="py-2">
-                      {VALIDATION_CONDITION_LABELS.map(({ condition, label }) => (
+                      {VALIDATION_CONDITION_LABELS.map(({ condition }) => (
                         <SelectItem key={condition} value={condition}>
-                          {label}
+                          {messages.conditions[condition]}
                         </SelectItem>
                       ))}
                     </Ariakit.SelectGroup>
@@ -286,7 +299,7 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
                         }}
                         value={fromValue ?? '='}
                         required
-                        placeholder={s('Enter a formula')}
+                        placeholder={messages.dataValidationDialog['Enter a formula']}
                         autoFocus
                         functionDescriptions={FUNCTION_DESCRIPTIONS}
                         className="mb-0 w-full"
@@ -294,7 +307,7 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
                     </div>
                   ) : (
                     <Input
-                      placeholder={s('Enter value')}
+                      placeholder={messages.dataValidationDialog['Enter value']}
                       value={fromValue ?? ''}
                       onChange={(e) => form.setValue(`condition.values.${0}.userEnteredValue`, e.target.value)}
                     />
@@ -303,7 +316,7 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
 
                 {showToValue ? (
                   <Input
-                    placeholder={s('Enter value')}
+                    placeholder={messages.dataValidationDialog['Enter value']}
                     value={toValue ?? ''}
                     onChange={(event) => form.setValue(`condition.values.${1}.userEnteredValue`, event.target.value)}
                   />
@@ -318,7 +331,7 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
                   form.setValue('allowBlank', value)
                 }}
               >
-                <FormCheckbox>{s('Allow blanks')}</FormCheckbox>
+                <FormCheckbox>{messages.dataValidationDialog['Allow blanks']}</FormCheckbox>
               </Ariakit.CheckboxProvider>
             </FormGroup>
 
@@ -329,7 +342,7 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
                 className="inline-flex h-[36px] items-center gap-1.5 rounded-lg border border-[#DEDBD9] px-4 text-[13px]"
               >
                 <Icon data={Icons.plus} />
-                {s('Add another named range')}
+                {messages.dataValidationDialog['Add another named range']}
               </Button>
             </div>
           </div>
@@ -342,20 +355,18 @@ function DataValidationRuleEditor({ rule, sheetId, onDone, onSave, onNewRule }: 
           className="inline-flex h-[36px] items-center gap-1.5 rounded-lg border border-[#DEDBD9] px-4 text-[13px]"
           onClick={onDone}
         >
-          {s('Cancel')}
+          {messages.dataValidationDialog.Cancel}
         </Button>
         <Button
           type="submit"
           className="inline-flex h-[36px] items-center gap-1.5 rounded-lg bg-[#6D4AFF] px-4 text-[13px] text-[white]"
         >
-          {s('Save')}
+          {messages.dataValidationDialog.Save}
         </Button>
       </div>
     </form>
   )
 }
-
-type DataValidationState = { type: 'list' } | { type: 'editRule'; rule: DataValidationRuleRecord }
 
 function DataValidation() {
   const dataValidations = useUI((ui) => ui.legacy.dataValidations)
@@ -364,8 +375,32 @@ function DataValidation() {
   const onUpdateRule = useUI((ui) => ui.legacy.onUpdateDataValidationRule)
   const onDeleteRule = useUI((ui) => ui.legacy.onDeleteDataValidationRule)
 
-  const [state, setState] = useState<DataValidationState>({ type: 'list' })
+  const [editingId, setEditingId] = useEditingDataValidationIdState()
+  const [draftRule, setDraftRule] = useDraftDataValidationRuleState()
+  const activeRule = draftRule?.id === editingId ? draftRule : dataValidations.find((rule) => rule.id === editingId)
   const api = useSpreadsheetApi()
+
+  const unmountCleanupRef = useRef({ editingId, draftId: draftRule?.id })
+  useEffect(() => {
+    unmountCleanupRef.current = { editingId, draftId: draftRule?.id }
+  }, [editingId, draftRule])
+  useEffect(
+    () => () => {
+      const { editingId, draftId } = unmountCleanupRef.current
+      if (draftId !== undefined) {
+        setDraftRule(undefined)
+      }
+      if (editingId !== undefined) {
+        setEditingId(undefined)
+      }
+    },
+    [setDraftRule, setEditingId],
+  )
+
+  const onDone = () => {
+    setDraftRule(undefined)
+    setEditingId(undefined)
+  }
 
   const onNewRule = () => {
     const id = uuid() // TODO: idCreationStrategy("data-validation")?
@@ -380,29 +415,41 @@ function DataValidation() {
         sheetId,
       })),
     }
-    onCreateRule(rule)
-    setState({ type: 'editRule', rule })
+    setDraftRule(rule)
+    setEditingId(id)
   }
 
   return (
     <Fragment>
-      {state.type === 'list' ? (
+      {!activeRule ? (
         <DataValidationList
           rules={dataValidations}
           sheetId={sheetId}
           onDeleteRule={onDeleteRule}
-          onSelectRule={(rule) => setState({ type: 'editRule', rule })}
+          onSelectRule={(rule) => setEditingId(rule.id)}
           onNewRule={onNewRule}
         />
       ) : null}
 
-      {state.type === 'editRule' ? (
+      {activeRule ? (
         <DataValidationRuleEditor
-          key={state.rule.id}
-          rule={state.rule}
+          key={activeRule.id}
+          rule={activeRule}
           sheetId={sheetId}
-          onDone={() => setState({ type: 'list' })}
-          onSave={(updatedRule) => onUpdateRule(updatedRule, state.rule)}
+          onDone={onDone}
+          onSave={(updatedRule) => {
+            const isNoneRule = !updatedRule.condition?.type
+            if (updatedRule.id === draftRule?.id) {
+              if (!isNoneRule) {
+                onCreateRule(updatedRule)
+              }
+              setDraftRule(undefined)
+            } else if (isNoneRule) {
+              onDeleteRule(activeRule)
+            } else {
+              onUpdateRule(updatedRule, activeRule)
+            }
+          }}
           onNewRule={onNewRule}
         />
       ) : null}
@@ -411,34 +458,35 @@ function DataValidation() {
 }
 
 export function DataValidationDialog() {
+  const messages = useSheetsMessages()
+
   const [open, setOpen] = useDataValidationDialogState()
 
   return (
     <SidebarDialog open={open} setOpen={setOpen}>
       <div className="flex h-full min-h-0 flex-col">
-        <SidebarDialogHeader title={s('Data validation')} />
+        <SidebarDialogHeader title={messages.dataValidationDialog['Data validation']} />
         <DataValidation />
       </div>
     </SidebarDialog>
   )
 }
 
-function strings() {
-  return {
-    'Delete data validation rule': c('sheets_2025:Spreadsheet sidebar data validation dialog')
-      .t`Delete data validation rule`,
-    'Data validation': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Data validation`,
-    'Add another named range': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Add another named range`,
-    'Add named range': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Add named range`,
-    'Apply to range': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Apply to range`,
-    'Select a range': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Select a range`,
-    'Add another range': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Add another range`,
-    'Validation rules': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Validation rules`,
-    'Enter a formula': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Enter a formula`,
-    'Enter value': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Enter value`,
-    'Allow blanks': c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Allow blanks`,
-    Formula: c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Formula`,
-    Cancel: c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Cancel`,
-    Save: c('sheets_2025:Spreadsheet sidebar data validation dialog').t`Save`,
-  }
+export const dataValidationDialogMessages = {
+  dataValidationDialog: {
+    'Delete data validation rule': `Delete data validation rule`,
+    'Data validation': `Data validation`,
+    'Add another named range': `Add another named range`,
+    'Add named range': `Add named range`,
+    'Apply to range': `Apply to range`,
+    'Select a range': `Select a range`,
+    'Add another range': `Add another range`,
+    'Validation rules': `Validation rules`,
+    'Enter a formula': `Enter a formula`,
+    'Enter value': `Enter value`,
+    'Allow blanks': `Allow blanks`,
+    Formula: `Formula`,
+    Cancel: `Cancel`,
+    Save: `Save`,
+  },
 }

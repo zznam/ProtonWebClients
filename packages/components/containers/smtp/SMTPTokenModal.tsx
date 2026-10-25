@@ -6,13 +6,13 @@ import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { Href } from '@proton/atoms/Href/Href';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { createToken } from '@proton/shared/lib/api/smtptokens';
 import { ADDRESS_TYPE } from '@proton/shared/lib/constants';
 import { getIsAddressEnabled } from '@proton/shared/lib/helpers/address';
 import { maxLengthValidator, requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Address } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
 import noop from '@proton/utils/noop';
 
 import Copy from '../../components/button/Copy';
@@ -24,7 +24,7 @@ import ModalTwoFooter from '../../components/modalTwo/ModalFooter';
 import ModalTwoHeader from '../../components/modalTwo/ModalHeader';
 import Option from '../../components/option/Option';
 import SelectTwo from '../../components/selectTwo/SelectTwo';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import useFormErrors from '../../components/v2/useFormErrors';
 
 import './SMTPTokenModal.scss';

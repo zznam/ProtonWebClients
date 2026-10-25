@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { type ModalStateProps, useFormErrors } from '@proton/components';
-import type { ProtonDriveClient } from '@proton/drive';
-import { getDrive } from '@proton/drive';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
+import useFormErrors from '@proton/components/components/v2/useFormErrors';
 import { handleSdkError } from '@proton/drive/legacy/errorHandling';
 import { BusDriverEventName, getBusDriver } from '@proton/drive/modules/busDriver';
 import { getDeviceName } from '@proton/drive/modules/nodes';
-import { useLoading } from '@proton/hooks';
+import type { ProtonDriveClient } from '@proton/drive/sdk';
+import { getDrive } from '@proton/drive/sdk';
+import useLoading from '@proton/hooks/useLoading';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 
 import { getDeviceByUid } from '../../utils/sdk/getDeviceByUid';

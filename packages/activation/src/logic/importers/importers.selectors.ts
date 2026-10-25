@@ -5,7 +5,7 @@ import orderBy from '@proton/utils/orderBy';
 import { ApiImporterError, ApiImporterState } from '../../api/api.interface';
 import { ImportType } from '../../interface';
 import type { EasySwitchState } from '../store';
-import type { ActiveImportID, ActiveImporter, ActiveImportersMap, ImportersMap } from './importers.interface';
+import type { ActiveImporter, ActiveImportersMap, Importer, ImportersMap } from './importers.interface';
 
 const selectImportersMap = (state: EasySwitchState): ImportersMap => state.importers.importers;
 const selectActiveImportersMap = (state: EasySwitchState): ActiveImportersMap => state.importers.activeImporters;
@@ -15,22 +15,15 @@ const selectActiveImporters = createSelector(selectActiveImportersMap, (activeIm
     Object.values(activeImportersMap)
 );
 
-export const selectImporterById = createSelector(
-    selectImportersMap,
-    (_: EasySwitchState, ID: string) => ID,
-    (importersMap, ID) => importersMap[ID]
-);
-
-export const selectActiveImporterById = createSelector(
-    selectActiveImportersMap,
-    (_: EasySwitchState, ID: ActiveImportID) => ID,
-    (activeImportersMap, ID) => activeImportersMap[ID]
-);
-
-export const selectActiveImporterIdsByDate = createSelector(selectActiveImporters, (activeImporters) =>
-    orderBy(activeImporters, 'startDate')
-        .map(({ localID }) => localID)
-        .reverse()
+export const selectActiveImporterEntriesByDate = createSelector(
+    [selectActiveImporters, selectImportersMap],
+    (activeImporters, importersMap): { activeImporter: ActiveImporter; importer: Importer }[] =>
+        orderBy(activeImporters, 'startDate')
+            .flatMap((activeImporter) => {
+                const importer = importersMap[activeImporter.importerID];
+                return importer ? [{ activeImporter, importer }] : [];
+            })
+            .reverse()
 );
 
 export const selectActiveImportersErrors = createSelector(
@@ -74,7 +67,6 @@ export const selectActiveImportersErrors = createSelector(
     }
 );
 
-// TODO: ApiImporterState.PAUSED is not yet implemented by BE for Drive.
 // TODO: Check if we need to implement something for ApiImporterState.CANCELED
 const DRIVE_IMPORT_RUNNING_STATES = [ApiImporterState.QUEUED, ApiImporterState.RUNNING, ApiImporterState.DELAYED];
 
@@ -88,18 +80,28 @@ const selectIsDriveImportRunning = createSelector(selectActiveImporters, (active
     )
 );
 
+// Drive is only paused by the backend when the user runs out of storage, no ErrorCode is sent.
+const selectIsDriveImportPaused = createSelector(selectActiveImporters, (activeImporters): boolean =>
+    activeImporters.some(
+        ({ product, importState }) => product === ImportType.DRIVE && importState === ApiImporterState.PAUSED
+    )
+);
+
 export interface DriveImportStatus {
     /** False until loadImporters resolved once, so callers can tell "not known yet" apart from "nothing imported". */
     isLoaded: boolean;
     isImporting: boolean;
+    /** Stopped by the backend because the user ran out of storage --> resumable from settings. */
+    isPaused: boolean;
     hasCompletedImport: boolean;
 }
 
 export const selectDriveImportStatus = createSelector(
-    [selectHasDriveImporter, selectIsDriveImportRunning, selectImportersLoading],
-    (hasDriveImporter, isImporting, loading): DriveImportStatus => ({
+    [selectHasDriveImporter, selectIsDriveImportRunning, selectIsDriveImportPaused, selectImportersLoading],
+    (hasDriveImporter, isImporting, isPaused, loading): DriveImportStatus => ({
         isLoaded: loading === 'success' || loading === 'failed',
         isImporting,
-        hasCompletedImport: hasDriveImporter && !isImporting,
+        isPaused,
+        hasCompletedImport: hasDriveImporter && !isImporting && !isPaused,
     })
 );

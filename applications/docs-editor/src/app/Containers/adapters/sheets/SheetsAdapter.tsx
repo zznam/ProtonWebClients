@@ -1,7 +1,8 @@
 import { useNotifications } from '@proton/app-context/useNotifications'
-import { SheetsPatchesType as StoredSheetsPatchesType } from '@proton/docs-core/lib/Database/SheetsDBSchema'
-import type { EditorRequiresClientMethods, SheetImportData } from '@proton/docs-shared'
-import { SheetImportDestination, SheetImportEvent } from '@proton/docs-shared'
+import { SheetsPatchesType as StoredSheetsPatchesType } from '@proton/docs-core/Database/SheetsDBSchema'
+import type { EditorRequiresClientMethods } from '@proton/docs-shared/Bridge/EditorRequiresClientMethods'
+import type { SheetImportData } from '@proton/docs-shared/SheetImportData'
+import { SheetImportDestination, SheetImportEvent } from '@proton/docs-shared/SheetImportData'
 import { isDevOrBlack } from '@proton/shared/lib/env'
 import type { PropsWithChildren } from 'react'
 import { useMemo } from 'react'
@@ -21,6 +22,7 @@ import {
   type SpreadsheetImportDestination,
   type SpreadsheetImportRequest,
 } from '../../Spreadsheet/public'
+import { useSheetsLocalization } from './useSheetsLocalization'
 import { useResolvedAppPlatform } from './utils/use-resolved-app-platform'
 import { createSheetsFileMenuActions } from './utils/create-sheets-file-menu-actions'
 import { toCollaboratorCursorNavigationDestination } from './utils/collaborator-cursor-navigation-adapter'
@@ -45,6 +47,7 @@ function toStoredSheetsPatchesType(type: SheetsPatchCategory | undefined): Store
  * Docs host glue that collects SheetsDependencies and provides them to the sheets editor.
  */
 export function SheetsAdapter({ children, clientInvoker }: SheetsAdapterProps) {
+  const { messages, localization } = useSheetsLocalization()
   const { createNotification } = useNotifications()
   const { application } = useApplication()
   const { theme } = useEditorTheme()
@@ -136,6 +139,7 @@ export function SheetsAdapter({ children, clientInvoker }: SheetsAdapterProps) {
       appPlatform,
       theme,
       featureFlags,
+      localization,
     }),
     [
       appPlatform,
@@ -146,14 +150,21 @@ export function SheetsAdapter({ children, clientInvoker }: SheetsAdapterProps) {
       logger,
       theme,
       featureFlags,
+      localization,
       receivedEverythingFromRTS,
       userName,
     ],
   )
 
   const dependencies = useMemo<SheetsDependencies>(
-    () => ({ ...shellToEditorActions, ...editorToShellActions, ...session }),
-    [shellToEditorActions, editorToShellActions, session],
+    () => ({
+      ...shellToEditorActions,
+      ...editorToShellActions,
+      ...session,
+      messages,
+      licenseKey: process.env.DOCS_SHEETS_KEY,
+    }),
+    [shellToEditorActions, editorToShellActions, session, messages],
   )
 
   return <SheetsDependenciesProvider dependencies={dependencies}>{children}</SheetsDependenciesProvider>

@@ -8,7 +8,7 @@ import { getInitialStorage, getStorageRange, getTotalStorage } from '@proton/acc
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import {
     type MaybeFreeSubscription,
     hasDuo,
@@ -20,7 +20,8 @@ import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { BRAND_NAME, LUMO_APP_NAME, MAIL_APP_NAME, VPN_CONNECTIONS } from '@proton/shared/lib/constants';
 import { emailValidator, requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 import { sizeUnits } from '@proton/shared/lib/helpers/size';
-import type { Member, Organization } from '@proton/shared/lib/interfaces';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 import clamp from '@proton/utils/clamp';
 
 import Modal from '../../components/modalTwo/Modal';
@@ -29,7 +30,7 @@ import ModalFooter from '../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../components/modalTwo/ModalHeader';
 import type { ModalStateProps } from '../../components/modalTwo/useModalState';
 import Toggle from '../../components/toggle/Toggle';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import useFormErrors from '../../components/v2/useFormErrors';
 import AssistantUpdateSubscriptionButton from '../payments/subscription/assistant/AssistantUpdateSubscriptionButton';
 import LumoUpdateSubscriptionButton from '../payments/subscription/lumo/LumoUpdateSubscriptionButton';

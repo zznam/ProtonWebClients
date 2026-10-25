@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 
-import { TableRowBusy } from '@proton/components';
+import TableRowBusy from '@proton/components/components/table/TableRowBusy';
 
-import type { DecryptedLink, TreeItem } from '../../store';
+import type { DecryptedLink } from '../../store/_links/interface';
+import type { TreeItem } from '../../store/_views/useTree';
 import ExpandableRow from './ExpandableRow';
 import { FloatingEllipsisContext } from './FloatingEllipsisContext';
 import { useFloatingEllipsisContext } from './hooks/useFloatingEllipsisContext';

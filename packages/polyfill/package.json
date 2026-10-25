@@ -3,15 +3,16 @@
     "main": "index.js",
     "module": "index.js",
     "scripts": {
-        "lint": "eslint --quiet"
+        "lint": "oxlint --quiet"
     },
     "dependencies": {
-        "@proton/eslint-config-proton": "workspace:^",
-        "core-js": "^3.50.0",
+        "core-js": "catalog:",
         "regenerator-runtime": "^0.14.1",
         "resize-observer": "^1.0.4"
     },
     "devDependencies": {
-        "eslint": "^10.11.0"
+        "@proton/oxlint-config": "workspace:^",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:"
     }
 }

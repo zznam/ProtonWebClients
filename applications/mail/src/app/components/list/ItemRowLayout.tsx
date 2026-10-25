@@ -9,19 +9,18 @@ import type { AttachmentsMetadata } from '@proton/shared/lib/interfaces/mail/Mes
 import { getHasOnlyIcsAttachments } from '@proton/shared/lib/mail/messages';
 import clsx from '@proton/utils/clsx';
 
-import ItemAttachmentThumbnails from './ItemAttachmentThumbnails';
 import { MAX_ROW_ATTACHMENT_THUMBNAILS } from '../../constants';
-import { canShowAttachmentThumbnails } from '../../helpers/attachment/attachmentThumbnails';
-import { useMailSelector } from '../../store/hooks';
-
 import { useEncryptedSearchContext } from '../../containers/EncryptedSearchProvider';
+import { canShowAttachmentThumbnails } from '../../helpers/attachment/attachmentThumbnails';
 import { useExpiringElement } from '../../hooks/useExpiringElement';
 import type { Element } from '../../models/element';
 import type { ESMessage } from '../../models/encryptedSearch';
+import { useMailSelector } from '../../store/hooks';
 import { selectSnoozeDropdownState, selectSnoozeElement } from '../../store/snooze/snoozeSliceSelectors';
 import NumMessages from '../conversation/NumMessages';
 import ItemAction from './ItemAction';
 import ItemAttachmentIcon from './ItemAttachmentIcon';
+import ItemAttachmentThumbnails from './ItemAttachmentThumbnails';
 import ItemDate from './ItemDate';
 import ItemHoverButtons from './ItemHoverButtons';
 import ItemLabels from './ItemLabels';
@@ -79,6 +78,11 @@ const ItemRowLayout = ({
         [Subject, highlightData, highlightMetadata, unread]
     );
 
+    const oneTimeCodeContent = useMemo(
+        () => (highlightData && oneTimeCode ? highlightMetadata(oneTimeCode, unread, false).resultJSX : oneTimeCode),
+        [oneTimeCode, highlightData, highlightMetadata, unread]
+    );
+
     const { resultJSX, numOccurrences } = useMemo(
         () =>
             body && highlightData ? highlightMetadata(body, unread, true) : { resultJSX: undefined, numOccurrences: 0 },
@@ -129,23 +133,33 @@ const ItemRowLayout = ({
                     style={loading ? { '--w-custom': '35rem' } : {}}
                 >
                     <div className="flex flex-column inline-block">
-                        {/* eslint-disable-next-line jsx-a11y/prefer-tag-over-role */}
-                        <span
-                            role="heading"
-                            aria-level={2}
-                            className={clsx(['max-w-full text-ellipsis', unread && 'text-semibold'])}
-                            title={Subject}
-                            data-testid="message-row:subject"
-                            id={toValidHtmlId(`message-subject-${element.ID}`)}
-                        >
-                            {showIcon && (
-                                <span className="inline-flex shrink-0 align-bottom mr-1">
-                                    <ItemLocation element={element} labelID={labelID} />
-                                </span>
+                        <div className="flex flex-nowrap items-center max-w-full min-w-0">
+                            {oneTimeCode && (
+                                <ItemOneTimeCode
+                                    code={oneTimeCode}
+                                    codeContent={oneTimeCodeContent}
+                                    element={element}
+                                    className="shrink-0 mr-2"
+                                />
                             )}
-                            {conversationMode && <NumMessages className="shrink-0 mr-1" conversation={element} />}
-                            <span>{subjectContent}</span>
-                        </span>
+                            {/* eslint-disable-next-line jsx-a11y/prefer-tag-over-role */}
+                            <span
+                                role="heading"
+                                aria-level={2}
+                                className={clsx(['max-w-full text-ellipsis', unread && 'text-semibold'])}
+                                title={Subject}
+                                data-testid="message-row:subject"
+                                id={toValidHtmlId(`message-subject-${element.ID}`)}
+                            >
+                                {showIcon && (
+                                    <span className="inline-flex shrink-0 align-bottom mr-1">
+                                        <ItemLocation element={element} labelID={labelID} />
+                                    </span>
+                                )}
+                                {conversationMode && <NumMessages className="shrink-0 mr-1" conversation={element} />}
+                                <span>{subjectContent}</span>
+                            </span>
+                        </div>
 
                         {!!resultJSX && highlightData && (
                             <>
@@ -161,9 +175,6 @@ const ItemRowLayout = ({
                         )}
                     </div>
                 </div>
-
-                {/* Placed inline right after the subject so it sits with the text and does not shift when the hover action buttons appear on the right. */}
-                {oneTimeCode && <ItemOneTimeCode code={oneTimeCode} element={element} className="ml-2 shrink-0" />}
 
                 <span className="m-auto"></span>
 
@@ -188,7 +199,7 @@ const ItemRowLayout = ({
                         )}
 
                         <ItemAttachmentIcon
-                            icon={hasOnlyIcsAttachments ? 'calendar-grid' : undefined}
+                            hasOnlyIcsAttachments={hasOnlyIcsAttachments}
                             element={element}
                             className="shrink-0"
                         />

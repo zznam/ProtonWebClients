@@ -4,6 +4,7 @@ import { c, msgid } from 'ttag';
 
 import { useAddresses } from '@proton/account/addresses/hooks';
 import { useCustomDomains } from '@proton/account/domains/hooks';
+import { useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import {
     attachMemberSSO,
     deleteMember,
@@ -25,15 +26,12 @@ import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useUserPermissions } from '@proton/account/userPermissions/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useEntitlementChecks } from '@proton/payments-ui/entitlements/hooks';
 import { EntitlementName } from '@proton/payments/core/entitlements/entitlement-names';
 import {
     getHasDriveB2BPlan,
     getHasPassB2BPlan,
     hasDuo,
     hasLumoBusiness,
-    hasMeet,
-    hasMeetBusiness,
     hasVPNPassProfessional,
     hasVisionary,
 } from '@proton/payments/core/subscription/helpers';
@@ -43,7 +41,8 @@ import { resendUnprivatizationLink } from '@proton/shared/lib/api/members';
 import { APPS, type APP_NAMES, MEMBER_PRIVATE, MEMBER_TYPE, ORGANIZATION_STATE } from '@proton/shared/lib/constants';
 import { getAvailableAddressDomains } from '@proton/shared/lib/helpers/address';
 import { hasOrganizationSetupWithKeys } from '@proton/shared/lib/helpers/organization';
-import { type Address, type EnhancedMember, MEMBER_STATE, type Member } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import { type EnhancedMember, MEMBER_STATE, type Member } from '@proton/shared/lib/interfaces/Member';
 import {
     getIsDomainActive,
     getOrganizationDenomination,
@@ -98,7 +97,7 @@ export const useMemberActions = ({
     const getOrganizationKey = useGetOrganizationKey();
     const [subscription, loadingSubscription] = useSubscription();
     const [organization, loadingOrganization] = useOrganization();
-    const [entitlements] = useEntitlementChecks();
+    const [entitlements] = useEntitlementChecksForOrgAndUser();
     const [customDomains, loadingCustomDomains] = useCustomDomains();
     const [addresses] = useAddresses();
     const [user] = useUser();
@@ -122,22 +121,19 @@ export const useMemberActions = ({
     const hasDriveB2BPlan = getHasDriveB2BPlan(subscription);
     const hasLumoB2BPlan = hasLumoBusiness(subscription);
     const hasVPNPassProfessionalPlan = hasVPNPassProfessional(subscription);
-    const hasPassBusinessEntitlement = !!entitlements.quantityOrg(EntitlementName.PassBusiness);
-    const hasMeetPlan = hasMeetBusiness(subscription) || hasMeet(subscription);
-    const hasExternalMemberCapableB2BPlan = !!entitlements.quantityOrg(EntitlementName.ExternalManagedMembers);
+    const hasExternalMemberCapableB2BPlan = entitlements.hasEntitlement(EntitlementName.ExternalManagedMembers);
 
     const verifiedMailDomains = useMemo(() => (customDomains || []).filter(getIsDomainActive), [customDomains]);
 
     const hasMaxAddresses = Boolean(organization?.MaxAddresses ?? 0);
     const hasCustomDomains = verifiedMailDomains.length > 0;
-    // Allow using custom domain if organization has meetbiz2025 and a verified custom domain
-    const hasMeetB2BPlanAndVerifiedCustomDomain = hasMeetPlan && hasCustomDomains;
-    const useEmail = hasExternalMemberCapableB2BPlan && !hasMeetB2BPlanAndVerifiedCustomDomain;
+    const canUseVerifiedCustomDomain = entitlements.hasCustomDomainAddresses && hasCustomDomains;
+    const useEmail = hasExternalMemberCapableB2BPlan && !canUseVerifiedCustomDomain;
     const planSupportsMemberFeatures =
         !hasExternalMemberCapableB2BPlan ||
         hasDriveB2BPlan ||
         hasLumoB2BPlan ||
-        hasPassBusinessEntitlement ||
+        entitlements.hasEntitlement(EntitlementName.PassBusiness) ||
         hasVPNPassProfessionalPlan;
     const allowStorageConfiguration = planSupportsMemberFeatures && (!isSubsidiaryOrg || isMSPStorageOptionEnabled);
     const showFeaturesColumn = planSupportsMemberFeatures;
@@ -185,8 +181,7 @@ export const useMemberActions = ({
 
     // "Add address" is currently broken for MSP subsidiary orgs, so hide it for them.
     const showAddAddress =
-        !isSubsidiaryOrg &&
-        (!hasExternalMemberCapableB2BPlan || hasPassB2BPlan || hasMeetB2BPlanAndVerifiedCustomDomain);
+        !isSubsidiaryOrg && (!hasExternalMemberCapableB2BPlan || hasPassB2BPlan || canUseVerifiedCustomDomain);
 
     const hasReachedInvitationLimit = organization?.InvitationsRemaining === 0;
     const disableInviteUserButton =

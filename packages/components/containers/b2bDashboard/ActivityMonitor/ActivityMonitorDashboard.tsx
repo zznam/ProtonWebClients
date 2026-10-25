@@ -2,11 +2,10 @@ import { useMemo, useState } from 'react';
 
 import { c } from 'ttag';
 
-import type { EntitlementChecks } from '@proton/payments/core/entitlements/resolver';
-import { getIsB2BAudienceFromPlan } from '@proton/payments/core/plan/helpers';
+import type { EntitlementChecksForOrgAndUser } from '@proton/payments/core/entitlements/interface';
 import { PASS_APP_NAME } from '@proton/shared/lib/constants';
 import { hasOrganizationSetup, hasOrganizationSetupWithKeys } from '@proton/shared/lib/helpers/organization';
-import type { OrganizationExtended } from '@proton/shared/lib/interfaces';
+import type { OrganizationExtended } from '@proton/shared/lib/interfaces/Organization';
 import isTruthy from '@proton/utils/isTruthy';
 
 import { Tabs } from '../../../components/tabs/Tabs';
@@ -18,18 +17,21 @@ import ActivityMonitorEvents from './ActivityMonitorEvents';
 
 interface Props {
     organization?: OrganizationExtended;
-    entitlements: EntitlementChecks;
+    entitlements: EntitlementChecksForOrgAndUser;
 }
 
-const getTabPermissions = (organization: OrganizationExtended | undefined, entitlements: EntitlementChecks) => {
+const getTabPermissions = (
+    organization: OrganizationExtended | undefined,
+    entitlements: EntitlementChecksForOrgAndUser
+) => {
     const hasOrganizationSetupOrKey = hasOrganizationSetupWithKeys(organization) || hasOrganizationSetup(organization);
-    const isB2B = getIsB2BAudienceFromPlan(organization?.PlanName);
+    const isB2B = entitlements.isB2B;
 
     return {
         canDisplayAccountEvents: hasOrganizationSetupOrKey || isB2B,
         canDisplayB2BOrganizationEvents: hasOrganizationSetupOrKey,
-        canDisplayB2BLogsVPN: entitlements.orgHasVpnActivityMonitor && !!organization,
-        canDisplayB2BLogsPass: entitlements.orgHasPassActivityMonitor && !!organization,
+        canDisplayB2BLogsVPN: entitlements.hasVpnActivityMonitor && !!organization,
+        canDisplayB2BLogsPass: entitlements.hasPassActivityMonitor && !!organization,
     };
 };
 

@@ -5,9 +5,10 @@ import { Button } from '@proton/atoms/Button/Button';
 import { IcMagnifier } from '@proton/icons/icons/IcMagnifier';
 import { useIsWaitingRoomJoinEnabled } from '@proton/meet/hooks/useWaitingRoomFlags';
 import { useMeetSelector } from '@proton/meet/store/hooks';
-import { selectMeetingLink } from '@proton/meet/store/slices/meetingInfo';
+import { selectMeetingLink } from '@proton/meet/store/slices/currentMeeting';
 import { selectParticipantsWithDisabledVideos } from '@proton/meet/store/slices/settings';
-import { selectIsWaitingRoomHost } from '@proton/meet/store/slices/waitingRoomSlice.ts';
+import { selectIsWaitingRoomHost } from '@proton/meet/store/slices/waitingRoomSlice';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
 import clsx from '@proton/utils/clsx';
 
 import { useMediaManagementContext } from '../../../contexts/MediaManagementProvider/MediaManagementContext';
@@ -97,6 +98,9 @@ export const AllParticipantsTab = ({ participants, setIsScrolled, searchExpressi
                 <Button
                     className="secondary w-full rounded-full cursor-pointer px-8 py-3"
                     onClick={() => {
+                        sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_link_copied, {
+                            source: 'participant_list',
+                        });
                         void copyTextToClipboard(meetingLink);
                     }}
                 >

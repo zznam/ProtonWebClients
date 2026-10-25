@@ -1,6 +1,8 @@
-import type { YjsState, Result, DocumentType, NodeMeta } from '@proton/docs-shared'
-import type { NativeVersionHistory } from '../VersionHistory'
-import type { DocumentUpdate } from '@proton/docs-proto'
+import type { DocumentType, NodeMeta } from '@proton/docs-shared/BasicTypes'
+import type { Result } from '@proton/docs-shared/Result'
+import type { YjsState } from '@proton/docs-shared/YjsState'
+import type { NativeVersionHistory } from '../VersionHistory/NativeVersionHistory'
+import type { DocumentUpdate } from '@proton/docs-proto/Generated/DocumentUpdate'
 
 export interface AuthenticatedDocControllerInterface {
   didTrashDocInCurrentSession: boolean
@@ -17,10 +19,10 @@ export interface AuthenticatedDocControllerInterface {
   getVersionHistory(): NativeVersionHistory | undefined
   openMoveToFolderModal(): void
   restoreRevisionAsCopy(yjsContent: YjsState): Promise<{ nodeMeta: NodeMeta; documentType: DocumentType }>
-  restoreDocument(useSDK?: boolean): Promise<void>
+  restoreDocument(replaceDriveCompat?: boolean): Promise<void>
   squashDocument(): Promise<void>
   squashEverythingInBaseCommit(): Promise<Result<boolean>>
-  trashDocument(useSDK?: boolean): Promise<void>
+  trashDocument(replaceDriveCompat?: boolean): Promise<void>
   getAllUpdatesAsZip(): Promise<Blob>
   downloadAllUpdatesAsZip(): Promise<void>
   downloadUpdatesInformation(ydoc?: unknown): Promise<void>

@@ -11,7 +11,7 @@ import type { Mock } from 'vitest';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { deviceManagementReducer } from '@proton/meet/store/slices/deviceManagementSlice';
 import { screenShareStatusReducer } from '@proton/meet/store/slices/screenShareStatusSlice';
-import { ProtonStoreContext } from '@proton/react-redux-store';
+import { ProtonStoreContext } from '@proton/react-redux-store/ProtonStoreContext';
 import { isMobile } from '@proton/shared/lib/helpers/browser';
 
 import { useCurrentScreenShare } from './useCurrentScreenShare';
@@ -55,11 +55,22 @@ vi.mock('@livekit/components-react', () => ({
 vi.mock('@proton/shared/lib/helpers/browser', () => {
     return {
         isMobile: vi.fn().mockReturnValue(false),
+        isSafari: vi.fn().mockReturnValue(false),
+        isChrome: vi.fn().mockReturnValue(true),
         isMac: vi.fn().mockReturnValue(false),
         isLinux: vi.fn().mockReturnValue(false),
         getBrowser: vi.fn().mockReturnValue({ name: 'Chrome', version: '141.0.0.0' }),
     };
 });
+
+const desktopState = vi.hoisted(() => ({ isElectronApp: false }));
+
+vi.mock('@proton/shared/lib/helpers/desktop', async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    get isElectronApp() {
+        return desktopState.isElectronApp;
+    },
+}));
 
 vi.mock('@proton/app-context/useNotifications', () => ({
     useNotifications: vi.fn().mockReturnValue({
@@ -222,6 +233,45 @@ describe('useCurrentScreenShare', () => {
         expect(createNotification).toHaveBeenCalledWith({
             type: 'info',
             text: 'Screen share is not supported on your device',
+        });
+    });
+
+    describe('when the desktop app declines the request (picker closed or cancelled)', () => {
+        const abortError = Object.assign(new Error('Invalid capture constraints'), { name: 'AbortError' });
+
+        afterEach(() => {
+            desktopState.isElectronApp = false;
+        });
+
+        const startWithError = async () => {
+            useParticipantsMock.mockReturnValue([mockLocalParticipant]);
+            (isMobile as Mock).mockReturnValue(false);
+            mockLocalParticipant.setScreenShareEnabled.mockRejectedValueOnce(abortError);
+
+            const createNotification = vi.fn();
+            (useNotifications as Mock).mockReturnValue({ createNotification });
+
+            const { result } = renderUseCurrentScreenShare();
+            await result.current.startScreenShare();
+
+            return createNotification;
+        };
+
+        it('stays silent in the desktop app', async () => {
+            desktopState.isElectronApp = true;
+
+            const createNotification = await startWithError();
+
+            expect(createNotification).not.toHaveBeenCalled();
+        });
+
+        it('still reports the failure in the browser', async () => {
+            const createNotification = await startWithError();
+
+            expect(createNotification).toHaveBeenCalledWith({
+                type: 'error',
+                text: 'Failed to start screen share',
+            });
         });
     });
 

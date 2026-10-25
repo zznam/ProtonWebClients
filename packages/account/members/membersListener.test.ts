@@ -1,13 +1,14 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { getTestStore } from '@proton/redux-shared-store/test';
 import { EVENT_ACTIONS, USER_ROLES } from '@proton/shared/lib/constants';
-import type { EnhancedMember, Member, UserModel } from '@proton/shared/lib/interfaces';
+import type { EnhancedMember, Member } from '@proton/shared/lib/interfaces/Member';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import { addressesReducer } from '../addresses';
-import { getModelState } from '../tests';
+import { getModelState } from '../testing/getModelState';
 import { getServerEvent } from '../tests/getServerEvent';
 import { userReducer } from '../user';
 import { userPermissionsReducer } from '../userPermissions';

@@ -1,14 +1,15 @@
 import { select } from 'redux-saga/effects';
 
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
-import { UserType } from '@proton/shared/lib/interfaces';
+import { UserType } from '@proton/shared/lib/interfaces/User';
 
 import { getAliasOptions } from '../../../lib/alias/alias.requests';
 import { PassErrorCode, UnverifiedUserError } from '../../../lib/api/errors';
-import type { AliasOptions, Maybe } from '../../../types';
-import { requestAliasOptions } from '../../actions';
+import type { AliasOptions } from '../../../types/data/alias';
+import type { Maybe } from '../../../types/utils';
+import { requestAliasOptions } from '../../actions/creators/alias';
 import { createRequestSaga } from '../../request/sagas';
-import { selectUserType } from '../../selectors';
+import { selectUserType } from '../../selectors/user';
 
 export default createRequestSaga({
     actions: requestAliasOptions,

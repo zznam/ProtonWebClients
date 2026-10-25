@@ -3,15 +3,15 @@ import { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import type { ModalStateProps } from '@proton/components';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
+import { handleSdkError } from '@proton/drive/legacy/errorHandling';
 import {
     AbuseCategory,
     type NodeType,
     type ProtonDriveClient,
     type ProtonDrivePhotosClient,
     type ProtonDrivePublicLinkClient,
-} from '@proton/drive';
-import { handleSdkError } from '@proton/drive/legacy/errorHandling';
+} from '@proton/drive/sdk';
 
 import { getNodeDisplaySize } from '../../utils/sdk/getNodeDisplaySize';
 import { getNodeName } from '../preview/nodeUtils';

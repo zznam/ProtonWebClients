@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } para Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } for iOS"
-      ],
       "Accept": [
         "Aceitar"
       ],
@@ -327,6 +321,15 @@
       ],
       "Don't show this again": [
         "Não mostrar isso novamente"
+      ],
+      "Download for Linux": [
+        "Baixar para Linux"
+      ],
+      "Download for macOS": [
+        "Baixar para macOS"
+      ],
+      "Download for Windows": [
+        "Baixar para Windows"
       ],
       "Download this CSV template": [
         "Baixar esse modelo CSV"
@@ -688,6 +691,12 @@
       "Show Less": [
         "Mostrar menos"
       ],
+      "Show less": [
+        "Mostrar menos"
+      ],
+      "Show more": [
+        "Mostrar mais"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Iniciar sessão com ${ BRAND_NAME }"
       ],
@@ -826,8 +835,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicativo para computador do ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Aplicativo para computador do ${ appName }"
       ]
     },
     "Button": {
@@ -998,6 +1007,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "Falha na autenticação. Confirme sua segunda senha para prosseguir com a exportação."
       ],
+      "Biometric authentication cancelled.": [
+        "Autenticação biométrica cancelada."
+      ],
       "Biometric authentication failed.": [
         "A autenticação biométrica falhou."
       ],
@@ -1078,6 +1090,9 @@
       "Editing item failed": [
         "Erro ao editar o item"
       ],
+      "Email is not valid": [
+        "O e-mail não é válido."
+      ],
       "Empty CSV file": [
         "Arquivo CSV vazio"
       ],
@@ -1089,6 +1104,9 @@
       ],
       "Encrypted JSON not supported": [
         "JSON criptografado não suportado"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Insira seu nome de usuário sem o domínio (@example.com)"
       ],
       "Error reporting problem": [
         "Erro ao relatar o problema"
@@ -1280,6 +1298,9 @@
       "Incorrect backup password. Please try again.": [
         "Senha de backup incorreta. Tente novamente."
       ],
+      "Incorrect password. Please try again.": [
+        "A senha não é válida. Tente novamente."
+      ],
       "Incorrect second password. Please try again.": [
         "Segunda senha incorreta. Tente novamente."
       ],
@@ -1313,8 +1334,14 @@
       "Network error": [
         "Erro de rede"
       ],
+      "Not a valid number": [
+        "Não é um número válido"
+      ],
       "Passphrase is incorrect": [
         "A frase secreta está incorreta"
+      ],
+      "Passwords do not match": [
+        "As senhas não correspondem"
       ],
       "PIN codes do not match": [
         "Os códigos PIN não correspondem"
@@ -1379,11 +1406,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "O aplicativo para computador do ${ PASS_APP_NAME } deve estar iniciado a sessão."
       ],
+      "The email addresses do not match": [
+        "Os endereços de e-mail não correspondem."
+      ],
       "The session has expired. Please sign in again.": [
         "Sua sessão expirou. Inicie a sessão novamente."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Ocorreu um erro ao remover o link seguro. Tente novamente em alguns minutos."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Este campo excede o máximo de ${ maximumLength } caracteres."
+      ],
+      "This field is required": [
+        "Este campo é obrigatório"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Este campo exige um mínimo de ${ minimumLength } caracteres."
       ],
       "This invite is no longer available": [
         "Este convite não está mais disponível"
@@ -1396,6 +1435,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Tente entrar em contato com o proprietário do link."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Tente usar apenas letras, números e _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Não é possível gerar um código OTP para este item"
@@ -1430,6 +1472,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Erro ao atualizar o cofre \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "O nome de usuário deve começar com uma letra ou dígito"
+      ],
+      "Username must end with a letter or digit": [
+        "O nome de usuário deve terminar com uma letra ou dígito"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Erro ao criar o cofre \"${ payload.content.name }\""
       ],
@@ -1453,6 +1501,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Código PIN errado. Tente novamente."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase de recuperação errada. Tente novamente ou use outro método de autenticação."
       ],
       "Wrong second password": [
         "Segunda senha incorreta"
@@ -1801,9 +1852,6 @@
       "Can view this item.": [
         "Pode vere esse item."
       ],
-      "Change your password": [
-        "Alterar sua senha"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "Confirme sua senha adicional para prosseguir com a remoção."
       ],
@@ -1884,9 +1932,6 @@
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "e-mail"
       ],
       "Email address successfully deleted from monitoring": [
         "O endereço de e-mail foi excluído do monitoramento."
@@ -1984,9 +2029,6 @@
       "Fill in the CSV with your data": [
         "Preencha o CSV com seus dados"
       ],
-      "finance": [
-        "finança"
-      ],
       "Folder \"${ payload.folder.name }\" created": [
         "Pasta \"${ payload.folder.name }\" criada"
       ],
@@ -2070,6 +2112,9 @@
       "invites you to access items in": [
         "convida você a acessar itens em"
       ],
+      "iOS and Android Apps": [
+        "Aplicativos para iOS e Android"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Parece que você já está logado em ${ PASS_APP_NAME }. Se você estiver tentando fazer login com uma conta diferente, primeiro saia da extensão."
       ],
@@ -2149,9 +2194,6 @@
       "Medium Priority": [
         "Média prioridade"
       ],
-      "Monitor accounts": [
-        "Monitor de contas"
-      ],
       "Monitoring settings successfully updated": [
         "As configurações de monitoramento foram atualizadas."
       ],
@@ -2169,7 +2211,8 @@
         "Movendo todos os itens de \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Movendo um item para outra pasta apagará seus links seguros."
+        "Movendo um item para outro cofre apagará seu link seguro.",
+        "Movendo item para outro cofre apagará seus links seguros."
       ],
       "Moving items": [
         "Movendo itens"
@@ -2210,6 +2253,9 @@
       "None": [
         "Nenhum"
       ],
+      "None of your saved passwords have appeared in a known data breach.": [
+        "Nenhuma das suas senhas salvas apareceu em um vazamento de dados conhecido."
+      ],
       "None selected": [
         "Nenhum selecionado"
       ],
@@ -2242,9 +2288,6 @@
       ],
       "Pass Plus trial": [
         "Avaliação do Proton Pass Plus"
-      ],
-      "password": [
-        "senha"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Senha de bloqueio registrada. Use-a para desbloquear o ${ PASS_APP_NAME }"
@@ -2441,6 +2484,9 @@
       ],
       "Restoring trashed items...": [
         "Restaurando os itens da lixeira..."
+      ],
+      "Scan to download": [
+        "Digitalizar para baixar"
       ],
       "Secure links": [
         "Links seguros"
@@ -2692,9 +2738,6 @@
       "User's access successfully updated": [
         "O acesso do usuário foi atualizado."
       ],
-      "username": [
-        "Nome de usuário"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Cofre \"${ payload.content.name }\" excluído"
       ],
@@ -2899,6 +2942,9 @@
       "${ hours } hour": [
         "${ hours } hora",
         "${ hours } horas"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } caracteres"
       ],
       "${ minutes } minute": [
         "${ minutes } minutos",
@@ -3515,11 +3561,17 @@
       "LinkedIn account": [
         "Conta do LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Início de sessão"
       ],
       "Logins": [
         "Inícios de sessão"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Caixas de correio"
@@ -4079,6 +4131,9 @@
       "WiFi network": [
         "Rede Wi-Fi"
       ],
+      "Windows": [
+        "Windows"
+      ],
       "Work details": [
         "Detalhes do trabalho"
       ],
@@ -4468,6 +4523,9 @@
       ],
       "This URL will NOT be blocked from autofill": [
         "Esta URL NÃO será bloqueada no preenchimento automático"
+      ],
+      "URL doesn't match the rule": [
+        "URL não corresponde a regra"
       ],
       "URL matches the rule": [
         "A URL corresponde à regra"
@@ -4861,6 +4919,12 @@
       "Folder options": [
         "Opções da pasta"
       ],
+      "Get mobile and desktop apps": [
+        "Obtenha aplicativos móveis e para computador"
+      ],
+      "Get mobile apps": [
+        "Obter aplicativos móveis"
+      ],
       "Get Started": [
         "Começar"
       ],
@@ -4896,6 +4960,9 @@
       ],
       "Item": [
         "Item"
+      ],
+      "Keep your subscription active": [
+        "Mantenha sua assinatura ativa"
       ],
       "Last autofill": [
         "Último preenchimento automático"
@@ -5251,8 +5318,16 @@
       "OTP secret or URI is invalid": [
         "A chave secreta OTP ou o URL não funciona."
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "A senha deve conter ao menos ${ MIN_PASSWORD_LENGTH } caractere",
+        "A senha deve conter ao menos ${ MIN_PASSWORD_LENGTH } caracteres"
+      ],
       "Section name cannot be empty": [
         "O nome da seção não pode estar vazio"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Tente um nome de usuário mais curto (máximo de ${ n } caractere)",
+        "Tente um nome de usuário mais curto (máximo de ${ n } caracteres)"
       ],
       "URL already exists": [
         "URL já existe"
@@ -5408,9 +5483,6 @@
       ],
       "Move to trash": [
         "Mover para a lixeira"
-      ],
-      "Name is required": [
-        "Nome é obrigatório"
       ],
       "No items": [
         "Nenhum item"

@@ -8,11 +8,11 @@ import type { ModalProps } from '@proton/components/components/modalTwo/Modal';
 import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
 import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import useErrorHandler from '@proton/components/hooks/useErrorHandler';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import observeApiError from '@proton/metrics/observeApiError';
 import type { LocalSessionResponse } from '@proton/shared/lib/authentication/interface';
 import type { ActiveSession } from '@proton/shared/lib/authentication/persistedSessionHelper';
-import type { User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
 import AccountSwitcherItem from './AccountSwitcherItem';
 

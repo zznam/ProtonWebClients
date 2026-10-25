@@ -1,9 +1,10 @@
-import type { Feature } from '@proton/features';
+import type { Feature } from '@proton/features/interface';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS } from '@proton/shared/lib/constants';
 import { doesNotSupportEarlyAccessVersion } from '@proton/shared/lib/helpers/browser';
 import { getItem, removeItem, setItem } from '@proton/shared/lib/helpers/sessionStorage';
-import type { Environment, UserSettings } from '@proton/shared/lib/interfaces';
+import type { Environment } from '@proton/shared/lib/interfaces/Environment';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 
 import {
     getTargetEnvironment,

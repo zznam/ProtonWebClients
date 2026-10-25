@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import { scheduleCall } from '@proton/shared/lib/api/support';
-import type { ScheduleCall } from '@proton/shared/lib/interfaces';
+import type { ScheduleCall } from '@proton/shared/lib/interfaces/Support';
 
 const name = 'scheduleCall' as const;
 

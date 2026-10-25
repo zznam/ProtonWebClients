@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } pentru Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } pentru iOS"
-      ],
       "Accept": [
         "Acceptare"
       ],
@@ -328,6 +322,15 @@
       "Don't show this again": [
         "Nu mai afișa asta"
       ],
+      "Download for Linux": [
+        "Descărcare pentru Windows"
+      ],
+      "Download for macOS": [
+        "Descărcare pentru macOS"
+      ],
+      "Download for Windows": [
+        "Descărcare pentru Windows"
+      ],
       "Download this CSV template": [
         "Descărcați acest șablon de fișier CSV"
       ],
@@ -399,6 +402,9 @@
       ],
       "Hide": [
         "Ascundere"
+      ],
+      "Hide passwords": [
+        "Ascundere parole"
       ],
       "How do I export my data from ${ PROVIDER_INFO_MAP[form.values.provider].title }?": [
         "Cum se pot exporta datele din ${ PROVIDER_INFO_MAP[form.values.provider].title }?"
@@ -531,6 +537,9 @@
       ],
       "Open navigation": [
         "Deschidere navigare"
+      ],
+      "Open platform selection dropdown": [
+        "Deschide meniul derulant pentru selectarea platformei"
       ],
       "Organize vaults": [
         "Organizare seifuri"
@@ -688,6 +697,12 @@
       "Show Less": [
         "Arată mai puțin"
       ],
+      "Show less": [
+        "Afișare mai puțin"
+      ],
+      "Show more": [
+        "Afișare mai mult"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Conectare cu ${ BRAND_NAME }"
       ],
@@ -828,8 +843,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicați ${ MAIL_APP_NAME } Desktop"
+      "${ appName } Desktop application": [
+        "Aplicația desktop ${ appName }"
       ]
     },
     "Button": {
@@ -879,6 +894,9 @@
       ],
       "Change your passwords": [
         "Schimbați-vă parolele"
+      ],
+      "Check if you're reusing passwords": [
+        "Verifică dacă refolosiți parolele."
       ],
       "Check if your passwords have been exposed": [
         "Verificați dacă parolele v-au fost expuse"
@@ -1004,6 +1022,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "Autentificare eșuată. Confirmați parola secundară pentru continuare exportare."
       ],
+      "Biometric authentication cancelled.": [
+        "Autentificarea biometrică a fost anulată."
+      ],
       "Biometric authentication failed.": [
         "Autentificarea biometrică a eșuat."
       ],
@@ -1086,6 +1107,9 @@
       "Editing item failed": [
         "Editarea articolelor a eșuat."
       ],
+      "Email is not valid": [
+        "E-mailul nu este valid"
+      ],
       "Empty CSV file": [
         "Fișierul CSV este gol."
       ],
@@ -1097,6 +1121,9 @@
       ],
       "Encrypted JSON not supported": [
         "Fișierele JSON criptate nu sunt suportate."
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Introduceți numele de utilizator fără domeniu (@exemplu.com)."
       ],
       "Error reporting problem": [
         "Problemă de raportare a erorii."
@@ -1289,6 +1316,9 @@
       "Incorrect backup password. Please try again.": [
         "Parolă de rezervă incorectă. Reîncercați."
       ],
+      "Incorrect password. Please try again.": [
+        "Parolă incorectă. Reîncercați."
+      ],
       "Incorrect second password. Please try again.": [
         "Parolă secundară incorectă. Încercați din nou."
       ],
@@ -1322,8 +1352,14 @@
       "Network error": [
         "Eroare de rețea."
       ],
+      "Not a valid number": [
+        "Nu este un număr valid"
+      ],
       "Passphrase is incorrect": [
         "Fraza de acces nu este corectă."
+      ],
+      "Passwords do not match": [
+        "Parolele nu coincid"
       ],
       "PIN codes do not match": [
         "Codurile PIN nu coincid."
@@ -1388,11 +1424,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Aplicația desktop ${ PASS_APP_NAME } trebuie să fie conectată."
       ],
+      "The email addresses do not match": [
+        "Adresele de e-mail nu se potrivesc."
+      ],
       "The session has expired. Please sign in again.": [
         "Sesiunea a expirat. Reconectați-vă."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "A existat o eroare în timpul eliminării legăturii web securizate. Reîncercați peste câteva minute."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Acest câmp depășește maximul de ${ maximumLength } de caractere."
+      ],
+      "This field is required": [
+        "Acest câmp este obligatoriu"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Acest câmp necesită un minimum de ${ minimumLength } caractere."
       ],
       "This invite is no longer available": [
         "Această invitație nu mai este disponibilă."
@@ -1405,6 +1453,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Încercați să contactați proprietarul legăturii web."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Folosiți doar litere, cifre și _ . -"
       ],
       "Unable to generate an OTP code for this item": [
         "Nu se poate genera un cod OTP pentru acest articol."
@@ -1439,6 +1490,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Actualizarea seifului „${ payload.content.name }” a eșuat."
       ],
+      "Username must begin with a letter or digit": [
+        "Numele de utilizator trebuie să înceapă cu o literă sau cifră."
+      ],
+      "Username must end with a letter or digit": [
+        "Numele de utilizator trebuie să se termine cu o literă sau cifră."
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Crearea seifului „${ payload.content.name }” a eșuat."
       ],
@@ -1462,6 +1519,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Cod PIN greșit. Reîncercați."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frază de recuperare greșită. Încercați din nou sau utilizați o altă metodă de recuperare."
       ],
       "Wrong second password": [
         "Parola secundară nu este corectă."
@@ -1589,6 +1649,9 @@
         "Transferate: ${ forwardedEmailsCount }",
         "Transferate: ${ forwardedEmailsCount }",
         "Transferate: ${ forwardedEmailsCount }"
+      ],
+      "${ importantBold } This doesn't prevent viewers from retrieving passwords through other means.": [
+        "${ importantBold } Acest lucru nu îi împiedică pe spectatori să obțină parolele prin alte mijloace."
       ],
       "${ inviterEmail } wants to share an item with a group you administer.": [
         "${ inviterEmail } dorește să partajeze un articol cu un grup pe care îl administrați."
@@ -1827,9 +1890,6 @@
       "Can view this item.": [
         "Poate vedea acest articol."
       ],
-      "Change your password": [
-        "Modificare parolă"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Se verifică parolele ${ compromised.progress.completed } din ${ compromised.progress.total }"
       ],
@@ -1916,9 +1976,6 @@
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "e-mail"
       ],
       "Email address successfully deleted from monitoring": [
         "Adresa de e-mail s-a eliminat de la monitorizare."
@@ -2013,11 +2070,11 @@
       "Failed updating your vault organization": [
         "Nu s-a putut actualiza organizarea seifului."
       ],
+      "Field hidden. You can still autofill it.": [
+        "Câmp ascuns. Încă se poate autocompleta."
+      ],
       "Fill in the CSV with your data": [
         "Completați fișierul CSV cu datele necesare."
-      ],
-      "finance": [
-        "finanțe"
       ],
       "Finish signing in in the browser window that just opened. ${ PASS_APP_NAME } will pick up automatically once you're done.": [
         "Finalizați autentificarea în fereastra navigatorului web care tocmai s-a deschis. ${ PASS_APP_NAME } va prelua automat procesul imediat ce ați terminat."
@@ -2077,6 +2134,9 @@
       "Import the CSV file below.": [
         "Importați mai jos fișierul CSV."
       ],
+      "Important:": [
+        "Important:"
+      ],
       "Imported on ${ date }": [
         "Importat la ${ date }"
       ],
@@ -2109,6 +2169,9 @@
       ],
       "invites you to access items in": [
         "vă invită să accesați articolele din"
+      ],
+      "iOS and Android Apps": [
+        "Aplicații iOS și Android"
       ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Se pare că deja v-ați conectat la ${ PASS_APP_NAME }. Dacă încercați să vă autentificați cu un alt cont, deconectați-vă mai întâi de la extensie."
@@ -2190,9 +2253,6 @@
       "Medium Priority": [
         "Prioritate medie"
       ],
-      "Monitor accounts": [
-        "Monitorizare conturi"
-      ],
       "Monitoring settings successfully updated": [
         "Setările monitorizării s-au actualizat,"
       ],
@@ -2211,7 +2271,9 @@
         "Se mută toate articolele din „${ payload.content.name }”."
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Mutarea unui element într-un alt seif îi va șterge linkurile securizate."
+        "Mutarea unui articol într-un alt seif îi va șterge legăturile web securizate.",
+        "Mutarea articolelor într-un alt seif le va șterge legăturile web securizate.",
+        "Mutarea articolelor într-un alt seif le va șterge legăturile web securizate."
       ],
       "Moving items": [
         "Se mută articolele."
@@ -2298,8 +2360,8 @@
       "Pass Plus trial": [
         "Încercare Proton Pass Plus"
       ],
-      "password": [
-        "parola"
+      "Password hidden. You can still autofill it.": [
+        "Parola este ascunsă. Încă se poate autocompleta."
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Blocarea cu parolă s-a înregistrat. Folosiți-o pentru a debloca ${ PASS_APP_NAME }."
@@ -2498,6 +2560,12 @@
       "Restoring trashed items...": [
         "Se restaurează articolele din gunoi..."
       ],
+      "Scan to download": [
+        "Scanați pentru descărcare"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "Scanați pentru a descărca ${ PASS_APP_NAME } pentru iOS și Android"
+      ],
       "Secure links": [
         "Legături web securizate"
       ],
@@ -2692,6 +2760,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "Pentru a revizui datele importate, faceți clic pe pictograma ${ PASS_APP_NAME } din bara de utilitare a navigatorului web."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "Pentru a configura deblocarea biometrică, ${ PASS_APP_NAME } solicită o nouă permisiune din partea navigatorului web."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "Pentru a configura deblocarea biometrică, ${ PASS_APP_NAME } necesită o nouă permisiune de la navigatorul web. După ce o acceptați, extensia se va reîncărca. Apoi redeschideți această pagină."
       ],
@@ -2752,9 +2823,6 @@
       "User's access successfully updated": [
         "Accesul utilizatorului a fost actualizat."
       ],
-      "username": [
-        "nume de utilizator"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Seiful „${ payload.content.name }” a fost șters."
       ],
@@ -2786,6 +2854,12 @@
       ],
       "Viewer": [
         "Utilizator"
+      ],
+      "Viewers can still autofill passwords, but won't see them in ${ PASS_APP_NAME }. This discourages casual viewing and reduces the risk of accidental disclosure.": [
+        "Utilizatorii cu drept de vizualizare pot în continuare să completeze automat parolele, dar nu le vor vedea în ${ PASS_APP_NAME }. Acest lucru descurajează vizualizarea ocazională și reduce riscul unei dezvăluiri accidentale."
+      ],
+      "Viewers can still autofill. Editors and admins always see passwords.": [
+        "Utilizatorii cu drept de vizualizare pot folosi în continuare completarea automată. Editorii și administratorii văd întotdeauna parolele."
       ],
       "We are having trouble syncing data to your local storage. Please make sure you have sufficient disk space for ${ PASS_SHORT_APP_NAME } to work smoothly.": [
         "Există probleme la sincronizarea datelor cu stocarea locală. Asigurați-vă că aveți suficient spațiu pe disc pentru ca ${ PASS_SHORT_APP_NAME } să funcționeze fără probleme."
@@ -2975,6 +3049,9 @@
         "${ hours } ore",
         "${ hours } de ore"
       ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } de caractere"
+      ],
       "${ minutes } minute": [
         "${ minutes } minut",
         "${ minutes } minute",
@@ -3121,6 +3198,9 @@
       ],
       "All items": [
         "Toate articolele"
+      ],
+      "Allow viewers to see passwords": [
+        "Permitere ca spectatorii să vadă parolele"
       ],
       "Alphabetical": [
         "Alfabetic"
@@ -3596,11 +3676,17 @@
       "LinkedIn account": [
         "Cont LinkdIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Conectare"
       ],
       "Logins": [
         "Conectări"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Conturi de e-mail"
@@ -4159,6 +4245,9 @@
       ],
       "WiFi network": [
         "Rețea Wi-Fi"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Detalii loc de muncă"
@@ -4951,11 +5040,20 @@
       "Folder options": [
         "Opțiuni foldere"
       ],
+      "Get mobile and desktop apps": [
+        "Luați aplicațiile pentru mobile și desktop"
+      ],
+      "Get mobile apps": [
+        "Luați aplicații mobile"
+      ],
       "Get Started": [
         "Începeți"
       ],
       "Hidden vaults": [
         "Seifuri ascunse"
+      ],
+      "Hide passwords from viewers?": [
+        "Ascundeți parolele pentru spectatori?"
       ],
       "Hide-my-email aliases": [
         "Aliasuri hide-my-email"
@@ -5250,6 +5348,9 @@
       "Upgrade to check for compromised passwords": [
         "Modificați contul pentru a putea verifica parolele compromise"
       ],
+      "Upgrade to check for reused passwords": [
+        "Modificați contul pentru a putea verifica parolele reutilizate"
+      ],
       "URL matching": [
         "Potrivire URL"
       ],
@@ -5349,8 +5450,18 @@
       "OTP secret or URI is invalid": [
         "Secretul OTP sau URI nu este valid."
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Parola trebuie să conțină cel puțin ${ MIN_PASSWORD_LENGTH } caracter",
+        "Parola trebuie să conțină cel puțin ${ MIN_PASSWORD_LENGTH } caractere",
+        "Parola trebuie să conțină cel puțin ${ MIN_PASSWORD_LENGTH } de caractere"
+      ],
       "Section name cannot be empty": [
         "Numele secțiunii nu poate fi gol"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Încercați un nume de utilizator mai scurt (max ${ n } caractere)",
+        "Încercați un nume de utilizator mai scurt (max ${ n } caractere)",
+        "Încercați un nume de utilizator mai scurt (max ${ n } caractere)"
       ],
       "URL already exists": [
         "Adresa URL există deja."
@@ -5372,6 +5483,26 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "Este necesară parola ${ BRAND_NAME }"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "${ count } folder a fost fuzionat cu folderul părinte deoarece a fost atins nivelul maxim de imbricare.",
+        "${ count } foldere au fost fuzionate cu folderul părinte deoarece a fost atins nivelul maxim de imbricare.",
+        "${ count } de foldere au fost fuzionate cu folderul părinte deoarece a fost atins nivelul maxim de imbricare."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "${ count } folder nu a fost importat deoarece folderul său părinte a atins numărul maxim de subfoldere. Articolele sale au fost importate în cel mai apropiat folder disponibil.",
+        "${ count } foldere nu a fost importate deoarece folderul lor părinte a atins numărul maxim de subfoldere. Articolele lor au fost importate în cel mai apropiat folder disponibil.",
+        "${ count } de foldere nu a fost importate deoarece folderul lor părinte a atins numărul maxim de subfoldere. Articolele lor au fost importate în cel mai apropiat folder disponibil."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "${ count } folder nu a fost importat deoarece acest seif a atins limita de foldere. Articolele sale au fost importate în cel mai apropiat folder disponibil.",
+        "${ count } foldere nu au fost importate deoarece acest seif a atins limita de foldere. Articolele lor au fost importate în cel mai apropiat folder disponibil.",
+        "${ count } de foldere nu au fost importate deoarece acest seif a atins limita de foldere. Articolele lor au fost importate în cel mai apropiat folder disponibil."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "${ failed } folder nu a putut fi creat. Articolele sale au fost importate în cel mai apropiat folder disponibil.",
+        "${ failed } foldere nu au putut fi create. Articolele lor au fost importate în cel mai apropiat folder disponibil.",
+        "${ failed } de foldere nu au putut fi create. Articolele lor au fost importate în cel mai apropiat folder disponibil."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } oferă un control puternic, dar o singură eroare poate determina completarea automată să se potrivească și să completeze datele pe site-uri web frauduloase sau de înșelăciune."
@@ -5513,9 +5644,6 @@
       ],
       "Move to trash": [
         "Mutare în gunoi"
-      ],
-      "Name is required": [
-        "Numele este obligatoriu."
       ],
       "No items": [
         "Nu există articole."

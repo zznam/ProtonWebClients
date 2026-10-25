@@ -61,9 +61,6 @@
       "A participant reacted with ${ emoji }": [
         "მონაწილემ გამოხატა რეაქცია: ${ emoji }"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "დაკავშირება მოხდა TURN რეტრანსლაციის რეჟიმით, ქსელის შეზღუდვების გამო. ამან შეიძლება გაზარდოს დაყოვნება და გავლენა მოახდინოს ზარის ხარისხზე."
-      ],
       "Connection lost. Reconnecting…": [
         "კავშირი გაწყდა. მიმდინარეობს თავიდან დაკავშირება…"
       ],
@@ -277,9 +274,6 @@
       "Download": [
         "გადმოწერა"
       ],
-      "Download app": [
-        "აპის გადმოწერა"
-      ],
       "Download local participant report": [
         "ლოკალური მონაწილის ანგარიშის გადმოწერა"
       ],
@@ -382,6 +376,9 @@
       "Minimize preview": [
         "გადახედვის ჩაკეცვა"
       ],
+      "More info": [
+        "მეტი ინფორმაცია"
+      ],
       "More info: ${ safeTitle }": [
         "გაიგეთ მეტი: ${ safeTitle }"
       ],
@@ -400,8 +397,8 @@
       "Noise cancellation": [
         "ხმაურის ჩახშობა"
       ],
-      "Open app": [
-        "აპის გახსნა"
+      "Not now": [
+        "არა ახლა"
       ],
       "Open link": [
         "ბმულის გახსნა"
@@ -570,9 +567,6 @@
       "Stay in meeting": [
         "შეხვედრაზე დარჩენა"
       ],
-      "Stop opening meetings in the desktop app": [
-        "შეხვედრების კომპიუტერის აპში გახსნის შეწყვეტა"
-      ],
       "Stop receiving video": [
         "ვიდეოს მიღების გაჩერება"
       ],
@@ -584,6 +578,9 @@
       ],
       "Stop Recording Track Stats": [
         "ტრეკის ვარსკვლავების ჩაწერის შეწყვეტა"
+      ],
+      "Stop sharing": [
+        "გაზიარების შეწყვეტა"
       ],
       "Submit": [
         "დამტკიცება"
@@ -656,9 +653,6 @@
       "Blur background": [
         "ფონის დაბინდვა"
       ],
-      "Chat": [
-        "ჩატი"
-      ],
       "Close": [
         "დახურვა"
       ],
@@ -671,9 +665,6 @@
       "Copy meeting link": [
         "შეხვედრის ბმულის კოპირება"
       ],
-      "Debug overlay": [
-        "განლაგების გამართვა"
-      ],
       "Go to dashboard": [
         "მთავარზე გადასვლა"
       ],
@@ -682,12 +673,6 @@
       ],
       "Lock meeting": [
         "შეხვედრის დაბლოკვა"
-      ],
-      "Lower hand": [
-        "ხელის ჩამოშვება"
-      ],
-      "Meeting details": [
-        "შეხვედრის დეტალები"
       ],
       "More options": [
         "მეტი პარამეტრი"
@@ -704,23 +689,11 @@
       "Participant host control options": [
         "მონაწილის ჰოსტის კონტროლის პარამეტრები"
       ],
-      "Participants": [
-        "მონაწილეები"
-      ],
-      "Raise hand": [
-        "ხელის აწევა"
-      ],
       "Rotate camera": [
         "კამერის შებრუნება"
       ],
       "Save my name on this device": [
         "ჩემი სახელის შენახვა ამ მოწყობილობაზე"
-      ],
-      "Screen share": [
-        "ეკრანის გაზიარება"
-      ],
-      "Settings": [
-        "მორგება"
       ],
       "Stop recording and download.": [
         "შეწყვიტეთ ჩაწერა და ჩამოტვირთეთ."
@@ -731,17 +704,11 @@
       "Toggle emoji reactions": [
         "ემოჯი რეაქციების გადართვა"
       ],
-      "Toggle meeting details": [
-        "შეხვედრის დეტალების გადართვა"
-      ],
       "Toggle participants": [
         "მონაწილეების გადართვა"
       ],
       "Toggle screen share": [
         "ეკრანის გაზიარების გადართვა"
-      ],
-      "Toggle settings": [
-        "პარამეტრების გადართვა"
       ],
       "Video settings": [
         "ვიდეოს პარამეტრები"
@@ -796,16 +763,6 @@
     "Badge": {
       "Active": [
         "აქტიური"
-      ]
-    },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "დაკავშირება მოხდა TURN რეტრანსლაციის რეჟიმით, თქვენი ქსელის შეზღუდვების გამო. ამან შეიძლება გაზარდოს დაყოვნება და გავლენა მოახდინოს ზარის ხარისხზე."
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME }-ის კომპიუტერის აპლიკაცია"
       ]
     },
     "Bug category": {
@@ -1845,6 +1802,9 @@
       "Incorrect backup password. Please try again.": [
         "არასწორი მარქაფი პაროლი. თავიდან სცადეთ."
       ],
+      "Incorrect password. Please try again.": [
+        "არასწორი პაროლი. თავიდან სცადეთ."
+      ],
       "Incorrect second password. Please try again.": [
         "არასწორი მეორე პაროლი. თავიდან სცადეთ."
       ],
@@ -1928,6 +1888,9 @@
       ],
       "We couldn’t send a verification code using this method.": [
         "ამ მეთოდით დამოწმების კოდი ვერ გავაგზავნეთ."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "სცადეთ ხელახლა ან გამოიყენეთ აღდგენის სხვა მეთოდი."
       ],
       "Your browser ran out of storage space. We saved the recording up to this point.": [
         "თქვენს ბრაუზერში ამოიწურა საცავის ადგილი. ჩვენ შევინახეთ ჩანაწერი ამ მომენტამდე."
@@ -2330,9 +2293,6 @@
       "Get a secure meeting link then add it to your calendar": [
         "მიიღეთ უსაფრთხო შეხვედრის ბმული და დაამატეთ იგი თქვენს კალენდარს"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "მიიღეთ საუკეთესო გამოცდილება ${ protonMeet } სამაგიდო აპით"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "გადადით about:config, მოძებნეთ media.peerconnection.enabled და დააჭირეთ ჭეშმარიტზე."
       ],
@@ -2618,9 +2578,6 @@
       "Share screen": [
         "ეკრანის გაზიარება"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "გააზიარეთ ეს ბმული სხვების მოსაწვევად. ასევე, მისი მოძებნა ნებისმიერ დროს შეგიძლიათ ინფორმაციის ხატულაზე დაწკაპუნებით ხელსაწყოთა პანელში."
-      ],
       "Sign in": [
         "შესვლა"
       ],
@@ -2629,9 +2586,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "დინამიკის შერჩევა მიუწვდომელია ამ ბრაუზერში. გამოიყენეთ თქვენი სისტემის პარამეტრები სხვა დინამიკის ასარჩევად."
-      ],
-      "Start recording": [
-        "ჩაწერის დაწყება"
       ],
       "Starting camera…": [
         "კამერის გაშვება…"
@@ -2671,9 +2625,6 @@
       ],
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "ამ შეხვედრამ მიაღწია უფასო პაკეტის დროის ლიმიტს. განაახლეთ პაკეტი, რათა მომავალ ზარებზე გაზარდოთ თქვენი შეხვედრის ხანგრძლივობა."
-      ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "ეს შეხვედრა გაიხსნა ${ MEET_APP_NAME } სამაგიდო აპში."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "ეს ჩანაწერი სამუდამოდ წაიშლება ამ მოწყობილობიდან. ამ ქმედების დაბრუნება შეუძლებელია."
@@ -2758,9 +2709,6 @@
       ],
       "You are almost there": [
         "თითქმის მზად ბრძანდებით"
-      ],
-      "You can close this tab.": [
-        "ახლა შეგიძლიათ, დახუროთ ეს ჩანართი."
       ],
       "You can now return to the application to continue": [
         "ახლა გასაგრძელებლად შეგიძლიათ, აპლიკაციაზე დაბრუნდეთ"
@@ -2962,6 +2910,9 @@
       ],
       "Monday to Friday": [
         "ორშაბათიდან პარასკევის ჩათვლით"
+      ],
+      "More options": [
+        "მეტი პარამეტრი"
       ],
       "Muted": [
         "დადუმებულია"

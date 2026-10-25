@@ -1,8 +1,9 @@
 import { useUser } from '@proton/account/user/hooks';
 import { useConfig } from '@proton/app-context/useConfig';
-import { BilledUserModal } from '@proton/payments-ui/client-extensions/billed-user/index';
+import { BilledUserModal } from '@proton/payments-ui/client-extensions/billed-user/BilledUserModal';
 import type { BillingAddressExtended } from '@proton/payments/core/billing-address/billing-address';
 import { COUPON_CODES, PLANS } from '@proton/payments/core/constants';
+import type { EntitlementCatalog } from '@proton/payments/core/entitlements/interface';
 import type { FreeSubscription, PaymentStatus } from '@proton/payments/core/interface';
 import type { FreePlanDefault, Plan } from '@proton/payments/core/plan/interface';
 import { getAvailableSubscriptionActions, getHas2025OfferCoupon } from '@proton/payments/core/subscription/helpers';
@@ -11,7 +12,8 @@ import { checkoutTelemetry } from '@proton/payments/telemetry/telemetry';
 import { TelemetryMailDrivePostSignupOneDollarEvents } from '@proton/shared/lib/api/telemetry';
 import { APPS, type APP_NAMES } from '@proton/shared/lib/constants';
 import { invokeInboxDesktopIPC } from '@proton/shared/lib/desktop/ipcHelpers';
-import { type Organization, isBilledUser } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import { isBilledUser } from '@proton/shared/lib/interfaces/User';
 import clsx from '@proton/utils/clsx';
 
 import ModalTwo from '../../../components/modalTwo/Modal';
@@ -39,6 +41,7 @@ interface Props {
     paymentStatus: PaymentStatus;
     modalState: ModalStateProps;
     subscriptionProps: OpenCallbackProps;
+    entitlementCatalog: EntitlementCatalog;
 }
 
 const isOverridablableStep = (step: SUBSCRIPTION_STEPS): step is SubscriptionOverridableStep =>
@@ -53,6 +56,7 @@ const SubscriptionModal = ({
     freePlan,
     organization,
     paymentStatus,
+    entitlementCatalog,
     modalState,
     subscriptionProps,
 }: Props) => {
@@ -158,6 +162,7 @@ const SubscriptionModal = ({
             mode={mode}
             currency={currency}
             paymentStatus={paymentStatus}
+            entitlementCatalog={entitlementCatalog}
             upsellRef={upsellRef}
             // Post subscription has advantage over config
             disableThanksStep={postSubscriptionProps.disableThanksStep ?? rest.disableThanksStep}

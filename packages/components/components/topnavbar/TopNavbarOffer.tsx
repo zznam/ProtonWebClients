@@ -3,9 +3,9 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { c } from 'ttag';
 
-import { useWelcomeFlags } from '@proton/account';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
+import { useWelcomeFlags } from '@proton/account/welcomeFlags';
 import { useConfig } from '@proton/app-context/useConfig';
 import { IcBagPercent } from '@proton/icons/icons/IcBagPercent';
 import { CYCLE } from '@proton/payments/core/constants';
@@ -14,14 +14,14 @@ import { APPS, OPEN_OFFER_MODAL_EVENT } from '@proton/shared/lib/constants';
 import clsx from '@proton/utils/clsx';
 
 import OfferModal from '../../containers/offers/components/OfferModal';
-import { Q3Sale2026Layout } from '../../containers/offers/components/q3Sale2026/Q3Sale2026Layout';
+import { BlackFriday2026Layout } from '../../containers/offers/components/blackFriday2026/BlackFriday2026Layout';
 import useOfferFlags from '../../containers/offers/hooks/useOfferFlags';
 import useOfferModal from '../../containers/offers/hooks/useOfferModal';
 import usePreloadOfferImage from '../../containers/offers/hooks/usePreloadOfferImage';
 import type { OfferConfig } from '../../containers/offers/interface';
 import { subscriptionModalClassName } from '../../containers/payments/subscription/constants';
 import useActiveBreakpoint from '../../hooks/useActiveBreakpoint';
-import { PromotionButton } from '../button/PromotionButton';
+import PromotionButton from '../button/PromotionButton/PromotionButton';
 import TopNavbarListItem from './TopNavbarListItem';
 
 interface Props {
@@ -60,7 +60,7 @@ const TopNavbarOffer = ({ app, offerConfig, ignoreVisited, ignoreOnboarding, sho
     // This component only renders for an offer that is already eligible, so mounting is the signal
     // that the artwork will very likely be needed. Preload it now rather than when the modal mounts.
     usePreloadOfferImage(hasEstimationError ? undefined : offerConfig.images?.modalImage);
-    const shouldDownloadArizona = offerConfig.layout === Q3Sale2026Layout && !hasEstimationError;
+    const shouldDownloadBlackFriday2026Fonts = offerConfig.layout === BlackFriday2026Layout && !hasEstimationError;
 
     // Listen custom event to open offer modal
     useEffect(() => {
@@ -174,9 +174,10 @@ const TopNavbarOffer = ({ app, offerConfig, ignoreVisited, ignoreOnboarding, sho
                     {CTAText}
                 </PromotionButton>
             </TopNavbarListItem>
-            {shouldDownloadArizona && (
-                <span className="font-arizona sr-only" aria-hidden="true">
-                    &nbsp;
+            {shouldDownloadBlackFriday2026Fonts && (
+                <span className="sr-only" aria-hidden="true">
+                    <span className="font-sofia-sans-condensed">&nbsp;</span>
+                    <span className="font-es-build">&nbsp;</span>
                 </span>
             )}
             {renderOfferModal && offer && (

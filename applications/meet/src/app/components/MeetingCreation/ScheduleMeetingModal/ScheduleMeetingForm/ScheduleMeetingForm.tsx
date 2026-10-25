@@ -12,25 +12,24 @@ import { InlineLinkButton } from '@proton/atoms/InlineLinkButton/InlineLinkButto
 import useAppLink from '@proton/components/components/link/useAppLink';
 import Option from '@proton/components/components/option/Option';
 import SelectTwo from '@proton/components/components/selectTwo/SelectTwo';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
-import { useLoading } from '@proton/hooks/index';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
+import useLoading from '@proton/hooks/useLoading';
 import { IcArrowWithinSquare } from '@proton/icons/icons/IcArrowWithinSquare';
 import { IcArrowsRotate } from '@proton/icons/icons/IcArrowsRotate';
 import { IcCheckmark } from '@proton/icons/icons/IcCheckmark';
 import { IcLink } from '@proton/icons/icons/IcLink';
 import { IcSquares } from '@proton/icons/icons/IcSquares';
 import { IcTextAlignLeft } from '@proton/icons/icons/IcTextAlignLeft';
-import {
-    generateMeetingLinkFromMeeting,
-    useCreateMeeting,
-    useDeleteMeeting,
-    useGetMeetingDependencies,
-} from '@proton/meet';
+import { useCreateMeeting } from '@proton/meet/hooks/useCreateMeeting';
+import { useDeleteMeeting } from '@proton/meet/hooks/useDeleteMeeting';
+import { useGetMeetingDependencies } from '@proton/meet/hooks/useGetMeetingDependencies';
 import { useMeetingUpdates } from '@proton/meet/hooks/useMeetingUpdates';
 import { useUpdateMeetingWaitingRoom } from '@proton/meet/hooks/useUpdateMeetingWaitingRoom';
 import { useIsWaitingRoomCreationEnabled } from '@proton/meet/hooks/useWaitingRoomFlags';
 import { useMeetDispatch } from '@proton/meet/store/hooks';
 import { addMeeting, removeMeeting, updateMeeting } from '@proton/meet/store/slices/meetings';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
+import { generateMeetingLinkFromMeeting } from '@proton/meet/utils/generateMeetingLinkFromMeeting';
 import { getApiError, getApiErrorMessage } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { APPS, CALENDAR_APP_NAME, MINUTE } from '@proton/shared/lib/constants';
 import { getTimeZoneOptions, getTimezone } from '@proton/shared/lib/date/timezone';
@@ -278,6 +277,9 @@ export const ScheduleMeetingForm = ({
                     type,
                 });
                 dispatch(addMeeting(newMeeting));
+                sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_scheduled, {
+                    hasWaitingRoom: restOfValues.waitingRoom === WaitingRoomState.ENABLED,
+                });
                 meetingLink = link;
                 meetingId = newMeeting.ID;
                 onMeetingCreated(newMeeting.ID);
@@ -301,6 +303,7 @@ export const ScheduleMeetingForm = ({
     const handleDeleteMeeting = async (meeting: Meeting) => {
         await deleteMeeting(meeting.ID)
             .then(() => {
+                sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_deleted, { meetingKind: 'scheduled' });
                 dispatch(removeMeeting(meeting.ID));
                 notifications.createNotification({
                     text: c('Info').t`Successfully deleted meeting`,
@@ -341,6 +344,7 @@ export const ScheduleMeetingForm = ({
             return;
         }
         void navigator.clipboard.writeText(meetingLink);
+        sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_link_copied, { source: 'schedule_form' });
         notifications.createNotification({
             key: 'link-copied',
             text: c('Notification').t`Link copied to clipboard`,

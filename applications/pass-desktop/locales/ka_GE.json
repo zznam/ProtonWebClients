@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } Android-სთვის"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } iOS-სთვის"
-      ],
       "Accept": [
         "დასტური"
       ],
@@ -333,6 +327,12 @@
       ],
       "Done": [
         "მზადაა"
+      ],
+      "Download for macOS": [
+        "გადმოწერა macOS-სთვის"
+      ],
+      "Download for Windows": [
+        "გადმოწერა Windows-სთვის"
       ],
       "Download this CSV template": [
         "გადმოწერეთ ეს CSV ნიმუში"
@@ -700,6 +700,12 @@
       "Show Less": [
         "ნაკლების ჩვენება"
       ],
+      "Show less": [
+        "ნაკლების ჩვენება"
+      ],
+      "Show more": [
+        "მეტის ჩვენება"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "${ BRAND_NAME }-ით შესვლა"
       ],
@@ -855,11 +861,6 @@
       ],
       "Uninstall ${ PASS_APP_NAME }": [
         "${ PASS_APP_NAME }-ის წაშლა"
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME }-ის კომპიუტერის აპლიკაცია"
       ]
     },
     "Button": {
@@ -1101,6 +1102,9 @@
       "Editing item failed": [
         "ელემენტის ჩასწორების შეცდომა"
       ],
+      "Email is not valid": [
+        "ელფოსტა არასწორია"
+      ],
       "Empty CSV file": [
         "ცარიელი CSV ფაილი"
       ],
@@ -1112,6 +1116,9 @@
       ],
       "Encrypted JSON not supported": [
         "დაშიფრული JSON-ი მხარდაჭერილი არაა"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "შეიყვანეთ თქვენი მომხმარებლის სახელი დომენის (@example.com) გარეშე"
       ],
       "Error reporting problem": [
         "პრობლემის გადაგზავნის შეცდომა"
@@ -1293,6 +1300,9 @@
       "Incorrect backup password. Please try again.": [
         "არასწორი მარქაფი პაროლი. თავიდან სცადეთ."
       ],
+      "Incorrect password. Please try again.": [
+        "არასწორი პაროლი. თავიდან სცადეთ."
+      ],
       "Incorrect second password. Please try again.": [
         "არასწორი მეორე პაროლი. თავიდან სცადეთ."
       ],
@@ -1326,8 +1336,14 @@
       "Network error": [
         "ქსელის შეცდომა"
       ],
+      "Not a valid number": [
+        "არასწორი ნომერი"
+      ],
       "Passphrase is incorrect": [
         "საკვანძო ფრაზა არასწორია"
+      ],
+      "Passwords do not match": [
+        "პაროლები არ ემთხვევა"
       ],
       "PIN codes do not match": [
         "Pin-კოდები არ ემთხვევა"
@@ -1386,11 +1402,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME } სამაგიდო აპში შესული უნდა იყოთ."
       ],
+      "The email addresses do not match": [
+        "ელფოსტის მისამართები არ ემთხვევა"
+      ],
       "The session has expired. Please sign in again.": [
         "სესიას დრო გაუვიდა. თავიდან შედით."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "შეცდომა დაცული ბმულის წაშლისას. თავიდან სცადეთ რამდენიმე წუთში."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "ველი ${ maximumLength } დაშვებულ სიმბოლოს აჭარბებს."
+      ],
+      "This field is required": [
+        "ეს ველი აუცილებელია"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "ეს ველი მოითხოვს, მინიმუმ, ${ minimumLength } სიმბოლოს."
       ],
       "Too many failed attempts. Please sign in again.": [
         "მეტისმეტად ბევრი ჩავარდნილი მცდელობა. თავიდან შედით."
@@ -1400,6 +1428,9 @@
       ],
       "Try reaching out to the link owner.": [
         "სცადეთ, ბმულის ავტორს დაუკავშირდეთ."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "სცადეთ გამოიყენოთ, მხოლოდ, ანბანის სიმბოლოები, ციფრები და _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "ამ ელემენტისთვის OTP კოდის გენერაცია შეუძლებელია"
@@ -1431,6 +1462,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "საცავის \"${ payload.content.name }\" განახლების შეცდომა"
       ],
+      "Username must begin with a letter or digit": [
+        "მომხმარებლის სახელი ასოთი ან ციფრით უნდა იწყებოდეს"
+      ],
+      "Username must end with a letter or digit": [
+        "მომხმარებლის სახელი ასოთი ან ციფრით უნდა მთავრდებოდეს"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "საცავის \"${ payload.content.name }\" შექმნის შეცდომა"
       ],
@@ -1454,6 +1491,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "PIN-კოდი არასწორია. თავიდან სცადეთ."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "სცადეთ ხელახლა ან გამოიყენეთ აღდგენის სხვა მეთოდი."
       ],
       "Wrong second password": [
         "არასწორი მეორე პაროლი"
@@ -1824,9 +1864,6 @@
       "Can view this item.": [
         "შეუძლია ან ელემენტის დათვალიერება"
       ],
-      "Change your password": [
-        "შეცვალეთ თქვენი პაროლი"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "დაადასტურეთ თქვენი დამატებითი პაროლი, რომ ის წაშალოთ."
       ],
@@ -1907,9 +1944,6 @@
       ],
       "Editor": [
         "რედაქტორი"
-      ],
-      "email": [
-        "ელფოსტა"
       ],
       "Email address successfully deleted from monitoring": [
         "ელფოსტის მისამართიის მონიტორინგიდან წაშლა წარმატებულია"
@@ -2003,9 +2037,6 @@
       ],
       "Fill in the CSV with your data": [
         "შეავსეთ CSV თქვენი მონაცემებით"
-      ],
-      "finance": [
-        "ფინანსები"
       ],
       "Find \"OpenSSH Authentication Agent\", right-click Properties.": [
         "მოძებნეთ \"OpenSSH Authentication Agent\", მარჯვენა ღილაკით დააწკაპუნეთ Properties."
@@ -2175,9 +2206,6 @@
       "Medium Priority": [
         "საშუალო პრიორიტეტი"
       ],
-      "Monitor accounts": [
-        "ანგარიშების მონიტორი"
-      ],
       "Monitoring settings successfully updated": [
         "მონიტორინგის პარამეტრები წარმატებით განახლდა"
       ],
@@ -2195,8 +2223,7 @@
         "ყველა ელემენტის გადატანა \"${ payload.content.name }\"-დან"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "ელემენტის გადატანა სხვა საცავში მის დაცულ ბმულებს წაშლის.",
-        "ელემენტის გადატანა სხვა საცავში მის დაცულ ბმულებს წაშლის."
+        "ელემენტის გადატანა სხვა სეიფში წაშლის მის უსაფრთხო ბმულებს."
       ],
       "Moving items": [
         "მიმდინარეობს ელემენტების გადატანა"
@@ -2275,9 +2302,6 @@
       ],
       "Pass Plus trial": [
         "Pass Plus-ის საცდელი"
-      ],
-      "password": [
-        "პაროლი"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "პაროლით დაბლოკვა წამარტებით დარეგისტრირდა. გამოიყენეთ ის ${ PASS_APP_NAME }-ის განბლოკვისთვის"
@@ -2739,9 +2763,6 @@
       ],
       "User's access successfully updated": [
         "მომხმარებლის წვდომები წარმატებით განახლდა"
-      ],
-      "username": [
-        "მომხმარებლის სახელი"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "საცავი \"${ payload.content.name }\" წარმატებით წაიშალა"
@@ -5309,8 +5330,16 @@
       "OTP secret or URI is invalid": [
         "OTP საიდუმლო ან URI არასწორია"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "პაროლი ${ MIN_PASSWORD_LENGTH } სიმბოლოს მაინც უნდა შეიცავდეს",
+        "პაროლი ${ MIN_PASSWORD_LENGTH } სიმბოლოს მაინც უნდა შეიცავდეს"
+      ],
       "Section name cannot be empty": [
         "განყოფლების სახელი ცარიელი ვერ იქნება"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "სცადეთ უფრო მოკლე მომხმარებლის სახელი (მაქს ${ n } სიმბოლო)",
+        "სცადეთ უფრო მოკლე მომხმარებლის სახელი (მაქს ${ n } სიმბოლო)"
       ],
       "URL already exists": [
         "URL უკვე არსებობს"
@@ -5466,9 +5495,6 @@
       ],
       "Move to trash": [
         "ნაგვის ყუთში გადატანა"
-      ],
-      "Name is required": [
-        "სახელი აუცილებელია"
       ],
       "No items": [
         "ელემენტების გარეშე"

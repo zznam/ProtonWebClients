@@ -1,13 +1,14 @@
 import { c } from 'ttag';
 
-import type { OrganizerModel } from '@proton/shared/lib/interfaces/calendar';
+import { shouldDisplayEmailNextToName } from '@proton/shared/lib/helpers/email';
+import type { OrganizerModel } from '@proton/shared/lib/interfaces/calendar/Event';
 
 interface Props {
     organizer: OrganizerModel;
 }
 
 const getDisplayNames = (name: string, email: string) => {
-    const displayFull = name && name !== email;
+    const displayFull = shouldDisplayEmailNextToName(name, email);
 
     const nameEmail = displayFull ? `${name} <${email}>` : email;
 

@@ -7,18 +7,19 @@ import { renameInternalAddressThunk } from '@proton/account/addresses/renameInte
 import { useCustomDomains } from '@proton/account/domains/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { CANONICALIZE_SCHEME, canonicalizeEmail, getEmailParts } from '@proton/shared/lib/helpers/email';
 import { emailValidator, requiredValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { Address, Member } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
 
 import type { ModalProps } from '../../components/modalTwo/Modal';
 import Modal from '../../components/modalTwo/Modal';
 import ModalContent from '../../components/modalTwo/ModalContent';
 import ModalFooter from '../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../components/modalTwo/ModalHeader';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import useFormErrors from '../../components/v2/useFormErrors';
 import useErrorHandler from '../../hooks/useErrorHandler';
 

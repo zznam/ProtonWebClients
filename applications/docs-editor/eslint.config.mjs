@@ -1,12 +1,24 @@
 import { defineConfig } from 'eslint/config'
-import { atomsPackage, componentsPackage, createBarrelConfig, iconsPackage } from '@proton/eslint-config-proton/barrel'
+import { createRestrictedImportsConfig } from '@proton/eslint-config-proton/restrictedImports'
 import defaultConfig from '@proton/eslint-config-proton/all'
+import {
+  createExtraneousDependenciesRule,
+  extraneousDependenciesDevDependencies,
+} from '@proton/eslint-config-proton/extraneousDependencies'
 
 const isFixMode = process.argv.includes('--fix')
 
 export default defineConfig([
   defaultConfig,
-  createBarrelConfig({ packages: [atomsPackage, iconsPackage, componentsPackage] }),
+  createRestrictedImportsConfig({
+    patterns: [
+      {
+        group: ['@proton/drive-store*'],
+        message:
+          'docs-editor should not import from drive-store. Use @proton/docs-shared or @proton/docs-core instead.',
+      },
+    ],
+  }),
   {
     rules: {
       'react/prop-types': 'off',
@@ -33,18 +45,6 @@ export default defineConfig([
       'max-classes-per-file': 'off',
       // TODO: Remove this rule once the compat issue is resolved
       'compat/compat': 'off',
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: ['@proton/drive-store*'],
-              message:
-                'docs-editor should not import from drive-store. Use @proton/docs-shared or @proton/docs-core instead.',
-            },
-          ],
-        },
-      ],
     },
   },
   {
@@ -55,6 +55,14 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/TestUtils/**'],
+    rules: {
+      'import/no-extraneous-dependencies': createExtraneousDependenciesRule({
+        devDependencies: [...extraneousDependenciesDevDependencies, '**/TestUtils/**'],
+      }),
+    },
+  },
+  {
     files: ['src/app/Containers/Spreadsheet/**/*.{ts,tsx}', 'src/standalone-sheet/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-restricted-imports': [
@@ -62,13 +70,7 @@ export default defineConfig([
         {
           patterns: [
             {
-              group: [
-                '@proton/icons',
-                '@proton/icons/**',
-                '@proton/components/components/icon/Icon',
-                '@rowsncolumns/icons',
-                '@rowsncolumns/icons/**',
-              ],
+              group: ['@proton/icons', '@proton/icons/**', '@rowsncolumns/icons', '@rowsncolumns/icons/**'],
               message:
                 'Use icons from Spreadsheet/components/icons so standalone Sheets does not depend on an external icon registry or package.',
             },
@@ -85,7 +87,7 @@ export default defineConfig([
         {
           patterns: [
             {
-              group: ['@proton/icons', '@proton/icons/**', '@proton/components/components/icon/Icon'],
+              group: ['@proton/icons', '@proton/icons/**'],
               message:
                 'Use Docs/Components/Icon with data from Docs/Components/icons so the Docs editor does not depend on the Proton icon registry.',
             },

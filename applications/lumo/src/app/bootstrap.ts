@@ -1,17 +1,17 @@
 import createSagaMiddleware from 'redux-saga';
 
-import {
-    initEvent,
-    serverEvent,
-    userKeysThunk,
-    userSettingsThunk,
-    userThunk,
-    welcomeFlagsActions,
-} from '@proton/account';
 import { readAccountSessions } from '@proton/account/accountSessions/storage';
 import * as bootstrap from '@proton/account/bootstrap';
+import { bootstrapEvent } from '@proton/account/bootstrap/action';
+import { serverEvent } from '@proton/account/eventLoop';
+import { initEvent } from '@proton/account/init';
 import { getDecryptedPersistedState } from '@proton/account/persist/helper';
-import { FeatureCode, fetchFeatures } from '@proton/features';
+import { userThunk } from '@proton/account/user';
+import { userKeysThunk } from '@proton/account/userKeys';
+import { userSettingsThunk } from '@proton/account/userSettings';
+import { welcomeFlagsActions } from '@proton/account/welcomeFlags';
+import { FeatureCode } from '@proton/features/interface';
+import { fetchFeatures } from '@proton/features/reducer';
 import createApi from '@proton/shared/lib/api/createApi';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { getAppHref } from '@proton/shared/lib/apps/helper';
@@ -20,8 +20,8 @@ import { getPersistedSession, getPersistedSessions } from '@proton/shared/lib/au
 import { APPS, SSO_PATHS } from '@proton/shared/lib/constants';
 import { replaceUrl } from '@proton/shared/lib/helpers/browser';
 import { initSafariFontFixClassnames } from '@proton/shared/lib/helpers/initSafariFontFixClassnames';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
-import { DRAWER_VISIBILITY } from '@proton/shared/lib/interfaces';
+import { DRAWER_VISIBILITY } from '@proton/shared/lib/interfaces/UserSettings';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { telemetry } from '@proton/shared/lib/telemetry';
 import { formatUser } from '@proton/shared/lib/user/helpers';
 import noop from '@proton/utils/noop';
@@ -396,6 +396,8 @@ export const bootstrapApp = async ({ config }: { config: ProtonConfig }) => {
         });
         eventManager.start();
         lumoEventManager.start();
+
+        dispatch(bootstrapEvent({ type: 'complete' }));
 
         return {
             user: gateUser,

@@ -1,15 +1,16 @@
 import { useSubscription } from '@proton/account/subscription/hooks';
-import { FeatureCode, useFeatures } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import useFeatures from '@proton/features/useFeatures';
 import { isDangerouslyAllowedSubscriptionEstimation } from '@proton/payments/core/subscription/helpers';
 
 import type { OfferConfig, OfferId, Operation } from '../interface';
+import { blackFriday2026Configs, useBlackFriday2026 } from '../operations/blackFriday2026configs';
 import { goUnlimited2022Config } from '../operations/goUnlimited2022/configuration';
 import { useGoUnlimited2022 } from '../operations/goUnlimited2022/useOffer';
 import { mailTrial2023Config } from '../operations/mailTrial2023/configuration';
 import { useMailTrial2023 } from '../operations/mailTrial2023/useOffer';
 import { passFamilyPlan2024YearlyConfig } from '../operations/passFamilyPlan2024Yearly/configuration';
 import { usePassFamilyPlan2024Yearly } from '../operations/passFamilyPlan2024Yearly/useOffer';
-import { q3Sale2026Configs, useQ3Sale2026 } from '../operations/q3Sale2026configs';
 import { configuration as unlimitedToDuoDiscountedConfig } from '../operations/unlimitedToDuoDiscounted/configuration';
 import { useOffer as useUnlimitedToDuoDiscounted } from '../operations/unlimitedToDuoDiscounted/useOffer';
 
@@ -18,7 +19,7 @@ const configs: Record<OfferId, OfferConfig> = {
     'mail-trial-2023': mailTrial2023Config,
     'go-unlimited-2022': goUnlimited2022Config,
     'unlimited-to-duo-discounted': unlimitedToDuoDiscountedConfig,
-    ...q3Sale2026Configs,
+    ...blackFriday2026Configs,
 };
 
 const OFFERS_FEATURE_FLAGS = Object.values(configs).map(({ featureCode }) => featureCode);
@@ -28,7 +29,7 @@ const useOfferConfig = () => {
     useFeatures([FeatureCode.Offers, ...OFFERS_FEATURE_FLAGS]);
     const [subscription, loadingSubscription] = useSubscription();
 
-    const q3Sale2026Operations = useQ3Sale2026();
+    const blackFriday2026Operations = useBlackFriday2026();
 
     // Other offers
     const passFamilyPlan2024Yearly = usePassFamilyPlan2024Yearly();
@@ -36,11 +37,9 @@ const useOfferConfig = () => {
     const goUnlimited2022 = useGoUnlimited2022();
     const unlimitedToDuoDiscounted = useUnlimitedToDuoDiscounted();
 
-    // Offer order matters — Q3 sale takes priority over permanent offers. The discounted
-    // Unlimited-to-Duo offer targets the same audience as the Q3 Unlimited-to-Duo deal, so it sits
-    // after the campaign: while a seasonal sale is running, that wins.
+    // Offer order matters: the BF 2026 campaign takes priority over permanent offers
     const allOffers: Operation[] = [
-        ...q3Sale2026Operations,
+        ...blackFriday2026Operations,
         unlimitedToDuoDiscounted,
         passFamilyPlan2024Yearly,
         mailTrial2023,

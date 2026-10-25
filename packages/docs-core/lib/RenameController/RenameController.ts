@@ -1,22 +1,25 @@
-import { getErrorString, TranslatedResult } from '@proton/docs-shared'
+import { getErrorString } from '@proton/docs-shared/GetErrorString'
+import { TranslatedResult } from '@proton/docs-shared/TranslatedResult'
 import type { DocumentState, PublicDocumentState } from '../State/DocumentState'
-import type { DriveCompat, PublicDriveCompat } from '@proton/drive-store'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
+import type { PublicDriveCompat } from '@proton/drive-store/lib/usePublicDriveCompat'
 import type { GetNode } from '../UseCase/GetNode'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import { c } from 'ttag'
 import { renameNode } from '../DriveSDK/renameNode'
+import { renamePublicNode } from '../DriveSDK/renamePublicNode'
 import { findAvailableNodeName } from '../DriveSDK/findAvailableNodeName'
 import type { UnleashClient } from '@proton/unleash/UnleashClient'
 import { isDriveCompatSDKEnabled } from '../Util/isDriveCompatSDKEnabled'
 
 export interface RenameControllerInterface {
-  renameDocument(newName: string, useSDK?: boolean): Promise<TranslatedResult<void>>
+  renameDocument(newName: string): Promise<TranslatedResult<void>>
 }
 
 export class PublicRenameController implements RenameControllerInterface {
   constructor(
     private readonly documentState: PublicDocumentState,
-    private compat: PublicDriveCompat,
+    private compat: PublicDriveCompat | undefined,
     readonly _getNode: GetNode,
     readonly logger: LoggerInterface,
   ) {}
@@ -25,7 +28,11 @@ export class PublicRenameController implements RenameControllerInterface {
     try {
       const nodeMeta = this.documentState.getProperty('entitlements').nodeMeta
 
-      await this.compat.renamePublicDocument(nodeMeta, newName)
+      if (this.compat) {
+        await this.compat.renamePublicDocument(nodeMeta, newName)
+      } else {
+        await renamePublicNode(nodeMeta, newName)
+      }
 
       this.documentState.setProperty('documentName', newName)
       void this._getNode.updateNodeNameInCache(nodeMeta, newName)
@@ -48,7 +55,7 @@ export class PrivateRenameController implements RenameControllerInterface {
     private unleashClient: UnleashClient,
   ) {}
 
-  public async renameDocument(newName: string, useSDK: boolean = false): Promise<TranslatedResult<void>> {
+  public async renameDocument(newName: string): Promise<TranslatedResult<void>> {
     try {
       const decryptedNode = this.documentState.getProperty('decryptedNode')
       if (!decryptedNode.parentNodeId) {
@@ -64,11 +71,7 @@ export class PrivateRenameController implements RenameControllerInterface {
         ? await findAvailableNodeName(parentMeta, newName)
         : await this.compat.findAvailableNodeName(parentMeta, newName)
 
-      if (useSDK) {
-        await renameNode(nodeMeta, name)
-      } else {
-        await this.compat.renameDocument(nodeMeta, name)
-      }
+      await renameNode(nodeMeta, name)
 
       /**
        * In previous iterations, we would refetch the node after a rename, and set the global documentName property

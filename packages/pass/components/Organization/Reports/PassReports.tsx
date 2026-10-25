@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { Pagination } from '@proton/components/components/pagination/index';
+import Pagination from '@proton/components/components/pagination/Pagination';
 import SettingsSectionWide from '@proton/components/containers/account/SettingsSectionWide';
 import { PromotionBanner } from '@proton/components/containers/banner/PromotionBanner';
 import SubSettingsSection from '@proton/components/containers/layout/SubSettingsSection';
@@ -19,7 +19,8 @@ import { dateLocale } from '@proton/shared/lib/i18n';
 
 import { usePassBridge } from '../../../lib/bridge/PassBridgeProvider';
 import type { MonitorReport, UsageReport } from '../../../lib/organization/types';
-import type { MaybeNull, MemberMonitorReport } from '../../../types';
+import type { MemberMonitorReport } from '../../../types/api/pass';
+import type { MaybeNull } from '../../../types/utils';
 import { PassReportsMonitorTable } from './PassReportsMonitorTable';
 import { PassReportsUsageTable } from './PassReportsUsageTable';
 

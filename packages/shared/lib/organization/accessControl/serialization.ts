@@ -3,7 +3,7 @@ import { APPS, type APP_NAMES } from '../../constants';
 import type {
     OrganizationSettingsAllowedProduct,
     SerializedOrganizationSettingsAllowedProduct,
-} from '../../interfaces';
+} from '../../interfaces/Organization';
 
 // A mapping of what the API returns in OrganizationSettingsAllowedProduct to app names
 const productsToApps: Record<OrganizationSettingsAllowedProduct, APP_NAMES[]> = {
@@ -56,10 +56,6 @@ export const deserializeAllowedProducts = (
         return allAllowedProducts;
     }
     return serializedAllowedProductsSet as Set<OrganizationSettingsAllowedProduct>;
-};
-
-export const getAreAllProductsAllowed = (value: ReturnType<typeof deserializeAllowedProducts>) => {
-    return value === allAllowedProducts || allAllowedProducts.difference(value).size === 0;
 };
 
 /**

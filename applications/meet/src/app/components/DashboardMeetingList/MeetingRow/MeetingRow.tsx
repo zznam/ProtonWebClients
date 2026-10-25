@@ -14,12 +14,13 @@ import { IcMeetUsers } from '@proton/icons/icons/IcMeetUsers';
 import { IcPenSquare } from '@proton/icons/icons/IcPenSquare';
 import { IcSquares } from '@proton/icons/icons/IcSquares';
 import { IcTrash } from '@proton/icons/icons/IcTrash';
-import { getMeetingLink } from '@proton/meet';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { PASSWORD_SEPARATOR } from '@proton/meet/utils/cryptoUtils';
+import { getMeetingLink } from '@proton/meet/utils/getMeetingLink';
 import { getAppHref } from '@proton/shared/lib/apps/helper';
 import { APPS } from '@proton/shared/lib/constants';
-import type { SETTINGS_DATE_FORMAT } from '@proton/shared/lib/interfaces';
 import { type Meeting, MeetingType, WaitingRoomState } from '@proton/shared/lib/interfaces/Meet';
+import type { SETTINGS_DATE_FORMAT } from '@proton/shared/lib/interfaces/UserSettings';
 import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';
 
@@ -128,6 +129,7 @@ export const MeetingRow = ({
     const handleCopyLink = () => {
         const fullMeetingLink = getAppHref(meetingLink, APPS.PROTONMEET);
         void navigator.clipboard.writeText(fullMeetingLink);
+        sendMeetDashboardEvent(TelemetryMeetDashboardEvents.meeting_link_copied, { source: 'dashboard' });
         notifications.createNotification({
             key: 'link-copied',
             text: c('Notification').t`Link copied to clipboard`,

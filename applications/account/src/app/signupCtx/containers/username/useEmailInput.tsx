@@ -6,13 +6,12 @@ import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
 import { DropdownSizeUnit } from '@proton/components/components/dropdown/utils';
 import Option from '@proton/components/components/option/Option';
 import SelectTwo from '@proton/components/components/selectTwo/SelectTwo';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import ChallengeV4 from '@proton/components/containers/challenge/ChallengeV4';
 import { useTheme } from '@proton/components/containers/themes/ThemeProvider';
 import { IcCheckmarkCircle } from '@proton/icons/icons/IcCheckmarkCircle';
 import clsx from '@proton/utils/clsx';
 
-import challengeIconsSvg from '../../../signup/challenge-icons.source.svg';
 import { getThemeData } from '../../../signup/challenge-theme';
 import { SignupType } from '../../../signup/interfaces';
 import { useAccountFormDataContext } from '../../context/accountData/AccountFormDataContext';
@@ -80,7 +79,6 @@ const useEmailInput = ({
             <div className={`${inputsWrapper}`}>
                 <ChallengeV4
                     getThemeData={getThemeData}
-                    getIconsData={() => challengeIconsSvg}
                     bodyClassName="color-norm bg-transparent px-2"
                     iframeClassName="challenge-width-increase"
                     challengeRef={refs.challenge}

@@ -1,10 +1,20 @@
+import type { ReactNode } from 'react';
+
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
+import SubscriptionModalProvider from '@proton/components/containers/payments/subscription/SubscriptionModalProvider';
+import { SubscriptionModalContext } from '@proton/components/containers/payments/subscription/subscriptionModalContext';
+import { mockOrganizationApi } from '@proton/components/hooks/helpers/tests/useOrganization';
+import { mockStatusApi } from '@proton/components/hooks/helpers/tests/usePaymentStatus';
+import { mockPlansApi } from '@proton/components/hooks/helpers/tests/usePlans';
+import { mockSubscriptionApi } from '@proton/components/hooks/helpers/tests/useSubscription';
 import { renderWithProviders } from '@proton/components/testing/renderWithProviders';
+import type { CheckSubscriptionData } from '@proton/payments/core/api/api';
+import { getOptimisticCheckResult } from '@proton/payments/core/checkout';
 import {
-    ADDON_GENERIC_NAMES,
     ADDON_PREFIXES,
+    ADDON_TOTAL_PARAM_NAMES,
     COUPON_CODES,
     CURRENCIES,
     CYCLE,
@@ -16,13 +26,19 @@ import { getPreferredCurrency } from '@proton/payments/core/currencies';
 import type { PaymentStatus } from '@proton/payments/core/interface';
 import { getAddonNameByPlan } from '@proton/payments/core/plan/helpers';
 import { FREE_PLAN } from '@proton/payments/core/subscription/freePlans';
+import { GUARD_ERROR_CODES } from '@proton/payments/core/subscription/guard';
 import { getPlanName } from '@proton/payments/core/subscription/helpers';
-import type { Subscription } from '@proton/payments/core/subscription/interface';
+import type { Subscription, SubscriptionEstimation } from '@proton/payments/core/subscription/interface';
+import { getPlansMap } from '@proton/payments/core/subscription/plans-map-wrapper';
 import { buildSubscription } from '@proton/payments/testing/buildSubscription';
 import { getLongTestPlans } from '@proton/payments/testing/data-plans';
 import { getUserMock } from '@proton/payments/testing/data-user';
 import { getPaymentStatusState, getSubscriptionState } from '@proton/payments/testing/redux-state';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
+import { addApiMock, apiMock } from '@proton/test-api/api';
+import type { FeatureFlag } from '@proton/unleash/Flags';
 
+import { PaymentsContextProvider } from '../context/PaymentContext';
 import type { useCurrencies } from '../hooks/useCurrencies';
 import { AutomaticSubscriptionModal, getParameters } from './AutomaticSubscriptionModal';
 import { SUBSCRIPTION_STEPS } from './constants';
@@ -75,10 +91,16 @@ describe('getParameters', () => {
             expect(plan?.Name).toBe(getPlanName(subscription));
         });
 
-        it('does not fall back when totalLumo is set without plan', () => {
+        it('falls back to the subscription plan when totalLumo is set without plan', () => {
             const subscription = buildSubscription({ planName: PLANS.BUNDLE, currency: 'CHF', cycle: CYCLE.YEARLY });
             const { plan } = callGetParameters('?totalLumo=1', { subscription });
-            expect(plan).toBeUndefined();
+            expect(plan?.Name).toBe(getPlanName(subscription));
+        });
+
+        it('falls back to the subscription plan when totalMeet is set without plan', () => {
+            const subscription = buildSubscription({ planName: PLANS.BUNDLE, currency: 'CHF', cycle: CYCLE.YEARLY });
+            const { plan } = callGetParameters('?totalMeet=1', { subscription });
+            expect(plan?.Name).toBe(getPlanName(subscription));
         });
     });
 
@@ -98,6 +120,25 @@ describe('getParameters', () => {
             const subscription = buildSubscription({ planName: PLANS.BUNDLE, currency: 'CHF', cycle: CYCLE.TWO_YEARS });
             const { cycle } = callGetParameters('?plan=mail2022', { subscription });
             expect(cycle).toBe(DEFAULT_CYCLE);
+        });
+
+        it.each(['lumo', 'meet'])(
+            'keeps the two-year subscription cycle when addon=%s expands the subscription',
+            (addon) => {
+                const subscription = buildSubscription({
+                    planName: PLANS.BUNDLE,
+                    currency: 'CHF',
+                    cycle: CYCLE.TWO_YEARS,
+                });
+                const { cycle } = callGetParameters(`?addon=${addon}`, { subscription });
+                expect(cycle).toBe(CYCLE.TWO_YEARS);
+            }
+        );
+
+        it('uses the `cycle` param over the subscription cycle when addon=lumo expands the subscription', () => {
+            const subscription = buildSubscription({ planName: PLANS.BUNDLE, currency: 'CHF', cycle: CYCLE.TWO_YEARS });
+            const { cycle } = callGetParameters('?addon=lumo&cycle=12', { subscription });
+            expect(cycle).toBe(CYCLE.YEARLY);
         });
 
         it('parses minimumCycle and maximumCycle', () => {
@@ -180,15 +221,10 @@ describe('getParameters', () => {
         it.each([
             ['deprecated addon=lumo', '?addon=lumo'],
             ['deprecated addon=meet', '?addon=meet'],
-        ])('is true for %s', (_label, search) => {
-            expect(callGetParameters(search).disablePlanSelection).toBe(true);
-        });
-
-        it.each([
             ['totalLumo without plan', '?totalLumo=1'],
             ['totalMeet without plan', '?totalMeet=1'],
-        ])('is false for %s', (_label, search) => {
-            expect(callGetParameters(search).disablePlanSelection).toBe(false);
+        ])('is true for %s', (_label, search) => {
+            expect(callGetParameters(search).disablePlanSelection).toBe(true);
         });
 
         it('is false by default', () => {
@@ -208,15 +244,10 @@ describe('getParameters', () => {
         it.each([
             ['deprecated addon=lumo', '?addon=lumo'],
             ['deprecated addon=meet', '?addon=meet'],
-        ])('is true for %s', (_label, search) => {
-            expect(callGetParameters(search).disableCycleSelector).toBe(true);
-        });
-
-        it.each([
             ['totalLumo without plan', '?totalLumo=1'],
             ['totalMeet without plan', '?totalMeet=1'],
-        ])('is false for %s', (_label, search) => {
-            expect(callGetParameters(search).disableCycleSelector).toBe(false);
+        ])('is true for %s', (_label, search) => {
+            expect(callGetParameters(search).disableCycleSelector).toBe(true);
         });
 
         it('fixedPlan without fixedCycle leaves the cycle selector enabled', () => {
@@ -233,15 +264,23 @@ describe('getParameters', () => {
     });
 
     describe('totalX params', () => {
-        it.each(Object.entries(ADDON_PREFIXES))(
+        it.each(Object.values(ADDON_TOTAL_PARAM_NAMES).filter((addon) => addon !== 'Lumo' && addon !== 'Meet'))(
             'total%s is ignored when missing plan',
-            (_, addonPrefix: ADDON_PREFIXES) => {
-                const addon = ADDON_GENERIC_NAMES[addonPrefix];
+            (addon) => {
                 const result = callGetParameters(`?total${addon}=1`);
 
                 expect(result.totals).not.toHaveProperty(`total${addon}`);
             }
         );
+
+        it.each([
+            ['totalLumo', 'Lumo'],
+            ['totalMeet', 'Meet'],
+        ])('reads %s without plan for subscription expansion', (param) => {
+            const result = callGetParameters(`?${param}=1`);
+
+            expect(result.totals).toHaveProperty(param, 1);
+        });
 
         it.each([
             ['totalLumo', 'Lumo'],
@@ -252,15 +291,11 @@ describe('getParameters', () => {
             expect(result.totals).not.toHaveProperty(param);
         });
 
-        it.each(Object.entries(ADDON_PREFIXES))(
-            'total%s is present when plan defined',
-            (_, addonPrefix: ADDON_PREFIXES) => {
-                const addon = ADDON_GENERIC_NAMES[addonPrefix];
-                const result = callGetParameters(`?plan=mail2022&total${addon}=1`);
+        it.each(Object.values(ADDON_TOTAL_PARAM_NAMES))('total%s is present when plan defined', (addon) => {
+            const result = callGetParameters(`?plan=mail2022&total${addon}=1`);
 
-                expect(result.totals).toHaveProperty(`total${addon}`);
-            }
-        );
+            expect(result.totals).toHaveProperty(`total${addon}`);
+        });
 
         describe('validation and clamping', () => {
             it('drops non-numeric values', () => {
@@ -300,13 +335,31 @@ describe('getParameters', () => {
 });
 
 jest.mock('@proton/components/hooks/useModals');
-jest.mock('@proton/atoms/Portal/Portal');
+jest.mock('@proton/atoms/Portal/Portal', () => ({
+    __esModule: true,
+    Portal: jest.fn(({ children }) => <>{children}</>),
+}));
 jest.mock('@proton/payments-ui/ui/subscriptions/eligibility');
+jest.mock('@proton/components/containers/desktop/useRedirectToAccountApp', () => ({
+    useRedirectToAccountApp: () => () => false,
+}));
+jest.mock('@proton/components/hooks/assistant/useAssistantFeatureEnabled', () => ({
+    __esModule: true,
+    default: jest.fn(() => ({ paymentsEnabled: false, enabled: false })),
+}));
+jest.mock('@proton/unleash/proxy', () => ({
+    useFlagsStatus: jest.fn(() => ({ flagsReady: true })),
+}));
+jest.mock('@proton/unleash/useVariant', () => ({
+    useVariant: jest.fn(() => ({ name: 'disabled' })),
+}));
+jest.mock('@proton/features/useFeature', () => () => ({}));
+jest.mock('@proton/components/hooks/useActiveBreakpoint', () => ({
+    __esModule: true,
+    default: () => jest.requireActual('@proton/components/testing/mockUseActiveBreakpoint').mockDefaultBreakpoints,
+}));
 
 const mockOpenSubscriptionModal = jest.fn();
-jest.mock('@proton/components/containers/payments/subscription/subscriptionModalContext', () => ({
-    useSubscriptionModal: () => [mockOpenSubscriptionModal, false],
-}));
 
 const mockedGetEligibility = getEligibility as jest.Mock;
 
@@ -314,16 +367,21 @@ const renderModal = (search: string, subscriptionOverride?: Subscription) => {
     const subscription =
         subscriptionOverride ?? buildSubscription({ planName: PLANS.BUNDLE, currency: 'CHF', cycle: CYCLE.YEARLY });
 
-    return renderWithProviders(<AutomaticSubscriptionModal />, {
-        // Starts the router at this URL so the component reads `search` from useLocation on first render.
-        initialUrl: `/${search}`,
-        preloadedState: {
-            user: getModelState(userDefault),
-            subscription: getSubscriptionState(subscription),
-            paymentStatus: getPaymentStatusState(paymentStatus),
-            plans: getModelState({ plans, freePlan: FREE_PLAN }),
-        },
-    });
+    return renderWithProviders(
+        <SubscriptionModalContext.Provider value={[mockOpenSubscriptionModal, false, true]}>
+            <AutomaticSubscriptionModal />
+        </SubscriptionModalContext.Provider>,
+        {
+            // Starts the router at this URL so the component reads `search` from useLocation on first render.
+            initialUrl: `/${search}`,
+            preloadedState: {
+                user: getModelState(userDefault),
+                subscription: getSubscriptionState(subscription),
+                paymentStatus: getPaymentStatusState(paymentStatus),
+                plans: getModelState({ plans, freePlan: FREE_PLAN }),
+            },
+        }
+    );
 };
 
 describe('<AutomaticSubscriptionModal />', () => {
@@ -397,7 +455,26 @@ describe('<AutomaticSubscriptionModal />', () => {
         );
     });
 
-    it('supports deprecated addon=lumo until callers are migrated', async () => {
+    it('keeps plan transition checks enabled when opening checkout from URL', async () => {
+        renderModal('?plan=mail2022&target=checkout');
+
+        await waitFor(() => expect(mockOpenSubscriptionModal).toHaveBeenCalledTimes(1));
+        const props = mockOpenSubscriptionModal.mock.calls[0][0];
+        expect(props.step).toBe(SUBSCRIPTION_STEPS.CHECKOUT);
+        expect(props).not.toHaveProperty('skipPlanTransitionChecks');
+    });
+
+    it('opens subscription expansion checkout for totalLumo without plan', async () => {
+        renderModal('?totalLumo=1');
+
+        await waitFor(() => expect(mockOpenSubscriptionModal).toHaveBeenCalledTimes(1));
+        const props = mockOpenSubscriptionModal.mock.calls[0][0];
+        expect(props.plan).toBeUndefined();
+        expect(props.planIDs).toBeDefined();
+        expect(typeof props.onSubscribed).toBe('function');
+    });
+
+    it('still supports deprecated addon=lumo for backward compatibility', async () => {
         renderModal('?addon=lumo');
 
         await waitFor(() => expect(mockOpenSubscriptionModal).toHaveBeenCalledTimes(1));
@@ -653,4 +730,248 @@ describe('<AutomaticSubscriptionModal />', () => {
             });
         });
     });
+});
+
+const driveSubscription = buildSubscription({
+    planName: PLANS.DRIVE,
+    currency: 'CHF',
+    cycle: CYCLE.YEARLY,
+});
+
+const userSettingsPreloadedState = { userSettings: getModelState({} as UserSettings) };
+
+function GuardTestHarness({ children }: { children: ReactNode }) {
+    return (
+        <PaymentsContextProvider>
+            <SubscriptionModalProvider app="proton-account">{children}</SubscriptionModalProvider>
+        </PaymentsContextProvider>
+    );
+}
+
+function enableSepaFeatureFlag() {
+    const sepaFlag: FeatureFlag = 'SepaPayments';
+
+    const useFlagMock = jest.spyOn(require('@proton/unleash/useFlag'), 'useFlag');
+    useFlagMock.mockImplementation((flag) => flag === sepaFlag);
+}
+
+function renderAutomaticSubscriptionModal(search: string) {
+    return renderWithProviders(
+        <GuardTestHarness>
+            <AutomaticSubscriptionModal />
+        </GuardTestHarness>,
+        {
+            initialUrl: `/${search}`,
+            preloadedState: {
+                ...userSettingsPreloadedState,
+                user: getModelState(userDefault),
+                subscription: getSubscriptionState(driveSubscription),
+                paymentStatus: getPaymentStatusState(paymentStatus),
+                plans: getModelState({ plans, freePlan: FREE_PLAN }),
+            },
+        }
+    );
+}
+
+describe('<AutomaticSubscriptionModal /> subscription guards', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockedGetEligibility.mockReturnValue({ type: 'pass-through' });
+        mockSubscriptionApi({
+            Code: 1000,
+            Subscription: driveSubscription,
+            UpcomingSubscription: null,
+        });
+        mockPlansApi();
+        mockOrganizationApi();
+        mockStatusApi();
+        enableSepaFeatureFlag();
+        jest.spyOn(global, 'fetch').mockResolvedValue({ ok: true } as Response);
+    });
+
+    it('does not send ValidateGuards while browsing plan selection from upsell URL', async () => {
+        addApiMock(
+            'payments/v5/subscription/check',
+            ({ data }: { data: CheckSubscriptionData }) => ({
+                ...getOptimisticCheckResult({
+                    planIDs: data.Plans,
+                    cycle: data.Cycle,
+                    currency: data.Currency,
+                    plansMap: getPlansMap(plans, data.Currency, false),
+                }),
+                AmountDue: 999,
+            }),
+            'post'
+        );
+
+        renderAutomaticSubscriptionModal('?plan=drive1tb2025&target=compare');
+
+        await screen.findByTestId('b2c-plan');
+
+        expect(apiMock).not.toHaveBeenCalledWith(
+            expect.objectContaining({
+                url: 'payments/v5/subscription/check',
+                data: expect.objectContaining({ ValidateGuards: true }),
+            })
+        );
+    });
+
+    it('sends ValidateGuards once when upsell opens checkout with a settled selection', async () => {
+        addApiMock(
+            'payments/v5/subscription/check',
+            ({ data }: { data: CheckSubscriptionData }) => ({
+                ...getOptimisticCheckResult({
+                    planIDs: data.Plans,
+                    cycle: data.Cycle,
+                    currency: data.Currency,
+                    plansMap: getPlansMap(plans, data.Currency, false),
+                }),
+                AmountDue: 999,
+            }),
+            'post'
+        );
+
+        renderAutomaticSubscriptionModal('?plan=drive1tb2025&target=checkout&upsellRef=onboarding_banner');
+
+        await waitFor(() => {
+            expect(screen.getByTestId('subscription-amout-due')).toBeInTheDocument();
+        });
+
+        const guardChecks = apiMock.mock.calls.filter(
+            ([request]) => request.url === 'payments/v5/subscription/check' && request.data?.ValidateGuards === true
+        );
+        expect(guardChecks).toHaveLength(1);
+    });
+
+    it('shows guard feedback near the CTA, keeps pricing visible, and disables Continue', async () => {
+        addApiMock(
+            'payments/v5/subscription/check',
+            ({ data }: { data: CheckSubscriptionData }) => ({
+                ...getOptimisticCheckResult({
+                    planIDs: data.Plans,
+                    cycle: data.Cycle,
+                    currency: data.Currency,
+                    plansMap: getPlansMap(plans, data.Currency, false),
+                }),
+                AmountDue: 999,
+                GuardResult: 'raw backend message',
+                GuardResultCode: GUARD_ERROR_CODES.TOO_LITTLE_SPACE,
+            }),
+            'post'
+        );
+
+        renderAutomaticSubscriptionModal('?plan=drive1tb2025&target=checkout&upsellRef=onboarding_banner');
+
+        await waitFor(() => {
+            expect(screen.getByTestId('subscription-amout-due')).toBeInTheDocument();
+            expect(screen.getByText(/enough storage for your account/i)).toBeInTheDocument();
+        });
+
+        expect(screen.getByTestId('price')).toBeInTheDocument();
+        expect(screen.getByTestId('confirm')).toBeDisabled();
+        expect(screen.queryByText('raw backend message')).not.toBeInTheDocument();
+        expect(screen.getAllByTestId('plansModal')).toHaveLength(1);
+    });
+
+    it('clears stale guard feedback immediately when the billing cycle changes', async () => {
+        let resolveSecondCheck: (value: SubscriptionEstimation) => void;
+        const secondCheckPromise = new Promise<SubscriptionEstimation>((resolve) => {
+            resolveSecondCheck = resolve;
+        });
+        let guardedCheckCount = 0;
+
+        addApiMock(
+            'payments/v5/subscription/check',
+            ({ data }: { data: CheckSubscriptionData }) => {
+                const result = getOptimisticCheckResult({
+                    planIDs: data.Plans,
+                    cycle: data.Cycle,
+                    currency: data.Currency,
+                    plansMap: getPlansMap(plans, data.Currency, false),
+                });
+
+                const response = {
+                    ...result,
+                    AmountDue: result.Amount,
+                };
+
+                if (data.ValidateGuards) {
+                    guardedCheckCount += 1;
+
+                    if (guardedCheckCount === 1) {
+                        return {
+                            ...response,
+                            GuardResult: 'raw',
+                            GuardResultCode: GUARD_ERROR_CODES.TOO_LITTLE_SPACE,
+                        };
+                    }
+
+                    return secondCheckPromise;
+                }
+
+                return response;
+            },
+            'post'
+        );
+
+        renderAutomaticSubscriptionModal('?plan=drive1tb2025&target=checkout');
+
+        await waitFor(() => {
+            expect(screen.getByText(/enough storage for your account/i)).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByTestId(`cycle-${CYCLE.MONTHLY}`).querySelector('button')!);
+
+        await waitFor(() => {
+            expect(screen.queryByText(/enough storage for your account/i)).not.toBeInTheDocument();
+        });
+        expect(screen.getByTestId('confirm')).toBeEnabled();
+
+        resolveSecondCheck!({
+            ...getOptimisticCheckResult({
+                planIDs: { [PLANS.DRIVE_1TB]: 1 },
+                cycle: CYCLE.MONTHLY,
+                currency: 'CHF',
+                plansMap: getPlansMap(plans, 'CHF', false),
+            }),
+            AmountDue: 999,
+            Coupon: null,
+            SubscriptionMode: 0 as any,
+            BaseRenewAmount: null,
+            RenewCycle: null,
+            requestData: {
+                Plans: { [PLANS.DRIVE_1TB]: 1 },
+                Currency: 'CHF',
+                Cycle: CYCLE.MONTHLY,
+            },
+            GuardResult: [],
+        });
+
+        await waitFor(() => {
+            expect(screen.getByTestId('confirm')).toBeEnabled();
+        });
+    });
+
+    it('keeps Continue enabled after a check error and does not claim the purchase is allowed', async () => {
+        addApiMock(
+            'payments/v5/subscription/check',
+            () => {
+                throw { data: { Code: 2011, Error: 'Temporary failure' } };
+            },
+            'post'
+        );
+
+        renderAutomaticSubscriptionModal('?plan=drive1tb2025&target=checkout');
+
+        await waitFor(() => {
+            expect(screen.getByTestId('confirm')).toBeEnabled();
+        });
+
+        expect(screen.queryByText(/enough storage for your account/i)).not.toBeInTheDocument();
+    });
+
+    // Race safety (only the latest in-flight check may commit) is covered by
+    // useSubscriptionContainerInnerCheck "abort controller" tests; the cycle selector
+    // ignores input while a check is loading, so rapid cycle clicks are not a realistic
+    // integration surface here.
 });

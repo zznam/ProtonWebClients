@@ -9,10 +9,11 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import { FeatureCode } from '@proton/features/interface';
 import useFeature from '@proton/features/useFeature';
 import { CYCLE, PLANS } from '@proton/payments/core/constants';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
 import { TelemetryUnlimitedOffer2025 } from '@proton/shared/lib/api/telemetry';
 import { getAppFromPathnameSafe } from '@proton/shared/lib/apps/slugHelper';
 import { APPS, APPS_WITH_IN_APP_PAYMENTS, MAIL_UPSELL_PATHS, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
-import { addUpsellPath, getUpgradePath, getUpsellRefFromApp } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRefFromApp } from '@proton/shared/lib/helpers/ref';
 
 import { useSubscriptionModal } from '../../../../containers/payments/subscription/SubscriptionModalProvider';
 import { SUBSCRIPTION_STEPS } from '../../../../containers/payments/subscription/constants';
@@ -24,7 +25,7 @@ import { HIDE_OFFER } from './helpers/interface';
 import { useGoUnlimited2025 } from './hooks/useGoUnlimited2025';
 import { useGoUnlimitedOfferTelemetry } from './hooks/useGoUnlimitedOfferTelemetry';
 
-export const defaultOfferUpsellConfig = {
+const defaultOfferUpsellConfig = {
     step: SUBSCRIPTION_STEPS.CHECKOUT,
     plan: PLANS.BUNDLE,
     cycle: CYCLE.YEARLY,
@@ -90,14 +91,14 @@ export const GoUnlimited2025 = () => {
 
     const upsellInSettings = () => {
         goToSettings(
-            addUpsellPath(
-                getUpgradePath({
+            getUpgradePath(
+                {
                     user,
                     subscription,
                     app,
                     target: 'checkout',
                     ...defaultOfferUpsellConfig,
-                }),
+                },
                 upsellRef
             )
         );

@@ -1,12 +1,15 @@
 import type { TrackReference } from '@livekit/components-react';
+import { logger } from '@protontech/logger';
 
 import type { ReportMeetError } from '@proton/meet/hooks/useMeetErrorReporting';
 import type { OpfsRecording } from '@proton/meet/store/slices/recordingsSlice';
 
-import { type AudioMixer, createAudioMixer } from '../audioMixer/audioMixer';
+import type { RecordingStopTelemetry } from '../../telemetry/types';
+import { type AudioMixer, type AudioMixerDiagnostics, createAudioMixer } from '../audioMixer/audioMixer';
 import { createChunkWatchdog } from '../chunkWatchdog/chunkWatchdog';
-import type { ChunkWatchdog } from '../chunkWatchdog/types';
+import type { ChunkWatchdog, RecordingStallCause, StallSummary } from '../chunkWatchdog/types';
 import type { RecordingCodec } from '../codec/types';
+import { AUDIO_STALL_MS } from '../mediaEncoder/constants';
 import { WebCodecsRecorder } from '../mediaEncoder/webCodecsRecorder';
 import { type ChunkStats, createChunkStats } from '../mediaRecorder/chunkStats';
 import { MeetMediaRecorder } from '../mediaRecorder/meetMediaRecorder';
@@ -14,7 +17,16 @@ import { type RecordingStorageClient, createRecordingStorageClient } from '../re
 import type { RecorderAPI } from '../types';
 import { VideoMixerClient } from '../videoMixer/client';
 import type { RecordingTrackInfo, SceneState } from '../videoMixer/types';
-import type { RecordingSessionOptions, RecordingSessionStartOptions } from './types';
+import type {
+    RecordingDiagnostics,
+    RecordingOutcome,
+    RecordingSessionOptions,
+    RecordingSessionStartOptions,
+    RecordingStopReport,
+} from './types';
+
+const isOlderThan = (timestamp: number | null, thresholdMs: number) =>
+    timestamp === null || performance.now() - timestamp > thresholdMs;
 
 // Orchestrates one recording session: storage + video mixer + audio mixer +
 // recorder backend (WebCodecs or MediaRecorder) + watchdog. The hook talks to
@@ -33,8 +45,20 @@ export class RecordingSession {
     private userId: string;
     private reportMeetError: ReportMeetError;
     private onRuntimeError: () => void;
-    private onStorageFull: () => void;
+    private onStorageFull: (hasWrittenData: boolean) => void;
+    private onWriteError: (hasWrittenData: boolean) => void;
     private storageFull = false;
+    private writeError: string | null = null;
+    private startedAt: number | null = null;
+    private stopStartedAt: number | null = null;
+    private stopFinishedAt: number | null = null;
+    private cleanedUpAt: number | null = null;
+    private bytesBeforeStop = 0;
+    private file: OpfsRecording | null = null;
+    private outcome: RecordingOutcome | null = null;
+    private outcomeError: string | null = null;
+    private finalAudioDiagnostics: AudioMixerDiagnostics | null = null;
+    private stallSummary: StallSummary | null = null;
 
     constructor({
         codec,
@@ -43,6 +67,7 @@ export class RecordingSession {
         reportMeetError,
         onRuntimeError,
         onStorageFull,
+        onWriteError,
     }: RecordingSessionOptions) {
         this.codec = codec;
         this.isWebCodecs = isWebCodecs;
@@ -50,28 +75,53 @@ export class RecordingSession {
         this.reportMeetError = reportMeetError;
         this.onRuntimeError = onRuntimeError;
         this.onStorageFull = onStorageFull;
+        this.onWriteError = onWriteError;
     }
 
-    private handleStorageFull = (): void => {
+    private handleStorageFull = (hasWrittenData: boolean): void => {
         if (this.storageFull) {
             return;
         }
         this.storageFull = true;
-        this.onStorageFull();
+
+        if (!this.active) {
+            return;
+        }
+
+        this.onStorageFull(hasWrittenData);
+    };
+
+    private handleWriteError = (error: string, hasWrittenData: boolean): void => {
+        this.reportMeetError('MeetingRecording Error: Failed to write the recording', {
+            context: { error, recordingCodec: this.codec },
+        });
+        this.writeError = error;
+
+        if (!this.active) {
+            return;
+        }
+
+        this.onWriteError(hasWrittenData);
     };
 
     public async start({
         initialScene,
         initialAudioTracks,
         initialRecordedTracks,
+        encryptionKey,
     }: RecordingSessionStartOptions): Promise<void> {
-        // eslint-disable-next-line no-console
-        console.log('[MeetingRecorder] starting recording', {
+        logger.info('[MeetingRecorder] starting recording', {
             codec: this.codec,
             backend: this.isWebCodecs ? 'webcodecs' : 'mediarecorder',
         });
 
-        this.storage = await createRecordingStorageClient(this.codec.extension, this.userId, this.handleStorageFull);
+        this.storage = await createRecordingStorageClient({
+            fileExtension: this.codec.extension,
+            userId: this.userId,
+            encryptionKey,
+            onStorageFull: this.handleStorageFull,
+            onWriteError: this.handleWriteError,
+        });
 
         this.videoMixer = new VideoMixerClient({
             initialScene,
@@ -93,9 +143,9 @@ export class RecordingSession {
                 videoMixer: this.videoMixer,
                 audioMixer: this.audioMixer,
                 codec: this.codec,
-                onChunk: (data, position) => {
+                onChunk: (data) => {
                     stats.recordChunk(data.byteLength);
-                    void storage.addChunk(data, position).catch((error) => {
+                    void storage.addChunk(data).catch((error) => {
                         reportMeetError('MeetingRecording Error WebCodecs: Failed to store chunk in OPFS', {
                             context: {
                                 error: error instanceof Error ? error.message : String(error),
@@ -114,8 +164,7 @@ export class RecordingSession {
                 onChunk: (chunk) => {
                     const { isFirst, chunkNumber } = stats.recordChunk(chunk.size);
                     if (isFirst) {
-                        // eslint-disable-next-line no-console
-                        console.log(
+                        logger.info(
                             `[MeetingRecorder] first non-empty chunk: ${chunk.size} bytes (empty chunks before this: ${stats.snapshot().emptyChunkCount})`
                         );
                     }
@@ -128,8 +177,6 @@ export class RecordingSession {
                                 name: error?.name,
                             },
                         });
-                        // eslint-disable-next-line no-console
-                        console.error(`[MeetingRecorder] failed to store chunk ${chunkNumber} in OPFS:`, error);
                     });
                 },
                 onEmptyChunk: () => {
@@ -138,8 +185,7 @@ export class RecordingSession {
                     const recorderState = this.mediaRecorder?.getRecorderState() ?? 'inactive';
 
                     if (emptyCount === 1 || emptyCount % 5 === 0) {
-                        // eslint-disable-next-line no-console
-                        console.warn(
+                        logger.warn(
                             `[MeetingRecorder] empty chunk #${emptyCount} (chunks with data so far: ${snapshot.chunkCount}, mimeType: ${this.codec.mimeType}, mediaRecorder.state: ${recorderState})`
                         );
                     }
@@ -158,21 +204,14 @@ export class RecordingSession {
                     const recorderState = this.mediaRecorder?.getRecorderState() ?? 'inactive';
                     const snapshot = stats.snapshot();
 
-                    // eslint-disable-next-line no-console
-                    console.error('[MeetingRecorder] MediaRecorder runtime error:', {
-                        message: error?.message ?? 'Unknown MediaRecorder error',
-                        name: error?.name,
-                        state: recorderState,
-                        recordingCodec: this.codec,
-                        chunksWithData: snapshot.chunkCount,
-                        emptyChunks: snapshot.emptyChunkCount,
-                    });
                     reportMeetError('MeetingRecording Error: MediaRecorder runtime error', {
                         context: {
                             message: error?.message ?? 'Unknown MediaRecorder error',
                             name: error?.name,
                             state: recorderState,
                             recordingCodec: this.codec,
+                            chunksWithData: snapshot.chunkCount,
+                            emptyChunks: snapshot.emptyChunkCount,
                         },
                     });
 
@@ -183,19 +222,32 @@ export class RecordingSession {
 
         await this.mediaRecorder.start();
 
+        if (this.storageFull || this.writeError) {
+            await this.mediaRecorder.stop().catch(() => {});
+            await storage.clear().catch(() => {});
+
+            throw new Error(
+                this.storageFull
+                    ? 'Storage is full, the recording could not be started'
+                    : `The recording could not be written: ${this.writeError}`
+            );
+        }
+
         this.watchdog = createChunkWatchdog({
             stats,
             reportMeetError,
             getRecorderState: () => this.mediaRecorder?.getRecorderState() ?? 'inactive',
             getCodec: () => this.mediaRecorder?.getActiveCodec() ?? this.codec,
+            getStallCause: () => this.getStallCause(),
+            getReportContext: () => this.getErrorReportContext(),
             isWebCodecs: this.isWebCodecs,
         });
         this.watchdog.start();
 
         this.active = true;
+        this.startedAt = performance.now();
 
-        // eslint-disable-next-line no-console
-        console.log('[MeetingRecorder] recorder started', {
+        logger.info('[MeetingRecorder] recorder started', {
             state: this.mediaRecorder.getRecorderState(),
             recordingCodec: this.mediaRecorder.getActiveCodec(),
         });
@@ -206,16 +258,21 @@ export class RecordingSession {
             return null;
         }
 
+        this.stopStartedAt = performance.now();
+        this.bytesBeforeStop = this.stats?.snapshot().totalBytes ?? 0;
+
         try {
             await this.mediaRecorder.stop();
+            this.stallSummary = this.watchdog?.getStallSummary() ?? null;
             this.watchdog?.stop();
             this.watchdog = null;
 
-            return await this.storage.finalize();
+            this.file = await this.storage.finalize();
+            return this.file;
         } finally {
+            this.stopFinishedAt = performance.now();
             const snapshot = this.stats?.snapshot();
-            // eslint-disable-next-line no-console
-            console.log('[MeetingRecorder] recording stopped', {
+            logger.info('[MeetingRecorder] recording stopped', {
                 chunksWithData: snapshot?.chunkCount,
                 emptyChunks: snapshot?.emptyChunkCount,
                 firstChunkAt: snapshot?.firstChunkAt,
@@ -226,6 +283,7 @@ export class RecordingSession {
 
     public async cleanup(): Promise<void> {
         this.active = false;
+        this.cleanedUpAt = performance.now();
 
         this.watchdog?.stop();
         this.watchdog = null;
@@ -233,6 +291,7 @@ export class RecordingSession {
         this.videoMixer?.cleanup();
         this.videoMixer = null;
 
+        this.finalAudioDiagnostics = this.audioMixer?.getDiagnostics() ?? null;
         this.audioMixer?.cleanup();
         this.audioMixer = null;
 
@@ -242,7 +301,13 @@ export class RecordingSession {
         }
 
         this.mediaRecorder = null;
-        this.stats = null;
+    }
+
+    public setOutcome(outcome: RecordingOutcome, error?: unknown): void {
+        this.outcome = outcome;
+        if (error !== undefined) {
+            this.outcomeError = error instanceof Error ? error.message : String(error);
+        }
     }
 
     public updateScene(scene: SceneState): void {
@@ -263,5 +328,81 @@ export class RecordingSession {
 
     public getActiveCodec(): RecordingCodec | null {
         return this.mediaRecorder?.getActiveCodec() ?? null;
+    }
+
+    private getStopReport(): RecordingStopReport | null {
+        if (this.stopStartedAt === null && this.outcome === null) {
+            return null;
+        }
+
+        return {
+            outcome: this.outcome,
+            error: this.outcomeError,
+            durationMs:
+                this.startedAt !== null && this.stopStartedAt !== null ? this.stopStartedAt - this.startedAt : null,
+            stopDurationMs:
+                this.stopStartedAt !== null && this.stopFinishedAt !== null
+                    ? this.stopFinishedAt - this.stopStartedAt
+                    : null,
+            bytesBeforeStop: this.bytesBeforeStop,
+            file: this.file,
+        };
+    }
+
+    public getDiagnostics(): RecordingDiagnostics {
+        const snapshot = this.stats?.snapshot();
+
+        return {
+            isActive: this.active,
+            endedAt: this.stopStartedAt ?? this.cleanedUpAt,
+            stopReport: this.getStopReport(),
+            backend: this.isWebCodecs ? 'webcodecs' : 'mediarecorder',
+            mimeType: this.getActiveCodec()?.mimeType ?? this.codec.mimeType,
+            recorderState: this.mediaRecorder?.getRecorderState() ?? 'inactive',
+            audio: this.audioMixer?.getDiagnostics() ?? this.finalAudioDiagnostics,
+            chunkCount: snapshot?.chunkCount ?? 0,
+            totalBytes: snapshot?.totalBytes ?? 0,
+            emptyChunkCount: snapshot?.emptyChunkCount ?? 0,
+            lastChunkAt: snapshot && snapshot.firstChunkAt !== null ? snapshot.lastChunkAt : null,
+            pendingWriteCount: this.storage?.getPendingWriteCount() ?? 0,
+        };
+    }
+
+    public getStopTelemetry(): RecordingStopTelemetry {
+        const totalBytes = this.stats?.snapshot().totalBytes ?? 0;
+
+        return {
+            recordingBackend: this.isWebCodecs ? 'webcodecs' : 'mediarecorder',
+            recordingBytesBeforeStop: this.bytesBeforeStop,
+            recordingBytesFlushedAtStop: totalBytes - this.bytesBeforeStop,
+            recordingStallCount: this.stallSummary?.stallCount ?? 0,
+            recordingStallTotalMs: this.stallSummary?.stallTotalMs ?? 0,
+            recordingStallLongestMs: this.stallSummary?.stallLongestMs ?? 0,
+            recordingLongestStallCause: this.stallSummary?.longestStallCause ?? null,
+        };
+    }
+
+    private getStallCause(): RecordingStallCause {
+        const audio = this.audioMixer?.getDiagnostics();
+        if (audio && audio.contextState !== 'running') {
+            return 'audio-context';
+        }
+        if (audio?.isTapActive && isOlderThan(audio.lastTapBatchAt, AUDIO_STALL_MS)) {
+            return 'audio-tap';
+        }
+        return 'encoder-or-muxer';
+    }
+
+    private getErrorReportContext(): Record<string, string | number | null> {
+        const audio = this.audioMixer?.getDiagnostics();
+
+        return {
+            audioCodec: this.videoMixer?.getAudioCodec() ?? null,
+            audioContextState: audio?.contextState ?? null,
+            tapBatchCount: audio?.tapBatchCount ?? null,
+            msSinceLastTapBatch: audio?.lastTapBatchAt ? Math.round(performance.now() - audio.lastTapBatchAt) : null,
+            totalBytes: this.stats?.snapshot().totalBytes ?? 0,
+            pendingWriteCount: this.storage?.getPendingWriteCount() ?? 0,
+        };
     }
 }

@@ -1,0 +1,111 @@
+.reaction-stream {
+	position: fixed;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.reaction-stream-item {
+	position: absolute;
+	inset-block-end: 6rem; // just above the 5rem control bar
+	inset-inline-start: var(--reaction-left);
+
+	// Rise and appear/disappear are separate animations so the upward motion is one continuous
+	// movement with a single easing (keyframed transforms restart the easing on every segment)
+	animation:
+		reaction-stream-rise 4.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+		reaction-stream-appear 4.2s linear forwards;
+	will-change: translate, opacity, scale;
+}
+
+// Sideways sway on its own loop, slowing only at the turning points. Combined with the straight
+// rise, the emoji follows a smooth wave. The negative delay starts it centred.
+.reaction-stream-sway {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.25rem;
+	animation: reaction-stream-sway 1.5s ease-in-out -0.75s infinite alternate;
+}
+
+.reaction-stream-emoji {
+	font-size: 2.75rem;
+	line-height: 1;
+}
+
+.reaction-stream-name {
+	max-inline-size: 10rem;
+	padding-block: 0.125rem;
+	padding-inline: 0.5rem;
+	border: 1px solid var(--border-norm);
+	border-radius: var(--border-radius-full);
+	background: color-mix(in srgb, var(--interaction-weak-minor-3) 60%, transparent);
+	backdrop-filter: blur(14px);
+	color: var(--text-norm);
+	font-size: 0.75rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+@keyframes reaction-stream-rise {
+	from {
+		translate: 0 0;
+	}
+
+	to {
+		translate: 0 calc(var(--reaction-rise) * -1);
+	}
+}
+
+@keyframes reaction-stream-appear {
+	0% {
+		opacity: 0;
+		scale: 0.6;
+	}
+
+	6%,
+	80% {
+		opacity: 1;
+		scale: 1;
+	}
+
+	100% {
+		opacity: 0;
+		scale: 0.95;
+	}
+}
+
+@keyframes reaction-stream-sway {
+	from {
+		transform: translateX(calc(var(--reaction-drift) * -1));
+	}
+
+	to {
+		transform: translateX(var(--reaction-drift));
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reaction-stream-item {
+		animation: reaction-stream-fade 3s ease-in-out forwards;
+	}
+
+	.reaction-stream-sway {
+		animation: none;
+	}
+}
+
+@keyframes reaction-stream-fade {
+	0% {
+		opacity: 0;
+	}
+
+	10%,
+	80% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}

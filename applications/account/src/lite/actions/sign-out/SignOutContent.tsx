@@ -9,7 +9,7 @@ import { Button } from '@proton/atoms/Button/Button';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { Href } from '@proton/atoms/Href/Href';
 import useLoading from '@proton/hooks/useLoading';
-import { ForkSearchParameters } from '@proton/shared/lib/authentication/fork';
+import { ForkSearchParameters } from '@proton/shared/lib/authentication/fork/constants';
 import { BRAND_NAME, SSO_PATHS } from '@proton/shared/lib/constants';
 import signOutOfAllDevices from '@proton/styles/assets/img/illustrations/sign-out-devices.svg';
 import signedOutOfAllDevices from '@proton/styles/assets/img/illustrations/signed-out-devices.svg';
@@ -36,7 +36,7 @@ function SignedOutSection() {
                 {user.canPay && c('Description').t`Upgrade anytime to stay signed in on multiple devices.`}
             </p>
             <div className="flex gap-2">
-                <ButtonLike color="norm" fullWidth as={Href} href={SSO_PATHS.LOGIN} target={'_self'}>{c('Action')
+                <ButtonLike color="norm" fullWidth as={Href} href={SSO_PATHS.LOGIN} target={'_self'}>{c('Sign out')
                     .t`Sign in to ${providerName}`}</ButtonLike>
                 {user.canPay && (
                     <ButtonLike as={Href} href={'/lite?action=subscribe-account'} target={'_self'} fullWidth>{c(

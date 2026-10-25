@@ -6,9 +6,9 @@ import { useUser } from '@proton/account/user/hooks';
 import DrawerSidebar from '@proton/components/components/drawer/DrawerSidebar';
 import DrawerVisibilityButton from '@proton/components/components/drawer/DrawerVisibilityButton';
 import InboxQuickSettingsAppButton from '@proton/components/components/drawer/drawerAppButtons/InboxQuickSettingsAppButton';
-import useLumoInMail from '@proton/components/components/drawer/views/lumoAgent/useLumoInMail';
 import PrivateMainArea from '@proton/components/containers/layout/PrivateMainArea';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
+import { useHasLumoAgentDrawer } from '@proton/llm/lib/lumoAgent/ui/lumoAgentDrawerContext';
 import { useCategoriesData } from '@proton/mail/features/categoriesView/useCategoriesData';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
 import { CUSTOM_VIEWS, CUSTOM_VIEWS_LABELS } from '@proton/shared/lib/mail/constants';
@@ -18,7 +18,6 @@ import clsx from '@proton/utils/clsx';
 import { CategoriesOnboardingProvider } from '../components/categoryView/categoriesOnboarding/CategoriesOnboardingContext';
 import { CategoriesOnboardingSpotlight } from '../components/categoryView/categoriesOnboarding/CategoriesOnboardingSpotlights';
 import { OnboardingStep } from '../components/categoryView/categoriesOnboarding/onboardingInterface';
-import LumoHeaderButton from '../components/drawer/LumoHeaderButton';
 import MailHeader from '../components/header/MailHeader';
 import { NewsletterSubscriptionView } from '../components/view/NewsletterSubscription/NewsletterSubscriptionView';
 import { ROUTE_LABEL } from '../constants';
@@ -27,6 +26,8 @@ import { getInboxRedirectUrl } from '../helpers/mailboxUrl';
 import useMailDrawer from '../hooks/drawer/useMailDrawer';
 import { useElements } from '../hooks/mailbox/useElements';
 import { useRetryElementsOnReconnect } from '../hooks/mailbox/useRetryElementsOnReconnect';
+import LumoFloatingPanel from '../lumo/floating/LumoFloatingPanel';
+import { MAILBOX_BOUNDS_CLASS } from '../lumo/floating/useMailboxBounds';
 import { selectElementID, selectIsSearching, selectLabelID } from '../store/elements/elementsSelectors';
 import { useMailDispatch, useMailSelector } from '../store/hooks';
 import { layoutActions } from '../store/layout/layoutSlice';
@@ -57,7 +58,7 @@ export const RouterMailboxContainer = () => {
     useRetryElementsOnReconnect();
 
     const { drawerSidebarButtons, showDrawerSidebar } = useMailDrawer();
-    const isLumoInMailEnabled = useLumoInMail();
+    const hasLumo = useHasLumoAgentDrawer();
 
     const canShowDrawer = drawerSidebarButtons.length > 0;
     const hasRowMode = !isColumnModeActive;
@@ -111,7 +112,6 @@ export const RouterMailboxContainer = () => {
                     elementsData={elementsData}
                     actions={actions}
                     labelID={labelID}
-                    assistantButton={isLumoInMailEnabled ? <LumoHeaderButton /> : undefined}
                     settingsButton={
                         <CategoriesOnboardingSpotlight step={OnboardingStep.CUSTOMIZE}>
                             <InboxQuickSettingsAppButton />
@@ -125,7 +125,7 @@ export const RouterMailboxContainer = () => {
                         isColumnModeActive && 'column-layout-view',
                         breakpoints.viewportWidth['<=small'] && 'border-none',
                     ])}
-                    innerClassName={breakpoints.viewportWidth['<=small'] ? 'border-none' : ''}
+                    innerClassName={clsx(MAILBOX_BOUNDS_CLASS, breakpoints.viewportWidth['<=small'] && 'border-none')}
                     hasToolbar
                     hasRowMode={hasRowMode}
                     ref={mainAreaRef}
@@ -153,6 +153,12 @@ export const RouterMailboxContainer = () => {
                         />
                     </Switch>
                 </PrivateMainArea>
+                {hasLumo && (
+                    <LumoFloatingPanel
+                        mainAreaRef={mainAreaRef}
+                        hasFloatingDrawerButton={canShowDrawer && !showDrawerSidebar}
+                    />
+                )}
             </CategoriesOnboardingProvider>
         </MailboxContainerContextProvider>
     );

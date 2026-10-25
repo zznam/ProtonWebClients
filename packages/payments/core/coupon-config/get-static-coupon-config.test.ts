@@ -1,7 +1,7 @@
 import { COUPON_CODES } from '../constants';
+import { blackFriday2026Metadata } from './configs/black-friday-2026';
 import { monthlyNudgeMetadata } from './configs/monthly-nudge';
 import { porkbunMetadata } from './configs/porkbun';
-import { q3Sale2026Metadata } from './configs/q3-sale-2026';
 import { tryDuo2026Metadata } from './configs/try-duo-2026';
 import { getStaticCouponConfig } from './get-static-coupon-config';
 
@@ -25,12 +25,10 @@ describe('getStaticCouponConfig', () => {
         expect(getStaticCouponConfig('  annualoffer25  ')).toBe(monthlyNudgeMetadata);
     });
 
-    it('matches q3Sale2026 config coupons', () => {
-        expect(getStaticCouponConfig(COUPON_CODES.SEP26BUNDLESALE)).toBe(q3Sale2026Metadata);
-        expect(getStaticCouponConfig(COUPON_CODES.SEP26BUNDLEDEAL)).toBe(q3Sale2026Metadata);
-        expect(getStaticCouponConfig(COUPON_CODES.SEP26BUNDLESALECS)).toBe(q3Sale2026Metadata);
-        expect(getStaticCouponConfig(COUPON_CODES.SEP26BUNDLEDEALCS)).toBe(q3Sale2026Metadata);
-        expect(getStaticCouponConfig('sep26bundlesale')).toBe(q3Sale2026Metadata);
+    it('matches blackFriday2026 config coupons', () => {
+        expect(getStaticCouponConfig(COUPON_CODES.BLACK_FRIDAY_2026_NEW)).toBe(blackFriday2026Metadata);
+        expect(getStaticCouponConfig(COUPON_CODES.BLACK_FRIDAY_2026_BUNDLE)).toBe(blackFriday2026Metadata);
+        expect(getStaticCouponConfig('bf2026bundle')).toBe(blackFriday2026Metadata);
     });
 
     it('matches porkbun config by coupon code', () => {

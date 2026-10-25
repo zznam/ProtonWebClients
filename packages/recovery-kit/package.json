@@ -1,9 +1,13 @@
 {
     "name": "@proton/recovery-kit",
     "description": "Recovery kit pdf generation",
+    "exports": {
+        "./filledTemplate": "./filledTemplate.ts",
+        "./generatePDFKit": "./generatePDFKit.ts"
+    },
     "scripts": {
-        "check-types": "tsc --checkers 1",
-        "lint": "eslint --quiet",
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet",
         "test": "jest",
         "test:ci": "jest --runInBand --ci --logHeapUsage",
         "test:watch": "jest --watch"
@@ -13,18 +17,20 @@
         "@pdfme/common": "^6.1.13",
         "@pdfme/generator": "^6.1.13",
         "@pdfme/schemas": "^6.1.13",
+        "@proton/shared": "workspace:^",
         "@proton/utils": "workspace:^"
     },
     "devDependencies": {
         "@pdf-lib/standard-fonts": "^1.0.0",
-        "@proton/eslint-config-proton": "workspace:^",
         "@proton/jest-swc-preset": "workspace:^",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.11.0",
-        "jest": "^30.5.2",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
-    },
-    "installConfig": {
-        "hoistingLimits": "workspaces"
+        "@proton/oxlint-config": "workspace:^",
+        "@types/jest": "catalog:",
+        "@types/node": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "jest": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:"
     }
 }

@@ -1,75 +1,82 @@
 /** @jest-environment jsdom */
 import { isDevOrBlackHost } from '@proton/shared/lib/env';
 
-import { DISABLE_UNLEASH_TOOLBAR_KEY, isUnleashToolbarEnabled } from './isUnleashToolbarEnabled';
+import { ENABLE_UNLEASH_TOOLBAR_KEY, isUnleashToolbarEnabled } from './isUnleashToolbarEnabled';
 
 jest.mock('@proton/shared/lib/env', () => ({
     isDevOrBlackHost: jest.fn(),
 }));
 
-const mockIsDevOrBlackHost = isDevOrBlackHost as jest.MockedFunction<typeof isDevOrBlackHost>;
+const mockIsDevOrBlackHost = jest.mocked(isDevOrBlackHost);
 
 const setWebDriver = (value: boolean) => {
     Object.defineProperty(window.navigator, 'webdriver', { value, configurable: true });
 };
 
+const setNodeEnv = (value: string) => {
+    process.env.NODE_ENV = value;
+};
+
 describe('isUnleashToolbarEnabled', () => {
+    const originalNodeEnv = process.env.NODE_ENV;
+
     beforeEach(() => {
         setWebDriver(false);
+        setNodeEnv('production');
+        mockIsDevOrBlackHost.mockReturnValue(false);
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        setNodeEnv(originalNodeEnv as string);
         window.localStorage.clear();
+        jest.clearAllMocks();
     });
 
-    it('returns true on dev and black hosts', () => {
+    it('returns true in a development build without opting in', () => {
+        setNodeEnv('development');
+
+        expect(isUnleashToolbarEnabled()).toBe(true);
+    });
+
+    it('returns false on a dev or black host by default', () => {
         mockIsDevOrBlackHost.mockReturnValue(true);
+
+        expect(isUnleashToolbarEnabled()).toBe(false);
+    });
+
+    it('returns true on a dev or black host when the opt-in key is set', () => {
+        mockIsDevOrBlackHost.mockReturnValue(true);
+        window.localStorage.setItem(ENABLE_UNLEASH_TOOLBAR_KEY, 'true');
 
         expect(isUnleashToolbarEnabled()).toBe(true);
         expect(mockIsDevOrBlackHost).toHaveBeenCalledWith(window.location.host);
     });
 
-    it('returns false on every other host', () => {
-        mockIsDevOrBlackHost.mockReturnValue(false);
-
-        expect(isUnleashToolbarEnabled()).toBe(false);
-        expect(mockIsDevOrBlackHost).toHaveBeenCalledWith(window.location.host);
-    });
-
-    it('returns false on a dev or black host when the opt-out key is set', () => {
+    it.each(['false', '1', 'yes', ''])('ignores the opt-in key set to %p', (value) => {
         mockIsDevOrBlackHost.mockReturnValue(true);
-        window.localStorage.setItem(DISABLE_UNLEASH_TOOLBAR_KEY, 'true');
+        window.localStorage.setItem(ENABLE_UNLEASH_TOOLBAR_KEY, value);
 
         expect(isUnleashToolbarEnabled()).toBe(false);
     });
 
-    it.each(['false', '0', ''])('ignores the opt-out key set to %p', (value) => {
-        mockIsDevOrBlackHost.mockReturnValue(true);
-        window.localStorage.setItem(DISABLE_UNLEASH_TOOLBAR_KEY, value);
-
-        expect(isUnleashToolbarEnabled()).toBe(true);
-    });
-
-    it('stays disabled on a non-dev host regardless of the opt-out key', () => {
-        mockIsDevOrBlackHost.mockReturnValue(false);
-        window.localStorage.setItem(DISABLE_UNLEASH_TOOLBAR_KEY, 'true');
+    it('stays disabled on any other host even when the opt-in key is set', () => {
+        window.localStorage.setItem(ENABLE_UNLEASH_TOOLBAR_KEY, 'true');
 
         expect(isUnleashToolbarEnabled()).toBe(false);
     });
 
-    it('returns false on a dev or black host driven by WebDriver', () => {
-        mockIsDevOrBlackHost.mockReturnValue(true);
+    it('returns false under WebDriver in a development build', () => {
+        setNodeEnv('development');
         setWebDriver(true);
 
         expect(isUnleashToolbarEnabled()).toBe(false);
     });
 
-    it('stays disabled under WebDriver with no opt-out key present', () => {
+    it('returns false under WebDriver on an opted-in dev or black host', () => {
         mockIsDevOrBlackHost.mockReturnValue(true);
+        window.localStorage.setItem(ENABLE_UNLEASH_TOOLBAR_KEY, 'true');
         setWebDriver(true);
 
-        expect(window.localStorage.getItem(DISABLE_UNLEASH_TOOLBAR_KEY)).toBeNull();
         expect(isUnleashToolbarEnabled()).toBe(false);
     });
 });

@@ -18,7 +18,7 @@ import { getApiError, getIsConnectionIssue } from '../api/helpers/apiErrorHelper
 import { VPN_HOSTNAME } from '../constants';
 import { ApiError } from '../fetch/ApiError';
 import { getUIDHeaders } from '../fetch/headers';
-import type { ProtonConfig } from '../interfaces';
+import type { ProtonConfig } from '../interfaces/config';
 import { isElectronApp } from './desktop';
 
 type SentryContext = {
@@ -217,6 +217,7 @@ const getDefaultIgnoreErrors = (): SentryIgnoreErrors => {
         'UnhandledRejection', // Happens too often in extensions and we have lints for that, so should be safe to ignore.
         /chrome-extension/,
         /moz-extension/,
+        /window\.ethereum/, // Uncaught errors from browser-injected wallet scripts (see brave/brave-browser#58670).
         'TransferCancel', // User action to interrupt upload or download in Drive.
         'UploadConflictError', // User uploading the same file again in Drive.
         'UploadUserError', // Upload error on user's side in Drive.

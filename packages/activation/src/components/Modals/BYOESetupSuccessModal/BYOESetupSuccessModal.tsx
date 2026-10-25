@@ -2,10 +2,17 @@ import { c } from 'ttag';
 
 import { useConfig } from '@proton/app-context/useConfig';
 import { Button } from '@proton/atoms/Button/Button';
-import { ModalTwo, ModalTwoContent, ModalTwoFooter, ModalTwoHeader, useSettingsLink } from '@proton/components';
+import useSettingsLink from '@proton/components/components/link/useSettingsLink';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
 import type { ModalProps } from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import { APPS, BRAND_NAME, MAIL_APP_NAME } from '@proton/shared/lib/constants';
 import byoeSetupSuccess from '@proton/styles/assets/img/illustrations/byoe-setup-success.svg';
+import { tracker } from '@proton/telemetry-tracker/tracker';
+
+import { BYOEAddressAction } from '../../../telemetry/events';
 
 interface Props extends ModalProps {
     connectedAddress: string;
@@ -25,6 +32,18 @@ export const BYOESetupSuccessModal = ({ onClose, onComplete, connectedAddress, s
     const handleClose = async () => {
         onClose?.();
         void onComplete?.();
+    };
+
+    const handleManageAddresses = async () => {
+        tracker.emit(BYOEAddressAction, {
+            dimensions: {
+                addressAction: 'manage-address',
+                provider: 'google',
+            },
+        });
+
+        await onComplete?.();
+        goToSettings('/identity-addresses#addresses', APPS.PROTONMAIL);
     };
 
     return (
@@ -58,13 +77,8 @@ export const BYOESetupSuccessModal = ({ onClose, onComplete, connectedAddress, s
                     {c('Action').t`Done`}
                 </Button>
                 {showManageAddressesButton && (
-                    <Button
-                        className="w-full"
-                        onClick={async () => {
-                            await onComplete?.();
-                            goToSettings('/identity-addresses#addresses', APPS.PROTONMAIL);
-                        }}
-                    >{c('Action').t`Manage addresses`}</Button>
+                    <Button className="w-full" onClick={handleManageAddresses}>{c('Action')
+                        .t`Manage addresses`}</Button>
                 )}
             </ModalTwoFooter>
         </ModalTwo>

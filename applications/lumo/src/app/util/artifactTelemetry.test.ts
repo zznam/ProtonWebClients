@@ -1,0 +1,224 @@
+import { telemetry } from '@proton/shared/lib/telemetry';
+
+import {
+    bucketArtifactContentLength,
+    bucketArtifactLanguage,
+    bucketArtifactPanelOpenDuration,
+    capArtifactPosition,
+    sendArtifactContentCopiedEvent,
+    sendArtifactCreatedEvent,
+    sendArtifactCreationDefaultChangedEvent,
+    sendArtifactCreationToggledEvent,
+    sendArtifactDownloadedEvent,
+    sendArtifactFullscreenToggledEvent,
+    sendArtifactInlineActionSentEvent,
+    sendArtifactPanelClosedEvent,
+    sendArtifactPanelOpenedEvent,
+    sendArtifactRenderFailedEvent,
+    sendArtifactRevisedEvent,
+    sendArtifactSaveToDriveCompletedEvent,
+    sendArtifactTitleMenuOpenedEvent,
+    sendArtifactToolCallInvalidEvent,
+    sendArtifactTurnContextEvent,
+    sendArtifactVersionSelectedEvent,
+    sendArtifactWebpageViewToggledEvent,
+    sendLibraryOpenedEvent,
+    sendMessageGenerationAbortedEvent,
+    setLumoTelemetryEnabled,
+} from './telemetry';
+
+jest.mock('@proton/shared/lib/telemetry', () => {
+    return { telemetry: { sendCustomEvent: jest.fn() } };
+});
+
+describe('bucketArtifactContentLength', () => {
+    it('buckets content under 1k characters', () => {
+        expect(bucketArtifactContentLength(0)).toBe('0-1k');
+        expect(bucketArtifactContentLength(999)).toBe('0-1k');
+    });
+
+    it('buckets content between 1k and 10k characters', () => {
+        expect(bucketArtifactContentLength(1000)).toBe('1k-10k');
+        expect(bucketArtifactContentLength(9999)).toBe('1k-10k');
+    });
+
+    it('buckets content at 10k characters and above', () => {
+        expect(bucketArtifactContentLength(10000)).toBe('10k+');
+        expect(bucketArtifactContentLength(50000)).toBe('10k+');
+    });
+});
+
+describe('bucketArtifactLanguage', () => {
+    it('normalizes aliases onto the canonical name', () => {
+        expect(bucketArtifactLanguage('py')).toBe('python');
+        expect(bucketArtifactLanguage(' TypeScript ')).toBe('typescript');
+        expect(bucketArtifactLanguage('sh')).toBe('shell');
+    });
+
+    it('maps unknown and missing languages to fixed values', () => {
+        expect(bucketArtifactLanguage('brainfuck')).toBe('other');
+        expect(bucketArtifactLanguage(undefined)).toBe('none');
+    });
+});
+
+describe('capArtifactPosition', () => {
+    it('caps the ordinal at 10', () => {
+        expect(capArtifactPosition(3)).toBe(3);
+        expect(capArtifactPosition(42)).toBe(10);
+    });
+});
+
+describe('bucketArtifactPanelOpenDuration', () => {
+    it('buckets by the lower bound of each range', () => {
+        expect(bucketArtifactPanelOpenDuration(9_999)).toBe('0-10s');
+        expect(bucketArtifactPanelOpenDuration(10_000)).toBe('10s-1m');
+        expect(bucketArtifactPanelOpenDuration(60_000)).toBe('1m-5m');
+        expect(bucketArtifactPanelOpenDuration(300_000)).toBe('5m+');
+    });
+});
+
+/**
+ * The payloads are the contract with the data team: a property that appears, disappears or
+ * changes type breaks their dashboards. If a snapshot fails, an intended change is updated here
+ * and told to the data team; an unintended one is a bug in the caller.
+ */
+describe('artifact event payloads', () => {
+    const sendCustomEvent = telemetry.sendCustomEvent as jest.Mock;
+
+    beforeEach(() => {
+        sendCustomEvent.mockClear();
+        setLumoTelemetryEnabled(true);
+    });
+
+    afterAll(() => {
+        setLumoTelemetryEnabled(false);
+    });
+
+    it('sends nothing while telemetry is disabled', () => {
+        setLumoTelemetryEnabled(false);
+        sendArtifactContentCopiedEvent({ artifactType: 'code', layout: 'docked', viewedOlderVersion: false });
+
+        expect(sendCustomEvent).not.toHaveBeenCalled();
+    });
+
+    it('matches the agreed payloads', () => {
+        sendArtifactCreationToggledEvent({
+            isCurrentlyEnabled: true,
+            scope: 'conversation',
+            globalDefault: true,
+            conversationHasArtifact: true,
+        });
+        sendArtifactCreationToggledEvent({
+            isCurrentlyEnabled: false,
+            scope: 'pending-new-chat',
+            globalDefault: false,
+            conversationHasArtifact: false,
+        });
+        // Before any artifact is created or shown in this tab.
+        sendArtifactCreationDefaultChangedEvent(false);
+        sendArtifactTurnContextEvent({
+            generationType: 'new',
+            artifactToolMode: 'auto',
+            hasExistingArtifact: false,
+            creationSetting: 'default-on',
+        });
+        sendArtifactTurnContextEvent({
+            generationType: 'regenerate',
+            artifactToolMode: 'revise',
+            hasExistingArtifact: true,
+            creationSetting: 'chat-off',
+        });
+        sendArtifactCreatedEvent({
+            artifactType: 'code',
+            artifactToolMode: 'auto',
+            artifactPosition: 1,
+            contentLengthBucket: '1k-10k',
+            languageBucket: 'python',
+        });
+        sendArtifactCreatedEvent({
+            artifactType: 'document',
+            artifactToolMode: 'create',
+            artifactPosition: 2,
+            contentLengthBucket: '0-1k',
+        });
+        sendArtifactRevisedEvent({
+            artifactType: 'document',
+            artifactToolMode: 'revise',
+            artifactPosition: 1,
+            contentLengthBucket: '0-1k',
+            revisionSource: 'inline-edit',
+            versionNumber: 2,
+            viewedOlderVersion: false,
+        });
+        sendArtifactRevisedEvent({
+            artifactType: 'document',
+            artifactPosition: 1,
+            contentLengthBucket: '0-1k',
+            revisionSource: 'manual-edit',
+            versionNumber: 3,
+            viewedOlderVersion: true,
+        });
+        // After artifacts have been created in this tab.
+        sendArtifactCreationDefaultChangedEvent(true);
+        sendArtifactPanelOpenedEvent({ source: 'chip', artifactType: 'presentation', artifactPosition: 1 });
+        sendArtifactPanelOpenedEvent({ source: 'library', artifactType: 'document', artifactPosition: 2 });
+        sendArtifactPanelOpenedEvent({ source: 'drawer', artifactType: 'code', artifactPosition: 3 });
+        sendArtifactPanelClosedEvent({
+            closedDuringLoading: false,
+            artifactType: 'presentation',
+            openDurationBucket: '1m-5m',
+        });
+        sendArtifactPanelClosedEvent({ closedDuringLoading: true });
+        sendArtifactContentCopiedEvent({ artifactType: 'code', layout: 'fullscreen', viewedOlderVersion: true });
+        sendArtifactDownloadedEvent({
+            format: 'pptx',
+            artifactType: 'presentation',
+            layout: 'docked',
+            result: 'error',
+            contentLengthBucket: '1k-10k',
+            viewedOlderVersion: false,
+        });
+        sendArtifactDownloadedEvent({
+            format: 'pdf',
+            artifactType: 'document',
+            layout: 'fullscreen',
+            result: 'print_dialog',
+            contentLengthBucket: '10k+',
+            viewedOlderVersion: true,
+        });
+        sendArtifactSaveToDriveCompletedEvent({ format: 'md', artifactType: 'document', result: 'success' });
+        sendArtifactInlineActionSentEvent({ kind: 'explain', artifactType: 'code', layout: 'mobile' });
+        sendArtifactWebpageViewToggledEvent({ mode: 'code', layout: 'docked' });
+        sendArtifactTitleMenuOpenedEvent({ artifactType: 'document', layout: 'docked', versionCount: 4 });
+        sendArtifactVersionSelectedEvent({
+            artifactType: 'document',
+            layout: 'docked',
+            source: 'history',
+            versionsBehindLatest: 2,
+        });
+        sendArtifactVersionSelectedEvent({
+            artifactType: 'document',
+            layout: 'fullscreen',
+            source: 'banner',
+            versionsBehindLatest: 0,
+        });
+
+        sendMessageGenerationAbortedEvent({ artifactInFlight: true });
+        sendMessageGenerationAbortedEvent({ artifactInFlight: false });
+
+        sendArtifactToolCallInvalidEvent({
+            reason: 'invalid-json',
+            artifactToolMode: 'auto',
+            recoveredInSameMessage: false,
+        });
+        sendArtifactToolCallInvalidEvent({ reason: 'missing-fields', recoveredInSameMessage: true });
+        sendArtifactRenderFailedEvent({ artifactType: 'presentation' });
+        sendArtifactFullscreenToggledEvent({ entered: true });
+        sendArtifactFullscreenToggledEvent({ entered: false });
+        sendLibraryOpenedEvent({ tab: 'creations', hasCreations: false });
+        // The list failed to load.
+        sendLibraryOpenedEvent({ tab: 'images' });
+
+        expect(sendCustomEvent.mock.calls).toMatchSnapshot();
+    });
+});

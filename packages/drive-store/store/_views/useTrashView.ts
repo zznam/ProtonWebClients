@@ -1,13 +1,14 @@
 import { useEffect, useRef } from 'react';
 
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { SORT_DIRECTION } from '@proton/shared/lib/constants';
 
 import { sendErrorReport } from '../../utils/errorHandling';
 import useLinksListing from '../_links/useLinksListing/useLinksListing';
-import { useUserSettings } from '../_settings';
 import useDefaultShare from '../_shares/useDefaultShare';
-import { useAbortSignal, useMemoArrayNoMatterTheOrder, useSortingWithDefault } from './utils';
+import { useMemoArrayNoMatterTheOrder } from './utils/objectId';
+import useAbortSignal from './utils/useAbortSignal';
+import { useSortingWithDefault } from './utils/useSorting';
 import type { SortField } from './utils/useSorting';
 
 const DEFAULT_SORT = {
@@ -28,8 +29,7 @@ export default function useTrashView() {
     const { links: trashedLinks, isDecrypting } = linksListing.getCachedTrashed(abortSignal, volumeIds.current);
     const cachedTrashedLinks = useMemoArrayNoMatterTheOrder(trashedLinks);
 
-    const { layout } = useUserSettings();
-    const { sortedList, sortParams, setSorting } = useSortingWithDefault(cachedTrashedLinks, DEFAULT_SORT);
+    const { sortedList } = useSortingWithDefault(cachedTrashedLinks, DEFAULT_SORT);
 
     const loadTrashListing = async (signal: AbortSignal) => {
         const defaultShare = await getDefaultShare(signal);
@@ -54,10 +54,7 @@ export default function useTrashView() {
     }, []);
 
     return {
-        layout,
         items: sortedList,
-        sortParams,
-        setSorting,
         isLoading: isLoading || isDecrypting,
     };
 }

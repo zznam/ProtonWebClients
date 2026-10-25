@@ -4,8 +4,8 @@
     "private": true,
     "scripts": {
         "build": "tsc && vite build",
-        "check-types": "tsc --checkers 1",
-        "lint": "eslint --quiet",
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet",
         "preview": "vite preview",
         "start": "vite"
     },
@@ -14,17 +14,17 @@
         "@pdfme/schemas": "^6.1.13",
         "@pdfme/ui": "^6.1.13",
         "@proton/recovery-kit": "workspace:^",
-        "eslint": "^10.11.0",
         "toastify-js": "^1.12.0"
     },
     "devDependencies": {
-        "@proton/eslint-config-proton": "workspace:^",
+        "@proton/oxlint-config": "workspace:^",
+        "@types/node": "catalog:",
         "@types/toastify-js": "^1.12.4",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "typescript": "npm:@typescript/typescript6@^6.0.2",
-        "vite": "^8.3.0"
-    },
-    "installConfig": {
-        "hoistingLimits": "workspaces"
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:",
+        "vite": "catalog:"
     }
 }

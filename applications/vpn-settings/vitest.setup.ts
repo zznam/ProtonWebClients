@@ -41,7 +41,7 @@ vi.mock('@proton/shared/lib/helpers/setupCryptoWorker', () => ({
 }));
 
 // Globally mocked @proton/components modules
-vi.mock('@proton/components/hooks/useEventManager.ts', () => {
+vi.mock('@proton/components/hooks/useEventManager', () => {
     const subscribe = vi.fn();
     const call = vi.fn();
     const stop = vi.fn();
@@ -102,7 +102,7 @@ vi.mock('@proton/components/components/modalTwo/BackdropContainer', () => ({
 // Silence JDOM warnings triggered by emoji-mart
 HTMLCanvasElement.prototype.getContext = vi.fn() as unknown as typeof HTMLCanvasElement.prototype.getContext;
 
-vi.mock('@proton/llm/lib/hooks/useAssistant.tsx', () => {
+vi.mock('@proton/llm/lib/hooks/useAssistant', () => {
     return {
         __esModule: true,
         useAssistant: vi.fn(() => ({

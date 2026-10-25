@@ -1,7 +1,7 @@
 import type { PayloadAction, ThunkAction, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { createSlice, miniSerializeError, original } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { previousSelector } from '@proton/redux-utilities/creator';
 import { getFetchedAt, getFetchedEphemeral } from '@proton/redux-utilities/fetchedAt';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
@@ -18,7 +18,10 @@ import {
 import { updateCollectionAsyncV6 } from '@proton/shared/lib/eventManager/updateCollectionAsyncV6';
 import { type UpdateCollectionV6, updateCollectionV6 } from '@proton/shared/lib/eventManager/updateCollectionV6';
 import updateCollection from '@proton/shared/lib/helpers/updateCollection';
-import type { Address, Api, EnhancedMember, Member, RoleAssignment } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { EnhancedMember, Member } from '@proton/shared/lib/interfaces/Member';
+import type { RoleAssignment } from '@proton/shared/lib/interfaces/OrganizationRole';
 import { sortAddresses } from '@proton/shared/lib/mail/addresses';
 import chunk from '@proton/utils/chunk';
 import noop from '@proton/utils/noop';
@@ -44,14 +47,20 @@ type MemberRolesResponse = {
     RequiresOrgKeyPromotion: boolean;
 };
 
+/** Only the batch endpoint reports org key demotion state. */
+type BatchMemberRolesResponse = MemberRolesResponse & {
+    RequiresOrgKeyDemotion: boolean;
+    HasScheduledOrgKeyDemotion: boolean;
+};
+
 type MembersRolesResponse = {
-    Members: (MemberRolesResponse & { MemberID: string })[];
+    Members: (BatchMemberRolesResponse & { MemberID: string })[];
 };
 
 /** One member's roles request as committed in bulk by {@link getMemberRolesBatch}; no response means it failed. */
 type MemberRolesResult = {
     member: Member;
-    response: MemberRolesResponse | undefined;
+    response: BatchMemberRolesResponse | undefined;
 };
 
 enum ValueType {
@@ -135,6 +144,8 @@ const slice = createSlice({
                         roleState: 'initial',
                         UserOrganizationRoles: [],
                         requiresOrgKeyPromotion: false,
+                        requiresOrgKeyDemotion: false,
+                        hasScheduledOrgKeyDemotion: false,
                     }),
                     merge: (a, b): EnhancedMember => ({
                         ...a,
@@ -181,6 +192,8 @@ const slice = createSlice({
                 roleState: 'initial' as const,
                 UserOrganizationRoles: [],
                 requiresOrgKeyPromotion: false,
+                requiresOrgKeyDemotion: false,
+                hasScheduledOrgKeyDemotion: false,
             };
             if (memberIndex === -1) {
                 state.value.push(newMember);
@@ -204,6 +217,8 @@ const slice = createSlice({
                     // here would mask a member whose org key grant is still pending. It's cleared by an
                     // explicit getMemberRoles refetch instead.
                     requiresOrgKeyPromotion: previousMember.requiresOrgKeyPromotion,
+                    requiresOrgKeyDemotion: previousMember.requiresOrgKeyDemotion,
+                    hasScheduledOrgKeyDemotion: previousMember.hasScheduledOrgKeyDemotion,
                 };
                 const mergedValue: EnhancedMember = {
                     ...newMember,
@@ -280,6 +295,8 @@ const slice = createSlice({
                 member.roleState = 'full';
                 member.UserOrganizationRoles = response.RoleAssignments;
                 member.requiresOrgKeyPromotion = response.RequiresOrgKeyPromotion;
+                member.requiresOrgKeyDemotion = response.RequiresOrgKeyDemotion;
+                member.hasScheduledOrgKeyDemotion = response.HasScheduledOrgKeyDemotion;
             });
         },
         invalidateMemberRoles: (state, action: PayloadAction<{ member: Member }>) => {
@@ -347,6 +364,8 @@ const slice = createSlice({
                             roleState: 'initial',
                             UserOrganizationRoles: [],
                             requiresOrgKeyPromotion: false,
+                            requiresOrgKeyDemotion: false,
+                            hasScheduledOrgKeyDemotion: false,
                         };
                     },
                     merge: (a, b): EnhancedMember => {
@@ -390,6 +409,8 @@ const modelThunk = (options?: {
                         roleState: 'initial' as const,
                         UserOrganizationRoles: [],
                         requiresOrgKeyPromotion: false,
+                        requiresOrgKeyDemotion: false,
+                        hasScheduledOrgKeyDemotion: false,
                     }));
                 });
                 return {
@@ -484,7 +505,7 @@ export const getMemberAddresses = ({
 const MEMBER_ROLES_CHUNK_SIZE = 250;
 
 const getRolesByMemberID = ({ Members }: MembersRolesResponse) =>
-    new Map<string, MemberRolesResponse>(Members.map((memberRoles) => [memberRoles.MemberID, memberRoles]));
+    new Map<string, BatchMemberRolesResponse>(Members.map((memberRoles) => [memberRoles.MemberID, memberRoles]));
 
 const getTemporaryRolePromiseMap = (() => {
     let map: undefined | Map<string, Promise<RoleAssignment[]>>;
@@ -592,7 +613,7 @@ export const getMemberRolesBatch = ({
             const rolesByMemberID = await extra
                 .api<MembersRolesResponse>(getMembersOrganizationRoles(group.map(({ ID }) => ID)))
                 .then(getRolesByMemberID)
-                .catch(() => new Map<string, MemberRolesResponse>());
+                .catch(() => new Map<string, BatchMemberRolesResponse>());
 
             const results = group.map((member) => ({ member, response: rolesByMemberID.get(member.ID) }));
             dispatch(slice.actions.memberRolesFetchSettled(results));

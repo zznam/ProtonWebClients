@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } для Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } для iOS"
-      ],
       "Accept": [
         "Схвалити"
       ],
@@ -315,6 +309,12 @@
       ],
       "Don't show this again": [
         "Більше не показувати"
+      ],
+      "Download for macOS": [
+        "Завантажити для macOS"
+      ],
+      "Download for Windows": [
+        "Завантажити для Windows"
       ],
       "Download this CSV template": [
         "Завантажте цей шаблон CSV"
@@ -670,6 +670,12 @@
       "Show Less": [
         "Показати менше"
       ],
+      "Show less": [
+        "Згорнути"
+      ],
+      "Show more": [
+        "Розгорнути"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Увійдіть за допомогою ${ BRAND_NAME }"
       ],
@@ -806,11 +812,6 @@
       ],
       "Vault": [
         "Сховище"
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Програма ${ MAIL_APP_NAME } для комп'ютера"
       ]
     },
     "Button": {
@@ -1058,6 +1059,9 @@
       "Editing item failed": [
         "Помилка редагування елемента"
       ],
+      "Email is not valid": [
+        "Е-пошта недійсна"
+      ],
       "Empty CSV file": [
         "Порожній CSV-файл"
       ],
@@ -1069,6 +1073,9 @@
       ],
       "Encrypted JSON not supported": [
         "Зашифрований JSON не підтримується"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Введіть ім'я користувача без домену (@example.com)"
       ],
       "Error reporting problem": [
         "Помилка під час надсилання повідомлення про проблему"
@@ -1250,6 +1257,9 @@
       "Incorrect backup password. Please try again.": [
         "Неправильний резервний пароль. Будь ласка, спробуйте ще раз."
       ],
+      "Incorrect password. Please try again.": [
+        "Хибний пароль. Повторіть спробу."
+      ],
       "Incorrect second password. Please try again.": [
         "Неправильний другий пароль. Спробуйте ще раз."
       ],
@@ -1283,8 +1293,14 @@
       "Network error": [
         "Помилка мережі"
       ],
+      "Not a valid number": [
+        "Номер недійсний"
+      ],
       "Passphrase is incorrect": [
         "Парольна фраза неправильна"
+      ],
+      "Passwords do not match": [
+        "Паролі відрізняються"
       ],
       "PIN codes do not match": [
         "PIN-коди відрізняються"
@@ -1343,11 +1359,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "У настільну програму ${ PASS_APP_NAME } потрібно увійти."
       ],
+      "The email addresses do not match": [
+        "Електронні адреси відрізняються"
+      ],
       "The session has expired. Please sign in again.": [
         "Термін дії сеансу завершився. Виконайте вхід знову."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Виникла помилка при вилученні захищеного посилання. Будь ласка, спробуйте ще раз через кілька хвилин."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "У цьому полі перевищено обмеження ${ maximumLength } символів."
+      ],
+      "This field is required": [
+        "Це поле є обов'язковим"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "В цьому полі повинно бути не менше ${ minimumLength } символів."
       ],
       "Too many failed attempts. Please sign in again.": [
         "Забагато невдалих спроб. Будь ласка, увійдіть ще раз."
@@ -1357,6 +1385,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Спробуйте знайти власника посилання."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Спробуйте використовувати лише літери, цифри та символи _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Не вдалося створити код OTP для цього елемента"
@@ -1388,6 +1419,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Не вдалося оновити сховище \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "Ім'я користувача повинно починатися з літери або цифри"
+      ],
+      "Username must end with a letter or digit": [
+        "Ім'я користувача повинно закінчуватися літерою або цифрою"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Не вдалося створити сховище \"${ payload.content.name }\""
       ],
@@ -1411,6 +1448,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Неправильний PIN-код. Спробуйте ще раз."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Неправильна фраза відновлення. Спробуйте знову, або використайте інший спосіб відновлення."
       ],
       "Wrong second password": [
         "Неправильний другий пароль"
@@ -1790,9 +1830,6 @@
       "Can view this item.": [
         "Можна переглянути цей елемент."
       ],
-      "Change your password": [
-        "Змініть свій пароль"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "Підтвердьте додатковий пароль, щоб продовжити його вилучення."
       ],
@@ -1873,9 +1910,6 @@
       ],
       "Editor": [
         "Редактор"
-      ],
-      "email": [
-        "е-пошта"
       ],
       "Email address successfully deleted from monitoring": [
         "Адресу пошти успішно видалено з відстеження"
@@ -1972,9 +2006,6 @@
       ],
       "Fill in the CSV with your data": [
         "Заповніть CSV своїми даними"
-      ],
-      "finance": [
-        "фінанси"
       ],
       "Follow those steps to import your data with a generic CSV:": [
         "Виконайте ці кроки, щоб імпортувати ваші дані за допомогою загального файлу CSV:"
@@ -2135,9 +2166,6 @@
       "Medium Priority": [
         "Середній пріоритет"
       ],
-      "Monitor accounts": [
-        "Моніторинг облікових записів"
-      ],
       "Monitoring settings successfully updated": [
         "Налаштування відстеження успішно оновлено"
       ],
@@ -2155,9 +2183,6 @@
       ],
       "Moving all items from \"${ payload.content.name }\"": [
         "Переміщення всіх елементів із ${ payload.content.name }"
-      ],
-      "Moving an item to another vault will erase its secure links.": [
-        "Переміщення елемента до іншого сховища призведе до стирання його безпечних посилань."
       ],
       "Moving items": [
         "Переміщення елементів"
@@ -2230,9 +2255,6 @@
       ],
       "Pass Plus trial": [
         "Пробна версія Pass Plus"
-      ],
-      "password": [
-        "пароль"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Блокування паролем успішно зареєстровано. Використовуйте його, щоб розблокувати ${ PASS_APP_NAME }"
@@ -2683,9 +2705,6 @@
       ],
       "User's access successfully updated": [
         "Доступ користувача успішно оновлено"
-      ],
-      "username": [
-        "ім'я користувача"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Сховище \"${ payload.content.name }\" успішно видалено"
@@ -5229,8 +5248,20 @@
       "OTP secret or URI is invalid": [
         "Секретний ключ OTP або URI неправильний"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Пароль повинен містити принаймні ${ MIN_PASSWORD_LENGTH } символ",
+        "Пароль повинен містити принаймні ${ MIN_PASSWORD_LENGTH } символи",
+        "Пароль повинен містити принаймні ${ MIN_PASSWORD_LENGTH } символів",
+        "Пароль повинен містити принаймні ${ MIN_PASSWORD_LENGTH } символів"
+      ],
       "Section name cannot be empty": [
         "Назва розділу не може бути пустою"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Спробуйте коротше ім'я користувача (до ${ n } символу)",
+        "Спробуйте коротше ім'я користувача (до ${ n } символів)",
+        "Спробуйте коротше ім'я користувача (до ${ n } символів)",
+        "Спробуйте коротше ім'я користувача (до ${ n } символів)"
       ],
       "URL already exists": [
         "URL-адреса вже існує"
@@ -5391,9 +5422,6 @@
       ],
       "Move to trash": [
         "Перемістити до смітника"
-      ],
-      "Name is required": [
-        "Назва обовʼязкова"
       ],
       "No items": [
         "Немає елементів"

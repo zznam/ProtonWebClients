@@ -3,8 +3,9 @@
 import type { Share as ShareCore, TargetType } from '@protontech/pass-rust-core/worker';
 
 import type { ShareDedupeState } from '../../store/reducers/shares-dedupe';
-import type { Share, ShareId } from '../../types';
-import { ShareType } from '../../types';
+import type { ShareId } from '../../types/crypto/pass-types';
+import type { Share } from '../../types/data/shares';
+import { ShareType } from '../../types/data/shares';
 import { logger } from '../../utils/logger';
 import type { PassCoreProxy } from '../core/core.types';
 import { isGroupShare, isShareVisible } from './share.predicates';
@@ -18,7 +19,7 @@ const intoTargetType = (type: ShareType): TargetType => {
     }
 };
 
-const intoShareCore = (share: Share): ShareCore => ({
+export const intoShareCore = (share: Share): ShareCore => ({
     share_id: share.shareId,
     vault_id: share.vaultId,
     target_type: intoTargetType(share.targetType),
@@ -37,7 +38,7 @@ const rolePriority = (role: string) => ROLE_PRIORITY[role] ?? 0;
 /** WASM fallback for `dedupeShares`. The rust implementation derives each output
  * via a separate `visible_share_ids(_, filter_hidden)` call. Here we compute both
  * in a single pass: both `dedupe` and `dedupeAndVisible` are returned. */
-const getVisibleShareIds = (shares: ShareCore[]): ShareDedupeState => {
+export const getVisibleShareIds = (shares: ShareCore[]): ShareDedupeState => {
     const hiddenVaults = new Set<string>();
     const bestPerTriplet = new Map<string, ShareCore>();
     const vaultRolePriorities = new Map<string, number>();

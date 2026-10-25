@@ -9,10 +9,9 @@ import type { FreeSubscription } from '@proton/payments/core/interface';
 import type { FreePlanDefault, PlansMap } from '@proton/payments/core/plan/interface';
 import type { Subscription } from '@proton/payments/core/subscription/interface';
 import type { ProductParam } from '@proton/shared/lib/apps/product';
-import { BRAND_NAME } from '@proton/shared/lib/constants';
 import { getDifferenceInDays } from '@proton/shared/lib/date/date';
 import humanSize from '@proton/shared/lib/helpers/humanSize';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { getSpace } from '@proton/shared/lib/user/storage';
 
 import Form from '../../../components/form/Form';
@@ -33,7 +32,6 @@ export interface HighlightPlanDowngradeModalOwnProps {
     user: UserModel;
     app: ProductParam;
     freePlan: FreePlanDefault;
-    cancellationFlow: boolean;
     subscription: Subscription | FreeSubscription | undefined;
 }
 
@@ -55,14 +53,13 @@ const getDowngradedPlanFn = (planName: PLANS) => {
     }
 };
 
-export const getDowngradedShortPlan = (planName: PLANS, freePlan: FreePlanDefault) => {
+const getDowngradedShortPlan = (planName: PLANS, freePlan: FreePlanDefault) => {
     const getter = getDowngradedPlanFn(planName);
     return getter ? getter(freePlan) : getFreePlan(freePlan);
 };
 
 /**
  * Use this check before creating instance of HighlightPlanDowngradeModal.
- * Important: this check assumes that the `cancellationFlow` is true.
  */
 export const planSupportsCancellationDowngradeModal = (planName: PLANS) => {
     return !!getDowngradedPlanFn(planName);
@@ -77,7 +74,6 @@ const HighlightPlanDowngradeModal = ({
     onClose,
     shortPlan,
     periodEnd,
-    cancellationFlow,
     subscription,
     ...rest
 }: HighlightPlanDowngradeModalProps) => {
@@ -100,12 +96,7 @@ const HighlightPlanDowngradeModal = ({
         )
     );
 
-    // translator: will be something like "Downgrade to Proton Free" (where "Free" is the plan name)
-    const downgradeButtonString = c('new_plans: Action').t`Downgrade to ${downgradedPlanName}`;
-
-    const modalHeader = cancellationFlow
-        ? c('Title').t`Cancel subscription?`
-        : c('Title').t`Downgrade to ${downgradedPlanName}?`;
+    const modalHeader = c('Title').t`Cancel subscription?`;
 
     // translator: "Keep Mail Plus"
     const keepButtonString = c('storage_split: action').t`Keep ${currentPlanName}`;
@@ -186,11 +177,8 @@ const HighlightPlanDowngradeModal = ({
                         </div>
                         <div>
                             {planTimeRemainingString}{' '}
-                            {cancellationFlow
-                                ? c('subscription downgrading info')
-                                      .t`The subscription will be downgraded at the end of the billing cycle.`
-                                : c('storage_split: info')
-                                      .t`We’ll add the credits for the remaining time to your ${BRAND_NAME} Account.`}
+                            {c('subscription downgrading info')
+                                .t`The subscription will be downgraded at the end of the billing cycle.`}
                         </div>
                     </Card>
                 )}
@@ -205,7 +193,7 @@ const HighlightPlanDowngradeModal = ({
                     }}
                     data-testid="highlight-downgrade-to-free"
                 >
-                    {cancellationFlow ? c('Action').t`Cancel subscription` : downgradeButtonString}
+                    {c('Action').t`Cancel subscription`}
                 </Button>
                 <Button className="w-full md:w-auto" color="norm" onClick={onClose}>
                     {keepButtonString}

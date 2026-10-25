@@ -2,8 +2,8 @@ import type { AuthStore } from '@proton/pass/lib/auth/store';
 import { createAuthStore, exposeAuthStore } from '@proton/pass/lib/auth/store';
 import type { ConnectivityService } from '@proton/pass/lib/network/connectivity.service';
 import { ConnectivityStatus } from '@proton/pass/lib/network/connectivity.utils';
-import { offlineResume } from '@proton/pass/store/actions';
-import type { ClientEndpoint } from '@proton/pass/types';
+import { offlineResume } from '@proton/pass/store/actions/creators/client';
+import type { ClientEndpoint } from '@proton/pass/types/worker/runtime';
 import { AppStatus } from '@proton/pass/types/worker/state';
 import { createMemoryStore } from '@proton/pass/utils/store';
 
@@ -279,10 +279,21 @@ describe('Activation service - `CLIENT_INIT`', () => {
             expect(connectivity.syncNavigatorOnline).not.toHaveBeenCalled();
         });
 
-        test('does not sync from page senders', async () => {
-            /** Page (settings/onboarding) skipped: only popup is the trusted source. */
-            await handler(initMessage('page', { online: false }), {});
+        test('forwards top-level page `payload.online` to connectivity service', async () => {
+            await handler(initMessage('page', { online: false }), { frameId: 0 });
+            expect(connectivity.syncNavigatorOnline).toHaveBeenCalledWith(false);
+        });
+
+        test('does not sync from page senders embedded in a frame', async () => {
+            await handler(initMessage('page', { online: false }), { frameId: 3 });
             expect(connectivity.syncNavigatorOnline).not.toHaveBeenCalled();
+        });
+
+        test('probes when a top-level page signals online and worker thinks offline', async () => {
+            ctx.status = AppStatus.READY;
+            connectivity.online = false;
+            await handler(initMessage('page', { online: true }), { frameId: 0 });
+            expect(connectivity.check).toHaveBeenCalledTimes(1);
         });
     });
 });

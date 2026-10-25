@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "Android용 ${ PASS_SHORT_APP_NAME }"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "iOS용 ${ PASS_SHORT_APP_NAME }"
-      ],
       "Accept": [
         "수락"
       ],
@@ -324,6 +318,12 @@
       ],
       "Don't show this again": [
         "다시 보지 않기"
+      ],
+      "Download for macOS": [
+        "macOS용 다운로드"
+      ],
+      "Download for Windows": [
+        "Windows용 다운로드"
       ],
       "Download this CSV template": [
         "CSV 양식 다운로드"
@@ -685,6 +685,12 @@
       "Show Less": [
         "간단히 보기"
       ],
+      "Show less": [
+        "가리기"
+      ],
+      "Show more": [
+        "더보기"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "${ BRAND_NAME }에 로그인"
       ],
@@ -818,11 +824,6 @@
       ],
       "Vault": [
         "금고"
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } 데스크탑 어플리케이션"
       ]
     },
     "Button": {
@@ -1073,6 +1074,9 @@
       "Editing item failed": [
         "항목 수정 실패"
       ],
+      "Email is not valid": [
+        "유효하지 않은 이메일"
+      ],
       "Empty CSV file": [
         "빈 CSV 파일"
       ],
@@ -1084,6 +1088,9 @@
       ],
       "Encrypted JSON not supported": [
         "암호화된 JSON이 지원되지 않습니다."
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "도메인 없이 (@example.co.kr) 사용자 이름을 입력해 주세요."
       ],
       "Error reporting problem": [
         "문제 보고 실패"
@@ -1274,6 +1281,9 @@
       "Incorrect backup password. Please try again.": [
         "백업 비밀번호가 틀렸습니다. 다시 시도해 주세요."
       ],
+      "Incorrect password. Please try again.": [
+        "잘못된 비밀번호입니다. 다시 시도해 주세요."
+      ],
       "Incorrect second password. Please try again.": [
         "2차 비밀번호가 틀렸습니다. 다시 시도해 주세요."
       ],
@@ -1307,8 +1317,14 @@
       "Network error": [
         "네트워크 오류"
       ],
+      "Not a valid number": [
+        "유효하지 않은 번호"
+      ],
       "Passphrase is incorrect": [
         "비밀번호가 올바르지 않습니다."
+      ],
+      "Passwords do not match": [
+        "비밀번호가 일치하지 않습니다"
       ],
       "PIN codes do not match": [
         "PIN 코드가 일치하지 않습니다."
@@ -1373,11 +1389,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME } 데스크톱 앱에 로그인해야 합니다."
       ],
+      "The email addresses do not match": [
+        "이메일 주소가 일치하지 않습니다."
+      ],
       "The session has expired. Please sign in again.": [
         "세션이 만료되었습니다. 다시 로그인해 주세요."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "안전한 링크 삭제 중 문제가 발생했습니다. 몇 분 후 다시 시도하십시오."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "이 필드가 최대 ${ maximumLength } 글자를 초과합니다."
+      ],
+      "This field is required": [
+        "필수 기재 항목입니다"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "이 필드에는 ${ minimumLength }자 이상이 필요합니다."
       ],
       "This invite is no longer available": [
         "이 초대는 더 이상 유효하지 않습니다"
@@ -1390,6 +1418,9 @@
       ],
       "Try reaching out to the link owner.": [
         "이 링크 소유자에게 연락을 시도하세요.."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "문자, 숫자 및 _.- 만 사용하십시오"
       ],
       "Unable to generate an OTP code for this item": [
         "해당 항목으로 OTP 코드를 생성할 수 없습니다"
@@ -1424,6 +1455,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "\"${ payload.content.name }\" 금고를 업데이트하는데 실패했습니다."
       ],
+      "Username must begin with a letter or digit": [
+        "사용자명은 문자로 시작해야 합니다"
+      ],
+      "Username must end with a letter or digit": [
+        "사용자 이름은 문자로 시작하여야 합니다."
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "\"${ payload.content.name }\" 금고 생성을 실패했습니다."
       ],
@@ -1447,6 +1484,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "올바르지 않은 PIN 코드입니다. 다시 시도하세요."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "잘못된 복구 키입니다. 다시 시도하거나 다른 복구 방법을 사용하세요."
       ],
       "Wrong second password": [
         "2차 비밀번호 모드가 알맞지 않습니다"
@@ -1778,9 +1818,6 @@
       "Can view this item.": [
         "이 항목을 볼 수 있습니다."
       ],
-      "Change your password": [
-        "비밀번호를 변경하십시오"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "비밀번호 ${ compromised.progress.total }개 중 ${ compromised.progress.completed }개 확인 중"
       ],
@@ -1867,9 +1904,6 @@
       ],
       "Editor": [
         "편집자"
-      ],
-      "email": [
-        "이메일"
       ],
       "Email address successfully deleted from monitoring": [
         "이메일 주소가 모니터링에서 삭제되었습니다"
@@ -1967,9 +2001,6 @@
       "Fill in the CSV with your data": [
         "사용자의 데이터인 CSV를 채워 넣으십시오"
       ],
-      "finance": [
-        "금융정보"
-      ],
       "Finish signing in in the browser window that just opened. ${ PASS_APP_NAME } will pick up automatically once you're done.": [
         "방금 전 열린 브라우저 창에서 로그인을 완료하세요. ${ PASS_APP_NAME }가 로그인 완료 후 자동으로 가져갑니다."
       ],
@@ -2057,6 +2088,9 @@
       "invites you to access items in": [
         "님이 항목 공유를 초대합니다:"
       ],
+      "iOS and Android Apps": [
+        "iOS 및 Android 앱"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "이미 ${ PASS_APP_NAME }에 로그인 된 것 같습니다. 만약 다른 계정으로 로그인을 시도하는 중이라면, 확장 프로그램에서 로그아웃 하세요."
       ],
@@ -2135,9 +2169,6 @@
       "Medium Priority": [
         "중요도 보통"
       ],
-      "Monitor accounts": [
-        "계정 모니터링"
-      ],
       "Monitoring settings successfully updated": [
         "모니터링 설정이 업데이트되었습니다"
       ],
@@ -2154,7 +2185,7 @@
         "\"${ payload.content.name }\" 에서 모든 항목 이동 중"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "항목을 다른 금고로 이동시키면 모든 안전한 링크가 삭제됩니다."
+        "항목을 다른 금고로 이동하면 이 항목의 모든 안전한 링크가 삭제됩니다."
       ],
       "Moving items": [
         "항목 이동 중"
@@ -2236,9 +2267,6 @@
       ],
       "Pass Plus trial": [
         "Pass Plus 체험"
-      ],
-      "password": [
-        "비밀번호"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "비밀번호 잠금이 성공적으로 추가되었습니다. ${ PASS_APP_NAME }를 잠금해제 할 때 사용하세요."
@@ -2434,6 +2462,9 @@
       ],
       "Restoring trashed items...": [
         "휴지통 내 항목 복구 중..."
+      ],
+      "Scan to download": [
+        "스캔하여 다운로드"
       ],
       "Secure links": [
         "안전한 링크"
@@ -2687,9 +2718,6 @@
       "User's access successfully updated": [
         "사용자 접근 권한이 성공적으로 업데이트 되었습니다"
       ],
-      "username": [
-        "사용자 이름"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "금고 :${ payload.content.name }\" 이(가) 성공적으로 삭제되었습니다."
       ],
@@ -2885,6 +2913,9 @@
       ],
       "${ hours } hour": [
         "${ hours }시간"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength }자"
       ],
       "${ minutes } minute": [
         "${ minutes }분"
@@ -4838,6 +4869,9 @@
       "Folder options": [
         "폴더 옵션"
       ],
+      "Get mobile and desktop apps": [
+        "모바일 및 데스크톱 앱 다운로드"
+      ],
       "Get Started": [
         "시작하기"
       ],
@@ -5226,8 +5260,14 @@
       "OTP secret or URI is invalid": [
         "OTP 시크릿 및 URI가 잘못되었습니다."
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "비밀번호는 최소 ${ MIN_PASSWORD_LENGTH }자 이상이어야 합니다"
+      ],
       "Section name cannot be empty": [
         "섹션 이름은 비워둘 수 없습니다"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "더 짧은 이름을 사용하세요 (최대 ${ n }글자)"
       ],
       "URL already exists": [
         "URL이 이미 존재합니다"
@@ -5382,9 +5422,6 @@
       ],
       "Move to trash": [
         "휴지통으로 이동"
-      ],
-      "Name is required": [
-        "이름은 필수입니다"
       ],
       "No items": [
         "항목 없음"

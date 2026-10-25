@@ -1,6 +1,6 @@
 import { shell } from 'electron';
 
-import { ForkSearchParameters, ForkType } from '@proton/shared/lib/authentication/fork';
+import { ForkSearchParameters, ForkType } from '@proton/shared/lib/authentication/fork/constants';
 import { APPS } from '@proton/shared/lib/constants';
 import { getAppUrlFromApiUrl } from '@proton/shared/lib/helpers/url';
 import noop from '@proton/utils/noop';
@@ -8,6 +8,7 @@ import noop from '@proton/utils/noop';
 import config from '../../app/config';
 import type { PassElectronContext } from '../../types';
 import logger from '../../utils/logger';
+import { isMainWindowEntry } from '../../utils/navigation';
 import { PLATFORM_CLIENT_ID } from '../env';
 import {
     deepLinkAuthCallback,
@@ -15,6 +16,7 @@ import {
     getLoginUrl,
     handleDeepLink,
     isDeepLinkSupported,
+    loadWithReload,
 } from './deep-link';
 
 /** `RememberMode.HiddenEnabled` from the account app */
@@ -32,7 +34,7 @@ export const authInterceptors = (app: Electron.App, ctx: PassElectronContext) =>
 
         contents.addListener('will-navigate', (evt) => {
             // Do nothing if navigating to the bundled web app
-            if (evt.url.startsWith(MAIN_WINDOW_WEBPACK_ENTRY)) return;
+            if (isMainWindowEntry(evt.url)) return;
 
             const url = new URL(evt.url);
 
@@ -44,7 +46,7 @@ export const authInterceptors = (app: Electron.App, ctx: PassElectronContext) =>
             ) {
                 evt.preventDefault();
                 logger.debug(`[will-navigate] allow (external): ${url.toString()}`);
-                void ctx.window?.loadURL(getExternalLoginUrl());
+                void loadWithReload(ctx, getExternalLoginUrl());
                 return shell.openExternal(url.href).catch(noop);
             }
 
@@ -71,7 +73,7 @@ export const authInterceptors = (app: Electron.App, ctx: PassElectronContext) =>
 
                 logger.info(`[will-navigate] external login with redirect: ${url.href}`);
 
-                void ctx.window?.loadURL(getExternalLoginUrl());
+                void loadWithReload(ctx, getExternalLoginUrl());
 
                 return shell.openExternal(url.href).catch(noop);
             }

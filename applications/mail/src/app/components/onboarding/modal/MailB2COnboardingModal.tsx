@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
 
-import { useWelcomeFlags } from '@proton/account';
+import { useWelcomeFlags } from '@proton/account/welcomeFlags';
 import OnboardingModal from '@proton/components/containers/onboarding/OnboardingModal';
 import type { OnboardingStepComponent } from '@proton/components/containers/onboarding/interface';
 import useEventManager from '@proton/components/hooks/useEventManager';
-import { TelemetryMailOnboardingEvents } from '@proton/shared/lib/api/telemetry';
+import { OldTelemetryMailOnboardingEvents } from '@proton/shared/lib/api/telemetry';
 import isTruthy from '@proton/utils/isTruthy';
 
 import { useMailDispatch } from '../../../store/hooks';
+import { useOnboardingTracking } from '../../../telemetry/onboardingEvents';
 import { useMailOnboardingTelemetry } from '../useMailOnboardingTelemetry';
 import type { OnboardingStepEligibleCallback } from './interface';
 import ActivatePremiumFeaturesStep, {
     isActivatePremiumFeaturesStepEligible,
 } from './steps/ActivatePremiumFeaturesStep';
+import { DiscoverAppsStep } from './steps/DiscoverAppsStep';
 import DisplayNameStep, { isDisplayNameStepEligible } from './steps/DisplayNameStep';
 import GetDesktopAppStep, { isGetDesktopAppStepEligible } from './steps/GetDesktopAppStep';
 import GetMobileAppStep, { isGetMobileAppStepEligible } from './steps/GetMobileAppStep';
@@ -57,6 +59,7 @@ const STEPS: Record<
         eligible: isNewOnboardingThemesStepEligible,
         component: NewOnboardingThemes,
     },
+    // DAWG-88 add new telemetry
     'new-onboarding-organization': {
         eligible: isNewOnboardingOrganizationStepEligible,
         component: NewOnboardingOrganizationStep,
@@ -69,14 +72,17 @@ const STEPS: Record<
         eligible: isGetDesktopAppStepEligible,
         component: GetDesktopAppStep,
     },
+    // DAWG-88 add new telemetry
     'activate-premium-features': {
         eligible: isActivatePremiumFeaturesStepEligible,
         component: ActivatePremiumFeaturesStep,
     },
+    // DAWG-88 add new telemetry
     partner: {
         eligible: isPartnerStepEligible,
         component: PartnerStep,
     },
+    // DAWG-88 add new telemetry
     'display-name': {
         eligible: isDisplayNameStepEligible,
         component: DisplayNameStep,
@@ -88,6 +94,7 @@ const MailB2COnboardingModal = (props: MailOnboardingProps) => {
     const { endReplay } = useWelcomeFlags();
     const dispatch = useMailDispatch();
     const sendMailOnboardingTelemetry = useMailOnboardingTelemetry();
+    const { trackFlowFinished, trackFlowDismissed } = useOnboardingTracking();
     const [loading, setLoading] = useState(true);
     const [imgsToPreload, setImgsToPreload] = useState<string[]>([]);
     const [steps, setSteps] = useState<Set<StepId>>(new Set());
@@ -98,13 +105,14 @@ const MailB2COnboardingModal = (props: MailOnboardingProps) => {
     };
 
     const handleDone = () => {
-        void sendMailOnboardingTelemetry(TelemetryMailOnboardingEvents.finish_onboarding_modals, {});
+        void sendMailOnboardingTelemetry(OldTelemetryMailOnboardingEvents.finish_onboarding_modals, {});
+        trackFlowFinished();
         props.onDone?.();
     };
 
     useEffect(() => {
         // Send telemetry onboarding start event
-        void sendMailOnboardingTelemetry(TelemetryMailOnboardingEvents.start_onboarding_modals, {});
+        void sendMailOnboardingTelemetry(OldTelemetryMailOnboardingEvents.start_onboarding_modals, {});
 
         const init = async () => {
             const toPreload = new Set<string>();
@@ -143,6 +151,9 @@ const MailB2COnboardingModal = (props: MailOnboardingProps) => {
             <OnboardingModal
                 {...props}
                 onClose={() => {
+                    // `onClose` also runs after `onDone`, the tracking ignores it once the flow is finished
+                    trackFlowDismissed();
+
                     // Call the event manager when closing the modal so that BYOE users get as much imported emails as possible
                     void call();
                     endReplay();
@@ -157,6 +168,7 @@ const MailB2COnboardingModal = (props: MailOnboardingProps) => {
                 data-testid="new-onboarding-variant"
                 genericSteps={{
                     setupThemeStep: getStepComponent('new-onboarding-themes'),
+                    discoverAppsStep: DiscoverAppsStep,
                     organizationStep: getStepComponent('new-onboarding-organization'),
                 }}
             >

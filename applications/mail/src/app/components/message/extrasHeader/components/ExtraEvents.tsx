@@ -8,13 +8,13 @@ import { useAddresses } from '@proton/account/addresses/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
+import { useGetCalendarEventRaw } from '@proton/calendar/calendarEvent/useGetCalendarEventRaw';
 import { useGetCalendarUserSettings } from '@proton/calendar/calendarUserSettings/hooks';
-import useGetCalendarEventRaw from '@proton/components/hooks/useGetCalendarEventRaw';
 import { useGetCalendarInfo } from '@proton/components/hooks/useGetCalendarInfo';
 import { useGetCanonicalEmailsMap } from '@proton/components/hooks/useGetCanonicalEmailsMap';
 import useGetOrCreateCalendarAndSettings from '@proton/components/hooks/useGetOrCreateCalendarAndSettings';
-import { useLoading } from '@proton/hooks';
 import useIsMounted from '@proton/hooks/useIsMounted';
+import useLoading from '@proton/hooks/useLoading';
 import { useContactEmails } from '@proton/mail/store/contactEmails/hooks';
 import type { MessageErrors, MessageStateWithData } from '@proton/mail/store/messages/messagesTypes';
 import {
@@ -35,11 +35,11 @@ import {
 import { getIsVcalErrorComponent, getVcalendarHasNoErrorComponents } from '@proton/shared/lib/calendar/vcalHelper';
 import { getIsBYOEOnlyAccount } from '@proton/shared/lib/helpers/address';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
 import type {
     VcalErrorComponent,
     VcalVcalendarWithMaybeErrors,
-    VisualCalendar,
-} from '@proton/shared/lib/interfaces/calendar';
+} from '@proton/shared/lib/interfaces/calendar/VcalModel';
 import type { Attachment } from '@proton/shared/lib/interfaces/mail/Message';
 import { getAttachments, isBounced } from '@proton/shared/lib/mail/messages';
 import { useFlag } from '@proton/unleash/useFlag';

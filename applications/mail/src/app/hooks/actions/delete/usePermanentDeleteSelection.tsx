@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 
+import { logger } from '@protontech/logger';
 import { c, msgid } from 'ttag';
 
 import { useApi } from '@proton/app-context/useApi';
@@ -8,8 +9,8 @@ import { Button } from '@proton/atoms/Button/Button';
 import useModalState from '@proton/components/components/modalTwo/useModalState';
 import Prompt from '@proton/components/components/prompt/Prompt';
 import useEventManager from '@proton/components/hooks/useEventManager';
-import { FeatureCode, useFeature } from '@proton/features';
-import { logger } from '@proton/logger';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 import { deleteConversations } from '@proton/shared/lib/api/conversations';
 import { deleteMessages } from '@proton/shared/lib/api/messages';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';

@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
-import { type NodeEntity, NodeType, splitNodeUid } from '@proton/drive/index';
 import { sendErrorReport } from '@proton/drive/legacy/errorHandling';
 import { getNodeAncestry } from '@proton/drive/modules/nodes';
+import { type NodeEntity, NodeType, splitNodeUid } from '@proton/drive/sdk';
 import generateUID from '@proton/utils/generateUID';
 
 import { toLinkURLType } from '../../../legacy/components/sections/helpers';
@@ -87,8 +87,12 @@ function useDriveNavigation() {
         [navigateToLink, navigateToAlbum]
     );
 
-    const redirectToLink = useCallback((shareId: string, linkId: string, isFile: boolean) => {
-        navigate(`/${shareId}/${toLinkURLType(isFile)}/${linkId}`, { replace: true });
+    const redirectToLink = useCallback((shareId: string, linkId: string, isFile: boolean, rPath?: string) => {
+        navigate(`/${shareId}/${toLinkURLType(isFile)}/${linkId}${rPath ? `?r=${rPath}` : ''}`, { replace: true });
+    }, []);
+
+    const redirectToAlbum = useCallback((shareId: string, linkId: string) => {
+        navigate(`/photos/albums/${shareId}/album/${linkId}`, { replace: true });
     }, []);
 
     const navigateToRoot = useCallback(() => {
@@ -153,6 +157,7 @@ function useDriveNavigation() {
         navigateToDevices,
         navigateToSharedWithMe,
         redirectToLink,
+        redirectToAlbum,
         navigateToAlbum,
         navigateToPhotos,
         navigateToAlbums,

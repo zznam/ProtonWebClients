@@ -1,10 +1,10 @@
-import { RecentDocumentsItem } from '@proton/docs-core'
-import type { RecentDocumentsItemValue } from '@proton/docs-core/lib/Services/recent-documents'
-import type { NodeEntity } from '@proton/drive'
-import { getDrive } from '@proton/drive'
+import { RecentDocumentsItem } from '@proton/docs-core/Services/recent-documents'
+import type { RecentDocumentsItemValue } from '@proton/docs-core/Services/recent-documents'
+import type { NodeEntity } from '@proton/drive/sdk'
+import { getDrive } from '@proton/drive/sdk'
 import { useContactEmails } from '@proton/mail/store/contactEmails/hooks'
 import type { ProtonDocumentType } from '@proton/shared/lib/helpers/mimetype'
-import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts'
+import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts/Contact'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouteMatch } from 'react-router'
 import { HOMEPAGE_TRASH_PATH } from '../../../__utils/homepage-paths'
@@ -29,9 +29,10 @@ import { useTrashed } from './use-trashed'
 import { c } from 'ttag'
 import { useNotifications } from '@proton/app-context/useNotifications'
 import { getEventSubscriber } from '~/drive-sdk/event-subscriber'
+import { getCoreEventSubscriber } from '~/drive-sdk/core-event-subscriber'
 import { traceRecentsError } from './traceRecentsError'
 import { useAddresses } from '@proton/account/addresses/hooks'
-import type { Address } from '@proton/shared/lib/interfaces'
+import type { Address } from '@proton/shared/lib/interfaces/Address'
 
 export function HomepageViewProviderSDK({ children }: HomepageViewProviderProps) {
   const drive = getDrive()
@@ -74,6 +75,14 @@ export function HomepageViewProviderSDK({ children }: HomepageViewProviderProps)
   useEffect(() => {
     void loadData()
     return () => abortLoad.current?.abort()
+  }, [loadData])
+
+  // Shared documents can appear or disappear
+  useEffect(() => {
+    const coreSubscriber = getCoreEventSubscriber()
+    const reloadOnCoreEvent = () => loadData()
+    const removeListener = coreSubscriber.addListener(reloadOnCoreEvent)
+    return removeListener
   }, [loadData])
 
   // Loading it once here to avoid doing it every time we subscribe

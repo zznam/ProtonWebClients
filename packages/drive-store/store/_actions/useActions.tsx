@@ -1,12 +1,12 @@
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useConfirmActionModal } from '@proton/components';
+import { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal';
 import isTruthy from '@proton/utils/isTruthy';
 
 import { useLinksActions } from '../_links';
 import useLinkActions from '../_links/useLinkActions';
-import { useErrorHandler } from '../_utils';
+import { useErrorHandler } from '../_utils/errorHandler';
 import type { LinkInfo } from './interface';
 import useListNotifications from './useListNotifications';
 

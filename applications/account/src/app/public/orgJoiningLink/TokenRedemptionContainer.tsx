@@ -8,10 +8,11 @@ import { c } from 'ttag';
 import { parseJoiningLinkConfig } from '@proton/account/orgJoiningLink/helpers';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { PasswordPolicySpotlight, usePasswordPolicyValidation } from '@proton/components/components/passwordPolicy';
+import { PasswordPolicySpotlight } from '@proton/components/components/passwordPolicy/PasswordPolicy';
+import { usePasswordPolicyValidation } from '@proton/components/components/passwordPolicy/usePasswordPolicyValidation';
 import PasswordStrengthIndicator from '@proton/components/components/passwordStrengthIndicator/PasswordStrengthIndicator';
 import Progress from '@proton/components/components/progress/Progress';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import PasswordInputTwo from '@proton/components/components/v2/input/PasswordInput';
 import TotpInput from '@proton/components/components/v2/input/TotpInput';
 import useFormErrors from '@proton/components/components/v2/useFormErrors';
@@ -37,15 +38,12 @@ import {
     passwordLengthValidator,
     requiredValidator,
 } from '@proton/shared/lib/helpers/formValidators';
-import type {
-    Address,
-    Api,
-    DecryptedAddressKey,
-    DecryptedKey,
-    KeySalt,
-    PasswordPolicies,
-    User,
-} from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { DecryptedAddressKey, DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import type { KeySalt } from '@proton/shared/lib/interfaces/KeySalt';
+import type { PasswordPolicies } from '@proton/shared/lib/interfaces/PasswordPolicy';
+import type { User } from '@proton/shared/lib/interfaces/User';
 import { getUpdateKeysPayload } from '@proton/shared/lib/keys/changePassword';
 import { getDecryptedAddressKeysHelper } from '@proton/shared/lib/keys/getDecryptedAddressKeys';
 import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys/getDecryptedUserKeys';

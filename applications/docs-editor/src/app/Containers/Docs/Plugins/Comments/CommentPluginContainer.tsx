@@ -1,4 +1,3 @@
-import { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal'
 import type { NodeKey, RangeSelection } from 'lexical'
 import {
   $createCommentThreadMarkNode,
@@ -10,43 +9,50 @@ import {
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { mergeRegister, registerNestedElementResolver } from '@lexical/utils'
 import { $getNodeByKey, $getSelection, $isElementNode, $isRangeSelection, COMMAND_PRIORITY_EDITOR } from 'lexical'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { FloatingQuickActions } from './FloatingQuickActions'
 import CommentsPanel from './CommentsPanel'
-import type {
-  CommentMarkNodeChangeData,
-  CommentThreadInterface,
-  EditorRequiresClientMethods,
-  LiveCommentsTypeStatusChangeData,
-} from '@proton/docs-shared'
-import { CommentThreadState, CommentsEvent, LiveCommentsEvent } from '@proton/docs-shared'
+import type { DocsCommentThread } from '../../contract/DocsCommentThread'
+import { CommentThreadStates } from '../../contract/DocsCommentThread'
 import { INSERT_INLINE_COMMENT_COMMAND, SHOW_ALL_COMMENTS_COMMAND } from '../../Commands'
-import { useApplication } from '../../../ApplicationProvider'
 import { useLexicalEditable } from '@lexical/react/useLexicalEditable'
 import { CommentsProvider } from './CommentsContext'
 import { ContextualComments } from './ContextualComments'
-import { useLatestAwarenessStates } from '../../../../Utils/useLatestAwarenessStates'
+import { useDocsAwarenessStates } from './useDocsAwarenessStates'
 import { KEYBOARD_SHORTCUT_COMMAND } from '../KeyboardShortcuts/Command'
 import { useMarkNodesContext } from '../MarkNodesContext'
 import { nonUndoableUpdate } from '../Collaboration/useYjsHistory'
 import { useCustomCollaborationContext } from '../Collaboration/CustomCollaborationContext'
-import { useSyncedState } from '../../../../Hooks/useSyncedState'
-import { useContactEmails } from '../../../../Hooks/useContactEmails'
 import { TYPING_STATUS_CHANGE_EVENT_COMMAND } from './CommentsPanelListThread'
-import { useRightPanelContext } from '../../../DocsLayout'
+import { registerCommentCutMove } from './registerCommentCutMove'
+import { useRightPanelContext } from '../../Layout/DocsLayout'
 import { useDocsDependencies } from '../../DocsDependenciesProvider'
+import type { DeleteCommentDialogOptions } from './DeleteCommentDialog'
+import { DeleteCommentDialog } from './DeleteCommentDialog'
 
 export default function CommentPlugin({
-  controller,
   userAddress,
+  documentId,
+  isSuggestionMode,
 }: {
-  controller: EditorRequiresClientMethods
   userAddress: string
+  documentId: string
+  isSuggestionMode: boolean
 }): JSX.Element {
-  const { application } = useApplication()
-  const { logger, reportError } = useDocsDependencies()
+  const {
+    logger,
+    reportError,
+    comments: controller,
+    userName,
+    suggestionsEnabled,
+    canEdit,
+    canComment,
+    languageCode,
+    dateFormat,
+    getDisplayNameForEmail,
+  } = useDocsDependencies()
   const [editor] = useLexicalComposerContext()
   const { element: rightPanelElement } = useRightPanelContext()
   const isEditorEditable = useLexicalEditable()
@@ -56,10 +62,18 @@ export default function CommentPlugin({
   /** Top level comment only, not reply */
   const [currentCommentDraft, setCurrentCommentDraft] = useState<string | undefined>()
 
-  const [threads, setThreads] = useState<CommentThreadInterface[]>([])
+  const [threads, setThreads] = useState<DocsCommentThread[]>([])
+  const threadMarkIDs = useRef(new Set<string>())
+  threadMarkIDs.current = new Set(threads.map((thread) => thread.markID).filter((id): id is string => !!id))
+
+  useEffect(() => {
+    if (!isSuggestionMode) {
+      return registerCommentCutMove(editor, documentId, () => threadMarkIDs.current)
+    }
+  }, [editor, documentId, isSuggestionMode])
 
   const activeThreads = useMemo(() => {
-    const activeThreads = threads.filter((thread) => thread.state === CommentThreadState.Active)
+    const activeThreads = threads.filter((thread) => thread.state === CommentThreadStates.Active)
     return activeThreads
   }, [threads])
 
@@ -67,7 +81,7 @@ export default function CommentPlugin({
     controller.getAllThreads().then(setThreads).catch(reportError)
   }, [controller, reportError])
 
-  const awarenessStates = useLatestAwarenessStates(application)
+  const awarenessStates = useDocsAwarenessStates()
 
   const { markNodeMap, activeIDs, activeAnchorKey } = useMarkNodesContext()
 
@@ -300,7 +314,7 @@ export default function CommentPlugin({
             if (!$isCommentThreadMarkNode(node)) {
               continue
             }
-            const isThreadResolved = thread.state === CommentThreadState.Resolved
+            const isThreadResolved = thread.state === CommentThreadStates.Resolved
             if (node.getResolved() !== isThreadResolved) {
               nonUndoableUpdate(editor, collabContext.undoManager, () => {
                 node.setResolved(isThreadResolved)
@@ -331,35 +345,31 @@ export default function CommentPlugin({
   )
 
   useEffect(() => {
-    return mergeRegister(
-      application.eventBus.addEventCallback(() => {
-        controller.getAllThreads().then(setThreads).catch(reportError)
-      }, CommentsEvent.CommentsChanged),
-      application.eventBus.addEventCallback((data: CommentMarkNodeChangeData) => {
-        const { markID } = data
-        createMarkNodeForCurrentSelection(markID)
-      }, CommentsEvent.CreateMarkNode),
-      application.eventBus.addEventCallback((data: CommentMarkNodeChangeData) => {
-        const { markID } = data
-        removeMarkNode(markID)
-      }, CommentsEvent.RemoveMarkNode),
-      application.eventBus.addEventCallback((data: CommentMarkNodeChangeData) => {
-        const { markID } = data
-        resolveMarkNode(markID)
-      }, CommentsEvent.ResolveMarkNode),
-      application.eventBus.addEventCallback((data: CommentMarkNodeChangeData) => {
-        const { markID } = data
-        unresolveMarkNode(markID)
-      }, CommentsEvent.UnresolveMarkNode),
-      application.eventBus.addEventCallback((data: LiveCommentsTypeStatusChangeData) => {
-        const { threadId } = data
-        editor.dispatchCommand(TYPING_STATUS_CHANGE_EVENT_COMMAND, { threadId })
-      }, LiveCommentsEvent.TypingStatusChange),
-    )
+    return controller.subscribeToEvents((event) => {
+      switch (event.type) {
+        case 'changed':
+          controller.getAllThreads().then(setThreads).catch(reportError)
+          break
+        case 'create-mark':
+          createMarkNodeForCurrentSelection(event.markID)
+          break
+        case 'remove-mark':
+          removeMarkNode(event.markID)
+          break
+        case 'resolve-mark':
+          resolveMarkNode(event.markID)
+          break
+        case 'unresolve-mark':
+          unresolveMarkNode(event.markID)
+          break
+        case 'typing':
+          editor.dispatchCommand(TYPING_STATUS_CHANGE_EVENT_COMMAND, { threadId: event.threadId })
+          break
+      }
+    })
   }, [
     controller,
     reportError,
-    application,
     createMarkNodeForCurrentSelection,
     removeMarkNode,
     resolveMarkNode,
@@ -367,12 +377,10 @@ export default function CommentPlugin({
     editor,
   ])
 
-  const layoutContainerElement = editor.getRootElement()?.closest('.docs-layout-container')
+  // The scope root has `display: contents`, so the panel stays a grid item of the layout container.
+  const styleScopeElement = editor.getRootElement()?.closest('.docs-editor-root')
 
-  const [confirmModal, showConfirmModal] = useConfirmActionModal()
-
-  const { userName, suggestionsEnabled } = useSyncedState()
-  const { displayNameForEmail } = useContactEmails()
+  const [deleteDialogOptions, setDeleteDialogOptions] = useState<DeleteCommentDialogOptions | null>(null)
 
   return (
     <CommentsProvider
@@ -385,18 +393,19 @@ export default function CommentPlugin({
         setThreadToFocus,
         awarenessStates,
         getMarkNodes,
-        showConfirmModal,
+        showDeleteDialog: setDeleteDialogOptions,
         commentInputSelection,
         cancelAddComment,
         setCurrentCommentDraft,
         createCommentThread: controller.createCommentThread.bind(controller),
-        canEdit: application.getRole().canEdit(),
-        canComment: application.getRole().canComment(),
-        languageCode: application.languageCode,
+        canEdit,
+        canComment,
+        languageCode,
+        dateFormat,
         logger,
         userName,
         suggestionsEnabled,
-        getDisplayNameForEmail: displayNameForEmail,
+        getDisplayNameForEmail,
         acceptSuggestion: controller.acceptSuggestion.bind(controller),
         rejectSuggestion: controller.rejectSuggestion.bind(controller),
         deleteThread: controller.deleteThread.bind(controller),
@@ -411,7 +420,9 @@ export default function CommentPlugin({
         createComment: controller.createComment.bind(controller),
       }}
     >
-      {confirmModal}
+      {deleteDialogOptions && (
+        <DeleteCommentDialog {...deleteDialogOptions} onClose={() => setDeleteDialogOptions(null)} />
+      )}
       {activeAnchorKey !== null &&
         activeAnchorKey !== undefined &&
         commentInputSelection === undefined &&
@@ -424,7 +435,7 @@ export default function CommentPlugin({
       {showCommentsPanel &&
         createPortal(
           <CommentsPanel threads={threads} setShowComments={setShowCommentsPanel} />,
-          layoutContainerElement || document.body,
+          styleScopeElement || document.body,
         )}
       {(activeThreads.length > 0 || commentInputSelection !== undefined) &&
         !showCommentsPanel &&

@@ -1,5 +1,7 @@
 import type { MessageState } from '@proton/mail/store/messages/messagesTypes';
-import type { Address, MailSettings, UserSettings } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import { isPlainText } from '@proton/shared/lib/mail/messages';
 
 import {
@@ -37,7 +39,6 @@ export const writtenDraftBody = ({ message, addresses, mailSettings, userSetting
     if (isPlainText(message.data)) {
         const signature = getAddressPlainTextSignature({
             senderAddress: message.data?.Sender?.Address,
-            action: message.draftFlags?.action,
             addresses,
             mailSettings,
             userSettings,

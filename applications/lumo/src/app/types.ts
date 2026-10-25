@@ -10,8 +10,8 @@ import {
     type WireTurn,
 } from './types-api';
 
-export type { ImageAspectRatio };
 export { IMAGE_ASPECT_RATIOS };
+export type { ImageAspectRatio };
 
 // *** Turn aliases ***
 // Turn types are defined in types-api as WireTurn (matching backend schema)
@@ -19,8 +19,8 @@ export { IMAGE_ASPECT_RATIOS };
 export type Turn = WireTurn;
 export { Role };
 
-export type { AdString, Base64, EncryptedData } from './crypto/encryptedData';
 export { isOldEncryptedData } from './crypto/encryptedData';
+export type { AdString, Base64, EncryptedData } from './crypto/encryptedData';
 
 // *** Various string aliases ***
 
@@ -347,7 +347,7 @@ export type CompactionMeta = {
     createdAt: string; // ISO date
 };
 
-type ArtifactActionKind = 'explain' | 'improve' | 'edit';
+export type ArtifactActionKind = 'explain' | 'improve' | 'edit';
 
 /** UI metadata for artifact panel selection actions (Explain / Improve / Edit). */
 export type ArtifactActionMeta = {
@@ -360,7 +360,7 @@ export type ArtifactActionMeta = {
     userInstruction?: string;
 };
 
-function isArtifactActionMeta(value: unknown): value is ArtifactActionMeta {
+export function isArtifactActionMeta(value: unknown): value is ArtifactActionMeta {
     if (typeof value !== 'object' || value === null) {
         return false;
     }
@@ -396,6 +396,64 @@ function isArtifactManualEditMeta(value: unknown): value is ArtifactManualEditMe
         typeof meta.artifactId === 'string' &&
         typeof meta.artifactTitle === 'string' &&
         isArtifactType(meta.artifactType)
+    );
+}
+
+/** Encrypted attachment metadata for a Lumo artifact persisted as a GeneratedDoc space asset. */
+export type GeneratedArtifactAssetMeta = {
+    conversationId: ConversationId;
+    artifactId: string;
+    artifactType: ArtifactType;
+    artifactTitle: string;
+};
+
+function isGeneratedArtifactAssetMeta(value: unknown): value is GeneratedArtifactAssetMeta {
+    if (typeof value !== 'object' || value === null) {
+        return false;
+    }
+    const meta = value as GeneratedArtifactAssetMeta;
+    return (
+        typeof meta.conversationId === 'string' &&
+        typeof meta.artifactId === 'string' &&
+        typeof meta.artifactTitle === 'string' &&
+        isArtifactType(meta.artifactType)
+    );
+}
+
+/** Points at the current GeneratedDoc asset row for one artifact slug in a conversation. */
+export type ArtifactAssetPointer = {
+    attachmentId: AttachmentId;
+    syncedMessageId: MessageId;
+};
+
+/** One submitted question answer, stored independently of the question's input type. */
+export interface QuestionAnswer {
+    /** The id of the question that was answered. */
+    questionId: string;
+    /** The title of the question that was answered. */
+    title: string;
+    /** Submitted answer values. Single-choice answers are stored as a one-item array. */
+    answers?: string[];
+    /** Whether the user left this question unanswered. */
+    skipped?: boolean;
+}
+
+function isQuestionAnswers(value: unknown): value is QuestionAnswer[] {
+    return (
+        Array.isArray(value) &&
+        value.length > 0 &&
+        value.every((item: unknown) => {
+            if (typeof item !== 'object' || item === null) return false;
+            const answer = item as QuestionAnswer;
+            return (
+                typeof answer.questionId === 'string' &&
+                typeof answer.title === 'string' &&
+                (answer.answers === undefined ||
+                    (Array.isArray(answer.answers) &&
+                        answer.answers.every((value: unknown) => typeof value === 'string'))) &&
+                (answer.skipped === undefined || typeof answer.skipped === 'boolean')
+            );
+        })
     );
 }
 
@@ -438,7 +496,10 @@ export type MessagePriv = {
     /** When set, the user message was sent from the artifact panel selection UI. */
     artifactAction?: ArtifactActionMeta;
 
-    /** True when the user sent this message with Create Artifact mode active in the composer. */
+    /** Structured question-card answers; content still carries the plain-text model input. */
+    questionAnswers?: QuestionAnswer[];
+
+    /** Reserved for explicit create-artifact mode (phase 2). Not used for loading state. */
     artifactCreateModeActive?: boolean;
 
     /** Artifact id the user was viewing (latest version) in the panel when this message was sent. */
@@ -533,6 +594,7 @@ export function isMessagePriv(value: any): value is MessagePriv {
         (value.compaction === undefined || (typeof value.compaction === 'object' && value.compaction !== null)) &&
         (value.usage === undefined || (typeof value.usage === 'object' && value.usage !== null)) &&
         (value.artifactAction === undefined || isArtifactActionMeta(value.artifactAction)) &&
+        (value.questionAnswers === undefined || isQuestionAnswers(value.questionAnswers)) &&
         (value.artifactCreateModeActive === undefined || typeof value.artifactCreateModeActive === 'boolean') &&
         (value.artifactRevisionTargetId === undefined || typeof value.artifactRevisionTargetId === 'string') &&
         (value.artifactManualEdit === undefined || isArtifactManualEditMeta(value.artifactManualEdit))
@@ -561,6 +623,7 @@ export function getMessagePriv(m: MessagePriv): MessagePriv {
         requestedModel,
         compaction,
         artifactAction,
+        questionAnswers,
         artifactCreateModeActive,
         artifactRevisionTargetId,
         artifactManualEdit,
@@ -582,6 +645,7 @@ export function getMessagePriv(m: MessagePriv): MessagePriv {
         requestedModel,
         compaction,
         artifactAction,
+        questionAnswers,
         artifactCreateModeActive,
         artifactRevisionTargetId,
         artifactManualEdit,
@@ -591,6 +655,13 @@ export function getMessagePriv(m: MessagePriv): MessagePriv {
 
 export function isCompactionMessage(message: MessagePriv): boolean {
     return message.compaction !== undefined;
+}
+
+/** Question-card submissions use their own renderer while remaining ordinary user turns for the model. */
+export function isQuestionAnswerMessage(
+    message: MessagePriv
+): message is MessagePriv & { questionAnswers: QuestionAnswer[] } {
+    return message.questionAnswers !== undefined;
 }
 
 export function isManualArtifactEditMessage(message: MessagePriv): boolean {
@@ -621,6 +692,7 @@ export function cleanMessage(message: Message): Message {
         requestedModel,
         compaction,
         artifactAction,
+        questionAnswers,
         artifactCreateModeActive,
         artifactRevisionTargetId,
         artifactManualEdit,
@@ -649,6 +721,7 @@ export function cleanMessage(message: Message): Message {
         ...(requestedModel !== undefined && { requestedModel }),
         ...(compaction !== undefined && { compaction }),
         ...(artifactAction !== undefined && { artifactAction }),
+        ...(questionAnswers !== undefined && { questionAnswers }),
         ...(artifactCreateModeActive !== undefined && { artifactCreateModeActive }),
         ...(artifactRevisionTargetId !== undefined && { artifactRevisionTargetId }),
         ...(artifactManualEdit !== undefined && { artifactManualEdit }),
@@ -705,6 +778,7 @@ export function isEmptyMessagePriv(value: MessagePriv): boolean {
         value.requestedModel === undefined &&
         value.compaction === undefined &&
         value.artifactAction === undefined &&
+        value.questionAnswers === undefined &&
         value.artifactCreateModeActive === undefined &&
         value.artifactRevisionTargetId === undefined &&
         value.usage === undefined
@@ -729,6 +803,11 @@ export type ConversationPub = {
 export type ConversationPriv = {
     title: string;
     agentId?: string; // id of an active custom agent (see LumoUserSettings.customAgents)
+    // Per-conversation override of LumoUserSettings.automaticArtifactCreation, set from the composer
+    // tool menu. Undefined means the conversation follows the global default.
+    artifactCreation?: boolean;
+    /** Latest synced GeneratedDoc asset per artifact id (model slug) in this chat. */
+    artifactAssets?: Record<string, ArtifactAssetPointer>;
 };
 
 export type LocalFlags = {
@@ -755,9 +834,15 @@ export function getConversationPub(c: ConversationPub): ConversationPub {
     return { id, spaceId, createdAt, updatedAt, starred };
 }
 
-function getConversationPriv(c: ConversationPriv): ConversationPriv {
-    const { title, agentId } = c;
-    return { title, ...(agentId && { agentId }) };
+export function getConversationPriv(c: ConversationPriv): ConversationPriv {
+    const { title, agentId, artifactCreation, artifactAssets } = c;
+    return {
+        title,
+        ...(agentId && { agentId }),
+        // Explicit `false` is meaningful (the user turned creation off for this chat), so don't drop it.
+        ...(artifactCreation !== undefined && { artifactCreation }),
+        ...(artifactAssets !== undefined && { artifactAssets }),
+    };
 }
 
 export function splitConversation(c: Conversation): {
@@ -771,7 +856,19 @@ export function splitConversation(c: Conversation): {
 }
 
 export function cleanConversation(conversation: Conversation): Conversation {
-    const { id, spaceId, createdAt, updatedAt, title, agentId, starred, status, ghost } = conversation;
+    const {
+        id,
+        spaceId,
+        createdAt,
+        updatedAt,
+        title,
+        agentId,
+        artifactCreation,
+        artifactAssets,
+        starred,
+        status,
+        ghost,
+    } = conversation;
     return {
         id,
         spaceId,
@@ -779,6 +876,8 @@ export function cleanConversation(conversation: Conversation): Conversation {
         updatedAt,
         title,
         ...(agentId && { agentId }),
+        ...(artifactCreation !== undefined && { artifactCreation }),
+        ...(artifactAssets !== undefined && { artifactAssets }),
         ...(starred && { starred: true }),
         // `status` is local-only, so a conversation coming back from the server never carries one.
         // Defaulting it to COMPLETED invented a "generation finished" that never happened.
@@ -848,6 +947,7 @@ export type AttachmentPriv = {
     tokenCount?: number; // cached token count for LLM context size calculation
     imagePreview?: Uint8Array<ArrayBuffer>; // if the attachment is an image: small definition image for preview
     role?: 'user' | 'assistant'; // source of attachment, defaults to 'user' for backward compatibility
+    generatedArtifactAsset?: GeneratedArtifactAssetMeta;
 };
 
 // This contains metadata as well as the complete blob data.
@@ -897,7 +997,8 @@ export function isAttachmentPriv(value: any): value is AttachmentPriv {
         (value.processedRowCount === undefined || typeof value.processedRowCount === 'number') &&
         (value.imagePreview === undefined || value.imagePreview instanceof Uint8Array) &&
         (value.tokenCount === undefined || typeof value.tokenCount === 'number') &&
-        (value.role === undefined || value.role === 'user' || value.role === 'assistant')
+        (value.role === undefined || value.role === 'user' || value.role === 'assistant') &&
+        (value.generatedArtifactAsset === undefined || isGeneratedArtifactAssetMeta(value.generatedArtifactAsset))
     );
 }
 
@@ -953,6 +1054,7 @@ export function getAttachmentPriv(m: AttachmentPriv): AttachmentPriv {
         tokenCount,
         imagePreview,
         role,
+        generatedArtifactAsset,
     } = m;
     return {
         filename,
@@ -965,6 +1067,7 @@ export function getAttachmentPriv(m: AttachmentPriv): AttachmentPriv {
         tokenCount,
         imagePreview,
         role,
+        ...(generatedArtifactAsset !== undefined && { generatedArtifactAsset }),
     };
 }
 
@@ -1003,6 +1106,7 @@ export function cleanAttachment(attachment: Attachment): Attachment {
         processedRowCount,
         tokenCount,
         role,
+        generatedArtifactAsset,
     } = attachment;
     return {
         id,
@@ -1026,6 +1130,7 @@ export function cleanAttachment(attachment: Attachment): Attachment {
         ...(processedRowCount !== undefined && { processedRowCount }),
         ...(tokenCount !== undefined && { tokenCount }),
         ...(role !== undefined && { role }),
+        ...(generatedArtifactAsset !== undefined && { generatedArtifactAsset }),
     };
 }
 
@@ -1177,8 +1282,9 @@ export interface ActionParams {
     retryStrategy?: RetryStrategy;
     customRetryInstructions?: string;
     imageOptions?: ImageGenerationOptions;
-    artifactModeActive?: boolean;
     artifactAction?: ArtifactActionMeta;
+    /** Structured question-card answers; content still carries the plain-text model input. */
+    questionAnswers?: QuestionAnswer[];
     artifactRevisionTargetId?: string;
     /** True when the message was auto-sent from a ?q= URL parameter. */
     isFromQueryParam?: boolean;

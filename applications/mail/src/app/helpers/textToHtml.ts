@@ -1,6 +1,7 @@
 import { defaultFontStyle } from '@proton/components/components/editor/helpers';
 import { toText } from '@proton/mail/helpers/parserHtml';
-import type { MailSettings, UserSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 
 import { templateBuilder } from './message/messageSignature';
 import { SIGNATURE_PLACEHOLDER, escapeBackslash, extractContentFromPtag, getMarkdownParser } from './textToHtmlUtils';
@@ -45,7 +46,7 @@ const replaceSignature = (
     userSettings: UserSettings | undefined
 ) => {
     const fontStyle = defaultFontStyle(mailSettings);
-    const signatureTemplate = templateBuilder(signature, mailSettings, userSettings, fontStyle, false, true);
+    const signatureTemplate = templateBuilder(signature, mailSettings, userSettings, fontStyle, true);
     const signatureText = toText(signatureTemplate)
         .replace(/\u200B/g, '')
         .trim();
@@ -66,7 +67,6 @@ const attachSignature = (
         mailSettings,
         userSettings,
         fontStyle,
-        false,
         !plaintext.startsWith(SIGNATURE_PLACEHOLDER)
     );
     return input.replace(SIGNATURE_PLACEHOLDER, signatureTemplate);

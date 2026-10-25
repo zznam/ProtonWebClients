@@ -2,15 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { Router } from 'react-router-dom';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { NotificationsChildren } from '@proton/components';
 import UnauthenticatedApiProvider from '@proton/components/containers/api/UnauthenticatedApiProvider';
 import ErrorBoundary from '@proton/components/containers/app/ErrorBoundary';
-import LoaderPage from '@proton/components/containers/app/LoaderPage';
 import StandardErrorPage from '@proton/components/containers/app/StandardErrorPage';
 import StandardLoadErrorPage from '@proton/components/containers/app/StandardLoadErrorPage';
 import AuthenticationProvider from '@proton/components/containers/authentication/Provider';
+import NotificationsChildren from '@proton/components/containers/notifications/Children';
 import type { MeetStore } from '@proton/meet/store/store';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import { getNonEmptyErrorMessage } from '@proton/shared/lib/helpers/error';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
@@ -20,6 +19,8 @@ import { FlagProvider } from '@proton/unleash/proxy';
 import { bootstrapGuestApp } from '../bootstrap';
 import config from '../config';
 import { MeetCoreClientContext } from '../contexts/MeetCoreClientContext';
+import { TrackedLoaderPage } from '../telemetry/TrackedLoaderPage';
+import { markBootstrapLoaderUnmount } from '../telemetry/loadPerformance';
 import type { MeetCoreClient } from '../wasm/MeetCoreClient';
 
 type ExtraThunkArguments = Omit<ProtonThunkArguments, 'config' | 'api' | 'eventManager'> & {
@@ -84,7 +85,7 @@ export const GuestContainer = ({ children }: GuestContainerProps) => {
     }
 
     if (!initialised) {
-        return <LoaderPage />;
+        return <TrackedLoaderPage onUnmount={markBootstrapLoaderUnmount} />;
     }
 
     const { unauthenticatedApi, authentication, unleashClient, history } =

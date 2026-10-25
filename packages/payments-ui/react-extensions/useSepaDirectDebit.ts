@@ -8,7 +8,7 @@ import type {
     DirectDebitCustomer,
     DirectDebitCustomerNameType,
 } from '@proton/chargebee/lib/types';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { type CreatePaymentIntentDirectDebitData, fetchPaymentIntentV5 } from '@proton/payments/core/api/api';
 import {
     type ADDON_NAMES,
@@ -32,7 +32,7 @@ import type { PaymentProcessorHook, PaymentProcessorType } from '@proton/payment
 import { getIsB2BAudienceFromPlan } from '@proton/payments/core/plan/helpers';
 import { type ExtendedExtractIBANResult, extractIBAN } from '@proton/payments/core/sepa';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import isTruthy from '@proton/utils/isTruthy';
 
 export class SepaEmailNotProvidedError extends DisplayablePaymentError {

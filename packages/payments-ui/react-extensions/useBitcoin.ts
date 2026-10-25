@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { getMaxBitcoinAmount, getMinBitcoinAmount } from '@proton/payments/core/amount-limits';
 import { type CreateBitcoinTokenData, createToken, getTokenStatusV5 } from '@proton/payments/core/api/api';
 import type { BillingAddress } from '@proton/payments/core/billing-address/billing-address';
@@ -9,7 +9,7 @@ import type { AmountAndCurrency, ChargeablePaymentParameters, Currency } from '@
 import type { PaymentProcessorHook } from '@proton/payments/core/payment-processors/interface';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { wait } from '@proton/shared/lib/helpers/promise';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 export const BITCOIN_POLLING_INTERVAL = 10000;
 

@@ -3,7 +3,7 @@ import { type PayloadAction, type ThunkAction, type UnknownAction, createSlice }
 import { getPaymentMethods, queryPaymentMethod } from '@proton/payments/core/api/api';
 import { formatPaymentMethod, formatPaymentMethods } from '@proton/payments/core/formatPaymentMethods';
 import type { SavedPaymentMethod } from '@proton/payments/core/interface';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
@@ -12,7 +12,7 @@ import type { CoreEventV6Response } from '@proton/shared/lib/api/events';
 import { updateCollectionAsyncV6 } from '@proton/shared/lib/eventManager/updateCollectionAsyncV6';
 import { type UpdateCollectionV6, updateCollectionV6 } from '@proton/shared/lib/eventManager/updateCollectionV6';
 import updateCollection, { sortCollection } from '@proton/shared/lib/helpers/updateCollection';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 import { serverEvent } from '../eventLoop';
 

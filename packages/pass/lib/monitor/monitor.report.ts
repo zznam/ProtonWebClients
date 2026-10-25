@@ -1,11 +1,12 @@
 import debounce from 'lodash/debounce';
 
 import {
+    selectCompromisedPasswordsReportCount,
     selectDuplicatePasswords,
     selectExcludedItems,
-    selectOwnedVaults,
-    selectPassPlan,
-} from '../../store/selectors';
+} from '../../store/selectors/monitor';
+import { selectOwnedVaults } from '../../store/selectors/shares';
+import { selectPassPlan } from '../../store/selectors/user';
 import type { State } from '../../store/types';
 import type { B2BEvent } from '../../types/data/b2b';
 import { B2BEventName } from '../../types/data/b2b';
@@ -31,6 +32,7 @@ export const createMonitorReport = debounce(
             const shareIds = selectOwnedVaults(state).map(prop('shareId'));
             const reusedCount = selectDuplicatePasswords(shareIds)(state).length;
             const excludedCount = selectExcludedItems(shareIds)(state).length;
+            const compromisedCount = selectCompromisedPasswordsReportCount(shareIds)(state);
             const missing2FAs = await monitor.checkMissing2FAs({ shareIds });
             const weakPasswords = await monitor.checkWeakPasswords({ shareIds });
 
@@ -42,6 +44,7 @@ export const createMonitorReport = debounce(
                     ReusedPasswords: reusedCount,
                     Inactive2FA: missing2FAs.length,
                     WeakPasswords: weakPasswords.length,
+                    CompromisedPasswords: compromisedCount,
                 },
                 { dedupeKey: 'name' }
             );

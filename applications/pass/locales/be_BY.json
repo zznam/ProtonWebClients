@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } для Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } для iOS"
-      ],
       "Accept": [
         "Прыняць"
       ],
@@ -327,6 +321,15 @@
       ],
       "Don't show this again": [
         "Больш не паказваць"
+      ],
+      "Download for Linux": [
+        "Спампаваць для Linux"
+      ],
+      "Download for macOS": [
+        "Спампаваць для macOS"
+      ],
+      "Download for Windows": [
+        "Спампаваць для Windows"
       ],
       "Download this CSV template": [
         "Спампаваць гэты шаблон CSV"
@@ -688,6 +691,12 @@
       "Show Less": [
         "Паказаць менш"
       ],
+      "Show less": [
+        "Паказаць менш"
+      ],
+      "Show more": [
+        "Паказаць больш"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Увайсці з ${ BRAND_NAME }"
       ],
@@ -830,8 +839,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Праграма для камп'ютара ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Праграма для камп'ютара ${ appName }"
       ]
     },
     "Button": {
@@ -1085,6 +1094,9 @@
       "Editing item failed": [
         "Збой рэдагавання элемента"
       ],
+      "Email is not valid": [
+        "Несапраўдная электронная пошта"
+      ],
       "Empty CSV file": [
         "Пусты файл CSV"
       ],
@@ -1096,6 +1108,9 @@
       ],
       "Encrypted JSON not supported": [
         "Зашыфраваны JSON не падтрымліваецца"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Увядзіце сваё імя карыстальніка без дамена (@example.com)"
       ],
       "Error reporting problem": [
         "Памылка адпраўкі справаздачы аб праблеме"
@@ -1289,6 +1304,9 @@
       "Incorrect backup password. Please try again.": [
         "Няправільны рэзервовы пароль. Паўтарыце спробу."
       ],
+      "Incorrect password. Please try again.": [
+        "Няправільны пароль. Паўтарыце спробу."
+      ],
       "Incorrect second password. Please try again.": [
         "Няправільны другі пароль. Паўтарыце спробу."
       ],
@@ -1322,8 +1340,14 @@
       "Network error": [
         "Памылка сеткі"
       ],
+      "Not a valid number": [
+        "Несапраўдны нумар"
+      ],
       "Passphrase is incorrect": [
         "Няправільная парольная фраза"
+      ],
+      "Passwords do not match": [
+        "Паролі не супадаюць"
       ],
       "PIN codes do not match": [
         "PIN-коды не супадаюць"
@@ -1388,11 +1412,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Праграма для камп'ютара ${ PASS_APP_NAME } павінна быць аўтарызавана ў сістэме."
       ],
+      "The email addresses do not match": [
+        "Адрасы электроннай пошты не супадаюць"
+      ],
       "The session has expired. Please sign in again.": [
         "Час сеансу пратэрмінаваны. Увайдзіце яшчэ раз."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Адбылася памылка падчас выдалення бяспечнай спасылкі. Паўтарыце спробу праз некалькі хвілін."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Гэта поле перавышае максімальную колькасць сімвалаў (дазволена: ${ maximumLength })."
+      ],
+      "This field is required": [
+        "Абавязковае поле"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Поле павінна змяшчаць як мінімум ${ minimumLength } сімвалаў."
       ],
       "This invite is no longer available": [
         "Гэта запрашэнне больш недаступна"
@@ -1405,6 +1441,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Паспрабуйце звярнуцца да ўладальніка спасылкі."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Паспрабуйце выкарыстоўваць толькі літары, лічбы і _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Немагчыма згенерыраваць код OTP для гэтага элемента"
@@ -1439,6 +1478,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Збой абнаўлення сховішча \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "Імя карыстальніка павінна пачынацца з літары або лічбы"
+      ],
+      "Username must end with a letter or digit": [
+        "Імя карыстальніка павінна заканчвацца літарай або лічбай"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Збой стварэння сховішча \"${ payload.content.name }\""
       ],
@@ -1462,6 +1507,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Няправільны PIN-код. Паўтарыце спробу."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Няправільная фраза аднаўлення. Паўтарыце спробу або скарыстайцеся іншым спосабам аднаўлення."
       ],
       "Wrong second password": [
         "Няправільны другі пароль"
@@ -1841,9 +1889,6 @@
       "Can view this item.": [
         "Можа праглядаць гэты элемент."
       ],
-      "Change your password": [
-        "Змяніць свой пароль"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "Пацвердзіце свой дадатковы пароль, каб працягнуць яго выдаленне."
       ],
@@ -1924,9 +1969,6 @@
       ],
       "Editor": [
         "Рэдактар​​"
-      ],
-      "email": [
-        "электронная пошта"
       ],
       "Email address successfully deleted from monitoring": [
         "Адрас электроннай пошты паспяхова выдалены з назірання"
@@ -2024,9 +2066,6 @@
       "Fill in the CSV with your data": [
         "Запоўніце CSV сваімі данымі"
       ],
-      "finance": [
-        "фінансы"
-      ],
       "Folder \"${ payload.folder.name }\" created": [
         "Папка \"${ payload.folder.name }\" створана"
       ],
@@ -2114,6 +2153,9 @@
       "invites you to access items in": [
         "запрасіў вас атрымаць доступ да элементаў у"
       ],
+      "iOS and Android Apps": [
+        "Праграмы для iOS і Android"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Здаецца, што вы ўжо ўвайшлі ў ${ PASS_APP_NAME }. Спачатку выйдзіце з уліковага запісу ў пашырэнні, калі вы спрабуеце ўвайсці з іншым уліковым запісам, спачатку выйдзіце з уліковага запісу ў пашырэнні."
       ],
@@ -2195,9 +2237,6 @@
       "Medium Priority": [
         "Сярэдні прыярытэт"
       ],
-      "Monitor accounts": [
-        "Назіранне за ўліковымі запісамі"
-      ],
       "Monitoring settings successfully updated": [
         "Налады назірання паспяхова абноўлены"
       ],
@@ -2217,7 +2256,10 @@
         "Перамяшчэнне ўсіх элементаў з \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Перамяшчэнне элемента ў іншае сховішча прывядзе да выдалення яго бяспечных спасылак."
+        "Перамяшчэнне элемента ў іншае сховішча прывядзе да сцірання яго бяспечных спасылак",
+        "Перамяшчэнне элементаў у іншае сховішча прывядзе да сцірання іх бяспечных спасылак.",
+        "Перамяшчэнне элементаў у іншае сховішча прывядзе да сцірання іх бяспечных спасылак.",
+        "Перамяшчэнне элементаў у іншае сховішча прывядзе да сцірання іх бяспечных спасылак."
       ],
       "Moving items": [
         "Перамяшчэнне элементаў"
@@ -2238,7 +2280,7 @@
         "Ніколі"
       ],
       "New": [
-        "Новы"
+        "Новая"
       ],
       "No activity recorded yet.": [
         "Пакуль ніякай актыўнасці не выяўлена."
@@ -2257,6 +2299,9 @@
       ],
       "None": [
         "Адсутнічае"
+      ],
+      "None of your saved passwords have appeared in a known data breach.": [
+        "Ніводны з вашых захаваных пароляў не быў знойдзены ў вядомай уцечцы даных."
       ],
       "None selected": [
         "Нічога не выбрана"
@@ -2290,9 +2335,6 @@
       ],
       "Pass Plus trial": [
         "Пробны перыяд Pass Plus"
-      ],
-      "password": [
-        "пароль"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Пароль блакіроўкі паспяхова зарэгістраваны. Вы можаце выкарыстоўваць яго, каб разблакіраваць ${ PASS_APP_NAME }"
@@ -2492,6 +2534,9 @@
       "Restoring trashed items...": [
         "Аднаўленне выдаленых элементаў..."
       ],
+      "Scan to download": [
+        "Сканіраваць і спампаваць"
+      ],
       "Secure links": [
         "Бяспечныя спасылкі"
       ],
@@ -2569,6 +2614,9 @@
       ],
       "Suggested": [
         "Прапанавана"
+      ],
+      "Switch to another folder or create an item in this folder": [
+        "Пераключыцеся на іншую папку або стварыце элемент у гэтай папцы"
       ],
       "Switch to another vault or create an item in this vault": [
         "Пераключыцеся на іншае сховішча або стварыце элемент у гэтым сховішчы."
@@ -2743,9 +2791,6 @@
       ],
       "User's access successfully updated": [
         "Доступ карыстальніка паспяхова абноўлены"
-      ],
-      "username": [
-        "імя карыстальніка"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Сховішча \"${ payload.content.name }\" паспяхова выдалена"
@@ -2975,6 +3020,9 @@
         "${ hours } гадзіны",
         "${ hours } гадзін",
         "${ hours } гадзін"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "Сімвалаў: ${ length }/${ maxLength }"
       ],
       "${ minutes } minute": [
         "${ minutes } хвіліна",
@@ -3603,11 +3651,17 @@
       "LinkedIn account": [
         "Уліковы запіс LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Запіс уваходу"
       ],
       "Logins": [
         "Запісы ўваходу"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Паштовыя скрыні"
@@ -4167,6 +4221,9 @@
       "WiFi network": [
         "Сетка Wi-Fi"
       ],
+      "Windows": [
+        "Windows"
+      ],
       "Work details": [
         "Звесткі аб працы"
       ],
@@ -4519,6 +4576,9 @@
       "Please describe the problem and include any error messages": [
         "Апішыце праблему і далучыце ўсе паведамленні з памылкамі"
       ],
+      "Retype \"${ name }\" to confirm deletion": [
+        "Увядзіце паўторна \"${ name }\", каб пацвердзіць выдаленне"
+      ],
       "Search ${ pluralItemType } in ${ vaultName }": [
         "Пошук ${ pluralItemType } у ${ vaultName }"
       ],
@@ -4551,6 +4611,9 @@
       ]
     },
     "Result": {
+      "Enter a URL to check if it matches the current rule": [
+        "Увядзіце URL-адрас, каб праверыць, ці адпавядае ён бягучаму правілу"
+      ],
       "This URL will be blocked from autofill": [
         "Гэты URL-адрас будзе заблакіраваны для аўтазапаўнення"
       ],
@@ -4958,6 +5021,12 @@
       "Folder options": [
         "Параметры папкі"
       ],
+      "Get mobile and desktop apps": [
+        "Атрымаць мабільныя праграмы і праграмы для камп'ютара"
+      ],
+      "Get mobile apps": [
+        "Атрымаць мабільныя праграмы"
+      ],
       "Get Started": [
         "Пачаць працу"
       ],
@@ -5361,8 +5430,20 @@
       "OTP secret or URI is invalid": [
         "Памылковы сакрэт OTP або URL-адрас"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Пароль павінен змяшчаць прынамсі ${ MIN_PASSWORD_LENGTH } сімвал",
+        "Пароль павінен змяшчаць прынамсі ${ MIN_PASSWORD_LENGTH } сімвалы",
+        "Пароль павінен змяшчаць прынамсі ${ MIN_PASSWORD_LENGTH } сімвалаў",
+        "Пароль павінен змяшчаць прынамсі ${ MIN_PASSWORD_LENGTH } сімвалаў"
+      ],
       "Section name cannot be empty": [
         "Назва раздзела не можа быць пустой"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Паспрабуйце больш кароткае імя карыстальніка (максімум ${ n } сімвал)",
+        "Паспрабуйце больш кароткае імя карыстальніка (максімум ${ n } сімвалы)",
+        "Паспрабуйце больш кароткае імя карыстальніка (максімум ${ n } сімвалаў)",
+        "Паспрабуйце больш кароткае імя карыстальніка (максімум ${ n } сімвалаў)"
       ],
       "URL already exists": [
         "URL-адрас ужо існуе"
@@ -5527,9 +5608,6 @@
       "Move to trash": [
         "Перамясціць у сметніцу"
       ],
-      "Name is required": [
-        "Патрабуецца назва"
-      ],
       "No items": [
         "Элементы адсутнічаюць"
       ],
@@ -5664,6 +5742,12 @@
       ],
       "You've reached the maximum folder nesting level": [
         "Дасягнуты максімальны ўзровень укладзеных папак"
+      ],
+      "You've reached the maximum number of folders at this level": [
+        "Вы дасягнулі максімальнай колькасці папак на гэтым узроўні"
+      ],
+      "You've reached the maximum number of folders for this vault": [
+        "Вы дасягнулі максімальнай колькасці папак для гэтага сховішча"
       ],
       "Your administrator needs to create a vault for you before you can create items": [
         "Ваш адміністратар павінен стварыць для вас сховішча, перш чым вы зможаце ствараць элементы"

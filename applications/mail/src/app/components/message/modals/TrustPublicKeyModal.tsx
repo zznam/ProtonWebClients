@@ -13,13 +13,13 @@ import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent
 import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
 import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import useEventManager from '@proton/components/hooks/useEventManager';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { addContacts, getContact, updateContact } from '@proton/shared/lib/api/contacts';
 import { API_CODES, CONTACT_CARD_TYPE } from '@proton/shared/lib/constants';
 import { pinKeyCreateContact, pinKeyUpdateContact } from '@proton/shared/lib/contacts/keyPinning';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Api } from '@proton/shared/lib/interfaces';
-import type { ContactCard, ContactWithBePinnedPublicKey } from '@proton/shared/lib/interfaces/contacts';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { ContactCard, ContactWithBePinnedPublicKey } from '@proton/shared/lib/interfaces/contacts/Contact';
 import { splitKeys } from '@proton/shared/lib/keys/keys';
 
 import SimplePublicKeyTable from './SimplePublicKeyTable';

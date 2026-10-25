@@ -2,19 +2,17 @@ import { renderHook } from '@testing-library/react';
 
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
-import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import {
     TelemetryAccountCancellationFlowFeedbackEvents,
     sendMultipleTelemetryData,
     sendTelemetryData,
 } from '@proton/shared/lib/api/telemetry';
 
+import { useSilentApi } from '../../../../../../hooks/useSilentApi';
 import { useFeedbackFirstTelemetry } from '../useFeedbackFirstTelemetry';
 
-jest.mock('@proton/app-context/useApi', () => ({
-    __esModule: true,
-    useApi: () => jest.fn(),
-}));
+jest.mock('../../../../../../hooks/useSilentApi');
+const mockUseSilentApi = useSilentApi as jest.MockedFunction<any>;
 
 jest.mock('@proton/account/user/hooks', () => ({
     useUser: () => [{}, false],
@@ -25,11 +23,6 @@ const mockUseSubscription = useSubscription as jest.MockedFunction<any>;
 
 jest.mock('@proton/account/userSettings/hooks');
 const mockUseUserSettings = useUserSettings as jest.MockedFunction<any>;
-
-jest.mock('@proton/shared/lib/api/helpers/customConfig', () => ({
-    getSilentApi: jest.fn(),
-}));
-const mockGetSilentApi = getSilentApi as jest.MockedFunction<any>;
 
 jest.mock('@proton/shared/lib/api/telemetry', () => {
     const actual = jest.requireActual('@proton/shared/lib/api/telemetry');
@@ -52,7 +45,7 @@ describe('useFeedbackFirstTelemetry', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockSilentApi = jest.fn();
-        mockGetSilentApi.mockReturnValue(mockSilentApi);
+        mockUseSilentApi.mockReturnValue(mockSilentApi);
         mockUseSubscription.mockReturnValue([{ CouponCode: null }, false]);
         mockUseUserSettings.mockReturnValue([{}, false]);
     });

@@ -1,13 +1,13 @@
 import 'core-js/actual/set/difference';
 
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import type { HttpsProtonMeDriveSyncErrorsTotalV1SchemaJson } from '@proton/metrics/types/drive_sync_errors_total_v1.schema';
 import { getIsNetworkError, getIsOfflineError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { EVENT_TYPES } from '@proton/shared/lib/drive/constants';
 import type { DriveEventsResult } from '@proton/shared/lib/interfaces/drive/events';
 
 import { is4xx, is5xx } from '../../utils/errorHandling/apiErrors';
-import type { VolumeTypeForEvents } from '../_volumes';
+import type { VolumeTypeForEvents } from '../_volumes/interface';
 import type { DriveEvent } from './interface';
 
 const EVENT_METRICS = ['delete', 'create', 'update', 'update_metadata'] as const;

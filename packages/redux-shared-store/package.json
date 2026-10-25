@@ -14,12 +14,12 @@
         "./eventLoop/coreEventLoopV6": "./eventLoop/coreEventLoopV6.ts",
         "./eventLoop/mailEventLoopV6": "./eventLoop/mailEventLoopV6.ts",
         "./test": "./test.ts",
-        "./mailSettingsHeartbeatListener": "./settingsHeartbeat/mailSettingsHeartbeatListener.ts",
-        "./calendarSettingsHeartbeatListener": "./settingsHeartbeat/calendarSettingsHeartbeatListener.ts"
+        "./settingsHeartbeat/mailSettingsHeartbeatListener": "./settingsHeartbeat/mailSettingsHeartbeatListener.ts",
+        "./settingsHeartbeat/calendarSettingsHeartbeatListener": "./settingsHeartbeat/calendarSettingsHeartbeatListener.ts"
     },
     "scripts": {
-        "check-types": "tsc --checkers 1",
-        "lint": "eslint --quiet"
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet"
     },
     "dependencies": {
         "@proton/account": "workspace:^",
@@ -31,15 +31,20 @@
         "@proton/redux-utilities": "workspace:^",
         "@proton/shared": "workspace:^",
         "@proton/utils": "workspace:^",
-        "@reduxjs/toolkit": "^2.12.0",
+        "@reduxjs/toolkit": "catalog:",
         "date-fns": "^2.30.0",
-        "react": "^18.3.1",
-        "react-redux": "^9.3.0"
+        "react": "catalog:",
+        "react-redux": "catalog:",
+        "redux": "catalog:"
     },
     "devDependencies": {
-        "@proton/eslint-config-proton": "workspace:^",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.11.0",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
+        "@proton/oxlint-config": "workspace:^",
+        "@types/node": "catalog:",
+        "@types/react": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:"
     }
 }

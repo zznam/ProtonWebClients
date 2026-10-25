@@ -3,19 +3,23 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { c } from 'ttag';
 
 import { useApi } from '@proton/app-context/useApi';
+import { useNotifications } from '@proton/app-context/useNotifications';
+import type { LumoApiClient } from '@proton/lumo-api-client/core/client';
+import { isContextLengthExceededApiError } from '@proton/lumo-api-client/core/context-length';
 import type {
     ChatCompletionsFunctionTool,
     GenerationResponseMessage,
-    LumoApiClient,
     Role,
     ToolName as ServerToolName,
     Turn,
-} from '@proton/lumo-api-client';
+} from '@proton/lumo-api-client/core/types';
 import type { WireImage } from '@proton/lumo-api-client/types-api';
+import { isContextLengthExceededMessage } from '@proton/lumo-api-client/types-api';
 import { lumoImageMarker } from '@proton/lumo-api-client/utils';
-import type { ServerToolSource } from '@proton/lumo-ui';
+import type { ServerToolSource } from '@proton/lumo-ui/ServerToolChip';
+import { LUMO_SHORT_APP_NAME } from '@proton/shared/lib/constants';
 
-import type { ToolDefinition, ToolImage, ToolName } from '../contracts/types';
+import type { ToolImage, ToolName } from '../contracts/types';
 import type { ConfirmDecision, ToolChip } from '../engine/engine';
 import { ConfirmOutcome, createClientToolExecutor } from '../engine/engine';
 import { LOAD_GUIDE_TOOL_NAME } from '../engine/loadGuide';
@@ -36,26 +40,31 @@ const ASSISTANT = 'assistant' as Role;
 const TOOL_CALL = 'tool_call' as Role;
 const TOOL_RESULT = 'tool_result' as Role;
 
-/** Stands in for an elided read payload; the values it held are stale by the time it would be replayed. */
-const ELIDED_READ = '[earlier read - re-run the tool for current values]';
+const ELIDED_GUIDE = '[guide loaded - its rules are in the system prompt]';
 
-const parseToolCallName = (content: string | undefined): string => {
+const parseToolCall = (content: string | undefined): { name: string; arguments?: Record<string, unknown> } => {
     try {
-        return String(JSON.parse(content || '{}')?.name ?? '');
+        const call = JSON.parse(content || '{}');
+        return { name: String(call?.name ?? ''), arguments: call?.arguments };
     } catch {
-        return '';
+        return { name: '' };
     }
 };
 
+/** Standalone-prompt mode: a guide is loaded for as long as the turns sent to the model still carry its load. */
+const guidesCarriedBy = (turns: Turn[]): ToolName[] =>
+    turns
+        .filter((turn) => turn.role === TOOL_CALL)
+        .map((turn) => parseToolCall(turn.content))
+        .filter((call) => call.name === LOAD_GUIDE_TOOL_NAME && typeof call.arguments?.guide === 'string')
+        .map((call) => call.arguments!.guide as ToolName);
+
 /**
- * The chain as history should remember it: the narration and every tool call verbatim, so the model can
- * see that it works by calling tools, but a read's payload replaced by {@link ELIDED_READ} so a replay
- * never answers from values that have since moved on. A mutation's result is the durable fact the next
- * turn reasons from ("was off"), so it stays. A call naming a tool this session does not define is read
- * as a read — eliding is the safe side.
+ * The chain as history should remember it: every turn verbatim, so the model never re-runs a read it
+ * already holds. In composed-prompt mode a guide load's result is the one exception, since the system
+ * prompt re-injects that body; a standalone prompt carries no guide, so history keeps it.
  */
-const projectChainForHistory = (chainWork: Turn[], definitions: ToolDefinition[]): Turn[] => {
-    const kindByName = new Map(definitions.map((definition) => [definition.name, definition.kind]));
+const projectChainForHistory = (chainWork: Turn[], keepGuideBodies: boolean): Turn[] => {
     const projected: Turn[] = [];
     let calledName = '';
 
@@ -67,13 +76,13 @@ const projectChainForHistory = (chainWork: Turn[], definitions: ToolDefinition[]
             continue;
         }
         if (turn.role === TOOL_CALL) {
-            calledName = parseToolCallName(turn.content);
+            calledName = parseToolCall(turn.content).name;
             projected.push(turn);
             continue;
         }
         if (turn.role === TOOL_RESULT) {
-            const isMutation = kindByName.get(calledName) === 'mutation';
-            projected.push(isMutation ? turn : { role: TOOL_RESULT, content: ELIDED_READ });
+            const elideBody = !keepGuideBodies && calledName === LOAD_GUIDE_TOOL_NAME;
+            projected.push(elideBody ? { role: TOOL_RESULT, content: ELIDED_GUIDE } : turn);
             continue;
         }
         projected.push(turn);
@@ -83,39 +92,13 @@ const projectChainForHistory = (chainWork: Turn[], definitions: ToolDefinition[]
 };
 
 /**
- * The transport pads a tool round with a blank assistant turn and drops that padding again before the
- * next one. Measuring both ends without the padding keeps them aligned, and keeps a blank turn from
- * reading as narration.
- */
-const withoutBlankAssistantTurns = (turns: Turn[]): Turn[] =>
-    turns.filter((turn) => turn.role !== ASSISTANT || !!turn.content?.trim());
-
-/** Banked history replays as question-then-answer, so a trailing tool call or result is not banked. */
-const untilLastSpokenTurn = (turns: Turn[]): Turn[] => {
-    const fromEnd = [...turns].reverse().findIndex((turn) => turn.role === ASSISTANT && !!turn.content);
-    return fromEnd === -1 ? [] : turns.slice(0, turns.length - fromEnd);
-};
-
-/**
- * Prose the projection does not already carry, merged into a trailing assistant turn rather than added
- * beside it: the history an exchange replays is one answer turn.
- */
-const appendProse = (turns: Turn[], prose: string): Turn[] => {
-    const last = turns[turns.length - 1];
-    if (last?.role === ASSISTANT && last.content) {
-        return [...turns.slice(0, -1), { role: ASSISTANT, content: `${last.content}\n\n${prose}` }];
-    }
-    return [...turns, { role: ASSISTANT, content: prose }];
-};
-
-/**
  * Lazily instantiate the Lumo client on first send so `@proton/lumo-api-client` stays out of the
  * shared `@proton/components` bundle until the assistant is actually used (bundle hygiene, plan §6).
  */
 let clientPromise: Promise<LumoApiClient> | null = null;
 const getLumoClient = (): Promise<LumoApiClient> => {
     if (!clientPromise) {
-        clientPromise = import('@proton/lumo-api-client').then(
+        clientPromise = import('@proton/lumo-api-client/core/client').then(
             ({ LumoApiClient }) => new LumoApiClient({ enableSmoothing: true, enableU2LEncryption: true })
         );
     }
@@ -149,10 +132,15 @@ const extractWebSources = (content: string): ServerToolSource[] => {
  */
 const useLumoAgent = (config: LumoAgentConfig) => {
     const api = useApi();
+    const { createNotification } = useNotifications();
+    const standalonePrompt = !!config.serverPrompt;
 
     const [items, setItems] = useState<LumoAgentItem[]>([]);
     const [isBusy, setIsBusy] = useState(false);
+    // Cleared when a chain starts, so a chain that is abandoned before it reports reads as no outcome
+    const [lastChainEnd, setLastChainEnd] = useState<LumoChainEnd | null>(null);
     const [sessionKey, setSessionKey] = useState(0);
+    const [draft, setDraft] = useState('');
 
     const idRef = useRef(0);
     const controllerRef = useRef<AbortController | null>(null);
@@ -160,14 +148,12 @@ const useLumoAgent = (config: LumoAgentConfig) => {
     // tool it proposes and the answer it awaits have exactly the same lifetime.
     const confirmResolveRef = useRef<{ tool: ToolName; resolve: (decision: ConfirmDecision) => void } | null>(null);
     const historyRef = useRef<Turn[]>([]);
-    // What the debug transcript copies: every turn verbatim, including read payloads history elides.
+    // What the debug transcript copies: every turn verbatim, including guide bodies a composed prompt's history elides.
     const transcriptRef = useRef<Turn[]>([]);
     // The exchange's projected turns, waiting to be banked.
     const projectedChainRef = useRef<Turn[]>([]);
     const replyIdRef = useRef<number | null>(null);
     const replyTextRef = useRef('');
-    // Every bubble of prose the current chain has written. `replyTextRef` only ever holds the live bubble.
-    const chainReplyRef = useRef('');
     // Read through a ref so no reporting call site has to depend on `config`. The cleanup effect below
     // would otherwise abort the chain and abandon its card on every render a caller changed config on.
     const telemetryRef = useRef(config.telemetry);
@@ -182,13 +168,22 @@ const useLumoAgent = (config: LumoAgentConfig) => {
         finalizeReply();
         pushItem({ id: nextId(), kind: 'error', message: c('Error').t`Something went wrong. Please try again.` });
     }, [finalizeReply, nextId, pushItem]);
+    const notifyContextLimit = useCallback(() => {
+        createNotification({
+            type: 'error',
+            // translator: shown when a conversation gets too long to stay responsive. Reassures the user this is about performance, not a plan limit.
+            text: c('collider_2025: Error')
+                .t`This conversation is too long to continue. Start a new chat to keep ${LUMO_SHORT_APP_NAME} purring and responsive.`,
+            expiration: 8000,
+        });
+    }, [createNotification]);
 
     /** Banks the exchange the projection has accumulated, and empties it either way. */
     const commitHistory = useCallback((userText: string) => {
-        const projected = untilLastSpokenTurn(projectedChainRef.current);
+        const projected = projectedChainRef.current;
         projectedChainRef.current = [];
-        // An exchange that ended without prose has nothing worth remembering — bank neither side rather
-        // than an unanswered question.
+        // A trailing tool result is banked as it stands, so a mutation the model never spoke after is
+        // still known to have applied.
         if (!projected.length) {
             return;
         }
@@ -201,12 +196,10 @@ const useLumoAgent = (config: LumoAgentConfig) => {
                 const id = nextId();
                 replyIdRef.current = id;
                 replyTextRef.current = delta;
-                chainReplyRef.current = chainReplyRef.current ? `${chainReplyRef.current}\n\n${delta}` : delta;
                 pushItem({ id, kind: 'reply', text: delta });
                 return;
             }
             replyTextRef.current += delta;
-            chainReplyRef.current += delta;
             const id = replyIdRef.current;
             const text = replyTextRef.current;
             setItems((prev) => prev.map((item) => (item.id === id ? { ...item, text } : item)));
@@ -321,6 +314,7 @@ const useLumoAgent = (config: LumoAgentConfig) => {
             definitions: config.definitions,
             handlers: config.handlers,
             references,
+            standalonePrompt,
             confirm: {
                 requestConfirmation: (action, labels) =>
                     new Promise<ConfirmDecision>((resolve) => {
@@ -346,41 +340,24 @@ const useLumoAgent = (config: LumoAgentConfig) => {
                 });
             },
         });
-    }, [config, sessionKey, nextId, pushItem, finalizeReply, advanceLastConfirm]);
+    }, [config, standalonePrompt, sessionKey, nextId, pushItem, finalizeReply, advanceLastConfirm]);
 
     /**
-     * Bank a finished chain's own turns — each round's narration, then its tool calls (id, name,
-     * decrypted arguments) and results — in the order the model produced them. The transport breaks its
-     * loop before banking the closing prose, so what this chain produced minus the narration already in
-     * `chainWork` supplies it: nothing when the last round called a tool rather than speaking. The live
-     * bubble is the fallback for a chain whose prose a chip or an error split mid-round, where the
-     * subtraction no longer lines up. The same walk projects the chain
-     * into the exchange history is waiting to bank (see {@link projectChainForHistory}).
+     * Bank what the chain produced, as the transport reports it rather than as the bubbles on screen
+     * split it: verbatim for the transcript, projected for history (see {@link projectChainForHistory}).
      */
     const recordChainWork = useCallback(
-        (chainWork: Turn[]) => {
-            const produced = chainReplyRef.current.trimStart();
-            const narrated = chainWork
-                .filter((turn) => turn.role === ASSISTANT)
-                .map((turn) => turn.content)
-                .join('\n\n');
-            const closing = produced.startsWith(narrated)
-                ? produced.slice(narrated.length).trimStart()
-                : replyTextRef.current;
-            transcriptRef.current.push(...chainWork);
-            projectedChainRef.current.push(...projectChainForHistory(chainWork, config.definitions));
-            if (closing) {
-                transcriptRef.current.push({ role: ASSISTANT, content: closing });
-                projectedChainRef.current = appendProse(projectedChainRef.current, closing);
-            }
+        (producedTurns: Turn[]) => {
+            transcriptRef.current.push(...producedTurns);
+            projectedChainRef.current.push(...projectChainForHistory(producedTurns, standalonePrompt));
         },
-        [config]
+        [standalonePrompt]
     );
 
     const runChain = useCallback(
-        async (turns: Turn[], userText: string) => {
+        async (turns: Turn[], userContent: string) => {
             setIsBusy(true);
-            chainReplyRef.current = '';
+            setLastChainEnd(null);
 
             const controller = new AbortController();
             controllerRef.current = controller;
@@ -388,11 +365,16 @@ const useLumoAgent = (config: LumoAgentConfig) => {
             const startedAt = performance.now();
             // Counted here rather than off the returned turns, because a chain that throws never returns any.
             let toolCalls = 0;
-            const reportChainEnd = (end: LumoChainEnd) =>
+            const reportChainEnd = (end: LumoChainEnd) => {
+                // An abandoned chain's late report must not overwrite the outcome its successor owns
+                if (controllerRef.current === controller) {
+                    setLastChainEnd(end);
+                }
                 telemetryRef.current?.chainEnded(end, {
                     durationMs: performance.now() - startedAt,
                     toolCalls,
                 });
+            };
 
             // A tool can hand over an image mid-chain (the file on screen, say) — a tool result is text
             // only. The chain re-sends its turns every round, so attaching it to the message the user
@@ -417,6 +399,7 @@ const useLumoAgent = (config: LumoAgentConfig) => {
             // chain returns as though it answered while the user reads an error. Latched here because
             // that is the only place the two are distinguishable.
             let streamFailed = false;
+            let hitContextLimit = false;
 
             const chunkCallback = (chunk: GenerationResponseMessage) => {
                 if (chunk.type === 'token_data' && chunk.target === 'message') {
@@ -450,15 +433,32 @@ const useLumoAgent = (config: LumoAgentConfig) => {
                 ) {
                     streamFailed = true;
                     pushError();
+                } else if (
+                    config.showContextLimitToast &&
+                    isContextLengthExceededMessage(chunk) &&
+                    !hitContextLimit &&
+                    controllerRef.current === controller
+                ) {
+                    hitContextLimit = true;
+                    streamFailed = true;
+                    finalizeReply();
+                    notifyContextLimit();
                 }
             };
 
             try {
                 const client = await getLumoClient();
-                const clientTools: ChatCompletionsFunctionTool[] = (await executor.getClientTools?.()) ?? [];
+                if (standalonePrompt) {
+                    executor.setLoadedGuides(guidesCarriedBy(turns));
+                }
+                // The transport also advertises the executor's tools, so composed mode sends them twice;
+                // standalone mode leaves the executor the only advertiser.
+                const clientTools: ChatCompletionsFunctionTool[] | undefined = standalonePrompt
+                    ? undefined
+                    : ((await executor.getClientTools?.()) ?? []);
                 // The executor is shared across chains, so bind this one's signal to its batches: an
                 // abandoned chain must not confirm and run the tail of its batch on the turn that replaced it.
-                const { turns: chainTurns } = await client.callAssistant(api, turns, {
+                const { producedTurns } = await client.callAssistant(api, turns, {
                     clientToolExecutor: {
                         ...executor,
                         execute: (calls) => {
@@ -466,8 +466,9 @@ const useLumoAgent = (config: LumoAgentConfig) => {
                             return executor.execute(calls, { signal: controller.signal, showImage });
                         },
                     },
-                    clientTools,
+                    ...(clientTools && { clientTools }),
                     serverTools: config.serverTools,
+                    ...(config.clientType && { clientType: config.clientType }),
                     signal: controller.signal,
                     chunkCallback,
                 });
@@ -478,12 +479,24 @@ const useLumoAgent = (config: LumoAgentConfig) => {
                     reportChainEnd(abortEndRef.current);
                     return;
                 }
-                const sentCount = withoutBlankAssistantTurns(turns).length;
-                recordChainWork(withoutBlankAssistantTurns(chainTurns).slice(sentCount));
-                commitHistory(userText);
-                reportChainEnd(streamFailed ? LumoChainEnd.FAILED : LumoChainEnd.SUCCEEDED);
+                recordChainWork(producedTurns);
+                commitHistory(userContent);
+                if (hitContextLimit) {
+                    reportChainEnd(LumoChainEnd.CONTEXT_LIMIT);
+                } else {
+                    reportChainEnd(streamFailed ? LumoChainEnd.FAILED : LumoChainEnd.SUCCEEDED);
+                }
             } catch (error: any) {
                 const isAbort = error?.name === 'AbortError';
+                if (!isAbort && config.showContextLimitToast && isContextLengthExceededApiError(error)) {
+                    if (controllerRef.current !== controller) {
+                        reportChainEnd(abortEndRef.current);
+                        return;
+                    }
+                    notifyContextLimit();
+                    reportChainEnd(LumoChainEnd.CONTEXT_LIMIT);
+                    return;
+                }
                 if (!isAbort) {
                     pushError();
                 }
@@ -501,6 +514,7 @@ const useLumoAgent = (config: LumoAgentConfig) => {
         [
             api,
             config,
+            standalonePrompt,
             executor,
             appendReplyDelta,
             commitHistory,
@@ -509,19 +523,26 @@ const useLumoAgent = (config: LumoAgentConfig) => {
             nextId,
             pushItem,
             pushError,
+            notifyContextLimit,
         ]
     );
 
-    const buildSystemTurn = useCallback(
-        (): Turn => ({
-            role: SYSTEM,
-            content: buildSystemPrompt({
-                definitions: config.definitions,
-                loadedGuides: executor.getLoadedGuides(),
-                productRules: config.productRules?.(),
-            }),
-        }),
-        [config, executor]
+    // With a server prompt the backend supplies the whole system turn, so none is sent.
+    const buildSystemTurns = useCallback(
+        (): Turn[] =>
+            standalonePrompt
+                ? []
+                : [
+                      {
+                          role: SYSTEM,
+                          content: buildSystemPrompt({
+                              definitions: config.definitions,
+                              loadedGuides: executor.getLoadedGuides(),
+                              productRules: config.productRules?.(),
+                          }),
+                      },
+                  ],
+        [config, standalonePrompt, executor]
     );
 
     const send = useCallback(
@@ -543,24 +564,27 @@ const useLumoAgent = (config: LumoAgentConfig) => {
             projectedChainRef.current = [];
             finalizeReply();
             pushItem({ id: nextId(), kind: 'user', text });
-            transcriptRef.current.push({ role: USER, content: text });
+            // The model reads the moment the message was sent; the bubble on screen shows only what was typed.
+            const turnContext = standalonePrompt ? config.turnContext?.() : undefined;
+            const content = turnContext ? `${turnContext}\n\n${text}` : text;
+            transcriptRef.current.push({ role: USER, content });
 
-            await runChain([buildSystemTurn(), ...historyRef.current, { role: USER, content: text }], text);
+            await runChain([...buildSystemTurns(), ...historyRef.current, { role: USER, content }], content);
         },
-        [buildSystemTurn, isBusy, finalizeReply, nextId, pushItem, runChain, abandonChain]
+        [config, standalonePrompt, buildSystemTurns, isBusy, finalizeReply, nextId, pushItem, runChain, abandonChain]
     );
 
     /**
-     * The model-facing exchange as one copyable string, for a bug report: the system prompt, then each
+     * The model-facing exchange as one copyable string, for a bug report: the system prompt (unless the server supplies it), then each
      * question, the tool calls and results it drove, and the answer. The diagnostic events the POC
      * interleaved need an event log this hook does not keep, and stay out of scope.
      */
     const getDebugTranscript = useCallback(
         () =>
-            [buildSystemTurn(), ...transcriptRef.current]
+            [...buildSystemTurns(), ...transcriptRef.current]
                 .map((turn) => `===== ${turn.role.toUpperCase()} =====\n${turn.content ?? ''}`)
                 .join('\n\n'),
-        [buildSystemTurn]
+        [buildSystemTurns]
     );
 
     const clear = useCallback(() => {
@@ -570,7 +594,6 @@ const useLumoAgent = (config: LumoAgentConfig) => {
         projectedChainRef.current = [];
         replyIdRef.current = null;
         replyTextRef.current = '';
-        chainReplyRef.current = '';
         setItems([]);
         setSessionKey((key) => key + 1);
     }, [abandonChain]);
@@ -578,7 +601,10 @@ const useLumoAgent = (config: LumoAgentConfig) => {
     return {
         items,
         isBusy,
+        lastChainEnd,
         hasConversation: items.length > 0,
+        draft,
+        setDraft,
         send,
         confirm,
         cancel,

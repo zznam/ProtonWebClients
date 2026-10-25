@@ -1,11 +1,11 @@
-import type {
-    BackgroundOptions,
-    ProcessorWrapper,
-    ProcessorWrapperOptions,
-    SegmenterOptions,
-} from '@livekit/track-processors';
+import type { ProcessorWrapperOptions, SegmenterOptions } from '@livekit/track-processors';
+import type { Track, TrackProcessor } from 'livekit-client';
 
 import type { TunableConstantsOverrides } from './tunableConstants';
+
+export interface PipelineLogger {
+    error: (message: string, ...args: unknown[]) => void;
+}
 
 // What the segmented person is composited over. Both variants run on the same
 // pipeline, so switching between them only changes compositor state.
@@ -28,7 +28,7 @@ export interface BackgroundProcessorOptions extends ProcessorWrapperOptions {
     constantOverrides?: TunableConstantsOverrides;
 }
 
-export type BackgroundProcessor = ProcessorWrapper<BackgroundOptions> & {
+export type BackgroundProcessor = TrackProcessor<Track.Kind.Video> & {
     enable: () => void;
     disable: () => void;
     isEnabled: () => boolean;

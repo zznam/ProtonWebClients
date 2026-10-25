@@ -3,9 +3,9 @@ import { c } from 'ttag';
 import type { ToolDefinition, ToolHandler } from '@proton/llm/lib/lumoAgent/contracts/types';
 
 import { selectParams } from '../../../store/elements/elementsSelectors';
-
 import type { DecryptedMessage } from '../../helpers/messages';
 import { readDecryptedMessage, toDecryptedMessage, truncateBody } from '../../helpers/messages';
+import { conversationReferenceFor, messageReferenceFor } from '../../helpers/references';
 import type { MailToolDeps, MailToolModule } from '../../toolModule';
 
 export interface ReadOpenEmailResult {
@@ -22,10 +22,10 @@ export const readOpenEmailDefinition: ToolDefinition<Record<string, never>, Read
     paramsSchema: { type: 'object', additionalProperties: false, required: [], properties: {} },
     serializeForLumo: (result) => {
         if (!result.isOpen) {
-            return 'No email is currently open on screen.';
+            return 'No email was open on screen.';
         }
         if (!result.email) {
-            return 'An email is open but its body could not be read yet.';
+            return 'An email was open but its body could not be read yet.';
         }
         const { reference, subject, from, date, body } = result.email;
         return `Open email ${reference} — "${subject}" from ${from} (${date}):\n${truncateBody(body)}`;
@@ -59,10 +59,12 @@ export const createReadOpenEmailHandler =
         }
 
         const email = toDecryptedMessage(decrypted);
-        return {
-            isOpen: true,
-            email: { reference: references.referenceFor('email', id, { title: email.subject }), ...email },
-        };
+        const label = { title: email.subject };
+        const reference =
+            decrypted.data?.ID === id
+                ? messageReferenceFor(references, id, label)
+                : conversationReferenceFor(references, id, label);
+        return { isOpen: true, email: { reference, ...email } };
     };
 
 export const readOpenEmailModule: MailToolModule = {

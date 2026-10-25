@@ -1,11 +1,13 @@
 import type { RenderResult } from '@testing-library/react';
 import { act, fireEvent, screen } from '@testing-library/react';
 
-import { getModelState } from '@proton/account/tests';
+import { getModelState } from '@proton/account/testing/getModelState';
 import type { MessageState } from '@proton/mail/store/messages/messagesTypes';
 import type { MIME_TYPES } from '@proton/shared/lib/constants';
 import { INCOMING_DEFAULTS_LOCATION } from '@proton/shared/lib/constants';
-import type { IncomingDefault, MailSettings, Recipient } from '@proton/shared/lib/interfaces';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
+import type { IncomingDefault } from '@proton/shared/lib/interfaces/IncomingDefault';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { BLOCK_SENDER_CONFIRMATION } from '@proton/shared/lib/mail/constants';
 
 import { addApiMock } from '../../../../helpers/tests/api';

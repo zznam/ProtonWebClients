@@ -1,4 +1,4 @@
-import { useConfirmActionModal } from '@proton/components';
+import { useConfirmActionModal } from '@proton/components/components/confirmActionModal/ConfirmActionModal';
 import { useCopyItemsModal } from '@proton/drive/modals/copyItemsModal';
 import { useSharingModal } from '@proton/drive/modals/sharingModal';
 
@@ -30,7 +30,7 @@ export function SharedWithMeContextMenu({
     const { reportAbuseModal, showReportAbuseModal } = useReportAbuseModal();
 
     function convertDataShowModal(items: DirectShareItem[]) {
-        showCopyItemsModal(items.map((item) => ({ uid: item.nodeUid, name: item.name })));
+        showCopyItemsModal(items.map((item) => ({ uid: item.nodeUid, name: item.name, type: item.type })));
     }
 
     return (

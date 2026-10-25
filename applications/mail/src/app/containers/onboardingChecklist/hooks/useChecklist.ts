@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import useEventManager from '@proton/components/hooks/useEventManager';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { getChecklist } from '@proton/shared/lib/api/checklist';
 import { APPS } from '@proton/shared/lib/constants';
 import { getMailChecklistType } from '@proton/shared/lib/helpers/checklist';
-import type { ChecklistApiResponse, ChecklistKey } from '@proton/shared/lib/interfaces';
-import { CHECKLIST_DISPLAY_TYPE } from '@proton/shared/lib/interfaces';
+import type { ChecklistApiResponse, ChecklistKey } from '@proton/shared/lib/interfaces/Checklist';
+import { CHECKLIST_DISPLAY_TYPE } from '@proton/shared/lib/interfaces/Checklist';
 
 import type { Event } from '../../../models/event';
 

@@ -27,17 +27,17 @@ jest.mock('@proton/shared/lib/helpers/setupCryptoWorker', () => ({
 // Silence JDOM warnings triggered by emoji-mart
 HTMLCanvasElement.prototype.getContext = jest.fn()
 
-jest.mock('@proton/raw-images', () => ({
+jest.mock('@proton/raw-images/createWorker', () => ({
   __esModule: true,
 }))
 
-jest.mock('@proton/drive-store/store/_downloads/fileSaver/download.ts', () => {
+jest.mock('@proton/drive-store/store/_downloads/fileSaver/download', () => {
   return {
     initDownloadSW: jest.fn().mockResolvedValue(true),
   }
 })
 
-jest.mock('@proton/drive-store/utils/metrics/userSuccessMetrics.ts', () => {
+jest.mock('@proton/drive-store/utils/metrics/userSuccessMetrics', () => {
   return {
     userSuccessMetrics: {
       init: jest.fn(),

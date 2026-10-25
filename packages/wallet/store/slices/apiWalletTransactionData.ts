@@ -2,19 +2,18 @@ import { createAction, createSlice } from '@reduxjs/toolkit';
 import pick from 'lodash/pick';
 import set from 'lodash/set';
 
-import type { AddressKeysState, UserKeysState } from '@proton/account';
-import { dispatchGetAllAddressesKeys, userKeysThunk } from '@proton/account';
+import type { AddressKeysState } from '@proton/account/addressKeys';
+import { dispatchGetAllAddressesKeys } from '@proton/account/addressKeys';
+import type { UserKeysState } from '@proton/account/userKeys';
+import { userKeysThunk } from '@proton/account/userKeys';
 import { createAsyncModelThunk, handleAsyncModel } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
-import type { SimpleMap } from '@proton/shared/lib/interfaces';
+import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 import isTruthy from '@proton/utils/isTruthy';
 
-import type {
-    AccountIdByDerivationPathAndWalletId,
-    DecryptedTransactionData,
-    NetworkTransactionByHashedTxId,
-} from '../../types';
+import type { DecryptedTransactionData, NetworkTransactionByHashedTxId } from '../../types/transactions';
+import type { AccountIdByDerivationPathAndWalletId } from '../../types/wallet';
 import { createApiTransactions, fetchApiTransactions, hashApiTransactions } from '../../utils/transactions';
 import type { WalletThunkArguments } from '../thunk';
 

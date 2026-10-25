@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } para Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } for iOS"
-      ],
       "Accept": [
         "Aceitar"
       ],
@@ -238,6 +232,9 @@
       "Create a ${ BRAND_NAME } account": [
         "Criar uma conta no ${ BRAND_NAME }"
       ],
+      "Create a login": [
+        "Criar um início de sessão"
+      ],
       "Create a new vault": [
         "Criar um cofre"
       ],
@@ -339,6 +336,15 @@
       ],
       "Do not suggest on this website": [
         "Não sugerir nesse site"
+      ],
+      "Download for Linux": [
+        "Baixar para Linux"
+      ],
+      "Download for macOS": [
+        "Baixar para macOS"
+      ],
+      "Download for Windows": [
+        "Baixar para Windows"
       ],
       "Download this CSV template": [
         "Baixar esse modelo CSV"
@@ -700,6 +706,12 @@
       "Show Less": [
         "Mostrar menos"
       ],
+      "Show less": [
+        "Mostrar menos"
+      ],
+      "Show more": [
+        "Mostrar mais"
+      ],
       "Sign back in": [
         "Inicie sessão novamente"
       ],
@@ -708,6 +720,9 @@
       ],
       "Sign out": [
         "Encerrar sessão"
+      ],
+      "Skip for now": [
+        "Pular por enquanto"
       ],
       "Start from scratch": [
         "Começar do zero"
@@ -843,9 +858,15 @@
         "Cofre"
       ]
     },
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "Mais ${ hiddenResultsCount } resultado não exibido",
+        "Mais ${ hiddenResultsCount } resultados não exibidos"
+      ]
+    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicativo para computador do ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Aplicativo para computador do ${ appName }"
       ]
     },
     "Button": {
@@ -1022,6 +1043,9 @@
       "Authentication failure: ${ message }": [
         "Falha na autenticação: ${ message }"
       ],
+      "Biometric authentication cancelled.": [
+        "Autenticação biométrica cancelada."
+      ],
       "Biometric authentication failed.": [
         "A autenticação biométrica falhou."
       ],
@@ -1105,6 +1129,9 @@
       "Editing item failed": [
         "Erro ao editar o item"
       ],
+      "Email is not valid": [
+        "O e-mail não é válido."
+      ],
       "Empty CSV file": [
         "Arquivo CSV vazio"
       ],
@@ -1116,6 +1143,9 @@
       ],
       "Encrypted JSON not supported": [
         "JSON criptografado não suportado"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Insira seu nome de usuário sem o domínio (@example.com)"
       ],
       "Error reporting problem": [
         "Erro ao relatar o problema"
@@ -1304,6 +1334,9 @@
       "Incorrect backup password. Please try again.": [
         "Senha de backup incorreta. Tente novamente."
       ],
+      "Incorrect password. Please try again.": [
+        "A senha não é válida. Tente novamente."
+      ],
       "Incorrect second password. Please try again.": [
         "Segunda senha incorreta. Tente novamente."
       ],
@@ -1346,8 +1379,14 @@
       "Network error": [
         "Erro de rede"
       ],
+      "Not a valid number": [
+        "Não é um número válido"
+      ],
       "Passphrase is incorrect": [
         "A frase secreta está incorreta"
+      ],
+      "Passwords do not match": [
+        "As senhas não correspondem"
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "Permissão negada para acessar o site de ${ domainsJSX }."
@@ -1421,6 +1460,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "O aplicativo para computador do ${ PASS_APP_NAME } deve estar iniciado a sessão."
       ],
+      "The email addresses do not match": [
+        "Os endereços de e-mail não correspondem."
+      ],
       "The URL is in the list": [
         "A URL está na lista"
       ],
@@ -1429,6 +1471,15 @@
       ],
       "This domain is already managed by your organization": [
         "Esse domínio já é gerenciada pela sua organização"
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Este campo excede o máximo de ${ maximumLength } caracteres."
+      ],
+      "This field is required": [
+        "Este campo é obrigatório"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Este campo exige um mínimo de ${ minimumLength } caracteres."
       ],
       "This invite is no longer available": [
         "Este convite não está mais disponível"
@@ -1441,6 +1492,9 @@
       ],
       "Trashing item failed": [
         "Erro ao mover item para a lixeira"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Tente usar apenas letras, números e _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Não é possível gerar um código OTP para este item"
@@ -1478,6 +1532,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Erro ao atualizar o cofre \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "O nome de usuário deve começar com uma letra ou dígito"
+      ],
+      "Username must end with a letter or digit": [
+        "O nome de usuário deve terminar com uma letra ou dígito"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Erro ao criar o cofre \"${ payload.content.name }\""
       ],
@@ -1501,6 +1561,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Código PIN errado. Tente novamente."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase de recuperação errada. Tente novamente ou use outro método de autenticação."
       ],
       "Wrong second password": [
         "Segunda senha incorreta"
@@ -1589,6 +1652,95 @@
       ],
       "Username": [
         "Nome de usuário"
+      ]
+    },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Encontrada ${ itemsCount } sugestão, use o teclado para navegar.",
+        "Encontradas ${ itemsCount } sugestões, use o teclado para navegar."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "Use as teclas Para cima e Para baixo para acessar e procurar sugestões após a entrada. Pressione Enter para confirmar sua escolha, ou Escape para fechar a caixa de sugestões."
+      ]
+    },
+    "Import Tutorial": {
+      "Account & Data": [
+        "Conta e dados"
+      ],
+      "Advanced Options": [
+        "Opções avançadas"
+      ],
+      "Autofill and passwords": [
+        "Preenchimento automático e senhas"
+      ],
+      "Continue export": [
+        "Continuar exportação"
+      ],
+      "Download file": [
+        "Baixar arquivo"
+      ],
+      "Export": [
+        "Exportar"
+      ],
+      "Export Data": [
+        "Exportar dados"
+      ],
+      "Export data": [
+        "Exportar dados"
+      ],
+      "Export items": [
+        "Exportar itens"
+      ],
+      "Export passwords": [
+        "Exportar senhas"
+      ],
+      "Export to CSV": [
+        "Exportar para CSV"
+      ],
+      "Export to TXT": [
+        "Exportar para TXT"
+      ],
+      "File": [
+        "Arquivo"
+      ],
+      "Go to ${ passwords }.": [
+        "Vá para ${ passwords }."
+      ],
+      "Google Password Manager": [
+        "Gerenciador de Senhas do Google"
+      ],
+      "Manage your vault": [
+        "Gerencie seu cofre"
+      ],
+      "Microsoft password manager": [
+        "Gerenciador de senhas da Microsoft"
+      ],
+      "More actions": [
+        "Mais ações"
+      ],
+      "Passwords": [
+        "Senhas"
+      ],
+      "Passwords and Autofill": [
+        "Senhas e preenchimento automático"
+      ],
+      "Passwords and autofill": [
+        "Senhas e preenchimento automático"
+      ],
+      "Settings": [
+        "Configurações"
+      ],
+      "Submit": [
+        "Enviar"
+      ],
+      "Vault": [
+        "Cofre"
+      ],
+      "Vault options": [
+        "Opções do cofre"
+      ],
+      "your username": [
+        "seu nome de usuário"
       ]
     },
     "Info": {
@@ -1895,9 +2047,6 @@
       "Can view this item.": [
         "Pode vere esse item."
       ],
-      "Change your password": [
-        "Alterar sua senha"
-      ],
       "Choose a saved passkey to sign-in to ${ domain }": [
         "Escolha uma chave de acesso salva para iniciar sessão em ${ domain }"
       ],
@@ -1997,9 +2146,6 @@
       "Editor": [
         "Editor"
       ],
-      "email": [
-        "e-mail"
-      ],
       "Email address successfully deleted from monitoring": [
         "O endereço de e-mail foi excluído do monitoramento."
       ],
@@ -2096,9 +2242,6 @@
       "Fill in the CSV with your data": [
         "Preencha o CSV com seus dados"
       ],
-      "finance": [
-        "finança"
-      ],
       "Folder \"${ payload.folder.name }\" created": [
         "Pasta \"${ payload.folder.name }\" criada"
       ],
@@ -2182,6 +2325,9 @@
       "invites you to access items in": [
         "convida você a acessar itens em"
       ],
+      "iOS and Android Apps": [
+        "Aplicativos para iOS e Android"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Parece que você já está logado em ${ PASS_APP_NAME }. Se você estiver tentando fazer login com uma conta diferente, primeiro saia da extensão."
       ],
@@ -2264,9 +2410,6 @@
       "Medium Priority": [
         "Média prioridade"
       ],
-      "Monitor accounts": [
-        "Monitor de contas"
-      ],
       "Monitoring settings successfully updated": [
         "As configurações de monitoramento foram atualizadas."
       ],
@@ -2284,7 +2427,8 @@
         "Movendo todos os itens de \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Movendo um item para outro cofre apagará seu link seguro."
+        "Movendo um item para outro cofre apagará seu link seguro.",
+        "Movendo item para outro cofre apagará seus links seguros."
       ],
       "Moving items": [
         "Movendo itens"
@@ -2334,6 +2478,9 @@
       "None": [
         "Nenhum"
       ],
+      "None of your saved passwords have appeared in a known data breach.": [
+        "Nenhuma das suas senhas salvas apareceu em um vazamento de dados conhecido."
+      ],
       "None selected": [
         "Nenhum selecionado"
       ],
@@ -2378,9 +2525,6 @@
       ],
       "Passkey sign-in": [
         "Iniciar sessão com chave de acesso"
-      ],
-      "password": [
-        "senha"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Senha de bloqueio registrada. Use-a para desbloquear o ${ PASS_APP_NAME }"
@@ -2610,6 +2754,9 @@
       ],
       "Save passkey": [
         "Salvar chave de acesso"
+      ],
+      "Scan to download": [
+        "Digitalizar para baixar"
       ],
       "Secure links": [
         "Links seguros"
@@ -2870,9 +3017,6 @@
       "User's access successfully updated": [
         "O acesso do usuário foi atualizado."
       ],
-      "username": [
-        "Nome de usuário"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Cofre \"${ payload.content.name }\" excluído"
       ],
@@ -3086,6 +3230,9 @@
       "${ hours } hour": [
         "${ hours } hora",
         "${ hours } horas"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } caracteres"
       ],
       "${ minutes } minute": [
         "${ minutes } minutos",
@@ -3699,6 +3846,9 @@
       "LinkedIn account": [
         "Conta do LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Início de sessão"
       ],
@@ -3707,6 +3857,9 @@
       ],
       "Logins": [
         "Inícios de sessão"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Caixas de correio"
@@ -4023,6 +4176,9 @@
       "Server": [
         "Servidor"
       ],
+      "Service": [
+        "Serviço"
+      ],
       "Settings": [
         "Configurações"
       ],
@@ -4241,6 +4397,9 @@
       ],
       "WiFi network": [
         "Rede Wi-Fi"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Detalhes do trabalho"
@@ -4627,6 +4786,9 @@
       "This URL will NOT be blocked from autofill": [
         "Esta URL NÃO será bloqueada no preenchimento automático"
       ],
+      "URL doesn't match the rule": [
+        "URL não corresponde a regra"
+      ],
       "URL matches the rule": [
         "A URL corresponde à regra"
       ]
@@ -4871,6 +5033,9 @@
       "Browser permission required": [
         "É necessária a permissão do navegador"
       ],
+      "Browsers": [
+        "Navegadores"
+      ],
       "Cancel changing your email?": [
         "Cancelar a alteração do seu e-mail?"
       ],
@@ -5016,6 +5181,9 @@
       "Excluded items": [
         "Itens excluídos"
       ],
+      "Export": [
+        "Exportar"
+      ],
       "Fill & copy password": [
         "Preencher e copiar senha"
       ],
@@ -5024,6 +5192,12 @@
       ],
       "Folder options": [
         "Opções da pasta"
+      ],
+      "Get mobile and desktop apps": [
+        "Obtenha aplicativos móveis e para computador"
+      ],
+      "Get mobile apps": [
+        "Obter aplicativos móveis"
       ],
       "Get Started": [
         "Começar"
@@ -5052,8 +5226,17 @@
       "Import - ${ date }": [
         "Importar - ${ date }"
       ],
+      "Import failed": [
+        "Erro na importação"
+      ],
+      "Import successful": [
+        "Importação com sucesso"
+      ],
       "Import to vault(s)": [
         "Importar para cofre(s)"
+      ],
+      "Imported items:": [
+        "Itens importados"
       ],
       "Importing your data": [
         "Importando seus dados"
@@ -5066,6 +5249,9 @@
       ],
       "Item": [
         "Item"
+      ],
+      "Keep your subscription active": [
+        "Mantenha sua assinatura ativa"
       ],
       "Last autofill": [
         "Último preenchimento automático"
@@ -5180,6 +5366,9 @@
       "Password Health": [
         "Integridade da senha"
       ],
+      "Password managers": [
+        "Gerenciadores de senhas"
+      ],
       "Pause monitoring?": [
         "Pausar monitoramento?"
       ],
@@ -5254,6 +5443,9 @@
       "Select the default domain for aliases": [
         "Selecione o domínio padrão para aliases"
       ],
+      "Select your password manager": [
+        "Selecione seu gerenciador de senhas"
+      ],
       "Set access level": [
         "Definir nível de acesso"
       ],
@@ -5277,6 +5469,9 @@
       ],
       "Shared via": [
         "Compartilhar via"
+      ],
+      "Some of your items could not be imported. See the details below.": [
+        "Alguns de seus itens não ponderam ser importados. Veja os detalhes abaixo."
       ],
       "SPF (Optional)": [
         "SPF (Opcional)"
@@ -5325,6 +5520,12 @@
       ],
       "Upgrade to check for compromised passwords": [
         "Faça upgrade para verificar se há senhas comprometidas"
+      ],
+      "Upload": [
+        "Enviar"
+      ],
+      "Upload your data": [
+        "Enviar seus dados"
       ],
       "URL matching": [
         "Correspondência de URL"
@@ -5422,8 +5623,16 @@
       "OTP secret or URI is invalid": [
         "A chave secreta OTP ou o URL não funciona."
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "A senha deve conter ao menos ${ MIN_PASSWORD_LENGTH } caractere",
+        "A senha deve conter ao menos ${ MIN_PASSWORD_LENGTH } caracteres"
+      ],
       "Section name cannot be empty": [
         "O nome da seção não pode estar vazio"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Tente um nome de usuário mais curto (máximo de ${ n } caractere)",
+        "Tente um nome de usuário mais curto (máximo de ${ n } caracteres)"
       ],
       "URL already exists": [
         "URL já existe"
@@ -5585,9 +5794,6 @@
       ],
       "Move to trash": [
         "Mover para a lixeira"
-      ],
-      "Name is required": [
-        "Nome é obrigatório"
       ],
       "No items": [
         "Nenhum item"

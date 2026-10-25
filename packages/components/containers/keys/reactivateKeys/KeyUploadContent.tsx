@@ -7,14 +7,14 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import type { ButtonProps } from '@proton/atoms/Button/Button';
 import { Button } from '@proton/atoms/Button/Button';
 import { IcTrash } from '@proton/icons/icons/IcTrash';
-import type { ArmoredKeyWithInfo } from '@proton/shared/lib/keys';
+import type { ArmoredKeyWithInfo } from '@proton/shared/lib/keys/keyImport';
 import removeItem from '@proton/utils/removeIndex';
 import uniqueBy from '@proton/utils/uniqueBy';
 
 import Table from '../../../components/table/Table';
 import TableBody from '../../../components/table/TableBody';
 import TableRow from '../../../components/table/TableRow';
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import { type ProcessedKey, useProcessKey } from '../importKeys/useProcessKey';
 
 interface FileInputProps {

@@ -1,8 +1,10 @@
-import type { ChunkWatchdog, ChunkWatchdogOptions } from './types';
+import { logger } from '@protontech/logger';
+
+import type { ChunkWatchdog, ChunkWatchdogOptions, RecordingStallCause } from './types';
 
 const DEFAULT_INTERVAL_MS = 2_000;
 const DEFAULT_PRIMING_THRESHOLD_MS = 15_000;
-const DEFAULT_STALL_THRESHOLD_MS = 10_000;
+export const DEFAULT_STALL_THRESHOLD_MS = 10_000;
 
 // Surfaces stalled MediaRecorder encoders to the console and Sentry.
 //
@@ -17,6 +19,8 @@ export const createChunkWatchdog = ({
     reportMeetError,
     getRecorderState,
     getCodec,
+    getStallCause,
+    getReportContext,
     intervalMs = DEFAULT_INTERVAL_MS,
     primingThresholdMs = DEFAULT_PRIMING_THRESHOLD_MS,
     stallThresholdMs = DEFAULT_STALL_THRESHOLD_MS,
@@ -25,6 +29,20 @@ export const createChunkWatchdog = ({
     let interval: ReturnType<typeof setInterval> | null = null;
     let startedAt = 0;
     let warned = false;
+
+    let currentStall: { startedAt: number; cause: RecordingStallCause } | null = null;
+    let stallCount = 0;
+    let stallTotalMs = 0;
+    let stallLongestMs = 0;
+    let longestStallCause: RecordingStallCause | null = null;
+
+    const recordStallDuration = (durationMs: number, cause: RecordingStallCause) => {
+        stallTotalMs += durationMs;
+        if (durationMs > stallLongestMs) {
+            stallLongestMs = durationMs;
+            longestStallCause = cause;
+        }
+    };
 
     const tick = () => {
         const snapshot = stats.snapshot();
@@ -38,19 +56,12 @@ export const createChunkWatchdog = ({
             const phase = hasFirstChunk ? 'stall' : 'no-first-chunk';
             const recordingCodec = getCodec();
             const mediaRecorderState = getRecorderState();
+            const stallCause = getStallCause();
+            const reportContext = getReportContext();
 
-            // eslint-disable-next-line no-console
-            console.error(
-                `[MeetingRecorder] watchdog: no chunk with data in the last ${Math.round(sinceLastChunk)}ms (${phase})`,
-                {
-                    isWebCodecs,
-                    recordingCodec,
-                    mediaRecorderState,
-                    chunksWithData: snapshot.chunkCount,
-                    emptyChunks: snapshot.emptyChunkCount,
-                    firstChunkAt: snapshot.firstChunkAt,
-                }
-            );
+            currentStall = { startedAt: hasFirstChunk ? snapshot.lastChunkAt : startedAt, cause: stallCause };
+            stallCount += 1;
+
             reportMeetError(
                 isWebCodecs
                     ? 'MeetingRecording Error WebCodecs: watchdog detected stalled MediaRecorder'
@@ -64,6 +75,8 @@ export const createChunkWatchdog = ({
                         emptyChunks: snapshot.emptyChunkCount,
                         sinceLastChunkMs: Math.round(sinceLastChunk),
                         phase,
+                        stallCause,
+                        ...reportContext,
                     },
                 }
             );
@@ -71,8 +84,11 @@ export const createChunkWatchdog = ({
 
         if (sinceLastChunk <= threshold && warned) {
             warned = false;
-            // eslint-disable-next-line no-console
-            console.log('[MeetingRecorder] watchdog: chunks resumed');
+            if (currentStall) {
+                recordStallDuration(snapshot.lastChunkAt - currentStall.startedAt, currentStall.cause);
+                currentStall = null;
+            }
+            logger.info('[MeetingRecorder] watchdog: chunks resumed');
         }
     };
 
@@ -90,6 +106,17 @@ export const createChunkWatchdog = ({
                 clearInterval(interval);
                 interval = null;
             }
+        },
+        getStallSummary: () => {
+            const openStallMs = currentStall ? performance.now() - currentStall.startedAt : 0;
+            const isOpenStallLongest = currentStall !== null && openStallMs > stallLongestMs;
+
+            return {
+                stallCount,
+                stallTotalMs: Math.round(stallTotalMs + openStallMs),
+                stallLongestMs: Math.round(Math.max(stallLongestMs, openStallMs)),
+                longestStallCause: isOpenStallLongest && currentStall ? currentStall.cause : longestStallCause,
+            };
         },
     };
 };

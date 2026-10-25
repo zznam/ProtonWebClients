@@ -8,8 +8,8 @@ import { act as actHook, renderHook as originalRenderHook } from '@testing-libra
 import type { History } from 'history';
 import { createMemoryHistory } from 'history';
 
+import { getModelState } from '@proton/account/testing/getModelState';
 import { getOrganizationState } from '@proton/account/testing/redux-state';
-import { getModelState } from '@proton/account/tests';
 import { ApiContext } from '@proton/app-context/apiContext';
 import { createCalendarModelEventManager } from '@proton/calendar/calendarModelEventManager';
 import SpotlightProvider from '@proton/components/components/spotlight/Provider';
@@ -23,19 +23,19 @@ import ModalsProvider from '@proton/components/containers/modals/Provider';
 import { DrawerProvider } from '@proton/components/hooks/drawer/useDrawer';
 import { registerFeatureFlagsApiMock } from '@proton/features/testing/features';
 import type { MessagesState } from '@proton/mail/store/messages/messagesTypes';
+import { buildEntitlementCatalog } from '@proton/payments/testing/buildEntitlementCatalog';
+import { makeEntitlements } from '@proton/payments/testing/makeEntitlements';
 import { getSubscriptionState } from '@proton/payments/testing/redux-state';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import { APPS } from '@proton/shared/lib/constants';
 import { wait } from '@proton/shared/lib/helpers/promise';
-import type {
-    ApiEnvironmentConfig,
-    CachedOrganizationKey,
-    DecryptedKey,
-    ProtonConfig,
-    UserModel,
-    UserSettings,
-} from '@proton/shared/lib/interfaces';
-import type { CalendarUserSettings } from '@proton/shared/lib/interfaces/calendar';
+import type { ApiEnvironmentConfig } from '@proton/shared/lib/interfaces/ApiEnvironmentConfig';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import type { CachedOrganizationKey } from '@proton/shared/lib/interfaces/OrganizationKey';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
+import type { CalendarUserSettings } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { DEFAULT_MAIL_SETTINGS, DELAY_IN_SECONDS, PM_SIGNATURE } from '@proton/shared/lib/mail/mailSettings';
 
 import { ComposerAssistantProvider } from '../../components/assistant/provider/ComposerAssistantProvider';
@@ -206,6 +206,8 @@ export const getStoreWrapper = ({
             calendarUserSettings: getModelState({} as CalendarUserSettings),
             holidaysDirectory: getModelState([]),
             importerConfig: getModelState({} as ApiEnvironmentConfig),
+            entitlementCatalog: getModelState(buildEntitlementCatalog()),
+            entitlements: getModelState(makeEntitlements()),
             conversationCounts: getModelState([]),
             messageCounts: getModelState([]),
             attachments: {} as AttachmentsState,

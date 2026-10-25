@@ -82,9 +82,6 @@
       "Blurred office background applied": [
         "已应用模糊办公室背景"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "由于网络限制，已通过 TURN 中继模式连接。这可能会增加延迟并影响通话质量。"
-      ],
       "Connection lost. Reconnecting…": [
         "连接断开，正在重连…"
       ],
@@ -237,9 +234,6 @@
       "Cancel": [
         "取消"
       ],
-      "Change layout": [
-        "更改布局"
-      ],
       "Change password": [
         "更改密码"
       ],
@@ -336,9 +330,6 @@
       "Download": [
         "下载"
       ],
-      "Download app": [
-        "下载应用程序"
-      ],
       "Download local participant report": [
         "下载本地参与者报告"
       ],
@@ -368,9 +359,6 @@
       ],
       "Enable camera": [
         "启用摄像头"
-      ],
-      "Enable captions": [
-        "启用字幕"
       ],
       "Enable waiting room": [
         "启用等候室"
@@ -459,6 +447,9 @@
       "Minimize preview": [
         "最小化预览"
       ],
+      "More info": [
+        "更多信息"
+      ],
       "More info: ${ safeTitle }": [
         "更多信息：${ safeTitle }"
       ],
@@ -480,8 +471,8 @@
       "Noise cancellation": [
         "降噪"
       ],
-      "Open app": [
-        "打开应用"
+      "Not now": [
+        "以后再说"
       ],
       "Open link": [
         "打开链接"
@@ -678,9 +669,6 @@
       "Stay in meeting": [
         "留在会议中"
       ],
-      "Stop opening meetings in the desktop app": [
-        "停止在桌面应用中打开会议"
-      ],
       "Stop receiving video": [
         "停止接收视频"
       ],
@@ -692,6 +680,9 @@
       ],
       "Stop Recording Track Stats": [
         "停止录制轨道统计"
+      ],
+      "Stop sharing": [
+        "停止分享"
       ],
       "Submit": [
         "提交"
@@ -741,9 +732,6 @@
       "Use camera": [
         "使用摄像头"
       ],
-      "Use it": [
-        "应用"
-      ],
       "Use microphone": [
         "使用麦克风"
       ],
@@ -788,9 +776,6 @@
       "Blur background": [
         "模糊背景"
       ],
-      "Chat": [
-        "聊天"
-      ],
       "Close": [
         "关闭"
       ],
@@ -803,23 +788,11 @@
       "Copy meeting link": [
         "复制会议链接"
       ],
-      "Debug devices": [
-        "调试设备"
-      ],
-      "Debug overlay": [
-        "调试叠加层"
-      ],
-      "Device Debugger": [
-        "设备调试器"
-      ],
       "Go to dashboard": [
         "转到控制面板"
       ],
       "Incoming video": [
         "传入视频"
-      ],
-      "Layout: ${ selectedLabel }": [
-        "布局：${ selectedLabel }"
       ],
       "Leave Meeting": [
         "离开会议"
@@ -829,12 +802,6 @@
       ],
       "Lock meeting": [
         "锁定会议"
-      ],
-      "Lower hand": [
-        "放下"
-      ],
-      "Meeting details": [
-        "会议详情"
       ],
       "Meeting timer": [
         "会议计时器"
@@ -854,14 +821,8 @@
       "Participant host control options": [
         "参与者主持人控制选项"
       ],
-      "Participants": [
-        "参与者"
-      ],
       "Picture-in-picture while sharing": [
         "共享时使用画中画"
-      ],
-      "Raise hand": [
-        "举手"
       ],
       "Rotate camera": [
         "旋转摄像头"
@@ -869,14 +830,8 @@
       "Save my name on this device": [
         "在此设备上保存我的姓名"
       ],
-      "Screen share": [
-        "屏幕共享"
-      ],
       "Self view": [
         "自身视图"
-      ],
-      "Settings": [
-        "设置"
       ],
       "Stop recording and download.": [
         "停止录制并下载"
@@ -887,17 +842,11 @@
       "Toggle emoji reactions": [
         "切换表情反应"
       ],
-      "Toggle meeting details": [
-        "切换会议详情"
-      ],
       "Toggle participants": [
         "切换参与者列表"
       ],
       "Toggle screen share": [
         "切换屏幕共享"
-      ],
-      "Toggle settings": [
-        "切换设置"
       ],
       "Video settings": [
         "视频设置"
@@ -969,14 +918,9 @@
         "活跃"
       ]
     },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "由于您的网络限制，已通过 TURN 中继模式连接。这可能会增加延迟并影响通话质量。"
-      ]
-    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } 桌面应用"
+      "${ appName } Desktop application": [
+        "${ appName } 桌面应用"
       ]
     },
     "Bug category": {
@@ -2166,6 +2110,9 @@
       "Incorrect backup password. Please try again.": [
         "备份密码不正确，请重试。"
       ],
+      "Incorrect password. Please try again.": [
+        "密码错误，请重试。"
+      ],
       "Incorrect second password. Please try again.": [
         "二级密码错误，请重试。"
       ],
@@ -2186,9 +2133,6 @@
       ],
       "Legacy public link cannot be updated. Please re-create a new public link.": [
         "旧版公开链接无法更新，请重新创建新的公开链接！"
-      ],
-      "Live captions aren't working. Try turning them off and on again.": [
-        "实时字幕无法使用，请尝试关闭后重新开启。"
       ],
       "Live captions couldn't be started.": [
         "无法开启实时字幕。"
@@ -2409,6 +2353,9 @@
       "We couldn’t send a verification code using this method.": [
         "我们无法通过此类方式发送验证码。"
       ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "恢复短语错误，请重试或使用其他恢复方法。"
+      ],
       "You can create public links for your own files only": [
         "您只能为自己拥有的文件创建公开链接"
       ],
@@ -2613,9 +2560,6 @@
       " and ": [
         "和"
       ],
-      "${ deviceLabel } is available again": [
-        "${ deviceLabel } 已恢复可用"
-      ],
       "${ maxParticipants } participant limit reached": [
         "已达到 ${ maxParticipants } 名参与者上限"
       ],
@@ -2741,9 +2685,6 @@
       ],
       "Camera permission denied": [
         "摄像头权限被拒绝"
-      ],
-      "Captions are on": [
-        "字幕已开启"
       ],
       "Changes are staged. Apply to rebuild the preview with the new constants.": [
         "更改已暂存，应用以使用新常量重建预览。"
@@ -2894,9 +2835,6 @@
       ],
       "Get a secure meeting link then add it to your calendar": [
         "获取安全的会议链接，然后将其添加到您的日历"
-      ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "通过 ${ protonMeet } 桌面应用获得最佳体验"
       ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "请前往 about:config，搜索 media.peerconnection.enabled，并将其设置为 true"
@@ -3228,9 +3166,6 @@
       "Share screen": [
         "共享屏幕"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "分享此链接以邀请他人，您也可以随时点击工具栏中的信息图标找到它。"
-      ],
       "Sign in": [
         "登录"
       ],
@@ -3239,9 +3174,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "此浏览器不支持扬声器选择，请使用系统设置选择其他扬声器。"
-      ],
-      "Start recording": [
-        "开始录制"
       ],
       "Starting camera…": [
         "正在启动摄像头…"
@@ -3285,9 +3217,6 @@
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "此会议已达到免费套餐的时长限制，请升级以在未来的通话中延长会议时长。"
       ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "此会议已在 ${ MEET_APP_NAME } 桌面应用中打开"
-      ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "此录制将从本设备中永久删除，此操作无法撤销。"
       ],
@@ -3302,9 +3231,6 @@
       ],
       "To create a room, you'll need **a free ${ BRAND_NAME } Account** so we can save the room. This only takes a few seconds.": [
         "要创建会议室，您需要**一个免费的 ${ BRAND_NAME } 账户**，以便我们保存该会议室。这仅需几秒钟。"
-      ],
-      "To create live captions, the captioning service needs access to the meeting audio. Captions are only visible to you and are not saved.": [
-        "要生成实时字幕，字幕服务需要访问会议音频。字幕仅您可见且不会保存。"
       ],
       "To fight spam and abuse, please verify you are human.": [
         "为了防止垃圾邮件和滥用行为，请进行人机验证。"
@@ -3326,9 +3252,6 @@
       ],
       "Turn on camera": [
         "开启摄像头"
-      ],
-      "Turn on live captions?": [
-        "开启实时字幕？"
       ],
       "Unable to reconnect to the meeting. Please rejoin or leave.": [
         "无法重新连接到会议，请重新加入或离开。"
@@ -3393,9 +3316,6 @@
       "You are almost there": [
         "快要完成了"
       ],
-      "You can close this tab.": [
-        "您可以关闭此标签页"
-      ],
       "You can now return to the application to continue": [
         "您现在可以返回到应用程序以继续"
       ],
@@ -3447,38 +3367,14 @@
       "Your browser or device isn’t supported": [
         "您的浏览器或设备不受支持"
       ],
-      "Your camera was disconnected. Now using ${ deviceLabel }.": [
-        "您的摄像头已断开连接，现使用 ${ deviceLabel }。"
-      ],
-      "Your device was disconnected. Now using ${ deviceLabel }.": [
-        "您的设备已断开连接，现使用 ${ deviceLabel }。"
-      ],
       "Your email will only be used for this one-time verification.": [
         "您的邮箱将只会用于此一次性验证。"
       ],
       "Your meeting is ready": [
         "您的会议已准备就绪"
       ],
-      "Your microphone and camera were disconnected. Now using other devices.": [
-        "您的麦克风和摄像头已断开连接，现使用其他设备。"
-      ],
-      "Your microphone and speaker were disconnected. Now using other devices.": [
-        "您的麦克风和扬声器已断开连接，现使用其他设备。"
-      ],
-      "Your microphone was disconnected. Now using ${ deviceLabel }.": [
-        "您的麦克风已断开连接，现使用 ${ deviceLabel }。"
-      ],
-      "Your microphone, speaker and camera were disconnected. Now using other devices.": [
-        "您的麦克风、扬声器和摄像头已断开连接，现使用其他设备。"
-      ],
       "Your phone number will only be used for this one-time verification.": [
         "您的电话号码将只会用于此一次性验证。"
-      ],
-      "Your speaker and camera were disconnected. Now using other devices.": [
-        "您的扬声器和摄像头已断开连接，现使用其他设备。"
-      ],
-      "Your speaker was disconnected. Now using ${ deviceLabel }.": [
-        "您的扬声器已断开连接，现使用 ${ deviceLabel }。"
       ],
       "You’re about to open a link in a new tab. Make sure you trust the website before continuing.": [
         "您即将在新标签页中打开一个链接。请确保您信任该网站，然后再继续。"
@@ -3670,6 +3566,9 @@
       ],
       "Monday to Friday": [
         "周一至周五"
+      ],
+      "More options": [
+        "更多选项"
       ],
       "Mountain landscape background": [
         "山景背景"

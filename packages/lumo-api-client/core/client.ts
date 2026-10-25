@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 import type {
     ChatCompletionsFunctionTool,
     ChatCompletionsTool,
+    LumoClientType,
     LumoCompletionTarget,
     ResponseFormat,
     ToolName,
@@ -125,6 +126,8 @@ export class LumoApiClient {
             clientTools,
             serverTools,
             clientToolExecutor,
+            featureFlags,
+            clientType,
         } = options;
         const { enableU2LEncryption, endpoint } = this.config;
 
@@ -163,7 +166,9 @@ export class LumoApiClient {
                     chunkCallback,
                     encryption,
                     enableU2LEncryption,
-                    modelTier === 'apertus-15' ? 'apertus-15' : 'lumo-lite'
+                    modelTier === 'apertus-15' ? 'apertus-15' : 'lumo-lite',
+                    featureFlags,
+                    clientType
                 ).catch((error) => {
                     if (error?.name === 'AbortError') {
                         return;
@@ -184,7 +189,9 @@ export class LumoApiClient {
                     chunkCallback,
                     encryption,
                     enableU2LEncryption,
-                    modelTier === 'apertus-15' ? 'apertus-15' : 'lumo-lite'
+                    modelTier === 'apertus-15' ? 'apertus-15' : 'lumo-lite',
+                    featureFlags,
+                    clientType
                 ).catch((error) => {
                     if (error?.name === 'AbortError') {
                         return;
@@ -232,6 +239,8 @@ export class LumoApiClient {
                         responseFormat,
                         clientTools,
                         serverTools,
+                        featureFlags,
+                        clientType,
                     })
                 );
 
@@ -249,7 +258,7 @@ export class LumoApiClient {
                     responseContext,
                     roundChunkCallback,
                     undefined,
-                    { target: 'message', modelTier, responseFormat, clientTools, serverTools }
+                    { target: 'message', modelTier, responseFormat, clientTools, serverTools, featureFlags, clientType }
                 );
                 finalStatus = status;
 
@@ -290,7 +299,9 @@ export class LumoApiClient {
             }
         }
 
-        return { status: finalStatus, turns: currentTurns };
+        const sentCount = this.stripTrailingEmptyAssistant(turns).length;
+        const producedTurns = this.withAssistantReply(currentTurns, roundReply).slice(sentCount);
+        return { status: finalStatus, turns: currentTurns, producedTurns };
     }
 
     private async runSseReceiveLoop(
@@ -309,6 +320,8 @@ export class LumoApiClient {
             responseFormat?: ResponseFormat;
             clientTools?: ChatCompletionsFunctionTool[];
             serverTools?: ToolName[];
+            featureFlags?: AssistantCallOptions['featureFlags'];
+            clientType?: LumoClientType;
         } = {}
     ): Promise<{ pendingClientToolCalls: PendingClientToolCall[]; status: Status }> {
         const enableSmoothing = options.enableSmoothing ?? this.config.enableSmoothing;
@@ -326,6 +339,8 @@ export class LumoApiClient {
             responseFormat: options.responseFormat,
             clientTools: options.clientTools,
             serverTools: options.serverTools,
+            featureFlags: options.featureFlags,
+            clientType: options.clientType,
         });
 
         try {
@@ -391,6 +406,8 @@ export class LumoApiClient {
             responseFormat?: ResponseFormat;
             clientTools?: ChatCompletionsFunctionTool[];
             serverTools?: ToolName[];
+            featureFlags?: AssistantCallOptions['featureFlags'];
+            clientType?: LumoClientType;
         }
     ) {
         return toChatCompletionsBody(request, {
@@ -400,6 +417,8 @@ export class LumoApiClient {
             responseFormat: options.responseFormat,
             clientTools: options.clientTools,
             serverTools: options.serverTools,
+            featureFlags: options.featureFlags,
+            clientType: options.clientType,
         });
     }
 
@@ -547,7 +566,9 @@ export class LumoApiClient {
         chunkCallback: ChunkCallback | undefined,
         encryption: RequestEncryptionParams | null,
         enableU2LEncryption: boolean,
-        modelTier: AssistantCallOptions['modelTier'] = 'auto'
+        modelTier: AssistantCallOptions['modelTier'] = 'auto',
+        featureFlags?: AssistantCallOptions['featureFlags'],
+        clientType?: LumoClientType
     ): Promise<void> {
         const request = await this.prepareGenerationRequest(turns, encryption, {
             enableExternalTools: false,
@@ -569,6 +590,8 @@ export class LumoApiClient {
             enableSmoothing: false,
             target,
             modelTier,
+            featureFlags,
+            clientType,
         });
     }
 

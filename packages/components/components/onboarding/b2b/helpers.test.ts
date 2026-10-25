@@ -1,6 +1,7 @@
-import { PLANS } from '@proton/payments/core/constants';
-import { getPlan } from '@proton/payments/core/subscription/helpers';
-import { buildSubscription } from '@proton/payments/testing/buildSubscription';
+import { EntitlementName } from '@proton/payments/core/entitlements/entitlement-names';
+import { EntitlementScope, EntitlementType } from '@proton/payments/core/entitlements/interface';
+import { createEntitlementResolverForOrgAndUser } from '@proton/payments/core/entitlements/resolver';
+import { makeEntitlements } from '@proton/payments/testing/makeEntitlements';
 import {
     APPS,
     CALENDAR_APP_NAME,
@@ -13,33 +14,24 @@ import {
 import { getFeatures, getSections } from './helpers';
 import type { B2BFeaturesSection } from './interface';
 
-jest.mock('@proton/payments/core/subscription/helpers', () => ({
-    __esModule: true,
-    ...jest.requireActual('@proton/payments/core/subscription/helpers'),
-    getPlan: jest.fn(),
-}));
+const entitlementsWithGroups = createEntitlementResolverForOrgAndUser(
+    undefined,
+    makeEntitlements([
+        {
+            Name: EntitlementName.Groups,
+            Quantity: 1,
+            Type: EntitlementType.Switch,
+            Scope: EntitlementScope.Organization,
+        },
+    ]),
+    []
+);
+const entitlementsWithoutGroups = createEntitlementResolverForOrgAndUser(undefined, makeEntitlements(), []);
 
-const setMockPlan = (planName: PLANS) => {
-    (getPlan as jest.Mock).mockReturnValue({
-        MaxAddresses: 5,
-        MaxCalendars: 1,
-        MaxDomains: 1,
-        MaxMembers: 1,
-        MaxSpace: 536870912000,
-        Name: planName,
-    });
-};
 describe('b2b onboarding helpers', () => {
-    beforeEach(() => {
-        jest.resetAllMocks();
-    });
-
     describe('getFeatures', () => {
         it('should return all features', () => {
-            setMockPlan(PLANS.BUNDLE_PRO_2024);
-            const subscription = buildSubscription();
-
-            const features = getFeatures(subscription).filter((f) => f.canShowFeature);
+            const features = getFeatures(entitlementsWithGroups).filter((f) => f.canShowFeature);
             const featuresIDs = features.map((f) => f.id);
 
             const expectedFeaturesIDs = [
@@ -67,10 +59,7 @@ describe('b2b onboarding helpers', () => {
         });
 
         it('should return only accessible features', () => {
-            setMockPlan(PLANS.MAIL_PRO);
-            const subscription = buildSubscription();
-
-            const features = getFeatures(subscription).filter((f) => f.canShowFeature);
+            const features = getFeatures(entitlementsWithoutGroups).filter((f) => f.canShowFeature);
             const featuresIDs = features.map((f) => f.id);
 
             const expectedFeaturesIDs = [

@@ -348,9 +348,6 @@
       "Connect to video conferencing": [
         "เชื่อมต่อกับการประชุมทางวิดีโอ"
       ],
-      "Connect your ${ BRAND_NAME } Account": [
-        "เชื่อมต่อบัญชี ${ BRAND_NAME }"
-      ],
       "Connect your email": [
         "เชื่อมต่ออีเมล"
       ],
@@ -429,14 +426,8 @@
       "Create": [
         "สร้าง"
       ],
-      "Create a ${ BRAND_NAME } Account": [
-        "สร้างบัญชี ${ BRAND_NAME }"
-      ],
       "Create a link to share with anyone outside ${ BRAND_NAME }": [
         "สร้างลิงก์เพื่อแชร์กับบุคคลภายนอก ${ BRAND_NAME }"
-      ],
-      "Create an account": [
-        "สร้างบัญชีใหม่"
       ],
       "Create calendar": [
         "สร้างปฏิทิน"
@@ -603,9 +594,6 @@
       "Dismiss": [
         "ปิดไป"
       ],
-      "Domain name": [
-        "ชื่อโดเมน"
-      ],
       "Don't show again": [
         "ไม่ต้องแสดงให้เห็นอีก"
       ],
@@ -614,9 +602,6 @@
       ],
       "Done": [
         "เสร็จสมบูรณ์"
-      ],
-      "Downgrade": [
-        "ดาวน์เกรด"
       ],
       "Download": [
         "ดาวน์โหลด"
@@ -1116,6 +1101,9 @@
       "More benefits": [
         "สิทธิประโยชน์เพิ่มเติม"
       ],
+      "More info": [
+        "ข้อมูลเพิ่มเติม"
+      ],
       "More info: ${ safeTitle }": [
         "ข้อมูลเพิ่มเติม: ${ safeTitle }"
       ],
@@ -1275,17 +1263,11 @@
       "Reload": [
         "โหลดใหม่"
       ],
-      "Reload page": [
-        "โหลดหน้าเว็บใหม่"
-      ],
       "Remove": [
         "เอาออก"
       ],
       "Remove all other devices": [
         "ลบอุปกรณ์อื่นทั้งหมดออก"
-      ],
-      "Remove bonuses": [
-        "ลบโบนัสออก"
       ],
       "Remove button": [
         "ลบปุ่มออก"
@@ -1520,9 +1502,6 @@
       ],
       "Set as default": [
         "ตั้งเป็นค่าเริ่มต้น"
-      ],
-      "Set as default mail application": [
-        "ตั้งเป็นแอปพลิเคชันอีเมลเริ่มต้น"
       ],
       "Set catch-all": [
         "ตั้งค่าฟีเจอร์ catch-all"
@@ -2114,15 +2093,6 @@
       "Configure security policies, data retention, and VPN infrastructure, and manage audit logs.": [
         "กำหนดค่านโยบายความปลอดภัย การเก็บรักษาข้อมูล และโครงสร้างพื้นฐาน VPN รวมถึงจัดการบันทึกการตรวจสอบ"
       ],
-      "Delegate management by assigning specific admin roles. Give each admin only the access they need. This follows the principle of least privilege, protecting your organization from compromised accounts and accidental errors.": [
-        "มอบหมายการจัดการโดยกำหนดบทบาทผู้ดูแลระบบเฉพาะ ให้สิทธิ์ผู้ดูแลระบบแต่ละคนเข้าถึงเฉพาะที่จำเป็นเท่านั้น ซึ่งเป็นไปตามหลักการสิทธิ์ขั้นต่ำที่จำเป็นในการปฏิบัติงาน เพื่อปกป้ององค์กรจากบัญชีที่ถูกละเมิดความปลอดภัยและความผิดพลาดที่เกิดขึ้นโดยไม่ได้ตั้งใจ"
-      ],
-      "Delegate management for many users at once. Assign specific admin roles to groups for automatic permissions. This follows the principle of least privilege to save time on onboarding and offboarding while reducing errors.": [
-        "มอบหมายการจัดการสำหรับผู้ใช้หลายคนพร้อมกัน กำหนดบทบาทผู้ดูแลระบบเฉพาะให้กับกลุ่มเพื่อกำหนดสิทธิ์โดยอัตโนมัติ การดำเนินการนี้เป็นไปตามหลักการกำหนดสิทธิ์เท่าที่จำเป็นเพื่อประหยัดเวลาในการเริ่มต้นและสิ้นสุดการทำงานร่วมกับผู้ใช้ ขณะเดียวกันก็ช่วยลดข้อผิดพลาด"
-      ],
-      "Delegate management with the appropriate admin role.": [
-        "มอบหมายการจัดการด้วยบทบาทผู้ดูแลระบบที่เหมาะสม"
-      ],
       "Manage all users, groups, storage, security, billing, audit logs, and system configurations.": [
         "จัดการผู้ใช้ กลุ่ม พื้นที่จัดเก็บ ความปลอดภัย การเรียกเก็บเงิน บันทึกการตรวจสอบ และการกำหนดค่าระบบทั้งหมด"
       ],
@@ -2409,12 +2379,6 @@
       ]
     },
     "bf2023: Info": {
-      "6 TB storage (2x more than any other plan)": [
-        "พื้นที่จัดเก็บ 6 TB (มากกว่าแผนอื่นถึง 2 เท่า)"
-      ],
-      "6 users": [
-        "ผู้ใช้ 6 ราย"
-      ],
       "Become a super-supporter. Get access to all current and future ${ BRAND_NAME } services.": [
         "มาเป็นผู้สนับสนุนระดับซูเปอร์ เข้าถึงบริการปัจจุบันและอนาคตทั้งหมดของ ${ BRAND_NAME }"
       ],
@@ -2426,9 +2390,6 @@
       ],
       "Premium versions of all ${ BRAND_NAME } services": [
         "เวอร์ชันพรีเมียมของบริการ ${ BRAND_NAME } ทั้งหมด"
-      ],
-      "The ${ plan } plan is back for a limited time only": [
-        "แผน ${ plan } กลับมาแล้วในช่วงเวลาจำกัดเท่านั้น"
       ]
     },
     "bf2023: info": {
@@ -2436,66 +2397,20 @@
         "ขออภัย ข้อเสนอนี้ไม่พร้อมใช้งานกับแผนปัจจุบัน แต่คุณสามารถรับส่วนลด ${ discountPercentage } สำหรับ ${ plan.Title } เมื่อสมัครสมาชิกเป็นเวลา ${ cycle } เดือน"
       ]
     },
-    "bf2023: Offers": {
-      "30-day money-back guarantee": [
-        "รับประกันคืนเงินภายใน 30 วัน"
-      ]
-    },
     "bf2023: Title": {
       "Offer unavailable": [
         "ข้อเสนอไม่พร้อมใช้งาน"
-      ]
-    },
-    "bf2023: Tooltip": {
-      "Includes support for 1 custom email domain, 10 email addresses, 10 hide-my-email aliases, calendar sharing, and more.": [
-        "รวมการรองรับ 1 โดเมนอีเมลแบบกำหนดเอง, 10 ที่อยู่อีเมล, 10 นามแฝง hide-my-email, การแชร์ปฏิทิน และอื่นๆ"
       ]
     },
     "BF2024: Deal details": {
       "${ MAIL_APP_NAME } desktop app": [
         "แอปเดสก์ท็อป ${ MAIL_APP_NAME }"
       ],
-      "${ plan } and ${ CALENDAR_SHORT_APP_NAME }": [
-        "${ plan } และ ${ CALENDAR_SHORT_APP_NAME }"
-      ],
       "${ storageSize } storage": [
         "พื้นที่จัดเก็บ ${ storageSize }"
       ],
-      "1 user account": [
-        "บัญชีผู้ใช้ 1 บัญชี"
-      ],
-      "200 GB storage: 40x your current plan": [
-        "พื้นที่จัดเก็บ 200 GB: 40 เท่าของแผนปัจจุบัน"
-      ],
-      "6 user accounts": [
-        "บัญชีผู้ใช้ 6 บัญชี"
-      ],
-      "Admin panel to manage your family": [
-        "แผงผู้ดูแลระบบเพื่อจัดการครอบครัว"
-      ],
-      "Advanced account protection": [
-        "การปกป้องบัญชีขั้นสูง"
-      ],
-      "Easily add or remove users": [
-        "เพิ่มหรือลบผู้ใช้ออกได้อย่างง่ายดาย"
-      ],
-      "One-time payment, lifetime deal": [
-        "ชำระเงินครั้งเดียว ดีลตลอดชีพ"
-      ],
-      "Online document editor": [
-        "ตัวแก้ไขเอกสารออนไลน์"
-      ],
-      "Password health alerts": [
-        "การแจ้งเตือนความปลอดภัยของรหัสผ่าน"
-      ],
-      "Recover previous file versions": [
-        "กู้คืนไฟล์เวอร์ชันก่อนหน้า"
-      ],
       "Unlimited folders, labels and filters": [
         "โฟลเดอร์ ป้ายกำกับ และตัวกรองแบบไม่จำกัด"
-      ],
-      "Unlimited logins, credit cards, hide-my-email aliases and more": [
-        "การเข้าสู่ระบบ, บัตรเครดิต, นามแฝง hide-my-email และอื่น ๆ ไม่จำกัด"
       ],
       "Use your own email domain": [
         "ใช้โดเมนอีเมลของคุณเอง"
@@ -2504,81 +2419,111 @@
     "BF2024: Offers": {
       "Billed at ${ amount } once": [
         "เรียกเก็บเงิน ${ amount } ครั้งเดียว"
-      ],
-      "Renews after 1 month at ${ regularAmount }.": [
-        "ต่ออายุหลังจาก 1 เดือน ในราคา ${ regularAmount }"
       ]
     },
     "BF2024: Tooltip": {
-      "Access blocked content and browse privately. Includes 8,500+ servers across 110+ countries, 10 devices, high-speed streaming, ad-blocker and malware protection, VPN Accelerator and more.": [
-        "เข้าถึงเนื้อหาที่ถูกบล็อกและเรียกดูแบบส่วนตัว รวมถึงเซิร์ฟเวอร์กว่า 8,500 แห่งในกว่า 110 ประเทศ, 10 อุปกรณ์, การสตรีมความเร็วสูง, ตัวบล็อกโฆษณาและการป้องกันมัลแวร์, VPN Accelerator และอื่นๆ"
-      ],
-      "Secure logins on all your devices. Includes unlimited hide-my-email aliases, sharing, integrated 2FA, ${ DARK_WEB_MONITORING_NAME } and more.": [
-        "การเข้าสู่ระบบที่ปลอดภัยในทุกอุปกรณ์ รวมถึงนามแฝง hide-my-email ไม่จำกัด, การแชร์, 2FA ในตัว, ${ DARK_WEB_MONITORING_NAME } และอื่น ๆ"
-      ],
-      "Secure your emails and schedule with end-to-end encryption. Includes ${ addresses } email address, support for custom email domains, ${ BRAND_NAME } Scribe writing assistant, unlimited hide-my-email aliases and more.": [
-        "ปกป้องอีเมลและตารางเวลาด้วยการเข้ารหัสลับจากต้นทางถึงปลายทาง รวมถึงที่อยู่อีเมล ${ addresses } แห่ง, ฝ่ายสนับสนุนสำหรับโดเมนอีเมลที่กำหนดเอง, ผู้ช่วยการเขียน ${ BRAND_NAME } Scribe, นามแฝง hide-my-email ไม่จำกัด และอื่นๆ"
-      ],
-      "Secure your emails and schedule with end-to-end encryption. Includes ${ addresses } email address, support for custom email domains, unlimited hide-my-email aliases and more.": [
-        "ปกป้องอีเมลและตารางเวลาด้วยการเข้ารหัสลับจากต้นทางถึงปลายทาง รวมถึงที่อยู่อีเมล ${ addresses } แห่ง, ฝ่ายสนับสนุนสำหรับโดเมนอีเมลที่กำหนดเอง, นามแฝง hide-my-email ไม่จำกัด และอื่นๆ"
-      ],
-      "Secure your emails and schedule with end-to-end encryption. Includes 15 email addresses, support for custom email domains, ${ BRAND_NAME } Scribe writing assistant, unlimited hide-my-email aliases and more.": [
-        "ปกป้องอีเมลและตารางเวลาด้วยการเข้ารหัสลับจากต้นทางถึงปลายทาง รวมถึงที่อยู่อีเมล 15 แห่ง, ฝ่ายสนับสนุนสำหรับโดเมนอีเมลที่กำหนดเอง, ผู้ช่วยการเขียน ${ BRAND_NAME } Scribe, นามแฝง hide-my-email ไม่จำกัด และอื่น ๆ"
-      ],
-      "Secure your emails and schedule with end-to-end encryption. Includes 15 email addresses, support for custom email domains, unlimited hide-my-email aliases and more.": [
-        "ปกป้องอีเมลและตารางเวลาด้วยการเข้ารหัสลับจากต้นทางถึงปลายทาง รวมถึงที่อยู่อีเมล 15 แห่ง, ฝ่ายสนับสนุนสำหรับโดเมนอีเมลที่กำหนดเอง, นามแฝง hide-my-email ไม่จำกัด และอื่นๆ"
-      ],
-      "Secure your files with encrypted cloud storage. Includes online document editor, photo backup, version history, encrypted file sharing, and more.": [
-        "ปกป้องไฟล์ด้วยพื้นที่จัดเก็บคลาวด์ที่เข้ารหัส รวมถึงตัวแก้ไขเอกสารออนไลน์, การสำรองข้อมูลรูปภาพ, ประวัติเวอร์ชัน, การแชร์ไฟล์ที่เข้ารหัส และอื่นๆ"
-      ],
       "Storage space is shared across all ${ BRAND_NAME } services.": [
         "พื้นที่จัดเก็บจะถูกแชร์ร่วมกันในบริการทั้งหมดของ ${ BRAND_NAME }"
       ]
     },
-    "BF2025: Deal details": {
-      "2 TB data storage": [
-        "พื้นที่จัดเก็บข้อมูลขนาด 2 TB"
+    "bfcampaign2026: Action": {
+      "Black Friday": [
+        "11.11"
       ],
-      "3 TB data storage": [
-        "พื้นที่จัดเก็บข้อมูลขนาด 3 TB"
-      ],
-      "Access 15,000+ servers in 120+ countries": [
-        "เข้าถึงเซิร์ฟเวอร์ 15,000+ เครื่องใน 120+ ประเทศ"
-      ],
-      "Access advanced AI models": [
-        "เข้าถึงโมเดล AI ขั้นสูง"
-      ],
-      "All premium features of ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, ${ DRIVE_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME }, and ${ CALENDAR_SHORT_APP_NAME }": [
-        "คุณสมบัติพรีเมียมทั้งหมดของ ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, ${ DRIVE_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME } และ ${ CALENDAR_SHORT_APP_NAME }"
-      ],
-      "Block ads, trackers, and malware": [
-        "บล็อกโฆษณา ตัวติดตาม และมัลแวร์"
-      ],
-      "Built-in 2FA authenticator": [
-        "เครื่องมือยืนยันตัวตน 2FA ในตัว"
-      ],
-      "Connect 10 devices at once": [
-        "เชื่อมต่อได้ 10 อุปกรณ์พร้อมกัน"
-      ],
-      "Full chat history with easy search and favorites": [
-        "ประวัติการแชทฉบับเต็มพร้อมระบบค้นหาและรายการโปรดที่ใช้งานง่าย"
-      ],
-      "Individual accounts for 6 users": [
-        "บัญชีส่วนบุคคลสำหรับผู้ใช้ 6 คน"
-      ],
-      "Individual accounts for you and a partner": [
-        "บัญชีส่วนบุคคลสำหรับผู้ใช้และพาร์ทเนอร์"
-      ],
-      "Stronger protection against cyber threats": [
-        "การป้องกันภัยคุกคามทางไซเบอร์ที่แข็งแกร่งยิ่งขึ้น"
-      ],
-      "Unlimited daily chats": [
-        "แชทรายวันได้ไม่จำกัด"
+      "Get the deal": [
+        "รับข้อเสนอ"
       ]
     },
-    "BF2025: Tooltip": {
-      "Specially designed NetShield protects your devices and speeds up your browsing by blocking ads, trackers, and malware.": [
-        "NetShield ที่ได้รับการออกแบบมาเป็นพิเศษจะช่วยปกป้องอุปกรณ์และเพิ่มความเร็วในการท่องเว็บด้วยการบล็อกโฆษณา ตัวติดตาม และมัลแวร์"
+    "bfcampaign2026: Info": {
+      "/month": [
+        "/เดือน"
+      ],
+      "15 GB storage": [
+        "พื้นที่จัดเก็บ 15 GB"
+      ],
+      "2 individual accounts": [
+        "2 บัญชีส่วนบุคคล"
+      ],
+      "2 TB of secure storage": [
+        "พื้นที่จัดเก็บที่ปลอดภัย 2 TB"
+      ],
+      "200 GB storage: 40x your current plan": [
+        "พื้นที่จัดเก็บ 200 GB: 40 เท่าของแผนปัจจุบัน"
+      ],
+      "3 TB of secure storage": [
+        "พื้นที่จัดเก็บที่ปลอดภัย 3 TB"
+      ],
+      "500 GB of secure storage": [
+        "พื้นที่จัดเก็บที่ปลอดภัย 500 GB"
+      ],
+      "6 individual accounts": [
+        "6 บัญชีส่วนบุคคล"
+      ],
+      "Built-in 2FA authenticator": [
+        "ตัวยืนยันตัวตน 2FA ในตัว"
+      ],
+      "Discounts are based on standard monthly pricing. Your subscription will renew at the standard annual rate when the billing cycle ends.": [
+        "ส่วนลดคำนวณจากราคามาตรฐานรายเดือน การสมัครสมาชิกจะต่ออายุในอัตรารายปีมาตรฐานเมื่อสิ้นสุดรอบการชำระเงิน"
+      ],
+      "Online document editor": [
+        "ตัวแก้ไขเอกสารออนไลน์"
+      ],
+      "Recover previous file versions": [
+        "กู้คืนไฟล์เวอร์ชันก่อนหน้า"
+      ],
+      "Stronger protection against cyber threats": [
+        "การปกป้องที่แข็งแกร่งขึ้นจากภัยคุกคามทางไซเบอร์"
+      ],
+      "Unlimited folders, labels, and filters": [
+        "โฟลเดอร์ ป้ายกำกับ และตัวกรองไม่จำกัด"
+      ],
+      "Use your own email domain": [
+        "ใช้โดเมนอีเมลของคุณเอง"
+      ]
+    },
+    "bfcampaign2026: Info, Drive first": {
+      "Premium ${ DRIVE_SHORT_APP_NAME }, ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, and ${ VPN_SHORT_APP_NAME }": [
+        "${ DRIVE_SHORT_APP_NAME } ${ MAIL_SHORT_APP_NAME } ${ PASS_SHORT_APP_NAME } และ ${ VPN_SHORT_APP_NAME } แบบพรีเมียม"
+      ]
+    },
+    "bfcampaign2026: Info, Family, Drive first": {
+      "Premium ${ DRIVE_SHORT_APP_NAME }, ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME }": [
+        "${ DRIVE_SHORT_APP_NAME } ${ MAIL_SHORT_APP_NAME } ${ PASS_SHORT_APP_NAME } ${ VPN_SHORT_APP_NAME } แบบพรีเมียม"
+      ]
+    },
+    "bfcampaign2026: Info, Family, Mail first": {
+      "Premium ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, ${ DRIVE_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME }": [
+        "${ MAIL_SHORT_APP_NAME } ${ PASS_SHORT_APP_NAME } ${ DRIVE_SHORT_APP_NAME } ${ VPN_SHORT_APP_NAME } แบบพรีเมียม"
+      ]
+    },
+    "bfcampaign2026: Info, Mail first": {
+      "Premium ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, ${ DRIVE_SHORT_APP_NAME }, and ${ VPN_SHORT_APP_NAME }": [
+        "${ MAIL_SHORT_APP_NAME } ${ PASS_SHORT_APP_NAME } ${ DRIVE_SHORT_APP_NAME } และ ${ VPN_SHORT_APP_NAME } แบบพรีเมียม"
+      ]
+    },
+    "bfcampaign2026: Info, Pass first": {
+      "Premium ${ PASS_SHORT_APP_NAME }, ${ MAIL_SHORT_APP_NAME }, ${ DRIVE_SHORT_APP_NAME }, and ${ VPN_SHORT_APP_NAME }": [
+        "${ PASS_SHORT_APP_NAME } ${ MAIL_SHORT_APP_NAME } ${ DRIVE_SHORT_APP_NAME } และ ${ VPN_SHORT_APP_NAME } แบบพรีเมียม"
+      ]
+    },
+    "bfcampaign2026: Title": {
+      "Biggest sale of the year": [
+        "มหกรรมลดราคาครั้งใหญ่ที่สุดแห่งปี"
+      ],
+      "Black Friday": [
+        "11.11"
+      ],
+      "for 12 months": [
+        "เป็นเวลา 12 เดือน"
+      ],
+      "Last chance to save big": [
+        "โอกาสสุดท้ายที่จะประหยัดสุดคุ้ม"
+      ],
+      "Protect your entire tribe": [
+        "ปกป้องคนทั้งกลุ่มของคุณ"
+      ],
+      "Protection for two in a single plan": [
+        "ปกป้องสองคนได้ในแผนเดียว"
       ]
     },
     "Billing cycle": {
@@ -2891,11 +2836,6 @@
         "ไม่พบเวอร์ชันล่าสุด"
       ]
     },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "แอปพลิเคชั่น ${ MAIL_APP_NAME } บนเดสก์ท็อป"
-      ]
-    },
     "Bug category": {
       "${ LUMO_SHORT_APP_NAME } problem": [
         "ปัญหา ${ LUMO_SHORT_APP_NAME }"
@@ -3033,11 +2973,6 @@
       ],
       "Take a tour": [
         "ชมแนะนำการใช้งาน"
-      ]
-    },
-    "BYOE": {
-      "Duplicates from previous imports will be skipped. Undo or import older messages in ${ PRODUCT_NAMES.EASY_SWITCH } settings.": [
-        "จะข้ามข้อมูลที่ซ้ำกันจากการนำเข้าครั้งก่อนหน้า สามารถเลิกทำหรือนำเข้าข้อความเก่าในการตั้งค่า ${ PRODUCT_NAMES.EASY_SWITCH }"
       ]
     },
     "Calendar access select label": {
@@ -3328,9 +3263,6 @@
       ],
       "Basic chat history": [
         "ประวัติการแชทพื้นฐาน"
-      ],
-      "Built and based in Europe": [
-        "สร้างและตั้งอยู่ในยุโรป"
       ],
       "Compliance with data protection regulations": [
         "การปฏิบัติตามกฎระเบียบการคุ้มครองข้อมูล"
@@ -4819,12 +4751,6 @@
       "${ DOCS_SHORT_APP_NAME } in ${ DRIVE_APP_NAME } allows you to work together with others in a secure, encrypted environment.": [
         "${ DOCS_SHORT_APP_NAME } ใน ${ DRIVE_APP_NAME } ช่วยให้ทำงานร่วมกับผู้อื่นได้ในสภาพแวดล้อมที่ปลอดภัยและเข้ารหัส"
       ],
-      "${ MAIL_APP_NAME } is not your default mail application.": [
-        "${ MAIL_APP_NAME } ไม่ใช่แอปพลิเคชันอีเมลเริ่มต้น"
-      ],
-      "${ MAIL_APP_NAME } is your default mail application.": [
-        "${ MAIL_APP_NAME } เป็นแอปพลิเคชันอีเมลเริ่มต้น"
-      ],
       "${ MAIL_APP_NAME } keeps your business data secure and lets you send encrypted emails to anyone.": [
         "${ MAIL_APP_NAME } รักษาความปลอดภัยของข้อมูลธุรกิจและช่วยให้ส่งอีเมลที่เข้ารหัสลับถึงใครก็ได้"
       ],
@@ -5393,12 +5319,6 @@
       ],
       "macOS Big Sur": [
         "macOS Big Sur"
-      ],
-      "macOS Catalina": [
-        "macOS Catalina"
-      ],
-      "macOS Mojave or earlier": [
-        "macOS Mojave หรือเก่ากว่า"
       ],
       "macOS Monterey": [
         "macOS Monterey"
@@ -6431,9 +6351,6 @@
       "They may ask to access your account in case of an emergency.": [
         "บุคคลเหล่านี้อาจขอเข้าถึงบัญชีในกรณีฉุกเฉิน"
       ],
-      "They will receive access automatically in **${ days } day**, on **${ formattedAccessibleAt }**, you can reject their request or give them access immediately at any time.": [
-        "พวกเขาจะได้รับสิทธิ์เข้าถึงโดยอัตโนมัติใน **${ days } วัน** ในวันที่ **${ formattedAccessibleAt }** คุณสามารถปฏิเสธคำขอของพวกเขาหรือให้สิทธิ์เข้าถึงทันทีได้ตลอดเวลา"
-      ],
       "This will take effect immediately.": [
         "จะมีผลทันที"
       ],
@@ -6759,6 +6676,9 @@
       "Incorrect password": [
         "รหัสผ่านไม่ถูกต้อง"
       ],
+      "Incorrect password. Please try again.": [
+        "รหัสผ่านไม่ถูกต้อง โปรดลองใหม่อีกครั้ง"
+      ],
       "Incorrect recovery code. Please try again.": [
         "รหัสกู้คืนไม่ถูกต้อง โปรดลองอีกครั้ง"
       ],
@@ -6797,9 +6717,6 @@
       ],
       "Invalid private key file": [
         "ไฟล์คีย์ส่วนตัวไม่ถูกต้อง"
-      ],
-      "Invalid reset token. Please refresh the page and try again.": [
-        "โทเค็นรีเซ็ตไม่ถูกต้อง โปรดรีเฟรชหน้าเว็บและลองอีกครั้ง"
       ],
       "Invalid Sieve code": [
         "รหัส Sieve ไม่ถูกต้อง"
@@ -7604,19 +7521,9 @@
         "สามารถบันทึกไฟล์ ICS ของกิจกรรมที่ส่งออกสำเร็จได้"
       ]
     },
-    "familyOffer_2023: Deal details": {
-      "3 TB total storage": [
-        "พื้นที่จัดเก็บรวม 3 TB"
-      ]
-    },
     "familyOffer_2023: Title": {
       "Your account's benefits": [
         "สิทธิประโยชน์ของบัญชี"
-      ]
-    },
-    "familyOffer_2023: Tooltip": {
-      "Storage space is shared between family members across ${ MAIL_APP_NAME }, ${ CALENDAR_APP_NAME }, and ${ DRIVE_APP_NAME }.": [
-        "พื้นที่จัดเก็บจะแชร์ระหว่างสมาชิกครอบครัวใน ${ MAIL_APP_NAME }, ${ CALENDAR_APP_NAME } และ ${ DRIVE_APP_NAME }"
       ]
     },
     "familyOffer_2023:Action": {
@@ -7649,19 +7556,6 @@
       ],
       "View invitation": [
         "ดูคำเชิญ"
-      ]
-    },
-    "familyOffer_2023:Deal details": {
-      "Up to 6 users": [
-        "ผู้ใช้สูงสุด 6 คน"
-      ]
-    },
-    "familyOffer_2023:Error": {
-      "Family group not recognized. Try again.": [
-        "ไม่รู้จักกลุ่มครอบครัว ลองอีกครั้ง"
-      ],
-      "Organization not recognized. Try again.": [
-        "ไม่รู้จักองค์กร ลองอีกครั้ง"
       ]
     },
     "familyOffer_2023:Family plan": {
@@ -7836,22 +7730,8 @@
       ]
     },
     "familyOffer_2023:Label": {
-      "Enter family group name to confirm": [
-        "ป้อนชื่อกลุ่มครอบครัวเพื่อยืนยัน"
-      ],
-      "Enter organization name to confirm": [
-        "ป้อนชื่อองค์กรเพื่อยืนยัน"
-      ],
       "Family name": [
         "ชื่อครอบครัว"
-      ]
-    },
-    "familyOffer_2023:Member downgrade modal": {
-      "This will permanently delete all sub-users, accounts, and data associated with your organization.": [
-        "การดำเนินการนี้จะลบผู้ใช้ย่อย บัญชี และข้อมูลที่เกี่ยวข้องกับองค์กรของคุณทั้งหมดอย่างถาวร"
-      ],
-      "This will remove all ${ BRAND_NAME } premium features for every family member.": [
-        "การดำเนินการนี้จะลบคุณสมบัติพรีเมียมของ ${ BRAND_NAME } ทั้งหมดสำหรับสมาชิกในครอบครัวทุกคนออก"
       ]
     },
     "familyOffer_2023:Settings section title": {
@@ -7880,12 +7760,6 @@
       "Change family name": [
         "เปลี่ยนชื่อครอบครัว"
       ],
-      "Delete family group?": [
-        "ลบกลุ่มครอบครัวหรือไม่?"
-      ],
-      "Delete organization?": [
-        "ต้องการลบองค์กรของคุณหรือไม่?"
-      ],
       "Edit user storage": [
         "แก้ไขพื้นที่จัดเก็บของผู้ใช้"
       ],
@@ -7900,17 +7774,6 @@
       ],
       "Set family name": [
         "ตั้งชื่อครอบครัว"
-      ]
-    },
-    "familyOffer_2023:Tooltip": {
-      "Includes 2700 servers in 65+ countries, connect up to 10 devices, access worldwide streaming services, malware and ad-blocker, and more.": [
-        "รวมถึงเซิร์ฟเวอร์กว่า 2,700 แห่งในกว่า 65 ประเทศ, เชื่อมต่ออุปกรณ์ได้สูงสุด 10 เครื่อง, เข้าถึงบริการสตรีมมิงทั่วโลก, ระบบป้องกันมัลแวร์และตัวบล็อกโฆษณา และอื่นๆ"
-      ],
-      "Includes support for 3 custom email domains, 90 email addresses, unlimited hide-my-email aliases, calendar sharing and more.": [
-        "รวมถึงการรองรับโดเมนอีเมลกำหนดเอง 3 โดเมน, ที่อยู่อีเมล 90 ชื่อ, นามแฝง hide-my-email ไม่จำกัด, การแชร์ปฏิทิน และอื่นๆ"
-      ],
-      "Secure your files with encrypted cloud storage. Includes automatic sync, encrypted file sharing, and more.": [
-        "ปกป้องไฟล์ด้วยพื้นที่จัดเก็บข้อมูลบนคลาวด์ที่เข้ารหัส รวมถึงการซิงค์อัตโนมัติ การแชร์ไฟล์ที่เข้ารหัส และอื่นๆ"
       ]
     },
     "Feature": {
@@ -9105,12 +8968,6 @@
       ],
       "Paused": [
         "หยุดชั่วคราว"
-      ],
-      "Undo finished": [
-        "เลิกทำเสร็จสิ้น"
-      ],
-      "Undo in progress": [
-        "กำลังเลิกทำ"
       ]
     },
     "Import type": {
@@ -9369,18 +9226,6 @@
       "${ url } deleted.": [
         "ลบ ${ url } แล้ว"
       ],
-      "${ vaultLink } created": [
-        "อัปเดต ${ vaultLink } แล้ว"
-      ],
-      "${ vaultLink } deleted": [
-        "ลบ ${ vaultLink } แล้ว"
-      ],
-      "${ vaultLink } shared with email": [
-        "แชร์ ${ vaultLink } กับอีเมลแล้ว"
-      ],
-      "${ vaultLink } updated": [
-        "อัปเดต ${ vaultLink } แล้ว"
-      ],
       "${ VPN_SHORT_APP_NAME } hides your traffic. ${ PASS_SHORT_APP_NAME } hides your identity\n— unlimited **hide-my-email aliases** and **dark-web alerts** if your data is ever leaked.": [
         "${ VPN_SHORT_APP_NAME } ซ่อนทราฟฟิก ${ PASS_SHORT_APP_NAME } ซ่อนข้อมูลระบุตัวตน\n— **นามแฝง hide-my-email** ไม่จำกัด และ **การแจ้งเตือนดาร์กเว็บ** หากมีการรั่วไหลของข้อมูล"
       ],
@@ -9465,26 +9310,14 @@
       "+ ${ invisibleCount } More": [
         "+ อีก ${ invisibleCount } รายการ"
       ],
-      "+${ bonusSpace } bonus storage": [
-        "+${ bonusSpace } โบนัสพื้นที่จัดเก็บ"
-      ],
-      "+${ organization.BonusVPN } connection for ${ VPN_APP_NAME } (allows you to connect more devices to VPN)": [
-        "+${ organization.BonusVPN }การเชื่อมต่อของ${ VPN_APP_NAME }(อนุญาตให้คุณเชื่อมต่อหลายอุปกรณ์กับ VPN)"
-      ],
       "2FA disabled": [
         "ปิดใช้งาน 2FA แล้ว"
       ],
       "30-day money-back guarantee": [
         "รับประกันคืนเงินภายใน 30 วัน"
       ],
-      "30-day money-back guarantee.": [
-        "รับประกันคืนเงินภายใน 30 วัน"
-      ],
       "A ${ protonSubdomain } is hosted by ${ BRAND_NAME }, which allows you to quickly set up a subdomain. ${ learnMoreLink }": [
         "${ protonSubdomain } โฮสต์โดย ${ BRAND_NAME } ซึ่งช่วยให้คุณตั้งค่าโดเมนย่อยได้อย่างรวดเร็ว ${ learnMoreLink }"
-      ],
-      "A custom domain is required to create groups. If you don't have a custom domain set up, do so first under ${ linkToDomainPage }.": [
-        "จำเป็นต้องมีโดเมนที่กำหนดเองเพื่อสร้างกลุ่ม หากยังไม่ได้ตั้งค่าโดเมนที่กำหนดเอง ให้ดำเนินการก่อนภายใต้ ${ linkToDomainPage }"
       ],
       "A name to help you identify where you use it so you can easily revoke it or extend it later.": [
         "ชื่อเพื่อช่วยระบุตำแหน่งที่ใช้งาน เพื่อให้สามารถยกเลิกหรือขยายเวลาได้ในภายหลัง"
@@ -9867,9 +9700,6 @@
       "By disabling account monitor, you will also clear your entire history. Are you sure you want to disable this?": [
         "การปิดใช้งานการตรวจสอบบัญชีจะล้างประวัติทั้งหมดด้วย แน่ใจหรือไม่ว่าต้องการปิดใช้งานสิ่งนี้?"
       ],
-      "By downgrading to a Free plan, you will permanently lose these benefits, even if you upgrade again in the future.": [
-        "หากดำเนินการดาวน์เกรดบัญชีไปแบบบัญชีฟรี คุณจะไม่สามารถเข้าถึงสิทธิพิเศษอื่นๆ แม้ว่าคุณจะกลับมาอัปเกรดบัญชีอีกในอนาคต"
-      ],
       "By leaving now, changes may not be saved": [
         "การปิดหน้านี้จะไม่มีการบันทึกข้อมูลที่ได้เปลี่ยนแปลงต่างๆ"
       ],
@@ -9900,9 +9730,6 @@
       "Center": [
         "จัดกึ่งกลาง"
       ],
-      "Change your password": [
-        "เปลี่ยนรหัสผ่าน"
-      ],
       "Check your network and try again.": [
         "ตรวจสอบเครือข่ายและลองอีกครั้ง"
       ],
@@ -9917,9 +9744,6 @@
       ],
       "Click \"Request new code\" to have a new verification code sent to ${ strong }. If this phone number is incorrect, click \"Edit\" to correct it.": [
         "โปรดคลิก \"ส่งคำร้องขอรหัสใหม่\" เพื่อรับรหัสยืนยันตัวตนใหม่ที่ได้ส่งไปที่ ${ strong } หากหมายเลขโทรศัพท์นี้ไม่ถูกต้อง สามารถเปลี่ยนได้โดยคลิกที่ \"แก้ไข\""
-      ],
-      "Click 'Trouble signing in?' on your TV to follow the alternative steps.": [
-        "คลิก 'มีปัญหาในการลงชื่อเข้าใช้?' บนทีวีเพื่อปฏิบัติตามขั้นตอนอื่น"
       ],
       "Click **Request password reset** and follow the prompts.": [
         "คลิก **ขอรีเซ็ตรหัสผ่าน** และปฏิบัติตามคำแนะนำ"
@@ -10101,9 +9925,6 @@
       "default email address": [
         "ที่อยู่อีเมลหลัก"
       ],
-      "Default email application": [
-        "แอปพลิเคชั่นอีเมลค่าเริ่มต้น"
-      ],
       "Delete any other MX records or make sure ${ MAIL_APP_NAME }'s Priority is the lowest number.": [
         "ลบระเบียน MX อื่นๆ หรือตรวจสอบให้แน่ใจว่าลำดับความสำคัญของ ${ MAIL_APP_NAME } เป็นตัวเลขต่ำที่สุด"
       ],
@@ -10188,9 +10009,6 @@
       "Downgrade": [
         "ดาวน์เกรด"
       ],
-      "Downgrading will terminate any connections to paid ${ VPN_APP_NAME } servers.": [
-        "การดาวน์เกรดจะยุติการเชื่อมต่อกับเซิร์ฟเวอร์ ${ VPN_APP_NAME } ที่ต้องชำระเงิน"
-      ],
       "Download ${ VPN_APP_NAME }": [
         "ดาวน์โหลด ${ VPN_APP_NAME }"
       ],
@@ -10241,9 +10059,6 @@
       ],
       "eduGAIN configuration saved": [
         "บันทึกการกำหนดค่า eduGAIN แล้ว"
-      ],
-      "email": [
-        "อีเมล"
       ],
       "Email address": [
         "ที่อยู่อีเมล"
@@ -10442,9 +10257,6 @@
       ],
       "Filters work on all emails, including incoming as well as sent emails. Each filter must contain at least a name, a condition and an action.": [
         "ตัวกรองใช้งานได้กับอีเมลทั้งหมด รวมถึงข้อความที่ส่งมาและข้อความที่ส่งไป ตัวกรองแต่ละตัวต้องมีชื่ออย่างน้อยหนึ่งชื่อ เงื่อนไขหนึ่งเงื่อนไข และปฏิบัติการหนึ่งปฏิบัติการ"
-      ],
-      "finance": [
-        "การเงิน"
       ],
       "for ${ price }": [
         "ในราคา ${ price }"
@@ -10650,15 +10462,6 @@
       "If you lose your two-factor-enabled device, these codes can be used instead of the 6-digit two-factor authentication code to sign in to your account. Each code can only be used once.": [
         "หากทำอุปกรณ์ที่เปิดใช้งานการยืนยันตัวตนผ่านสองขั้นตอนหาย สามารถใช้รหัสเหล่านี้แทนรหัสการยืนยันตัวตนผ่านสองขั้นตอน 6 หลักเพื่อเข้าสู่ระบบบัญชีได้ แต่ละรหัสสามารถใช้ได้เพียงครั้งเดียวเท่านั้น"
       ],
-      "If you proceed with the downgrade, you will lose access to ${ MAIL_APP_NAME } and ${ VPN_APP_NAME } paid features.": [
-        "หากคุณดำเนินการดาวน์เกรดต่อ คุณจะสูญเสียการเข้าถึงคุณสมบัติที่ต้องชำระเงินของ ${ MAIL_APP_NAME } และ ${ VPN_APP_NAME }"
-      ],
-      "If you proceed with the downgrade, you will lose access to ${ MAIL_APP_NAME } paid features, including additional storage and filters.": [
-        "หากคุณดำเนินการดาวน์เกรดต่อ คุณจะสูญเสียการเข้าถึงคุณสมบัติที่ต้องชำระเงินของ ${ MAIL_APP_NAME } รวมถึงพื้นที่จัดเก็บเพิ่มเติมและตัวกรอง"
-      ],
-      "If you proceed with the downgrade, you will lose access to ${ VPN_APP_NAME } paid features.": [
-        "หากคุณดำเนินการดาวน์เกรดต่อ คุณจะสูญเสียการเข้าถึงคุณสมบัติที่ต้องชำระเงินของ ${ VPN_APP_NAME }"
-      ],
       "If you purchased a gift code or received one from our support team, you can enter it here.": [
         "หากซื้อรหัสของขวัญหรือได้รับรหัสจากทีมฝ่ายสนับสนุน สามารถป้อนรหัสได้ที่นี่"
       ],
@@ -10770,23 +10573,8 @@
       "Invitation link used": [
         "ลิงก์คำเชิญถูกใช้แล้ว"
       ],
-      "Invite deleted": [
-        "ลบคำเชิญแล้ว"
-      ],
       "Invite family members and get everything up and running.": [
         "เชิญสมาชิกในครอบครัวและเริ่มต้นใช้งานทุกอย่าง"
-      ],
-      "Invite for new user deleted": [
-        "ลบคำเชิญสำหรับผู้ใช้ใหม่แล้ว"
-      ],
-      "Invite for organization accepted": [
-        "ยอมรับคำเชิญสำหรับองค์กรแล้ว"
-      ],
-      "Invite for organization created": [
-        "สร้างคำเชิญสำหรับองค์กรแล้ว"
-      ],
-      "Invite rejected": [
-        "ปฏิเสธคำเชิญแล้ว"
       ],
       "Invite successfully sent": [
         "ส่งคำเชิญสำเร็จ"
@@ -10805,54 +10593,6 @@
       ],
       "It's better to have:": [
         "ควรมี:"
-      ],
-      "Item autofilled in ${ vaultLink }": [
-        "เติมรายการอัตโนมัติใน ${ vaultLink } แล้ว"
-      ],
-      "Item autofilled in vault": [
-        "เติมรายการอัตโนมัติในห้องนิรภัยแล้ว"
-      ],
-      "Item created in ${ vaultLink }": [
-        "สร้างรายการใน ${ vaultLink } แล้ว"
-      ],
-      "Item created in vault": [
-        "สร้างรายการในห้องนิรภัยแล้ว"
-      ],
-      "Item deleted from ${ vaultLink }": [
-        "ลบรายการออกจาก ${ vaultLink } แล้ว"
-      ],
-      "Item deleted from vault": [
-        "ลบรายการออกจากห้องนิรภัยแล้ว"
-      ],
-      "Item flags changed in ${ vaultLink }": [
-        "เปลี่ยนธงรายการใน ${ vaultLink } แล้ว"
-      ],
-      "Item flags changed in vault": [
-        "เปลี่ยนธงรายการในห้องนิรภัยแล้ว"
-      ],
-      "Item in ${ vaultLink } trashed": [
-        "ย้ายรายการใน ${ vaultLink } ไปที่ถังขยะแล้ว"
-      ],
-      "Item in ${ vaultLink } untrashed": [
-        "กู้คืนรายการใน ${ vaultLink } จากถังขยะแล้ว"
-      ],
-      "Item in vault trashed": [
-        "ย้ายรายการในห้องนิรภัยไปที่ถังขยะแล้ว"
-      ],
-      "Item in vault untrashed": [
-        "กู้คืนรายการในห้องนิรภัยจากถังขยะแล้ว"
-      ],
-      "Item read in ${ vaultLink }": [
-        "อ่านรายการใน ${ vaultLink } แล้ว"
-      ],
-      "Item read in vault": [
-        "อ่านรายการในห้องนิรภัยแล้ว"
-      ],
-      "Item updated in ${ vaultLink }": [
-        "อัปเดตรายการใน ${ vaultLink } แล้ว"
-      ],
-      "Item updated in vault": [
-        "อัปเดตรายการในห้องนิรภัยแล้ว"
       ],
       "It’s often the easiest way to recover your account if you’re signed in.": [
         "มักเป็นวิธีที่ง่ายที่สุดในการกู้คืนบัญชีหากลงชื่อเข้าใช้อยู่"
@@ -11010,9 +10750,6 @@
       "Messages to all your email addresses will go to your inbox.": [
         "ข้อความไปยังที่อยู่อีเมลทั้งหมดจะไปที่กล่องขาเข้า"
       ],
-      "Monitor accounts": [
-        "ตรวจสอบบัญชี"
-      ],
       "Monitor and audit authentication attempts for all ${ BRAND_NAME } services that use your ${ BRAND_NAME } credentials.": [
         "ตรวจสอบและตรวจสอบความพยายามในการยืนยันตัวตนสำหรับบริการ ${ BRAND_NAME } ทั้งหมดที่ใช้ข้อมูลยืนยันตัวตน ${ BRAND_NAME } ของคุณ"
       ],
@@ -11051,9 +10788,6 @@
       ],
       "New group created via your identity provider and pending review.": [
         "สร้างกลุ่มใหม่ผ่านผู้ให้บริการข้อมูลระบุตัวตนแล้ว และกำลังรอการตรวจสอบ"
-      ],
-      "New user invited to organization": [
-        "เชิญผู้ใช้ใหม่เข้าสู่องค์กรแล้ว"
       ],
       "New VPN connection data will stop being collected and shown.": [
         "ข้อมูลการเชื่อมต่อ VPN ใหม่จะหยุดรวบรวมและแสดง"
@@ -11217,20 +10951,8 @@
       "Paid for a plan": [
         "ชำระเงินสำหรับแผนแล้ว"
       ],
-      "Pass Monitor - custom email confirmed": [
-        "Pass Monitor - ยืนยันอีเมลที่กำหนดเองแล้ว"
-      ],
-      "Pass Monitor - custom email created": [
-        "Pass Monitor - สร้างอีเมลที่กำหนดเองแล้ว"
-      ],
-      "Pass Monitor - custom email deleted": [
-        "Pass Monitor - ลบอีเมลที่กำหนดเองแล้ว"
-      ],
       "Pass usage logs": [
         "บันทึกการใช้งาน Pass"
-      ],
-      "password": [
-        "รหัสผ่าน"
       ],
       "Password copied to clipboard": [
         "คัดลอกรหัสผ่านไปยังคลิปบอร์ดแล้ว"
@@ -11306,9 +11028,6 @@
       ],
       "Please open the document to view it.": [
         "โปรดเปิดเอกสารเพื่อดู"
-      ],
-      "Please open your browser extension settings and allow ${ PASS_APP_NAME } extension to access website data. Then, reload this page.": [
-        "โปรดเปิดการตั้งค่าส่วนขยายเบราว์เซอร์และอนุญาตให้ส่วนขยาย ${ PASS_APP_NAME } เข้าถึงข้อมูลเว็บไซต์ จากนั้นโหลดหน้านี้ใหม่"
       ],
       "Please reconnect to continue.": [
         "โปรดเชื่อมต่อใหม่เพื่อดำเนินการต่อ"
@@ -11559,9 +11278,6 @@
       "Session timed out": [
         "เซสชันหมดเวลา"
       ],
-      "Set ${ MAIL_APP_NAME } as your default email application. ${ MAIL_APP_NAME } will open automatically when you click an email link.": [
-        "ตั้ง ${ MAIL_APP_NAME } เป็นแอปพลิเคชันอีเมลเริ่มต้น ${ MAIL_APP_NAME } จะเปิดขึ้นโดยอัตโนมัติเมื่อคลิกลิงก์อีเมล"
-      ],
       "Set password": [
         "ตั้งค่ารหัสผ่าน"
       ],
@@ -11586,20 +11302,8 @@
       "Settings updated": [
         "อัปเดตการตั้งค่าแล้ว"
       ],
-      "Shared ${ vaultLink } deleted": [
-        "ลบ ${ vaultLink } ที่แชร์แล้ว"
-      ],
-      "Shared ${ vaultLink } updated": [
-        "อัปเดต ${ vaultLink } ที่แชร์แล้ว"
-      ],
       "Shared server country (${ countriesCount })": [
         "ประเทศของเซิร์ฟเวอร์ที่แชร์ (${ countriesCount })"
-      ],
-      "Shared vault deleted": [
-        "ลบห้องนิรภัยที่แชร์แล้ว"
-      ],
-      "Shared vault updated": [
-        "อัปเดตห้องนิรภัยที่แชร์แล้ว"
       ],
       "Show each sender's image in the message list. The sender's initials will be shown if a photo is not available.": [
         "แสดงรูปภาพของผู้ส่งแต่ละรายในรายการข้อความ หากไม่มีรูปภาพ จะแสดงชื่อย่อของผู้ส่งแทน"
@@ -11619,9 +11323,6 @@
       "Sign in only": [
         "เข้าสู่ระบบเท่านั้น"
       ],
-      "Sign in or create an account to continue.": [
-        "เข้าสู่ระบบหรือสร้างบัญชีเพื่อดำเนินการต่อ"
-      ],
       "Sign in to ${ MAIL_APP_NAME } to activate your address": [
         "เข้าสู่ระบบ ${ MAIL_APP_NAME } เพื่อเปิดใช้งานที่อยู่"
       ],
@@ -11630,9 +11331,6 @@
       ],
       "Signed up": [
         "ลงทะเบียนแล้ว"
-      ],
-      "Since you're a loyal user, your account has additional features enabled.": [
-        "เราได้เปิดฟีเจอร์เพิ่มให้กับบัญชีของคุณเพราะคุณคือผู้ใช้บริการที่ยึดมั่นในบริการของเรา"
       ],
       "Smart Routed through a different country.": [
         "กำหนดเส้นทางแบบสมาร์ทผ่านประเทศอื่น"
@@ -11678,12 +11376,6 @@
       ],
       "Step ${ step }/${ totalSteps }": [
         "ขั้นตอนที่ ${ step }/${ totalSteps }"
-      ],
-      "Step 1 of 2": [
-        "ขั้นตอนที่ 1 จาก 2"
-      ],
-      "Step 2 of 2": [
-        "ขั้นตอนที่ 2 จาก 2"
       ],
       "Storage allocated to other users in this organisation": [
         "พื้นที่จัดเก็บที่จัดสรรให้กับผู้ใช้อื่นในองค์กรนี้"
@@ -12132,9 +11824,6 @@
       "Unique ID generated by your identity provider, usually in the form of a URL that contains the identity provider’s name within it (e.g. https://idp.example.com/XXXXX).": [
         "ID เฉพาะที่สร้างโดยผู้ให้บริการข้อมูลระบุตัวตน มักอยู่ในรูปแบบของ URL ที่มีชื่อของผู้ให้บริการข้อมูลระบุตัวตนอยู่ภายใน (เช่น https://idp.example.com/XXXXX)"
       ],
-      "Unknown event type": [
-        "ประเภทกิจกรรมที่ไม่รู้จัก"
-      ],
       "Unless you sign out of your account or change your password, your session will remain active. Sessions expire after 60 days of inactivity.": [
         "เซสชั่นของคุณยังเปิดใช้งานอยู่ ยกเว้นกรณีที่คุณลงชื่อออกหรือเปลี่ยนรหัสผ่าน อนึ่ง เซสชั่นจะหมดอายุหลังจากไม่ได้ใช้งาน 60 วัน"
       ],
@@ -12225,26 +11914,8 @@
       "Username": [
         "ชื่อผู้ใช้"
       ],
-      "username": [
-        "ชื่อผู้ใช้"
-      ],
       "Users": [
         "ผู้ใช้งาน"
-      ],
-      "Vault created": [
-        "สร้างห้องนิรภัยแล้ว"
-      ],
-      "Vault deleted": [
-        "ลบห้องนิรภัยแล้ว"
-      ],
-      "Vault either deleted or requires access permissions": [
-        "ห้องนิรภัยถูกลบหรือต้องการสิทธิ์การเข้าถึง"
-      ],
-      "Vault shared with email": [
-        "แชร์ห้องนิรภัยกับอีเมลแล้ว"
-      ],
-      "Vault updated": [
-        "อัปเดตห้องนิรภัยแล้ว"
       ],
       "Verification code sent.": [
         "ส่งรหัสยืนยันแล้ว"
@@ -12263,9 +11934,6 @@
       ],
       "Verify your identity with a time-based one-time password from an authenticator app": [
         "ยืนยันตัวตนของคุณด้วยรหัสผ่านแบบใช้ครั้งเดียวตามเวลาจากแอปยืนยันตัวตน"
-      ],
-      "Verifying ${ PASS_APP_NAME } browser extension...": [
-        "กำลังยืนยันส่วนขยายเบราว์เซอร์ ${ PASS_APP_NAME }..."
       ],
       "Verifying your payment": [
         "กำลังยืนยันการชำระเงินของคุณ"
@@ -12396,17 +12064,11 @@
       "When disabled, this prevents remote images from loading without your knowledge.": [
         "เมื่อปิดใช้งาน จะป้องกันไม่ให้โหลดรูปภาพระยะไกลโดยที่คุณไม่ทราบ"
       ],
-      "When enabled, we will check if ${ MAIL_APP_NAME } is your default mail application and notify you if it is not.": [
-        "เมื่อเปิดใช้งาน จะมีการตรวจสอบว่า ${ MAIL_APP_NAME } เป็นแอปพลิเคชันอีเมลเริ่มต้นหรือไม่ และแจ้งเตือนหากไม่ใช่"
-      ],
       "When enabling SAML for ${ appName } in your identity provider, you might be prompted to use the callback (ACS) URL and issuer ID. Just copy-paste the data below into your identity provider fields.": [
         "เมื่อเปิดใช้งาน SAML สำหรับ ${ appName } ในผู้ให้บริการข้อมูลระบุตัวตน คุณอาจได้รับแจ้งให้ใช้ Callback (ACS) URL และ Issuer ID เพียงคัดลอกและวางข้อมูลด้านล่างลงในช่องข้อมูลของผู้ให้บริการข้อมูลระบุตัวตน"
       ],
       "When notifications are enabled, we'll send an alert to your recovery email address if you have new messages in your ${ MAIL_APP_NAME } account.": [
         "เมื่อเปิดใช้งานการแจ้งเตือน ระบบจะส่งการแจ้งเตือนไปยังที่อยู่อีเมลการกู้คืนหากมีข้อความใหม่ในบัญชี ${ MAIL_APP_NAME }"
-      ],
-      "When you cancel your current paid subscription, the balance of your subscription will be returned as account credits and you will be downgraded to the ${ BRAND_NAME } ${ PLANS.FREE } plan.": [
-        "เมื่อยกเลิกการสมัครสมาชิกแบบชำระเงินปัจจุบัน ยอดคงเหลือของการสมัครสมาชิกจะถูกคืนเป็นเครดิตบัญชี และคุณจะถูกดาวน์เกรดเป็นแผน ${ BRAND_NAME } ${ PLANS.FREE }"
       ],
       "When you cancel, your subscription won't be renewed, but you can still enjoy plan benefits until the end of the subscription period. After that, you will be downgraded to the ${ BRAND_NAME } Free plan.": [
         "เมื่อคุณยกเลิก การสมัครสมาชิกจะไม่ได้รับการต่ออายุ แต่คุณยังคงสามารถใช้สิทธิประโยชน์ของแผนได้จนถึงสิ้นสุดระยะเวลาการสมัครสมาชิก หลังจากนั้น คุณจะถูกดาวน์เกรดเป็น ${ BRAND_NAME } Free plan"
@@ -12641,9 +12303,6 @@
       ],
       "You must activate your organization private key with the backup organization key password provided to you by your organization administrator.": [
         "จะต้องเปิดใช้งานคีย์ลับขององค์กร ด้วยตัวสำรองของรหัสผ่านคีย์ขององค์กรที่ผู้ดูแลระบบขององค์กรคุณได้ให้มา"
-      ],
-      "You must disable or remove any additional ${ MAIL_APP_NAME } users, addresses, and custom domains before you can downgrade.": [
-        "คุณต้องปิดใช้งานหรือลบผู้ใช้ ${ MAIL_APP_NAME } เพิ่มเติม ที่อยู่ และโดเมนที่กำหนดเองใดๆ ออกก่อนที่คุณจะสามารถดาวน์เกรดได้"
       ],
       "You must have a credit card or bank account linked with your PayPal account in order to add it as a payment method.": [
         "จำเป็นต้องมีบัตรเครดิต หรือบัญชีธนาคารที่เชื่อมต่อกับบัญชี PayPal ของคุณ เพื่อที่จะสามารถเพิ่มบัญชี PayPal นี้ในวิธีการชำระ"
@@ -13678,9 +13337,6 @@
       "Auto-advance": [
         "เลื่อนอัตโนมัติ"
       ],
-      "Auto-delete unwanted messages": [
-        "ลบข้อความที่ไม่ต้องการโดยอัตโนมัติ"
-      ],
       "Auto-detect primary time zone": [
         "ตรวจหาเขตเวลาหลักอัตโนมัติ"
       ],
@@ -14154,9 +13810,6 @@
       ],
       "Font size": [
         "ขนาดแบบอักษร"
-      ],
-      "For ${ DRIVE_SHORT_APP_NAME } and ${ DOCS_SHORT_APP_NAME }.": [
-        "สำหรับ ${ DRIVE_SHORT_APP_NAME } และ ${ DOCS_SHORT_APP_NAME }"
       ],
       "For ${ DRIVE_SHORT_APP_NAME }, ${ DOCS_SHORT_APP_NAME }, and ${ SHEETS_SHORT_APP_NAME }.": [
         "สำหรับ ${ DRIVE_SHORT_APP_NAME }, ${ DOCS_SHORT_APP_NAME } และ ${ SHEETS_SHORT_APP_NAME }"
@@ -15330,9 +14983,6 @@
       "Details": [
         "รายละเอียด"
       ],
-      "Downloads": [
-        "ดาวน์โหลด"
-      ],
       "Encryption and keys": [
         "คีย์ต่างๆ และการเข้ารหัส"
       ],
@@ -15497,9 +15147,6 @@
       ],
       "use a data recovery method": [
         "ใช้วิธีกู้คืนข้อมูล"
-      ],
-      "Vault": [
-        "ห้องนิรภัย"
       ],
       "View guide": [
         "ดูวิธีการกำหนดค่า"
@@ -16429,9 +16076,6 @@
       ]
     },
     "new_plans: Action": {
-      "Downgrade to ${ downgradedPlanName }": [
-        "ดาวน์เกรดเป็น ${ downgradedPlanName }"
-      ],
       "Explore all ${ BRAND_NAME } plans": [
         "สำรวจแผน ${ BRAND_NAME } ทั้งหมด"
       ],
@@ -16599,9 +16243,6 @@
       "Auto-reply": [
         "ตอบกลับอัตโนมัติ"
       ],
-      "Autofill credit cards (coming soon)": [
-        "ป้อนบัตรเครดิตอัตโนมัติ (เร็วๆ นี้)"
-      ],
       "Automatic email forwarding": [
         "การส่งต่ออีเมลอัตโนมัติ"
       ],
@@ -16631,9 +16272,6 @@
       ],
       "Custom and secure business email": [
         "อีเมลธุรกิจที่กำหนดเองและปลอดภัย"
-      ],
-      "Custom domains for email aliases": [
-        "โดเมนที่กำหนดเองสำหรับนามแฝงอีเมล"
       ],
       "Custom email domains": [
         "โดเมนอีเมลที่กำหนดเอง"
@@ -16698,9 +16336,6 @@
       "Free features from ${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }, ${ CALENDAR_SHORT_APP_NAME }, and ${ DRIVE_SHORT_APP_NAME }": [
         "คุณสมบัติฟรีจาก ${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }, ${ CALENDAR_SHORT_APP_NAME } และ ${ DRIVE_SHORT_APP_NAME }"
       ],
-      "Free VPN on a single device": [
-        "VPN ฟรีบนอุปกรณ์เครื่องเดียว"
-      ],
       "Fully refundable for 30 days": [
         "สามารถขอคืนเงินเต็มจำนวนได้ภายใน 30 วัน"
       ],
@@ -16712,9 +16347,6 @@
       ],
       "Group management (coming soon)": [
         "การจัดการกลุ่ม (เร็วๆ นี้)"
-      ],
-      "High-speed VPN on ${ n } device": [
-        "VPN ความเร็วสูง ${ n } เครื่อง"
       ],
       "HTML signatures": [
         "ลายเซ็น HTML"
@@ -16886,9 +16518,6 @@
       ],
       "Unlimited shared ${ PASS_SHORT_APP_NAME } vaults per user": [
         "ห้องนิรภัย ${ PASS_SHORT_APP_NAME } ที่แชร์ได้ไม่จำกัดต่อผู้ใช้"
-      ],
-      "Unlimited shared vaults with access permissions": [
-        "ห้องนิรภัยที่แชร์ได้ไม่จำกัดพร้อมสิทธิ์การเข้าถึง"
       ],
       "Unlimited vault sharing": [
         "การแชร์ห้องนิรภัยไม่จำกัด"
@@ -17256,9 +16885,6 @@
       "Our servers’ hard disks are fully encrypted with multiple password layers so your data is protected even if our hardware is compromised": [
         "ฮาร์ดดิสก์ของเซิร์ฟเวอร์ของเราได้รับการเข้ารหัสอย่างเต็มรูปแบบด้วยรหัสผ่านหลายชั้น เพื่อให้ข้อมูลของคุณได้รับการปกป้องแม้ว่าฮาร์ดแวร์ของเราจะถูกโจมตี"
       ],
-      "Password management and identity protection": [
-        "การจัดการรหัสผ่านและการปกป้องข้อมูลระบุตัวตน"
-      ],
       "Personalize your email signature with logos, images, social media icons, links to your contact details, and more": [
         "ปรับแต่งลายเซ็นอีเมลของคุณด้วยโลโก้ รูปภาพ ไอคอนโซเชียลมีเดีย ลิงก์ไปยังรายละเอียดผู้ติดต่อ และอื่นๆ"
       ],
@@ -17368,12 +16994,6 @@
       "${ n } country": [
         "${ n } ประเทศ"
       ],
-      "Access advanced VPN features": [
-        "เข้าถึงคุณสมบัติ VPN ขั้นสูง"
-      ],
-      "Add more personalization with 15 email addresses and support for 3 custom email domains": [
-        "เพิ่มความเป็นส่วนตัวมากขึ้นด้วยที่อยู่อีเมล 15 รายการและการรองรับโดเมนอีเมลที่กำหนดเอง 3 โดเมน"
-      ],
       "AES 256-bit VPN encryption": [
         "การเข้ารหัส VPN แบบ AES 256-bit"
       ],
@@ -17383,9 +17003,6 @@
       "Boost your storage space to ${ bundleStorage } per user": [
         "เพิ่มพื้นที่จัดเก็บข้อมูลของคุณเป็น ${ bundleStorage } ต่อผู้ใช้"
       ],
-      "Boost your storage space to ${ bundleStorage } total": [
-        "เพิ่มพื้นที่จัดเก็บของคุณเป็น ${ bundleStorage } ทั้งหมด"
-      ],
       "Browser extension": [
         "ส่วนขยายเบราว์เซอร์"
       ],
@@ -17394,12 +17011,6 @@
       ],
       "Central control panel": [
         "แผงควบคุมกลาง"
-      ],
-      "Create up to ${ n } calendar": [
-        "สร้างได้ถึง ${ n } ปฏิทิน"
-      ],
-      "Dedicated Account manager": [
-        "ผู้จัดการบัญชีส่วนตัว"
       ],
       "Dedicated server locations in ${ numberOfCountries }+ countries": [
         "ตำแหน่งที่ตั้งเซิร์ฟเวอร์เฉพาะในกว่า ${ numberOfCountries } ประเทศ"
@@ -18571,9 +18182,6 @@
       ],
       "to start using ${ PASS_APP_NAME } on your phone": [
         "เพื่อเริ่มใช้งาน ${ PASS_APP_NAME } บนโทรศัพท์ของคุณ"
-      ],
-      "Unlimited logins, notes, credit cards and more": [
-        "การเข้าสู่ระบบ, โน้ต, บัตรเครดิต และอื่นๆ ไม่จำกัด"
       ],
       "Updating your account": [
         "กำลังอัปเดตบัญชีของคุณ"
@@ -21649,12 +21257,6 @@
       ]
     },
     "specialoffer: Deal details": {
-      "3 TB": [
-        "3 TB"
-      ],
-      "6 users": [
-        "ผู้ใช้ 6 คน"
-      ],
       "All paid Mail and Calendar features": [
         "คุณสมบัติทั้งหมดของ Mail และ Calendar แบบชำระเงิน"
       ],
@@ -21673,17 +21275,11 @@
       "Premium ${ appName1 } & ${ appName2 } & ${ appName3 }": [
         "${ appName1 }, ${ appName2 } และ ${ appName3 } พรีเมียม"
       ],
-      "Premium early access": [
-        "สิทธิ์การเข้าถึงก่อนใครแบบพรีเมียม"
-      ],
       "Secure cloud storage": [
         "พื้นที่จัดเก็บข้อมูลบนคลาวด์ที่ปลอดภัย"
       ],
       "Secure streaming": [
         "สตรีมมิงที่ปลอดภัย"
-      ],
-      "Support online privacy": [
-        "สนับสนุนความเป็นส่วนตัวออนไลน์"
       ]
     },
     "specialoffer: Footer": {
@@ -21766,32 +21362,8 @@
       "Get the deal": [
         "รับข้อเสนอ"
       ],
-      "Renews after 1 year at a discounted price of ${ discountedAmount } instead of ${ regularAmount } (${ discount }% discount)": [
-        "ต่ออายุหลังจาก 1 ปีในราคาลดพิเศษ ${ discountedAmount } แทนราคา ${ regularAmount } (ส่วนลด ${ discount }%)"
-      ],
-      "Renews after 2 years at a discounted price of ${ discountedAmount } instead of ${ regularAmount } (${ discount }% discount)": [
-        "ต่ออายุหลังจาก 2 ปีในราคาลดพิเศษ ${ discountedAmount } แทนราคา ${ regularAmount } (ส่วนลด ${ discount }%)"
-      ],
       "Save ${ discount }%": [
         "ประหยัด ${ discount }%"
-      ],
-      "Standard price ${ amount } for 1 month": [
-        "ราคามาตรฐาน ${ amount } เป็นเวลา 1 เดือน"
-      ],
-      "Standard price ${ amount } for 12 months": [
-        "ราคามาตรฐาน ${ amount } เป็นเวลา 12 เดือน"
-      ],
-      "Standard price ${ amount } for 15 months": [
-        "ราคามาตรฐาน ${ amount } เป็นเวลา 15 เดือน"
-      ],
-      "Standard price ${ amount } for 24 months": [
-        "ราคามาตรฐาน ${ amount } เป็นเวลา 24 เดือน"
-      ],
-      "Standard price ${ amount } for 30 months": [
-        "ราคามาตรฐาน ${ amount } เป็นเวลา 30 เดือน"
-      ],
-      "The special offer is valid for the first 2 years": [
-        "ข้อเสนอพิเศษนี้ใช้ได้สำหรับ 2 ปีแรก"
       ]
     },
     "specialoffer: Title": {
@@ -21821,23 +21393,11 @@
       ]
     },
     "specialoffer: Tooltip": {
-      "Access blocked content and browse privately. Includes 1700 servers in 60+ countries, highest VPN speed, 10 VPN connections per user, worldwide streaming services, malware and ad-blocker, and more.": [
-        "เข้าถึงเนื้อหาที่ถูกบล็อกและท่องเว็บแบบส่วนตัว รวมถึงเซิร์ฟเวอร์ 1,700 แห่งในกว่า 60 ประเทศ, ความเร็ว VPN สูงสุด, การเชื่อมต่อ VPN 10 เครื่องต่อผู้ใช้, บริการสตรีมมิงทั่วโลก, ระบบป้องกันมัลแวร์และตัวบล็อกโฆษณา และอื่นๆ"
-      ],
       "Access blocked content and browse privately. Includes 1700 servers in 60+ countries, highest VPN speed, 10 VPN connections, worldwide streaming services, malware and ad-blocker, and more.": [
         "เข้าถึงเนื้อหาที่ถูกบล็อกและท่องเว็บแบบส่วนตัว รวมถึงเซิร์ฟเวอร์ 1,700 แห่งในกว่า 60 ประเทศ, ความเร็ว VPN สูงสุด, การเชื่อมต่อ VPN 10 เครื่อง, บริการสตรีมมิงทั่วโลก, ระบบป้องกันมัลแวร์และตัวบล็อกโฆษณา และอื่นๆ"
       ],
-      "All our premium services with their highest limits: 100 email addresses, support for 10 custom domains, unlimited hide-my-email aliases, calendar sharing, encrypted cloud storage and file sharing, and more.": [
-        "บริการพรีเมียมทั้งหมดของเราพร้อมขีดจำกัดสูงสุด: ที่อยู่อีเมล 100 ชื่อ, รองรับโดเมนกำหนดเอง 10 โดเมน, นามแฝง hide-my-email ไม่จำกัด, การแชร์ปฏิทิน, พื้นที่จัดเก็บข้อมูลบนคลาวด์ที่เข้ารหัสและการแชร์ไฟล์ และอื่นๆ"
-      ],
       "Includes support for 3 custom email domains, 15 email addresses, unlimited hide-my-email aliases, calendar sharing, and more.": [
         "รวมถึงการรองรับโดเมนอีเมลกำหนดเอง 3 โดเมน, ที่อยู่อีเมล 15 ชื่อ, นามแฝง hide-my-email ไม่จำกัด, การแชร์ปฏิทิน และอื่นๆ"
-      ],
-      "Perfect for families or small teams, each can have their own inbox and aliases. Requires a custom domain.": [
-        "เหมาะสำหรับครอบครัวหรือทีมขนาดเล็ก แต่ละคนสามารถมีกล่องจดหมายและนามแฝงของตนเอง ต้องใช้โดเมนที่กำหนดเอง"
-      ],
-      "Receive at no extra cost the paid versions of all new privacy services we release in the future, along with early access to all future features and products.": [
-        "รับเวอร์ชันชำระเงินของบริการความเป็นส่วนตัวใหม่ทั้งหมดที่จะเปิดตัวในอนาคตโดยไม่มีค่าใช้จ่ายเพิ่มเติม พร้อมสิทธิ์การเข้าถึงคุณสมบัติและผลิตภัณฑ์ในอนาคตก่อนใคร"
       ],
       "Secure your files with encrypted cloud storage. Includes automatic sync, encrypted file sharing, and more.": [
         "ปกป้องไฟล์ด้วยพื้นที่จัดเก็บข้อมูลบนคลาวด์ที่เข้ารหัส รวมถึงการซิงค์อัตโนมัติ การแชร์ไฟล์ที่เข้ารหัส และอื่นๆ"
@@ -22309,9 +21869,6 @@
       "Upgrade your plan to increase your storage.": [
         "อัปเกรดแผนของคุณเพื่อเพิ่มพื้นที่จัดเก็บ"
       ],
-      "We’ll add the credits for the remaining time to your ${ BRAND_NAME } Account.": [
-        "เราจะเพิ่มเครดิตสำหรับเวลาที่เหลือไปยังบัญชี ${ BRAND_NAME } ของคุณ"
-      ],
       "You still have **${ daysRemaining }** day left on your **${ currentPlanName }** plan.": [
         "คุณยังเหลือเวลาอีก **${ daysRemaining }** วันในแผน **${ currentPlanName }** ของคุณ"
       ],
@@ -22420,9 +21977,6 @@
       ],
       "${ n } VPN connection": [
         "${ n }การเชื่อมต่อ VPN"
-      ],
-      "${ n } VPN connection per user": [
-        "${ n }การเชื่อมต่อ VPN ต่อผู้ใช้งาน"
       ],
       "${ productName } for ${ count } user": [
         "${ productName } สำหรับผู้ใช้ ${ count } ราย"
@@ -23166,9 +22720,6 @@
       "You have successfully canceled your subscription.": [
         "ยกเลิกการสมัครสมาชิกเรียบร้อยแล้ว"
       ],
-      "You have successfully unsubscribed": [
-        "คุณยกเลิกการเป็นสมาชิกเรียบร้อยแล้ว"
-      ],
       "You will receive your username via email within a minute if you entered a valid recovery email address.": [
         "คุณจะได้รับชื่อผู้ใช้ทางอีเมลภายในหนึ่งนาที หากป้อนที่อยู่อีเมลการกู้คืนที่ถูกต้อง"
       ],
@@ -23286,9 +22837,6 @@
       ],
       "Includes 2950+ servers in 65+ countries, connect up to 10 devices, access worldwide streaming services, malware and ad-blocker, and more.": [
         "รวมถึงเซิร์ฟเวอร์กว่า 2,950 แห่งในกว่า 65 ประเทศ, เชื่อมต่ออุปกรณ์ได้สูงสุด 10 เครื่อง, เข้าถึงบริการสตรีมมิงทั่วโลก, ระบบป้องกันมัลแวร์และตัวบล็อกโฆษณา และอื่นๆ"
-      ],
-      "Includes support for 1 custom email domain, 10 email addresses, 10 hide-my-email aliases, calendar sharing, and more.": [
-        "รวมถึงการรองรับโดเมนอีเมลกำหนดเอง 1 โดเมน, ที่อยู่อีเมล 10 ชื่อ, นามแฝง hide-my-email 10 ชื่อ, การแชร์ปฏิทิน และอื่นๆ"
       ],
       "Secure your files with encrypted cloud storage. Includes version history, encrypted file sharing, and more.": [
         "ปกป้องไฟล์ด้วยพื้นที่จัดเก็บข้อมูลบนคลาวด์ที่เข้ารหัส รวมถึงประวัติเวอร์ชัน การแชร์ไฟล์ที่เข้ารหัส และอื่นๆ"
@@ -23503,9 +23051,6 @@
       "${ MAIL_APP_NAME } Export Tool": [
         "Export Tool ของ ${ MAIL_APP_NAME }"
       ],
-      "${ PASS_APP_NAME } is missing permissions": [
-        "${ PASS_APP_NAME } ไม่มีสิทธิ์ที่จำเป็น"
-      ],
       "${ PASS_SHORT_APP_NAME } Monitor Report": [
         "รายงานการตรวจสอบ ${ PASS_SHORT_APP_NAME }"
       ],
@@ -23683,6 +23228,9 @@
       "Address and key verification": [
         "การตรวจสอบที่อยู่และคีย์"
       ],
+      "Addresses": [
+        "ที่อยู่"
+      ],
       "Advanced recovery options": [
         "ตัวเลือกการกู้คืนขั้นสูง"
       ],
@@ -23827,9 +23375,6 @@
       "Change second password": [
         "เปลี่ยนรหัสผ่านที่สอง"
       ],
-      "Check your default mail application": [
-        "ตรวจสอบแอปพลิเคชันอีเมลเริ่มต้น"
-      ],
       "Choose a provider": [
         "เลือกผู้ให้บริการ"
       ],
@@ -23863,12 +23408,6 @@
       "Confirm": [
         "ยืนยัน"
       ],
-      "Confirm downgrade": [
-        "ยืนยันการดาวน์เกรด"
-      ],
-      "Confirm loss of ${ BRAND_NAME } bonuses": [
-        "ยืนยันการสูญเสียโบนัส ${ BRAND_NAME }"
-      ],
       "Connect ${ name }": [
         "เชื่อมต่อ ${ name }"
       ],
@@ -23886,9 +23425,6 @@
       ],
       "Connect to video conferencing": [
         "เชื่อมต่อกับการประชุมทางวิดีโอ"
-      ],
-      "Connect your ${ BRAND_NAME } Account": [
-        "เชื่อมต่อบัญชี ${ BRAND_NAME }"
       ],
       "Connect your custom domain": [
         "เชื่อมต่อโดเมนที่กำหนดเอง"
@@ -24144,9 +23680,6 @@
       ],
       "Downgrade account": [
         "ลดระดับการสมัครสมาชิก"
-      ],
-      "Downgrade to ${ downgradedPlanName }?": [
-        "ดาวน์เกรดเป็น ${ downgradedPlanName } หรือไม่?"
       ],
       "Download ${ app }": [
         "ดาวน์โหลด ${ app }"
@@ -25306,9 +24839,6 @@
       "Welcome to ${ BRAND_NAME } for Business": [
         "ยินดีต้อนรับสู่ ${ BRAND_NAME } สำหรับธุรกิจ"
       ],
-      "Welcome to your new password manager!": [
-        "ยินดีต้อนรับสู่โปรแกรมจัดการรหัสผ่านใหม่!"
-      ],
       "What changes if you switch to the Free plan": [
         "สิ่งที่จะเปลี่ยนไปเมื่อสลับไปใช้ Free plan"
       ],
@@ -25957,6 +25487,36 @@
         "เครดิตทดสอบ"
       ]
     },
+    "tryduo2026: Action": {
+      "Get ${ discount }% off ${ planName }": [
+        "รับส่วนลด ${ discount }% สำหรับ ${ planName }"
+      ],
+      "Get ${ planName }": [
+        "รับ ${ planName }"
+      ]
+    },
+    "tryduo2026: Info": {
+      "/month": [
+        "/เดือน"
+      ],
+      "2 TB of storage to share": [
+        "พื้นที่จัดเก็บ 2 TB เพื่อแชร์"
+      ],
+      "2 user accounts": [
+        "บัญชีผู้ใช้ 2 บัญชี"
+      ],
+      "All premium features from your current plan": [
+        "คุณสมบัติพรีเมียมทั้งหมดจากแผนปัจจุบันของคุณ"
+      ],
+      "Discounts are based on standard monthly pricing. Your subscription will renew at the standard annual rate when the billing cycle ends.": [
+        "ส่วนลดอ้างอิงตามราคารายเดือนมาตรฐาน การสมัครสมาชิกจะต่ออายุในอัตรารายปีมาตรฐานเมื่อรอบการชำระเงินสิ้นสุดลง"
+      ]
+    },
+    "tryduo2026: Title": {
+      "for 12 months": [
+        "เป็นเวลา 12 เดือน"
+      ]
+    },
     "Unlimited offer": {
       "/month": [
         "/เดือน"
@@ -26566,12 +26126,6 @@
       ],
       "By removing this phone number, you will no longer be able to recover your account.": [
         "การลบหมายเลขโทรศัพท์นี้ออกจะทำให้ไม่สามารถกู้คืนบัญชีได้อีกต่อไป"
-      ],
-      "Could not login. Please open ${ PASS_APP_NAME } browser extension and login from there.": [
-        "ไม่สามารถเข้าสู่ระบบได้ โปรดเปิดส่วนขยายเบราว์เซอร์ ${ PASS_APP_NAME } และเข้าสู่ระบบจากที่นั่น"
-      ],
-      "Could not sign up. Please open ${ PASS_APP_NAME } browser extension and sign up from there.": [
-        "ไม่สามารถลงทะเบียนได้ โปรดเปิดส่วนขยายเบราว์เซอร์ ${ PASS_APP_NAME } และลงทะเบียนจากที่นั่น"
       ],
       "If you cancel this import, you won't be able to resume it. ${ BRAND_NAME } saved all progress in your account. Cancel anyway?": [
         "หากคุณยกเลิกการนำเข้านี้ คุณจะไม่สามารถดำเนินการต่อได้ ${ BRAND_NAME } บันทึกความคืบหน้าทั้งหมดไว้ในบัญชีของคุณแล้ว ต้องการยกเลิกหรือไม่?"

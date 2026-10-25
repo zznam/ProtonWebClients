@@ -3,7 +3,12 @@ import { unlink } from 'node:fs/promises';
 import type { Server } from 'node:net';
 import { type Socket, createServer } from 'node:net';
 
-import type { MaybeNull, NativeMessagePayload, NativeMessageRequest, NativeMessageResponse } from '@proton/pass/types';
+import type {
+    NativeMessagePayload,
+    NativeMessageRequest,
+    NativeMessageResponse,
+} from '@proton/pass/types/desktop/extension-unlock-with-desktop';
+import type { MaybeNull } from '@proton/pass/types/utils';
 import { wait } from '@proton/shared/lib/helpers/promise';
 import noop from '@proton/utils/noop';
 
@@ -21,7 +26,10 @@ const info = log('info');
 const warn = log('warn');
 
 const clearSocketFile = async (sockLocation: string) => {
-    if (!isWindows) return unlink(sockLocation).catch(noop);
+    /** Named pipes are kernel objects freed on process exit — nothing to unlink on Windows.
+     * Elsewhere a stale unix socket from an unclean exit must be removed before `listen`. */
+    if (isWindows()) return;
+    return unlink(sockLocation).catch(noop);
 };
 
 type ServerHandle = {
@@ -44,7 +52,7 @@ async function startServer({
         debug('sock connected');
         onStart(sock);
 
-        sock.on('data', (buf) => onMessage(sock, buf));
+        sock.on('data', (buf) => onMessage(sock, buf as Buffer));
         sock.on('close', (hadError) => {
             debug('sock closed', ...(hadError ? ['with error'] : []));
             onClose(sock);
@@ -106,7 +114,8 @@ export const hostSockLoop: HostSockLoop = ({ sockLocation, onMessage }) => {
                 }
             };
 
-            onMessage(JSON.parse(buffer.toString()) as NativeMessagePayload<NativeMessageRequest>, sendResponse);
+            const request = JSON.parse(buffer.toString()) as NativeMessagePayload<NativeMessageRequest>;
+            onMessage(request, sendResponse);
         } catch (error) {
             debug('failed parsing message', error);
         }

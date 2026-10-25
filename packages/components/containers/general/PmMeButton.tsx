@@ -6,10 +6,10 @@ import { createPremiumAddress } from '@proton/account/addresses/actions';
 import { useProtonDomains } from '@proton/account/protonDomains/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { queryUnlock } from '@proton/shared/lib/api/user';
-import type { User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
 import { useModalTwoPromise } from '../../components/modalTwo/useModalTwo';
 import useErrorHandler from '../../hooks/useErrorHandler';

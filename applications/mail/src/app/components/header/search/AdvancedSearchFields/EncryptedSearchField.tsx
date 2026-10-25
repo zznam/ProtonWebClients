@@ -10,7 +10,7 @@ import Info from '@proton/components/components/link/Info';
 import useModalState from '@proton/components/components/modalTwo/useModalState';
 import Progress from '@proton/components/components/progress/Progress';
 import Toggle from '@proton/components/components/toggle/Toggle';
-import type { ESIndexingState } from '@proton/encrypted-search/models';
+import type { ESIndexingState } from '@proton/encrypted-search/models/interfaces';
 import { useIndexedDBSupport } from '@proton/encrypted-search/useIndexedDBSupport';
 import clsx from '@proton/utils/clsx';
 
@@ -65,13 +65,9 @@ const EncryptedSearchField = ({ esIndexingProgressState }: Props) => {
         <span className="color-weak mr-2">{c('Info').jt`For messages newer than ${oldestDate}`}</span>
     );
 
-    let esToggleTooltip = c('Info').t`Activation in progress`;
-    if (contentIndexingDone && !isEnablingContentSearch) {
-        esToggleTooltip = esEnabled
-            ? c('Info')
-                  .t`Turn off to search only by date, name, email address, or subject line. To disable search message content (and delete messages downloaded to enable this feature), go to Settings.`
-            : c('Info').t`Turn on to search the content of your messages`;
-    }
+    // No tooltip once the download has finished
+    const esToggleTooltip =
+        contentIndexingDone && !isEnablingContentSearch ? undefined : c('Info').t`Activation in progress`;
 
     const esActivationTooltip = c('Info').t`The local database is being prepared`;
     const esActivationLoading = isEnablingEncryptedSearch;

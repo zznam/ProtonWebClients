@@ -1,20 +1,15 @@
 import ErrorBoundary from '@proton/components/containers/app/ErrorBoundary'
-import type {
-  ClientRequiresEditorMethods,
-  CommentMarkNodeChangeData,
-  RtsMessagePayload,
-  DocumentRoleType,
-  SheetImportData,
-  DocumentType,
-} from '@proton/docs-shared'
-import {
-  BridgeOriginProvider,
-  CommentsEvent,
-  EDITOR_READY_POST_MESSAGE_EVENT,
-  LiveCommentsEvent,
-  SheetImportEvent,
-  EditorSystemMode,
-} from '@proton/docs-shared'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { ClientRequiresEditorMethods } from '@proton/docs-shared/Bridge/ClientRequiresEditorMethods'
+import type { CommentMarkNodeChangeData } from '@proton/docs-shared/CommentsEvent'
+import type { DocumentRoleType } from '@proton/docs-shared/Doc/DocumentRole'
+import type { RtsMessagePayload } from '@proton/docs-shared/Doc/RtsMessagePayload'
+import type { SheetImportData } from '@proton/docs-shared/SheetImportData'
+import { BridgeOriginProvider } from '@proton/docs-shared/Bridge/BridgeOriginProvider'
+import { EDITOR_READY_POST_MESSAGE_EVENT } from '@proton/docs-shared/Bridge/EditorReadyEvent'
+import { CommentsEvent } from '@proton/docs-shared/CommentsEvent'
+import { LiveCommentsEvent } from '@proton/docs-shared/LiveCommentsEvent'
+import { SheetImportEvent } from '@proton/docs-shared/SheetImportData'
 
 import { bootstrapEditorApp } from '../Lib/Bootstrap'
 import { c } from 'ttag'
@@ -22,6 +17,7 @@ import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader'
 import { EditorUserMode } from '../Lib/EditorUserMode'
 import { exportDataFromEditorState } from './Docs/Conversion/Exporter/ExportDataFromEditorState'
 import { loadLocales } from '@proton/account/bootstrap'
+import { dateLocale } from '@proton/shared/lib/i18n'
 import { PreviewModeEditor } from './Docs/PreviewModeEditor'
 import { rejectAllSuggestions } from './Docs/Plugins/Suggestions/rejectAllSuggestions'
 import { removeCommentThreadMarks } from './Docs/Utils/removeCommentThreadMarks'
@@ -49,15 +45,20 @@ import { $generateJSONFromSelectedNodes } from '@lexical/clipboard'
 import { getEditorStateFromSerializedNodes } from './Docs/Conversion/get-editor-state-from-nodes'
 import { uint8ArrayToUtf8String } from '@protontech/crypto/utils'
 import { useStore } from 'zustand'
-import DocsLayout from './DocsLayout'
-import { getDocsLayoutScrollContainer } from './docsLayoutUtils'
 import { SheetsAdapter } from './adapters/sheets/SheetsAdapter'
 import { StandaloneSheetsEditor, type SpreadsheetRef } from './Spreadsheet/public'
 import { toSheetsInitialization } from './adapters/sheets/utils/sheets-initialization-adapter'
 import SheetsLayout from './SheetsLayout'
 import { useEditorTheme } from '../Theme/EditorThemeProvider'
 import { DocsAdapter } from './adapters/docs/DocsAdapter'
-import { StandaloneDocsEditor } from './Docs/public'
+import {
+  DocsLayoutContainer,
+  EditorSystemMode,
+  getDocsLayoutScrollContainer,
+  StandaloneDocsEditor,
+  type EditorInitializationConfig as DocsEditorInitializationConfig,
+} from './Docs/public'
+import { toDocsExportFormat, toDocsInitialization } from './adapters/docs/utils/docs-conversion-adapter'
 
 type AppProps = {
   documentType: DocumentType
@@ -77,6 +78,7 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
   const [isPublicMode, setIsPublicMode] = useState(false)
   const { setTheme } = useEditorTheme()
   const [editorError, setEditorError] = useState<Error | undefined>(undefined)
+  const [docsEditorInitializationConfig, setDocsEditorInitializationConfig] = useState<DocsEditorInitializationConfig>()
 
   const isSuggestionMode = userMode === EditorUserMode.Suggest
   useEffect(() => {
@@ -226,6 +228,17 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
     }
   }, [])
 
+  const onEditorLoadError = useCallback(
+    (message: string) => {
+      const error = new Error(message)
+
+      void bridge.getClientInvoker().reportUserInterfaceError(error, { irrecoverable: true })
+
+      reportErrorToSentry(error)
+    },
+    [bridge],
+  )
+
   useEffect(() => {
     if (!docState) {
       return
@@ -250,6 +263,8 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
 
       async loadUserSettings(settings) {
         void loadLocales({ locales, userSettings: settings })
+          .catch(reportErrorToSentry)
+          .finally(() => application.setDateLocale(dateLocale))
         application.setLocale(settings.Locale)
       },
 
@@ -354,6 +369,17 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
         appVersion,
         editorInitializationConfig,
       ) {
+        if (documentType === 'doc') {
+          let initializationConfig: DocsEditorInitializationConfig | undefined
+          try {
+            initializationConfig = toDocsInitialization(editorInitializationConfig)
+          } catch {
+            onEditorLoadError(c('Error').t`Failed to import document due to unsupported file format.`)
+            return
+          }
+          setDocsEditorInitializationConfig(initializationConfig)
+        }
+
         docMap.set(documentId, docState.getDoc())
         application.setRole(role)
         setIsPublicMode(isPublicMode)
@@ -384,7 +410,7 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
           const editorState = editorRef.current.getEditorState().toJSON()
 
           try {
-            const result = await exportDataFromEditorState(editorState, format, {
+            const result = await exportDataFromEditorState(editorState, toDocsExportFormat(format), {
               fetchExternalImageAsBase64: async (url) => bridge.getClientInvoker().fetchExternalImageAsBase64(url),
               reportError: (error, extra) => reportErrorToSentry(error, undefined, extra),
             })
@@ -471,7 +497,7 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
             return null
           }
 
-          const result = await exportDataFromEditorState(editorState, format, {
+          const result = await exportDataFromEditorState(editorState, toDocsExportFormat(format), {
             fetchExternalImageAsBase64: async (url) => bridge.getClientInvoker().fetchExternalImageAsBase64(url),
             reportError: (error, extra) => reportErrorToSentry(error, undefined, extra),
           })
@@ -502,6 +528,10 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
       async getYDocAsJSON() {
         const ydoc = docState.getDoc()
         return ydoc.toJSON()
+      },
+
+      async getEditorBuildInfo() {
+        return { appVersion: config.APP_VERSION, commit: config.COMMIT }
       },
 
       async importDataIntoSheet(data) {
@@ -555,7 +585,9 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
     bridge,
     docMap,
     docState,
+    documentType,
     notifyParentEditorIsReady,
+    onEditorLoadError,
     setEditingLocked,
     setEditorConfig,
     setEditorHidden,
@@ -651,17 +683,6 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
     }
   }, [docState, application.logger, documentType, sheetsInitializationMode])
 
-  const onEditorLoadError = useCallback(
-    (message: string) => {
-      const error = new Error(message)
-
-      void bridge.getClientInvoker().reportUserInterfaceError(error, { irrecoverable: true })
-
-      reportErrorToSentry(error)
-    },
-    [bridge],
-  )
-
   const onEditorError = useCallback(
     (error: Error) => {
       /** Report a UI displayable error */
@@ -708,16 +729,15 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
 
   if (documentType === 'doc') {
     return (
-      <DocsLayout.Container isSuggestionMode={isSuggestionMode}>
+      <DocsLayoutContainer isSuggestionMode={isSuggestionMode}>
         {showPreviewModeEditor && (
           <DocsAdapter clientInvoker={bridge.getClientInvoker()}>
             <PreviewModeEditor
               clonedEditorState={clonedEditorState}
-              role={application.getRole()}
               onUserModeChange={onUserModeChange}
-              clientInvoker={bridge.getClientInvoker()}
               initialScrollTop={scrollPositionBeforePreview.current}
               tableOfContentsVisible={tableOfContentsVisibleState}
+              hidden={editorHidden}
             />
           </DocsAdapter>
         )}
@@ -725,12 +745,11 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
         <div style={{ display: isPreviewMode ? 'none' : 'contents' }}>
           <DocsAdapter clientInvoker={bridge.getClientInvoker()}>
             <StandaloneDocsEditor
-              clientInvoker={bridge.getClientInvoker()}
               docMap={docMap}
               docState={docState}
               documentId={editorConfig.current.documentId}
               editingLocked={editingLocked || userMode === EditorUserMode.Preview}
-              editorInitializationConfig={editorConfig.current.editorInitializationConfig}
+              editorInitializationConfig={docsEditorInitializationConfig}
               hidden={editorHidden}
               isSuggestionsFeatureEnabled={suggestionsEnabled}
               lexicalError={editorError}
@@ -738,7 +757,6 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
               onEditorReadyToReceiveUpdates={onEditorReadyToReceiveUpdates}
               onEditorLoadError={onEditorLoadError}
               onUserModeChange={onUserModeChange}
-              role={application.getRole()}
               setEditorRef={setEditorRef}
               showTreeView={showTreeView}
               systemMode={systemMode}
@@ -748,7 +766,7 @@ export function App({ documentType, systemMode, bridgeState }: AppProps) {
             />
           </DocsAdapter>
         </div>
-      </DocsLayout.Container>
+      </DocsLayoutContainer>
     )
   }
 

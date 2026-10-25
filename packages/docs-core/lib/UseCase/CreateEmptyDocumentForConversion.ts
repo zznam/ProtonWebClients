@@ -1,5 +1,7 @@
-import type { DriveCompat } from '@proton/drive-store'
-import { Result, type NodeMeta, type DecryptedNode } from '@proton/docs-shared'
+import type { DriveCompat } from '@proton/drive-store/lib/useDriveCompat'
+import type { NodeMeta } from '@proton/docs-shared/BasicTypes'
+import type { DecryptedNode } from '@proton/docs-shared/DecryptedNode'
+import { Result } from '@proton/docs-shared/Result'
 import type { FileToDocConversionResult } from '../Types/FileToDocConversionResult'
 import type { GetDocumentMeta } from './GetDocumentMeta'
 import { getErrorString } from '../Util/GetErrorString'
@@ -29,8 +31,8 @@ export class CreateEmptyDocumentForConversion implements UseCaseInterface<FileTo
     contents: Uint8Array<ArrayBuffer>
   }): Promise<Result<FileToDocConversionResult>> {
     try {
-      const useSDK = isDriveCompatSDKEnabled(this.unleashClient)
-      const getRoot = useSDK ? getMyFilesNodeMeta : () => this.driveCompat.getMyFilesNodeMeta()
+      const replaceDriveCompat = isDriveCompatSDKEnabled(this.unleashClient)
+      const getRoot = replaceDriveCompat ? getMyFilesNodeMeta : () => this.driveCompat.getMyFilesNodeMeta()
       const parentMeta: NodeMeta = node.parentNodeId
         ? {
             volumeId: node.volumeId,
@@ -39,7 +41,7 @@ export class CreateEmptyDocumentForConversion implements UseCaseInterface<FileTo
         : await getRoot()
 
       const nodeNameWithoutExtension = getNodeNameWithoutExtension(node)
-      const newDocName = useSDK
+      const newDocName = replaceDriveCompat
         ? await findAvailableNodeName(parentMeta, nodeNameWithoutExtension)
         : await this.driveCompat.findAvailableNodeName(parentMeta, nodeNameWithoutExtension)
 

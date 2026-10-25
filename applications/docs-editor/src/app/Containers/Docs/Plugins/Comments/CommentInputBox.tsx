@@ -1,18 +1,17 @@
-import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton'
 import type { LexicalEditor, RangeSelection } from 'lexical'
 import { createDOMRange } from '@lexical/selection'
 import { $getSelection, $isRangeSelection } from 'lexical'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { CommentsComposer } from './CommentsComposer'
-import { c } from 'ttag'
-import { Icon } from '../../Components/Icon'
-import * as Icons from '../../Components/icons'
+import { CommentSendButton } from './CommentSendButton'
 import { useCommentsContext } from './CommentsContext'
 import { createRectsFromDOMRange } from '../../Utils/createRectsFromDOMRange'
+import { useDocsMessages } from '../../DocsDependenciesProvider'
 
 export function CommentInputBox({ editor, cancelAddComment }: { editor: LexicalEditor; cancelAddComment: () => void }) {
   const textContentRef = useRef('')
   const { createCommentThread, setThreadToFocus, setCurrentCommentDraft } = useCommentsContext()
+  const messages = useDocsMessages().comments
 
   const boxRef = useRef<HTMLDivElement>(null)
   const selectionState = useMemo(
@@ -92,7 +91,7 @@ export function CommentInputBox({ editor, cancelAddComment }: { editor: LexicalE
       }
       event.preventDefault()
       event.stopPropagation()
-      if (confirm(c('Confirm').t`Discard comment?`)) {
+      if (confirm(messages.discardComment)) {
         cancelAddComment()
       }
     }
@@ -106,7 +105,7 @@ export function CommentInputBox({ editor, cancelAddComment }: { editor: LexicalE
 
       window.removeEventListener('resize', updateLocation)
     }
-  }, [cancelAddComment, updateLocation])
+  }, [cancelAddComment, messages.discardComment, updateLocation])
 
   const onSubmit = useCallback(
     async (content: string) => {
@@ -142,22 +141,20 @@ export function CommentInputBox({ editor, cancelAddComment }: { editor: LexicalE
 
   return (
     <div
-      className="bg-norm shadow-lifted border-norm relative rounded border text-sm print:hidden"
+      className="relative rounded border border-[--border-norm] bg-[--background-norm] text-sm shadow-[shadow:--shadow-lifted] print:hidden"
       ref={boxRef}
       data-testid="comments-floating-input"
     >
       <CommentsComposer
         autoFocus
         className="px-2.5 py-2"
-        placeholder={c('Placeholder').t`Add a comment...`}
+        placeholder={messages.addCommentPlaceholder}
         onSubmit={onSubmit}
         onCancel={cancelAddComment}
         onTextContentChange={onTextChange}
         buttons={(canSubmit, submitComment) => (
-          <ToolbarButton
-            className="bg-primary rounded-full p-1"
-            title={c('Action').t`Add comment`}
-            icon={<Icon data={Icons.arrowUp} size={3.5} />}
+          <CommentSendButton
+            label={messages.addComment}
             disabled={!canSubmit}
             onClick={submitComment}
             data-testid="comments-floating-send-button"

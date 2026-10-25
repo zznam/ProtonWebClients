@@ -20,7 +20,7 @@ import { IcChevronDownFilled } from '@proton/icons/icons/IcChevronDownFilled';
 import { IcPlus } from '@proton/icons/icons/IcPlus';
 import { getVisualCalendars, sortCalendars } from '@proton/shared/lib/calendar/calendar';
 import { getIsCalendarSubpage } from '@proton/shared/lib/calendar/settingsRoutes';
-import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
 import clsx from '@proton/utils/clsx';
 import generateUID from '@proton/utils/generateUID';
 
@@ -172,10 +172,10 @@ const CalendarsSettingsSidebarList = ({ prefix, calendarsSection }: Props) => {
                         {calendarsSettingsHeaderContent}
                     </SidebarListItemContent>
                 </SidebarListItemLink>
-                {/* eslint-disable-next-line jsx-a11y/prefer-tag-over-role */}
                 <ul
                     className="unstyled"
                     id={contentId}
+                    // eslint-disable-next-line jsx-a11y/prefer-tag-over-role
                     role="region"
                     aria-labelledby={headerId}
                     hidden={!isExpanded}

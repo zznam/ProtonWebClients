@@ -1,7 +1,7 @@
 {
     "name": "Proton Pass: Password Manager",
     "description": "Fully encrypted password manager to keep your logins and passwords safe.",
-    "version": "1.41.2",
+    "version": "1.43.0",
     "manifest_version": 3,
     "browser_specific_settings": {
         "safari": {
@@ -99,6 +99,16 @@
                 "assets/*.woff2"
             ],
             "matches": ["https://*/*", "http://*/*"]
+        },
+        {
+            "resources": ["onboarding.html"],
+            "matches": [
+                "https://*.proton.me/*",
+                "https://*.proton.dev/*",
+                "https://*.proton.black/*",
+                "https://*.proton.pink/*",
+                "https://*.protontech.ch/*"
+            ]
         },
         {
             "resources": ["*.wasm"],

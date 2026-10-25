@@ -24,13 +24,17 @@ import { useFlag } from '@proton/unleash/useFlag';
  * - visualizationInstructions: Enable chart and KPI card formatting instructions in the system prompt
  * - customAgents: Enable the custom agents option in the composer tools dropdown
  * - artifactsView: Enable the create-artifact composer tool and artifact panel interactions
+ * - askUserQuestionsTool: Enable the ask-user-questions client tool
  * - artifactsViewSpotlight: Enable the create-artifact onboarding spotlight and New label
+ * - artifactSlides: Let the model create slide decks (`presentation` artifacts)
  * - aiPaperTrailRoute: Enable the AI Paper Trail route (/aitrail)
  * - aiPaperTrailPopup: Show the AI Paper Trail popup panel on the home screen
  * - maxAvailableFree: When enabled, free users can select Lumo Max (default off during high load)
  * - maxAvailableGuest: When enabled, guest users can select Lumo Max (default off during high load)
  * - apertusModelAvailable: Enable the Apertus 15 model in the composer model picker
+ * - previewModelAvailable: Enable the internal Lumo Preview model in the composer model picker
  * - dictationV2: Show the dictation mic button in the composer toolbar
+ * - schedules: Enable scheduled tasks (sidebar nav, /schedules page)
  */
 export const useLumoFlags = () => {
     const imageTools = useFlag('LumoImageTools');
@@ -53,20 +57,26 @@ export const useLumoFlags = () => {
     const lumoNativeAuthIOS = useFlag('LumoNativeAuthIOS');
     const customAgents = useFlag('LumoCustomAgents');
     const artifactsView = useFlag('LumoArtifactsView');
+    const askUserQuestionsTool = useFlag('LumoAskUserQuestionsTool');
     const artifactsViewSpotlight = useFlag('LumoArtifactsViewSpotlight');
+    const artifactSlides = useFlag('LumoArtifactSlides');
     const aiPaperTrailRoute = useFlag('LumoAiPaperTrailRoute');
     const aiPaperTrailPopup = useFlag('LumoAiPaperTrailPopup');
     const maxAvailableFree = useFlag('LumoMaxAvailableFree');
     const maxAvailableGuest = useFlag('LumoMaxAvailableGuest');
     const apertusModelAvailable = useFlag('LumoApertusModel');
+    const previewModelAvailable = useFlag('LumoPreviewModel');
     const dictationV2 = useFlag('LumoDictationV2');
+    const schedules = useFlag('LumoSchedules');
 
     return {
         memory,
         visualizationInstructions,
         customAgents,
         artifactsView,
+        askUserQuestionsTool,
         artifactsViewSpotlight,
+        artifactSlides,
         aiPaperTrailRoute,
         aiPaperTrailPopup,
         imageTools,
@@ -88,6 +98,8 @@ export const useLumoFlags = () => {
         maxAvailableFree,
         maxAvailableGuest,
         apertusModelAvailable,
+        previewModelAvailable,
         dictationV2,
+        schedules,
     };
 };

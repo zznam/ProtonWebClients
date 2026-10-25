@@ -83,9 +83,6 @@
       "Blurred office background applied": [
         "Unscharfer Bürohintergrund angewendet"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Wegen Netzwerkeinschränkungen erfolgt die Verbindung über den TURN-Relay-Modus. Dies kann zu einer erhöhten Latenz führen und die Gesprächsqualität beeinträchtigen."
-      ],
       "Connection lost. Reconnecting…": [
         "Verbindung verloren. Wiederverbinden…"
       ],
@@ -240,11 +237,11 @@
       "Cancel": [
         "Abbrechen"
       ],
-      "Change layout": [
-        "Layout ändern"
-      ],
       "Change password": [
         "Passwort ändern"
+      ],
+      "Chat": [
+        "Unterhaltung"
       ],
       "Chat with us": [
         "Chatte mit uns"
@@ -303,6 +300,9 @@
       "Create meeting": [
         "Meeting erstellen"
       ],
+      "Debug overlay": [
+        "Debug-Overlay"
+      ],
       "Delete": [
         "Löschen"
       ],
@@ -342,9 +342,6 @@
       "Download": [
         "Herunterladen"
       ],
-      "Download app": [
-        "App herunterladen"
-      ],
       "Download local participant report": [
         "Lokalen Teilnehmerbericht herunterladen"
       ],
@@ -374,9 +371,6 @@
       ],
       "Enable camera": [
         "Kamera aktivieren"
-      ],
-      "Enable captions": [
-        "Untertitel aktivieren"
       ],
       "Enable waiting room": [
         "Wartebereich aktivieren"
@@ -435,6 +429,12 @@
       "Join": [
         "Beitreten"
       ],
+      "Join and leave sounds": [
+        "Sounds für Beitritt und Austritt"
+      ],
+      "Join in browser": [
+        "Im Browser teilnehmen"
+      ],
       "Join meeting": [
         "Meeting beitreten"
       ],
@@ -446,6 +446,9 @@
       ],
       "Kick out ${ participantName }": [
         "${ participantName } entfernen"
+      ],
+      "Layout": [
+        "Layout"
       ],
       "Leave": [
         "Verlassen"
@@ -465,11 +468,20 @@
       "Lower hand": [
         "Hand senken"
       ],
+      "Meeting debug": [
+        "Meeting-Fehlersuche"
+      ],
+      "Meeting info": [
+        "Meeting-Information"
+      ],
       "Meeting timer": [
         "Meeting-Timer"
       ],
       "Minimize preview": [
         "Vorschau minimieren"
+      ],
+      "More info": [
+        "Weitere Informationen"
       ],
       "More info: ${ safeTitle }": [
         "Weitere Informationen: ${ safeTitle }"
@@ -492,14 +504,17 @@
       "Noise cancellation": [
         "Geräuschunterdrückung"
       ],
-      "Open app": [
-        "App öffnen"
+      "Not now": [
+        "Nicht jetzt"
       ],
       "Open link": [
         "Link öffnen"
       ],
       "Open mention from ${ senderName } in chat": [
         "Offene Erwähnung von ${ senderName } im Chat"
+      ],
+      "Participants": [
+        "Teilnehmer"
       ],
       "Participants join after you approve them": [
         "Teilnehmer werden zugelassen, nachdem du sie genehmigt hast"
@@ -546,6 +561,9 @@
       ],
       "Record": [
         "Aufnehmen"
+      ],
+      "Recording": [
+        "Aufnahme"
       ],
       "Recording your microphone...": [
         "Aufnahme über dein Mikrofon..."
@@ -641,6 +659,12 @@
       "Settings": [
         "Einstellungen"
       ],
+      "Share screen": [
+        "Fenster teilen"
+      ],
+      "Show captions": [
+        "Untertitel anzeigen"
+      ],
       "Show options": [
         "Optionen anzeigen"
       ],
@@ -680,6 +704,9 @@
       "Start meeting": [
         "Meeting starten"
       ],
+      "Start meeting in browser": [
+        "Meeting im Browser starten"
+      ],
       "Start new meeting": [
         "Neues Meeting starten"
       ],
@@ -698,9 +725,6 @@
       "Stay in meeting": [
         "Im Meeting bleiben"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Öffne keine Meetings mehr in der Desktop-App"
-      ],
       "Stop receiving video": [
         "Eingehendes Video stoppen"
       ],
@@ -712,6 +736,9 @@
       ],
       "Stop Recording Track Stats": [
         "Aufzeichnen von Track-Statistiken stoppen"
+      ],
+      "Stop sharing": [
+        "Teilen beenden"
       ],
       "Submit": [
         "Senden"
@@ -730,6 +757,9 @@
       ],
       "The current link will stop working.": [
         "Der aktuelle Link wird nicht mehr funktionieren."
+      ],
+      "Transcription": [
+        "Transkription"
       ],
       "Try again": [
         "Erneut versuchen"
@@ -760,9 +790,6 @@
       ],
       "Use camera": [
         "Kamera verwenden"
-      ],
-      "Use it": [
-        "Einsetzen"
       ],
       "Use microphone": [
         "Mikrofon benutzen"
@@ -811,9 +838,6 @@
       "Blur background": [
         "Hintergrund unscharf machen"
       ],
-      "Chat": [
-        "Chat"
-      ],
       "Close": [
         "Schließen"
       ],
@@ -826,23 +850,14 @@
       "Copy meeting link": [
         "Meeting-Link kopieren"
       ],
-      "Debug devices": [
-        "Fehler auf Geräten beheben"
-      ],
-      "Debug overlay": [
-        "Debug-Overlay"
-      ],
-      "Device Debugger": [
-        "Fehlerbehebung für Geräte"
-      ],
       "Go to dashboard": [
         "Zum Dashboard gehen"
       ],
       "Incoming video": [
         "Eingehender Videoanruf"
       ],
-      "Layout: ${ selectedLabel }": [
-        "Layout: ${ selectedLabel }"
+      "Join and leave sounds": [
+        "Sounds für Beitritt und Austritt"
       ],
       "Leave Meeting": [
         "Meeting verlassen"
@@ -852,12 +867,6 @@
       ],
       "Lock meeting": [
         "Meeting sperren"
-      ],
-      "Lower hand": [
-        "Hand senken"
-      ],
-      "Meeting details": [
-        "Meeting-Details"
       ],
       "Meeting timer": [
         "Meeting-Timer"
@@ -877,14 +886,8 @@
       "Participant host control options": [
         "Organisator-Steuerungsoptionen für Teilnehmer"
       ],
-      "Participants": [
-        "Teilnehmer"
-      ],
       "Picture-in-picture while sharing": [
         "Bild-in-Bild beim Teilen"
-      ],
-      "Raise hand": [
-        "Hand heben"
       ],
       "Rotate camera": [
         "Kamera drehen"
@@ -892,14 +895,8 @@
       "Save my name on this device": [
         "Meinen Namen auf diesem Gerät speichern"
       ],
-      "Screen share": [
-        "Bildschirmfreigabe"
-      ],
       "Self view": [
         "Selbstdarstellung"
-      ],
-      "Settings": [
-        "Einstellungen"
       ],
       "Stop recording and download.": [
         "Aufzeichnung stoppen und herunterladen."
@@ -910,17 +907,11 @@
       "Toggle emoji reactions": [
         "Emoji-Reaktionen umschalten"
       ],
-      "Toggle meeting details": [
-        "Meeting-Details ein-/ausblenden"
-      ],
       "Toggle participants": [
         "Teilnehmer ein-/ausblenden"
       ],
       "Toggle screen share": [
         "Bildschirmteilen ein-/ausschalten"
-      ],
-      "Toggle settings": [
-        "Einstellungen ein-/ausblenden"
       ],
       "Video settings": [
         "Videoeinstellungen"
@@ -992,14 +983,9 @@
         "Aktiv"
       ]
     },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Wegen deiner Netzwerkbeschränkungen über einen TURN-Relaymodus verbunden. Dies kann die Latenz erhöhen und die Anrufqualität beeinträchtigen."
-      ]
-    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } Desktopanwendung"
+      "${ appName } Desktop application": [
+        "${ appName } Desktopanwendung"
       ]
     },
     "Bug category": {
@@ -1988,6 +1974,12 @@
       "Cannot verify who uploaded this file": [
         "Es lässt sich nicht feststellen, wer diese Datei hochgeladen hat"
       ],
+      "Check your audio settings and try again": [
+        "Überprüfe deine Audioeinstellungen und versuche es erneut"
+      ],
+      "Connection lost — captions will resume when reconnected": [
+        "Verbindung unterbrochen – die Untertitel werden fortgesetzt, sobald die Verbindung wiederhergestellt ist"
+      ],
       "Copy operation aborted": [
         "Kopiervorgang abgebrochen"
       ],
@@ -2189,6 +2181,9 @@
       "Incorrect backup password. Please try again.": [
         "Falsches Backup-Passwort. Bitte versuche es erneut."
       ],
+      "Incorrect password. Please try again.": [
+        "Ungültiges Passwort. Bitte versuche es erneut."
+      ],
       "Incorrect second password. Please try again.": [
         "Falsches zusätzliches Passwort. Bitte versuche es erneut."
       ],
@@ -2210,9 +2205,6 @@
       "Legacy public link cannot be updated. Please re-create a new public link.": [
         "Der alte öffentliche Link kann nicht aktualisiert werden. Bitte erstelle einen neuen öffentlichen Link."
       ],
-      "Live captions aren't working. Try turning them off and on again.": [
-        "Die Live-Untertitel funktionieren nicht. Versuche, sie einmal aus- und wieder einzuschalten."
-      ],
       "Live captions couldn't be started.": [
         "Die Live-Untertitel konnten nicht gestartet werden."
       ],
@@ -2224,6 +2216,9 @@
       ],
       "Microphone access is blocked. Allow it in your browser settings.": [
         "Der Zugriff auf das Mikrofon ist gesperrt. Bitte aktiviere ihn in deinen Browsereinstellungen."
+      ],
+      "Microphone not detected": [
+        "Kein Mikrofon erkannt"
       ],
       "Missing inviter email": [
         "E-Mail-Adresse des Einladers fehlt"
@@ -2256,6 +2251,9 @@
       "Not a valid number": [
         "Keine gültige Zahl"
       ],
+      "Not enough storage space to record. Free up space and try again.": [
+        "Nicht genügend Speicherplatz für die Aufzeichnung. Gib Speicherplatz frei und versuche es erneut."
+      ],
       "Only admins can convert external invitations": [
         "Nur Administratoren können externe Einladungen umwandeln"
       ],
@@ -2285,6 +2283,9 @@
       ],
       "Please allow screen sharing in your system permissions, then try again": [
         "Bitte erlaube die Bildschirmfreigabe in deinen Systemeinstellungen und versuche es dann noch einmal."
+      ],
+      "Recording stopped because it could not be saved. We kept it up to this point.": [
+        "Die Aufzeichnung wurde beendet, da sie nicht gespeichert werden konnte. Bis zu diesem Zeitpunkt wurden sie behalten."
       ],
       "Renaming root item is not allowed": [
         "Das Umbenennen des Stammeintrags ist nicht zulässig"
@@ -2339,6 +2340,9 @@
       ],
       "The email addresses do not match": [
         "Die E-Mail-Adressen stimmen nicht überein"
+      ],
+      "The emoji could not be added because the message is at its character limit": [
+        "Das Emoji konnte nicht hinzugefügt werden, da die Zeichenbegrenzung der Nachricht erreicht ist"
       ],
       "The meeting password is incorrect": [
         "Das Meeting-Passwort ist falsch"
@@ -2409,8 +2413,14 @@
       "Too many server requests, please try again later": [
         "Zu viele Server-Anfragen bitte versuche es später erneut"
       ],
+      "Try turning live captions off and on again.": [
+        "Versuche, die Live-Untertitel einmal aus- und wieder einzuschalten."
+      ],
       "Try using only letters, numerals, and _.-": [
         "Bitte nur Buchstaben, Ziffern und die Zeichen _ . - verwenden"
+      ],
+      "Unable to generate captions": [
+        "Bildbeschreibungen konnten nicht generiert werden"
       ],
       "Unknown error": [
         "Unbekannter Fehler"
@@ -2432,6 +2442,9 @@
       ],
       "We couldn’t send a verification code using this method.": [
         "Wir konnten mit dieser Methode keinen Bestätigungscode senden."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Wiederherstellungsphrase ungültig. Versuche es erneut oder verwende eine andere Wiederherstellungsmethode."
       ],
       "You can create public links for your own files only": [
         "Du kannst öffentliche Links nur für deine eigenen Dateien erstellen"
@@ -2643,9 +2656,6 @@
       " and ": [
         " und "
       ],
-      "${ deviceLabel } is available again": [
-        "${ deviceLabel } ist wieder verfügbar"
-      ],
       "${ maxParticipants } participant limit reached": [
         "${ maxParticipants } Teilnehmerlimit erreicht"
       ],
@@ -2658,8 +2668,14 @@
       "${ MEET_APP_NAME } needs microphone access so others can hear you during the call. You can turn it off at any time.": [
         "${ MEET_APP_NAME } benötigt Zugriff auf das Mikrofon, damit andere dich während des Anrufs hören können. Du kannst das Mikrofon jederzeit ausschalten."
       ],
+      "${ MEET_APP_NAME } needs screen recording access so you can share your screen during the call. After you allow it, macOS will ask you to reopen the app.": [
+        "${ MEET_APP_NAME } benötigt Zugriff auf die Bildschirmaufzeichnung, damit du deinen Bildschirm während des Gesprächs teilen kannst. Nachdem du den Zugriff gewährt hast, fordert dich macOS auf, die App erneut zu öffnen."
+      ],
       "${ MEET_APP_NAME } needs WebRTC to run. Please update your browser or device to a version that supports WebRTC, try a different browser, or disable any extensions that might be blocking it.": [
         "${ MEET_APP_NAME } benötigt WebRTC, um zu funktionieren. Bitte aktualisiere deinen Browser oder dein Gerät auf eine Version, die WebRTC unterstützt, versuche es mit einem anderen Browser oder deaktiviere alle Erweiterungen, die es möglicherweise blockieren."
+      ],
+      "${ meetingName } has ended": [
+        "${ meetingName } ist beendet"
       ],
       "${ mlsMemberCount } member": [
         "${ mlsMemberCount } Mitglied",
@@ -2741,6 +2757,9 @@
       "Anyone with the link can join immediately": [
         "Jeder mit dem Link, kann sofort beitreten"
       ],
+      "App didn't open?": [
+        "App wurde nicht geöffnet?"
+      ],
       "Approve participants before they can join": [
         "Teilnehmer genehmigen, bevor sie beitreten können"
       ],
@@ -2783,8 +2802,8 @@
       "Camera permission denied": [
         "Kamerazugriff verweigert"
       ],
-      "Captions are on": [
-        "Untertitel sind eingeschaltet"
+      "Captions on": [
+        "Untertitel ein"
       ],
       "Changes are staged. Apply to rebuild the preview with the new constants.": [
         "Änderungen wurden zwischengespeichert. Wende sie an, um die Vorschau mit den neuen Konstanten neu zu erstellen."
@@ -2876,6 +2895,9 @@
       "End the meeting for everyone?": [
         "Meeting für alle beenden?"
       ],
+      "End to end encrypted chat": [
+        "Ende-zu-Ende-verschlüsselter Chat"
+      ],
       "End-to-end encryption is active for audio and video.": [
         "Ende-zu-Ende-Verschlüsselung ist für Audio und Video aktiv."
       ],
@@ -2936,14 +2958,14 @@
       "Get a secure meeting link then add it to your calendar": [
         "Hole dir einen geschützten Meeting-Link und füge ihn deinem Kalender hinzu"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Hole dir das beste Erlebnis mit der Desktop-App ${ protonMeet }"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Gehe zu about:config, suche nach media.peerconnection.enabled, und setze es auf „true“."
       ],
       "Host": [
         "Organisator"
+      ],
+      "Host has another meeting in progress": [
+        "Der Veranstalter ist gerade in einem anderen Meeting"
       ],
       "Host has disabled live captions for this meeting.": [
         "Organisator hat die Live-Untertitel für dieses Meeting deaktiviert."
@@ -3002,6 +3024,9 @@
       "Loading calendar, please wait. You will be redirected to our scheduling platform Calendly in a new tab.": [
         "Kalender wird geladen, bitte warte. Du wirst in einer neuen Registerkarte zu unserer Terminplanungsplattform Calendly weitergeleitet."
       ],
+      "Loading captions…": [
+        "Untertitel werden geladen …"
+      ],
       "Loading meeting details...": [
         "Details zur Besprechung werden geladen..."
       ],
@@ -3053,6 +3078,9 @@
       "Meeting recordings aren’t supported in Firefox.": [
         "Besprechungsaufzeichnungen sind in Firefox nicht unterstützt."
       ],
+      "Meeting recordings aren’t supported in Safari private mode.": [
+        "Im privaten Modus von Safari wird das Aufzeichnen von Meetings nicht unterstützt."
+      ],
       "Meeting time is up": [
         "Besprechungszeit ist abgelaufen"
       ],
@@ -3082,6 +3110,9 @@
       ],
       "Microphone permission denied": [
         "Mikrofonzugriff verweigert"
+      ],
+      "More options": [
+        "Weitere Optionen"
       ],
       "Mute microphone": [
         "Mikrofon stummschalten"
@@ -3134,11 +3165,26 @@
       "No speaker detected": [
         "Kein Lautsprecher erkannt"
       ],
+      "Noise cancellation was turned off because your device is experiencing performance issues. You can turn it back on in audio settings.": [
+        "Die Geräuschunterdrückung wurde deaktiviert, da auf deinem Gerät Leistungsprobleme auftraten. Du kannst diese in den Audioeinstellungen erneut aktivieren."
+      ],
       "Not sent, check your connection.": [
         "Nicht gesendet, überprüfe deine Verbindung."
       ],
       "notify everyone here": [
         "Alle hier benachrichtigen"
+      ],
+      "Now using ${ first } and ${ second }.": [
+        "Jetzt werden ${ first } und ${ second } verwendet."
+      ],
+      "Now using ${ first }, ${ second } and ${ third }.": [
+        "Jetzt werden ${ first }, ${ second } und ${ third } verwendet."
+      ],
+      "Now using ${ first }.": [
+        "Jetzt verwendet ${ first }."
+      ],
+      "Only a partial meeting recording was available.": [
+        "Für dieses Meeting liegt nur eine unvollständige Aufzeichnung vor."
       ],
       "Only meetings you created appear here": [
         "Nur Meetings, die du erstellt hast, werden hier angezeigt"
@@ -3263,6 +3309,27 @@
       "Select a speaker": [
         "Lautsprecher auswählen"
       ],
+      "Selected camera has disconnected.": [
+        "Die Verbindung zur ausgewählten Kamera wurde getrennt."
+      ],
+      "Selected devices have disconnected.": [
+        "Die Verbindung zu den ausgewählten Geräten wurde getrennt."
+      ],
+      "Selected microphone and camera have disconnected.": [
+        "Das ausgewählte Mikrofon und die ausgewählte Kamera wurden getrennt."
+      ],
+      "Selected microphone and speaker have disconnected.": [
+        "Die Verbindungen zum ausgewählten Mikrofon und Lautsprecher wurden getrennt."
+      ],
+      "Selected microphone has disconnected.": [
+        "Die Verbindung zum ausgewählten Mikrofon wurde getrennt."
+      ],
+      "Selected speaker and camera have disconnected.": [
+        "Die Verbindung zum gewählten Lautsprecher und zur Kamera wurde getrennt."
+      ],
+      "Selected speaker has disconnected.": [
+        "Die Verbindung zum ausgewählten Lautsprecher wurde getrennt."
+      ],
       "Servers are unreachable. Please try again in a few minutes": [
         "Die Server sind unerreichbar. Bitte versuche es in ein paar Minuten erneut"
       ],
@@ -3275,8 +3342,11 @@
       "Share screen": [
         "Bildschirm teilen"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Teile diesen Link, um andere einzuladen. Du findest ihn auch jederzeit, indem du auf das Info-Symbol in der Symbolleiste klickst."
+      "Share this link to invite others. You can also find it anytime under Meeting info in the More options menu.": [
+        "Teile diesen Link, um andere einzuladen. Du findest ihn außerdem jederzeit unter «Meeting-Informationen» im Menü «Weitere Optionen»."
+      ],
+      "Show live captions?": [
+        "Live-Untertitel anzeigen?"
       ],
       "Sign in": [
         "Anmelden"
@@ -3286,9 +3356,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "Die Lautsprecherauswahl ist in diesem Browser nicht verfügbar. Verwende deine Systemeinstellungen, um einen anderen Lautsprecher auszuwählen."
-      ],
-      "Start recording": [
-        "Aufzeichnung starten"
       ],
       "Starting camera…": [
         "Kamera wird gestartet…"
@@ -3308,6 +3375,9 @@
       "Thank you for joining.": [
         "Danke für deine Teilnahme."
       ],
+      "The captioning service uses meeting audio. Captions are visible only to you and aren’t saved.": [
+        "Der Untertitelungsdienst nutzt den Ton des Meetings. Untertitel sind nur für dich sichtbar und werden nicht gespeichert."
+      ],
       "The host has removed you from this meeting. If this was a mistake, ask the host to invite you again.": [
         "Der Organisator hat dich von diesem Meeting ausgeschlossen. Sollte dies ein Fehler gewesen sein, bitte den Organisator, dich erneut einzuladen."
       ],
@@ -3319,6 +3389,9 @@
       ],
       "This is an end to end encrypted chat with ephemeral messages, which disappear at the end of the call.": [
         "Dies ist ein Ende-zu-Ende-verschlüsselter Chat mit temporären Nachrichten, die am Ende des Anrufs verschwinden."
+      ],
+      "This meeting has a time limit. This call will disconnect soon.": [
+        "Dieses Meeting ist zeitlich begrenzt. Die Verbindung wird in Kürze getrennt."
       ],
       "This meeting has a waiting room": [
         "Dieses Meeting hat einen Warteraum"
@@ -3332,8 +3405,8 @@
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "Dieses Meeting hat die Zeitbegrenzung des kostenlosen Tarifs erreicht. Führe ein Upgrade durch, um die Dauer deiner zukünftigen Meetings zu verlängern"
       ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "Dieses Meeting wurde in der Desktop-App ${ MEET_APP_NAME } geöffnet."
+      "This meeting reached the time limit.": [
+        "Dieses Meeting hat die vorgesehene Dauer erreicht."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "Diese Aufnahme wird von diesem Gerät dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden."
@@ -3347,11 +3420,11 @@
       "This will sign you out of all accounts currently logged in.": [
         "Dadurch wirst du auf allen derzeit angemeldeten Geräten abgemeldet."
       ],
+      "Time is up for ${ meetingName }": [
+        "Die Zeit für ${ meetingName } ist abgelaufen"
+      ],
       "To create a room, you'll need **a free ${ BRAND_NAME } Account** so we can save the room. This only takes a few seconds.": [
         "Um einen Raum zu erstellen, benötigst du **ein kostenloses ${ BRAND_NAME }-Konto**, damit wir den Raum speichern können. Das dauert nur wenige Sekunden."
-      ],
-      "To create live captions, the captioning service needs access to the meeting audio. Captions are only visible to you and are not saved.": [
-        "Um Live-Untertitel zu erstellen, benötigt der Dienst für die Untertitelt Zugriff auf den Ton des Meetings. Die Untertitel sind nur für dich sichtbar und werden nicht gespeichert."
       ],
       "To fight spam and abuse, please verify you are human.": [
         "Bitte beweise, dass du ein Mensch bist, um Spam und Missbrauch zu vermeiden."
@@ -3373,9 +3446,6 @@
       ],
       "Turn on camera": [
         "Kamera aktivieren"
-      ],
-      "Turn on live captions?": [
-        "Live-Untertitel einschalten?"
       ],
       "Unable to reconnect to the meeting. Please rejoin or leave.": [
         "Die Verbindung zum Meeting kann nicht wiederhergestellt werden. Bitte trete erneut bei oder verlasse das Meeting."
@@ -3403,6 +3473,9 @@
       ],
       "Virtual background initializing": [
         "Virtueller Hintergrund wird initialisiert"
+      ],
+      "Waiting for speech…": [
+        "Auf Sprechen wird gewartet …"
       ],
       "Waiting for the host to admit you. The host has been notified that you're waiting.": [
         "Warten bis der Organisator dich zulässt. Er wurde darüber informiert, dass du wartest."
@@ -3440,9 +3513,6 @@
       "You are almost there": [
         "Du bist fast fertig"
       ],
-      "You can close this tab.": [
-        "Du kannst diesen Tab jetzt schließen."
-      ],
       "You can now return to the application to continue": [
         "Du kannst jetzt zur Anwendung zurückkehren, um fortzufahren."
       ],
@@ -3452,11 +3522,20 @@
       "You can still turn off your microphone and camera anytime in the meeting": [
         "Du kannst dein Mikrofon und deine Kamera jederzeit im Meeting ausschalten"
       ],
+      "You have too many meetings in progress": [
+        "Es sind zu viele Meetings gleichzeitig aktiv."
+      ],
+      "You left ${ meetingName }": [
+        "Du hast ${ meetingName } verlassen"
+      ],
       "You left the meeting": [
         "Du hast das Meeting verlassen"
       ],
       "You need a paid ${ MEET_SHORT_APP_NAME } or Workspace plan for this feature. Contact your organization admin to upgrade.": [
         "Für diese Funktion benötigst du ein kostenpflichtiges ${ MEET_SHORT_APP_NAME }- oder Workspace-Abonnement. Kontaktiere deinen Organisationsadministrator, um ein Upgrade durchzuführen."
+      ],
+      "You were removed from ${ meetingName }": [
+        "Du wurdest aus ${ meetingName } entfernt."
       ],
       "You were removed from the meeting": [
         "Du wurdest aus dem Meeting entfernt"
@@ -3494,38 +3573,14 @@
       "Your browser or device isn’t supported": [
         "Dein Browser oder Gerät wird nicht unterstützt"
       ],
-      "Your camera was disconnected. Now using ${ deviceLabel }.": [
-        "Deine Kamera wurde getrennt. Es wird nun ${ deviceLabel } verwendet."
-      ],
-      "Your device was disconnected. Now using ${ deviceLabel }.": [
-        "Dein Gerät wurde getrennt. Es wird nun ${ deviceLabel } verwendet."
-      ],
       "Your email will only be used for this one-time verification.": [
         "Deine E-Mail-Adresse wird nur für diese einmalige Überprüfung verwendet."
       ],
       "Your meeting is ready": [
         "Dein Meeting ist bereit"
       ],
-      "Your microphone and camera were disconnected. Now using other devices.": [
-        "Dein Mikrofon und deine Kamera wurden getrennt. Es werden nun andere Geräte verwendet."
-      ],
-      "Your microphone and speaker were disconnected. Now using other devices.": [
-        "Dein Mikrofon und dein Lautsprecher wurden getrennt. Es werden nun andere Geräte verwendet."
-      ],
-      "Your microphone was disconnected. Now using ${ deviceLabel }.": [
-        "Dein Mikrofon wurde getrennt. Es wird nun ${ deviceLabel } verwendet."
-      ],
-      "Your microphone, speaker and camera were disconnected. Now using other devices.": [
-        "Dein Mikrofon, dein Lautsprecher und deine Kamera wurden getrennt. Es werden nun andere Geräte verwendet."
-      ],
       "Your phone number will only be used for this one-time verification.": [
         "Deine Telefonnummer wird nur für diese einmalige Überprüfung verwendet."
-      ],
-      "Your speaker and camera were disconnected. Now using other devices.": [
-        "Dein Lautsprecher und deine Kamera wurden getrennt. Es werden nun andere Geräte verwendet."
-      ],
-      "Your speaker was disconnected. Now using ${ deviceLabel }.": [
-        "Dein Lautsprecher wurde getrennt. Es wird nun ${ deviceLabel } verwendet."
       ],
       "You’re about to open a link in a new tab. Make sure you trust the website before continuing.": [
         "Du bist dabei, einen Link in einem neuen Tab zu öffnen. Stelle sicher, dass du der Website vertraust, bevor du fortfährst."
@@ -3629,6 +3684,9 @@
       "Does not repeat": [
         "Keine Wiederholung"
       ],
+      "Don’t show this message again": [
+        "Diese Nachricht nicht mehr anzeigen"
+      ],
       "Download .ics": [
         ".ics herunterladen"
       ],
@@ -3698,6 +3756,9 @@
       "Live caption agent": [
         "Live-Untertitel-Agent"
       ],
+      "Live captions": [
+        "Live-Untertitel"
+      ],
       "Manage recordings": [
         "Aufnahmen verwalten"
       ],
@@ -3718,6 +3779,9 @@
       ],
       "Monday to Friday": [
         "Montag bis Freitag"
+      ],
+      "More options": [
+        "Weitere Optionen"
       ],
       "Mountain landscape background": [
         "Hintergrund mit Berglandschaft"
@@ -3849,6 +3913,101 @@
       ],
       "What’s this?": [
         "Was ist das?"
+      ]
+    },
+    "Lumo emoji name": {
+      "Alert": [
+        "Alarm"
+      ],
+      "Browse folders": [
+        "Ordner durchsuchen"
+      ],
+      "Cash": [
+        "Bargeld"
+      ],
+      "Celebrate": [
+        "Feiern"
+      ],
+      "Cheers": [
+        "Jubel"
+      ],
+      "Chef's kiss": [
+        "Kochkuss"
+      ],
+      "Coffee": [
+        "Kaffee"
+      ],
+      "Cowboy": [
+        "Cowboy"
+      ],
+      "Encrypt": [
+        "Verschlüsseln"
+      ],
+      "Halo": [
+        "Strahlenkranz"
+      ],
+      "Happy": [
+        "Glücklich"
+      ],
+      "Love": [
+        "Liebe"
+      ],
+      "Mild panic": [
+        "Leichte Panik"
+      ],
+      "Mind blown": [
+        "Verblüfft"
+      ],
+      "Nine lives": [
+        "Neun Leben"
+      ],
+      "Party": [
+        "Feier"
+      ],
+      "Perk": [
+        "Vorteil"
+      ],
+      "Popcorn": [
+        "Popcorn"
+      ],
+      "Rocket": [
+        "Rakete"
+      ],
+      "Sad": [
+        "Traurig"
+      ],
+      "Schrödinger out of the box": [
+        "Schrödinger mal ganz anders"
+      ],
+      "Search": [
+        "Suche"
+      ],
+      "Sit": [
+        "Sitzen"
+      ],
+      "Sleepy": [
+        "Schläfrig"
+      ],
+      "Sweep": [
+        "Fegen"
+      ],
+      "Thank you": [
+        "Vielen Dank"
+      ],
+      "Think": [
+        "Denken"
+      ],
+      "This is fine": [
+        "Dies ist in Ordnung"
+      ],
+      "Watch left": [
+        "Nach links schauen"
+      ],
+      "Watch right": [
+        "Nach rechts schauen"
+      ],
+      "Write": [
+        "Schreiben"
       ]
     },
     "meet": {
@@ -4196,6 +4355,9 @@
       "Allow microphone": [
         "Mikrofon zulassen"
       ],
+      "Allow screen recording": [
+        "Bildschirmaufzeichnung zulassen"
+      ],
       "Are you sure?": [
         "Bist du sicher?"
       ],
@@ -4320,6 +4482,9 @@
       "Meeting": [
         "Meeting"
       ],
+      "Meeting actions": [
+        "Maßnahmen aus Meeting"
+      ],
       "Meeting created": [
         "Meeting erstellt"
       ],
@@ -4367,6 +4532,9 @@
       ],
       "Publications": [
         "Veröffentlichungen"
+      ],
+      "Quick reactions": [
+        "Schnelle Reaktionen"
       ],
       "Reconnection Testing": [
         "Wiederherstellung der Verbindung prüfen"

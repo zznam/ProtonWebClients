@@ -1,13 +1,13 @@
+import { useSheetsMessages } from '../../SheetsDependenciesProvider'
 import * as Icons from '../icons'
 import * as Ariakit from '@ariakit/react'
-import { c } from 'ttag'
+
 import { useUI } from '../../ui-store'
 import { Icon } from '../ui'
-import { createStringifier } from '../../stringifier'
-
-const { s } = createStringifier(strings)
 
 export function SheetSearch() {
+  const messages = useSheetsMessages()
+
   const isActive = useUI((ui) => ui.legacy.searchState.isSearchActive)
   const searchQuery = useUI((ui) => ui.legacy.searchState.searchQuery)
   const currentResult = useUI((ui) => ui.legacy.searchState.currentResult)
@@ -28,19 +28,23 @@ export function SheetSearch() {
       hideOnEscape={false}
       open={isActive}
       onClose={handleReset}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault()
+          event.stopPropagation()
+          handleReset()
+        }
+      }}
       className="absolute right-4 top-4 flex w-[400px] items-center gap-2 rounded-b-[8px] border border-[#D1CFCD] bg-[white] px-2.5 py-2.5 shadow-[0px_12px_24px_-4px_rgba(0,0,0,0.16)] outline-none"
     >
       <label className="flex h-[34px] min-w-0 grow cursor-text items-center gap-1.5 rounded-[8px] border border-[#D1CFCD] pl-3 pr-4 transition focus-within:border-[#6D4AFF] focus-within:ring-[3px] focus-within:ring-[#6D4AFF]/20">
         <Icon data={Icons.magnifier} />
         <input
           className="grow truncate text-[14px] !outline-none"
-          placeholder={c('sheets_2025:Spreadsheet editor').t`Find in sheet`}
+          placeholder={messages.sheetSearch['Find in sheet']}
           autoFocus
           onChange={(event) => onSubmit(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === 'Escape') {
-              handleReset()
-            }
             if (event.key === 'Enter') {
               onNext()
             }
@@ -49,7 +53,7 @@ export function SheetSearch() {
 
         {searchQuery || totalResults > 0 ? (
           <span className="pointer-events-none shrink-0 select-none text-[14px] text-[#8F8D8A]">
-            {currentResult} of {totalResults}
+            {messages.sheetSearch.resultPosition(currentResult, totalResults)}
           </span>
         ) : null}
       </label>
@@ -59,7 +63,7 @@ export function SheetSearch() {
           className="flex size-[36px] items-center justify-center disabled:opacity-50"
           onClick={onPrevious}
           disabled={navigationDisabled}
-          aria-label={s('Go to previous')}
+          aria-label={messages.sheetSearch['Go to previous']}
         >
           <Icon data={Icons.chevronUp} />
         </button>
@@ -68,14 +72,18 @@ export function SheetSearch() {
           className="flex size-[36px] items-center justify-center disabled:opacity-50"
           onClick={onNext}
           disabled={navigationDisabled}
-          aria-label={s('Go to next')}
+          aria-label={messages.sheetSearch['Go to next']}
         >
           <Icon data={Icons.chevronDown} />
         </button>
 
         <div className="mx-2 h-[28px] w-px shrink-0 bg-[#D1CFCD]" />
 
-        <button className="flex size-[36px] items-center justify-center" onClick={handleReset} aria-label={s('Close')}>
+        <button
+          className="flex size-[36px] items-center justify-center"
+          onClick={handleReset}
+          aria-label={messages.sheetSearch.Close}
+        >
           <Icon data={Icons.cross} />
         </button>
       </div>
@@ -83,10 +91,13 @@ export function SheetSearch() {
   )
 }
 
-function strings() {
-  return {
-    'Go to next': c('sheets_2025:Spreadsheet editor search dialog').t`Go to next`,
-    'Go to previous': c('sheets_2025:Spreadsheet editor search dialog').t`Go to previous`,
-    Close: c('sheets_2025:Spreadsheet editor search dialog').t`Close`,
-  }
+export const sheetSearchMessages = {
+  sheetSearch: {
+    'Go to next': `Go to next`,
+    'Go to previous': `Go to previous`,
+    Close: `Close`,
+    'Find in sheet': `Find in sheet`,
+
+    resultPosition: (current: number, total: number) => `${current} of ${total}`,
+  },
 }

@@ -1,10 +1,14 @@
-import type { DocumentUpdate } from '@proton/docs-proto'
-import { CommitVersion, DocumentUpdateVersion, CreateDocumentUpdate, CreateCommit } from '@proton/docs-proto'
+import type { DocumentUpdate } from '@proton/docs-proto/Generated/DocumentUpdate'
+import { CreateCommit } from '@proton/docs-proto/Factory/CreateCommit'
+import { CreateDocumentUpdate } from '@proton/docs-proto/Factory/CreateDocumentUpdate'
+import { CommitVersion, DocumentUpdateVersion } from '@proton/docs-proto/Version'
 import type { UseCaseInterface } from '../Domain/UseCase/UseCaseInterface'
-import { Result, GenerateUUID, type NodeMeta } from '@proton/docs-shared'
+import type { NodeMeta } from '@proton/docs-shared/BasicTypes'
+import { GenerateUUID } from '@proton/docs-shared/GenerateUuid'
+import { Result } from '@proton/docs-shared/Result'
 import type { DocsApi } from '../Api/DocsApi'
 import type { EncryptMessage } from './EncryptMessage'
-import type { DocumentKeys } from '@proton/docs-shared'
+import type { DocumentKeys } from '@proton/docs-shared/CryptoTypes'
 
 type SeedInitialCommitResult = { commitId: string; linkId: string; volumeId: string }
 

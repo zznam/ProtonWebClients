@@ -1,18 +1,18 @@
 import type { IDBPDatabase } from 'idb';
 
-import { decryptFromDB, getIndexKey } from '@proton/encrypted-search/esHelpers';
-import { hasESDB, openESDB } from '@proton/encrypted-search/esIDB';
+import { getIndexKey } from '@proton/encrypted-search/esHelpers/esBuild';
+import { decryptFromDB } from '@proton/encrypted-search/esHelpers/esDecrypt';
+import { hasESDB, openESDB } from '@proton/encrypted-search/esIDB/indexedDB';
 import type {
     ESCiphertext,
     ESItem,
     EncryptedMetadataItem,
     EncryptedSearchDB,
-} from '@proton/encrypted-search/lib/models';
-import type { DecryptedKey } from '@proton/shared/lib/interfaces';
+} from '@proton/encrypted-search/models/interfaces';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
 import isTruthy from '@proton/utils/isTruthy';
 
 import type { ESBaseMessage, ESMessageContent } from '../../models/encryptedSearch';
-
 import type { ImportIssue } from './Import';
 import { ImportIssueSeverity } from './Import';
 

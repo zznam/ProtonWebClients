@@ -2,8 +2,9 @@ import { getIsOfflineError } from '@proton/shared/lib/api/helpers/apiErrorHelper
 import chunk from '@proton/utils/chunk';
 
 import { MAX_MAX_BATCH_PER_REQUEST } from '../../constants';
-import type { ItemMarkAsReadRequest, MaybeNull } from '../../types';
+import type { ItemMarkAsReadRequest } from '../../types/api/pass';
 import { type B2BEvent, B2BEventName } from '../../types/data/b2b';
+import type { MaybeNull } from '../../types/utils';
 import { groupByKey } from '../../utils/array/group-by-key';
 import type { EventBundle } from '../../utils/event/dispatcher';
 import { api } from '../api/api';
@@ -45,6 +46,7 @@ const sendReportMonitor = async (events: B2BEvent<B2BEventName.ReportMonitor>) =
             Inactive2FA: events.Inactive2FA,
             ExcludedItems: events.ExcludedItems,
             WeakPasswords: events.WeakPasswords,
+            ...(events.CompromisedPasswords !== null ? { CompromisedPasswords: events.CompromisedPasswords } : {}),
         },
     });
 

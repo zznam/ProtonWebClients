@@ -1,19 +1,16 @@
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import type { ModalProps } from '@proton/components';
-import {
-    Loader,
-    ModalTwo,
-    ModalTwoContent,
-    ModalTwoFooter,
-    ModalTwoHeader,
-    SUBSCRIPTION_STEPS,
-    useSubscriptionModal,
-} from '@proton/components';
+import Loader from '@proton/components/components/loader/Loader';
+import type { ModalProps } from '@proton/components/components/modalTwo/Modal';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
+import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
+import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
+import { useSubscriptionModal } from '@proton/components/containers/payments/subscription/SubscriptionModalProvider';
+import { SUBSCRIPTION_STEPS } from '@proton/components/containers/payments/subscription/constants';
 import { usePreferredPlansMap } from '@proton/payments-ui/ui/hooks/usePreferredPlansMap';
-import { CYCLE, PLANS } from '@proton/payments/core/constants';
-import { LUMO_SHORT_APP_NAME } from '@proton/shared/lib/constants';
+import { CYCLE, PLANS, PLAN_NAMES } from '@proton/payments/core/constants';
 import lumoCatLoaf from '@proton/styles/assets/img/lumo/lumo-cat-loaf-upsell.svg';
 
 import { LUMO_UPGRADE_TRIGGER_CLASS } from '../../../constants';
@@ -52,15 +49,22 @@ export const ProjectLimitModal = ({ ...modalProps }: ModalProps) => {
             <ModalTwoContent>
                 <div className="project-limit-modal-content">
                     <div className="modal-two-illustration-container mb-2 relative text-center">
-                        <img src={lumoCatLoaf} alt="Get Lumo Plus" width={160} />
+                        <img
+                            src={lumoCatLoaf}
+                            alt={
+                                // translator: Accessible description of an upgrade illustration. ${PLAN_NAMES[PLANS.LUMO]} is the paid plan name.
+                                c('collider_2025:Label').t`Get ${PLAN_NAMES[PLANS.LUMO]}`
+                            }
+                            width={160}
+                        />
                     </div>
                     <h3 className="text-bold mb-2">
-                        {c('collider_2025:Title').t`More Projects with ${LUMO_SHORT_APP_NAME} Plus`}
+                        {c('collider_2025:Title').t`More Projects with ${PLAN_NAMES[PLANS.LUMO]}`}
                     </h3>
 
                     <p className="color-weak mb-4">
                         {c('collider_2025:Info')
-                            .t`Upgrade to ${LUMO_SHORT_APP_NAME} Plus to create unlimited projects, unlock advanced AI models, and more.`}
+                            .t`Upgrade to ${PLAN_NAMES[PLANS.LUMO]} to create unlimited projects, unlock advanced AI models, and more.`}
                     </p>
 
                     <div className="project-limit-features">

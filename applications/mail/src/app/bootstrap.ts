@@ -1,23 +1,23 @@
-import {
-    addressesThunk,
-    initEvent,
-    organizationThunk,
-    retentionPoliciesThunk,
-    startLogoutListener,
-    userSettingsThunk,
-    userThunk,
-    welcomeFlagsActions,
-} from '@proton/account';
+import { logger } from '@protontech/logger';
+import { ALL_CONSOLE_LEVELS } from '@protontech/logger/constants';
+import type { LogLevel } from '@protontech/logger/types';
+
+import { addressesThunk } from '@proton/account/addresses';
 import * as bootstrap from '@proton/account/bootstrap';
 import { bootstrapEvent } from '@proton/account/bootstrap/action';
 import { serverEvent } from '@proton/account/eventLoop';
+import { initEvent } from '@proton/account/init';
+import { organizationThunk } from '@proton/account/organization';
 import { getDecryptedPersistedState } from '@proton/account/persist/helper';
+import { startLogoutListener } from '@proton/account/persist/listener';
+import { retentionPoliciesThunk } from '@proton/account/retentionPolicies';
+import { userThunk } from '@proton/account/user';
+import { userSettingsThunk } from '@proton/account/userSettings';
+import { welcomeFlagsActions } from '@proton/account/welcomeFlags';
 import { createCalendarModelEventManager } from '@proton/calendar/calendarModelEventManager';
 import { setupGuestCrossStorage } from '@proton/cross-storage/account/guest';
-import { FeatureCode, fetchFeatures } from '@proton/features';
-import { logger } from '@proton/logger';
-import { ALL_CONSOLE_LEVELS } from '@proton/logger/constants';
-import type { LogLevel } from '@proton/logger/types';
+import { FeatureCode } from '@proton/features/interface';
+import { fetchFeatures } from '@proton/features/reducer';
 import { contactEmailsThunk } from '@proton/mail/store/contactEmails';
 import { categoriesThunk } from '@proton/mail/store/labels';
 import { mailSettingsThunk } from '@proton/mail/store/mailSettings';
@@ -31,9 +31,10 @@ import { isChromiumBased } from '@proton/shared/lib/helpers/browser';
 import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
 import { initSafariFontFixClassnames } from '@proton/shared/lib/helpers/initSafariFontFixClassnames';
 import { isProduction } from '@proton/shared/lib/helpers/sentry';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { startMailForegroundTelemetry } from '@proton/shared/lib/telemetry/mailForegroundTelemetry';
 import { appMode } from '@proton/shared/lib/webpack.constants';
+import { initTracker } from '@proton/telemetry-tracker/tracker';
 import { CommonFeatureFlag } from '@proton/unleash/Flags';
 import noop from '@proton/utils/noop';
 
@@ -58,6 +59,7 @@ export const bootstrapApp = async ({ config }: { config: ProtonConfig }) => {
     const silentApi = getSilentApi(api);
     const authentication = bootstrap.createAuthentication();
     bootstrap.init({ config, authentication, locales });
+    initTracker({ api: silentApi });
     setupGuestCrossStorage({ appMode, appName });
     initSafariFontFixClassnames();
     startLogoutListener();

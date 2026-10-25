@@ -4,7 +4,7 @@ import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
-import Badge from '@proton/components/components/badge/Badge';
+import { Badge } from '@proton/components/components/badge/Badge';
 import TableCell from '@proton/components/components/table/TableCell';
 import TableRow from '@proton/components/components/table/TableRow';
 import { IcThreeDotsHorizontal } from '@proton/icons/icons/IcThreeDotsHorizontal';
@@ -12,8 +12,8 @@ import clsx from '@proton/utils/clsx';
 import noop from '@proton/utils/noop';
 
 import { useAsyncRequestDispatch } from '../../../../hooks/useDispatchAsyncRequest';
-import { deleteMailbox, setDefaultMailbox } from '../../../../store/actions';
-import type { UserMailboxOutput } from '../../../../types';
+import { deleteMailbox, setDefaultMailbox } from '../../../../store/actions/creators/alias';
+import type { UserMailboxOutput } from '../../../../types/api/pass';
 import { DropdownMenuButton } from '../../../Layout/Dropdown/DropdownMenuButton';
 import { QuickActionsDropdown } from '../../../Layout/Dropdown/QuickActionsDropdown';
 import { AliasMailboxLoading } from './AliasMailboxLoading';

@@ -1,5 +1,5 @@
 import type { MutableRefObject, ReactNode } from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { useAddresses } from '@proton/account/addresses/hooks';
@@ -16,8 +16,9 @@ import { useTheme } from '@proton/components/containers/themes/ThemeProvider';
 import { getReportInfo } from '@proton/components/helpers/report';
 import useEventManager from '@proton/components/hooks/useEventManager';
 import { defaultESStatus } from '@proton/encrypted-search/constants';
-import type { ESStatusBooleans } from '@proton/encrypted-search/models';
+import type { ESStatusBooleans } from '@proton/encrypted-search/models/interfaces';
 import { ToolInputError } from '@proton/llm/lib/lumoAgent/contracts/errors';
+import type { LumoAgentDrawerValue } from '@proton/llm/lib/lumoAgent/ui/lumoAgentDrawerContext';
 import LumoAgentDrawerContext from '@proton/llm/lib/lumoAgent/ui/lumoAgentDrawerContext';
 import useLumoAgent from '@proton/llm/lib/lumoAgent/ui/useLumoAgent';
 import { MESSAGE_ACTIONS } from '@proton/mail-renderer/constants';
@@ -30,13 +31,20 @@ import { useFolders, useLabels } from '@proton/mail/store/labels/hooks';
 import { mailSettingsActions } from '@proton/mail/store/mailSettings';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { getContact } from '@proton/shared/lib/api/contacts';
+import { getConversation } from '@proton/shared/lib/api/conversations';
 import { checkSieveFilter } from '@proton/shared/lib/api/filters';
 import { updateAutoresponder, updateViewLayout, updateViewMode } from '@proton/shared/lib/api/mailSettings';
+import { getMessage } from '@proton/shared/lib/api/messages';
 import { updateDensity } from '@proton/shared/lib/api/settings';
 import { prepareVCardContact } from '@proton/shared/lib/contacts/decrypt';
-import type { MailSettings, Recipient, UserSettings } from '@proton/shared/lib/interfaces';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import type { Contact } from '@proton/shared/lib/interfaces/contacts/Contact';
+import type { Message } from '@proton/shared/lib/interfaces/mail/Message';
 import { splitKeys } from '@proton/shared/lib/keys/keys';
+import { MailFeatureFlag } from '@proton/unleash/Flags';
+import { useFlag } from '@proton/unleash/useFlag';
 
 import { useOnCompose } from '../../containers/ComposeProvider';
 import { useDraftBodyWriters } from '../../containers/DraftBodyWriterProvider';
@@ -49,8 +57,10 @@ import { useInitializeMessage } from '../../hooks/message/useInitializeMessage';
 import type { RecipientType } from '../../models/address';
 import { composerActions } from '../../store/composers/composersSlice';
 import { load as loadConversationAction } from '../../store/conversations/conversationsActions';
+import type { ConversationResult } from '../../store/conversations/conversationsTypes';
 import { backendActionStarted, markAll as markAllAction } from '../../store/elements/elementsActions';
 import { useMailDispatch, useMailStore } from '../../store/hooks';
+import { useHasLumoFloatingPanel, useLumoFloatingPanel } from '../floating/LumoFloatingPanelProvider';
 import { buildDebugReportDraft } from '../helpers/debugReport';
 import type { SieveIssue } from '../helpers/sieve';
 import { assertSieveValid } from '../helpers/sieve';
@@ -58,10 +68,9 @@ import { buildLumoMailConfig } from '../registry';
 import type { LumoMailConfigTelemetry } from '../telemetry/useLumoMailTelemetry';
 import { useLumoMailTelemetry } from '../telemetry/useLumoMailTelemetry';
 import type { MailToolDeps } from '../toolModule';
-
-interface Props {
-    children: ReactNode;
-}
+import type { PublisherProps } from './PublishedProvider';
+import { PublishedProvider } from './PublishedProvider';
+import { usePublishToProvider } from './usePublishToProvider';
 
 const EncryptedSearchStatusMirror = ({ into }: { into: MutableRefObject<ESStatusBooleans> }) => {
     const { esStatus } = useEncryptedSearchContext();
@@ -79,12 +88,9 @@ const discardResult = async (mutation: Promise<unknown>): Promise<void> => {
 
 /**
  * Stands up the Lumo assistant for Mail. It builds the Mail tool pack's config from the store/router
- * hooks and hands it to {@link useLumoAgent}, then exposes the conversation to {@link DrawerLumoView}
- * via context. Mounted above the drawer (see PrivateLayout) so the conversation persists across drawer
- * tab switches and panel open/close, and only when the `LumoInMail` flag is on — flag off, this
- * component is never rendered.
+ * hooks and hands it to {@link useLumoAgent}, then publishes the conversation to {@link LumoMailProvider}.
  */
-const LumoMailProvider = ({ children }: Props) => {
+const LumoMailBody = memo(function LumoMailBody({ onValue }: PublisherProps<LumoAgentDrawerValue>) {
     const store = useMailStore();
     const dispatch = useMailDispatch();
     const api = useApi();
@@ -113,6 +119,8 @@ const LumoMailProvider = ({ children }: Props) => {
     const onCompose = useOnCompose();
     const draftBodyWriters = useDraftBodyWriters();
     const telemetry = useLumoMailTelemetry();
+    const { detach } = useLumoFloatingPanel();
+    const standalonePrompt = useFlag(MailFeatureFlag.LumoInMailStandalonePrompt);
 
     // Latest values, refreshed every render, so the once-built handlers always read the current
     // snapshot (mirrors the POC's ref pattern; keeps the config referentially stable).
@@ -143,6 +151,7 @@ const LumoMailProvider = ({ children }: Props) => {
         onCompose,
         draftBodyWriters,
         telemetry,
+        standalonePrompt,
     };
     const latest = useRef(current);
     latest.current = current;
@@ -227,6 +236,21 @@ const LumoMailProvider = ({ children }: Props) => {
             // Unwrapped so a failed fetch rejects: dispatching a thunk resolves with a rejected action.
             loadConversation: (conversationID) =>
                 latest.current.dispatch(loadConversationAction({ conversationID, messageID: undefined })).unwrap(),
+            // Silenced: a deleted email is an expected answer that Lumo relays, not an app error to toast.
+            fetchConversation: async (conversationID) => {
+                const { Conversation: conversation } = await latest.current.api<ConversationResult>({
+                    ...getConversation(conversationID),
+                    silence: true,
+                });
+                return conversation;
+            },
+            fetchMessage: async (messageID) => {
+                const { Message: message } = await latest.current.api<{ Message: Message }>({
+                    ...getMessage(messageID),
+                    silence: true,
+                });
+                return message;
+            },
             initializeMessage: (messageID, labelID) => latest.current.initializeMessage(messageID, labelID),
             composeDraft: ({ action, referenceMessage, bodyBeforeQuote }) =>
                 latest.current.onCompose({ type: ComposeTypes.newMessage, action, referenceMessage, bodyBeforeQuote }),
@@ -259,7 +283,8 @@ const LumoMailProvider = ({ children }: Props) => {
             toolFailed: (toolName, toolKind) => latest.current.telemetry.toolFailed(toolName, toolKind),
         };
 
-        return buildLumoMailConfig(deps, configTelemetry);
+        // Read once, like the rest of the config: a flag change applies from the next mount.
+        return buildLumoMailConfig(deps, configTelemetry, latest.current.standalonePrompt);
     }, []);
 
     const conversation = useLumoAgent(config);
@@ -280,20 +305,36 @@ const LumoMailProvider = ({ children }: Props) => {
         });
     };
 
+    const value: LumoAgentDrawerValue = {
+        ...conversation,
+        openDebugReport,
+        onDetach: detach,
+        onSuggestionPicked: telemetry.suggestionPicked,
+        cardRenderers: config.cardRenderers,
+        serverToolMeta: config.serverToolMeta,
+        suggestions: config.suggestions,
+    };
+
+    usePublishToProvider(value, onValue);
+
+    return <EncryptedSearchStatusMirror into={esStatus} />;
+});
+
+interface Props {
+    children: ReactNode;
+}
+
+/**
+ * Exposes the Mail Lumo conversation to {@link DrawerLumoView}, above the drawer so it survives tab switches
+ * and open/close. The assistant runs only while the floating panel is published, so only while Lumo is on.
+ */
+const LumoMailProvider = ({ children }: Props) => {
+    const hasFloatingPanel = useHasLumoFloatingPanel();
+
     return (
-        <LumoAgentDrawerContext.Provider
-            value={{
-                ...conversation,
-                openDebugReport,
-                onSuggestionPicked: telemetry.suggestionPicked,
-                cardRenderers: config.cardRenderers,
-                serverToolMeta: config.serverToolMeta,
-                suggestions: config.suggestions,
-            }}
-        >
-            <EncryptedSearchStatusMirror into={esStatus} />
+        <PublishedProvider context={LumoAgentDrawerContext} isEnabled={hasFloatingPanel} Publisher={LumoMailBody}>
             {children}
-        </LumoAgentDrawerContext.Provider>
+        </PublishedProvider>
     );
 };
 

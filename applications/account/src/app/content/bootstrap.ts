@@ -1,3 +1,7 @@
+import { logger } from '@protontech/logger';
+import { ALL_CONSOLE_LEVELS } from '@protontech/logger/constants';
+import type { LogLevel } from '@protontech/logger/types';
+
 import * as bootstrap from '@proton/account/bootstrap';
 import { bootstrapEvent } from '@proton/account/bootstrap/action';
 import { coreEventLoopV6 } from '@proton/account/coreEventLoop';
@@ -14,10 +18,8 @@ import { welcomeFlagsActions } from '@proton/account/welcomeFlags';
 import { calendarEventLoopV6 } from '@proton/calendar/calendarEventLoop';
 import { createCalendarModelEventManager } from '@proton/calendar/calendarModelEventManager';
 import { initMainHost } from '@proton/cross-storage/host';
-import { FeatureCode, fetchFeatures } from '@proton/features';
-import { logger } from '@proton/logger';
-import { ALL_CONSOLE_LEVELS } from '@proton/logger/constants';
-import type { LogLevel } from '@proton/logger/types';
+import { FeatureCode } from '@proton/features/interface';
+import { fetchFeatures } from '@proton/features/reducer';
 import { contactEventLoopV6 } from '@proton/mail/store/contactEventLoop';
 import { mailEventLoopV6 } from '@proton/mail/store/mailEventLoop';
 import createApi from '@proton/shared/lib/api/createApi';
@@ -35,8 +37,9 @@ import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
 import { initElectronClassnames } from '@proton/shared/lib/helpers/initElectronClassnames';
 import { initSafariFontFixClassnames } from '@proton/shared/lib/helpers/initSafariFontFixClassnames';
 import { isProduction } from '@proton/shared/lib/helpers/sentry';
-import type { ProtonConfig } from '@proton/shared/lib/interfaces';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { telemetry } from '@proton/shared/lib/telemetry';
+import { initTracker } from '@proton/telemetry-tracker/tracker';
 import noop from '@proton/utils/noop';
 
 import locales from '../locales';
@@ -56,6 +59,8 @@ export const bootstrapApp = async ({ config }: { config: ProtonConfig }) => {
     initElectronClassnames();
     initSafariFontFixClassnames();
     startLogoutListener();
+
+    initTracker({ api: silentApi });
 
     const appName = config.APP_NAME;
 

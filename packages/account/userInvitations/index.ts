@@ -1,6 +1,6 @@
 import { type PayloadAction, type ThunkAction, type UnknownAction, createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments, SharedStartListening } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments, SharedStartListening } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
@@ -10,7 +10,11 @@ import { getInvitation, getInvitations } from '@proton/shared/lib/api/user';
 import { updateCollectionAsyncV6 } from '@proton/shared/lib/eventManager/updateCollectionAsyncV6';
 import { type UpdateCollectionV6, updateCollectionV6 } from '@proton/shared/lib/eventManager/updateCollectionV6';
 import updateCollection from '@proton/shared/lib/helpers/updateCollection';
-import type { Api, PendingInvitation, PendingInvitation as PendingUserInvitation } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type {
+    PendingInvitation,
+    PendingInvitation as PendingUserInvitation,
+} from '@proton/shared/lib/interfaces/PendingInvitation';
 import noop from '@proton/utils/noop';
 
 import { serverEvent } from '../eventLoop';

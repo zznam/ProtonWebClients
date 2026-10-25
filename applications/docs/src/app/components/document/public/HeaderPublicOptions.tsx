@@ -10,11 +10,13 @@ import SimpleDropdown from '@proton/components/components/dropdown/SimpleDropdow
 import { DropdownSizeUnit } from '@proton/components/components/dropdown/utils'
 import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor'
 import Spotlight from '@proton/components/components/spotlight/Spotlight'
-import type { EditorControllerInterface, PublicDocumentState } from '@proton/docs-core'
-import { TooltipKey, useTooltipOnce, type DocumentType, RedirectAction } from '@proton/docs-shared'
-import { useDocsUrlPublicToken } from '@proton/drive-store'
+import type { EditorControllerInterface } from '@proton/docs-core/EditorController/EditorController'
+import type { PublicDocumentState } from '@proton/docs-core/State/DocumentState'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
+import { RedirectAction } from '@proton/docs-shared/DocumentAction'
+import { useDocsUrlPublicToken } from '@proton/docs-shared/Hooks/useDocsUrlPublicToken'
+import { TooltipKey, useTooltipOnce } from '@proton/docs-shared/Hooks/useTooltipOnce'
 import { useDocsBookmarks } from '@proton/drive-store/lib/_views/useDocsBookmarks'
-import { usePublicSessionUser } from '@proton/drive-store/store'
 import {
   needPublicRedirectSpotlight,
   publicRedirectSpotlightWasShown,
@@ -31,11 +33,14 @@ import { APPS, DRIVE_APP_NAME, DRIVE_SHORT_APP_NAME } from '@proton/shared/lib/c
 import { openNewTab } from '@proton/shared/lib/helpers/browser'
 import type { ProtonDocumentType } from '@proton/shared/lib/helpers/mimetype'
 import { getInitials } from '@proton/shared/lib/helpers/string'
-import type { UserModel } from '@proton/shared/lib/interfaces'
+import type { UserModel } from '@proton/shared/lib/interfaces/User'
 import { useCallback, useEffect, useState } from 'react'
 import { c } from 'ttag'
 import { useApplication } from '~/utils/application-context'
 import { useDocsUrlBar } from '~/utils/docs-url-bar'
+import { getPublicLinkUrlParams } from '@proton/docs-shared/URL/getPublicLinkUrlParams'
+import { getPublicLinkInfo } from '@proton/docs-core/DriveSDK/getPublicDrive'
+import type { PublicDriveCompat } from '@proton/drive-store/lib/usePublicDriveCompat'
 import { useDocsContext } from '../context'
 import { CommentsButton } from '../DocumentLayout/DocumentHeader/CommentsButton'
 import { DocumentActiveUsers } from '../DocumentLayout/DocumentHeader/DocumentActiveUsers'
@@ -76,15 +81,16 @@ function useSaveToDrive({
   isAlreadyBookmarked,
   urlPassword,
   showSignupFlowModal,
+  user,
 }: {
   onClick: () => Promise<void>
   isAlreadyBookmarked: boolean
   urlPassword: string
   showSignupFlowModal: ReturnType<typeof useSignupFlowModal>[1]
+  user: UserModel | undefined
 }) {
   const [isAdding, withAdding] = useLoading()
   const [showSpotlight, setShowSpotlight] = useState(needPublicRedirectSpotlight())
-  const { user } = usePublicSessionUser()
 
   useEffect(() => {
     if (showSpotlight) {
@@ -125,21 +131,28 @@ export function HeaderPublicOptions({ editorController, documentState, documentT
   const application = useApplication()
   const role = documentState.getProperty('userRole')
 
-  const { customPassword, token, linkId, urlPassword } = surePublicContext.compat
-  const { addBookmark, isAlreadyBookmarked, isLoading } = useDocsBookmarks({ token, urlPassword, customPassword })
+  const { token, linkId, urlPassword, customPassword, isSharedUrlAFolder } = getLinkDetails(surePublicContext.compat)
+  const { user, openParams } = surePublicContext
+  // Drive SDK path doesn't set the drive-store session user, so pass it in. Bookmarks will be migrated to the SDK later.
+  const { addBookmark, isAlreadyBookmarked, isLoading } = useDocsBookmarks({
+    token,
+    urlPassword,
+    customPassword,
+    user,
+  })
   const { createCopy } = usePublicDocumentCopying({
     context: surePublicContext,
     editorController,
     documentState,
     documentType,
   })
-  const { user, openParams, compat } = surePublicContext
-  const { isSharedUrlAFolder } = compat
 
   const saveForLater = useCallback(async () => {
     void addBookmark()
   }, [addBookmark])
 
+  // isSharedUrlAFolder is needed because a doc can be opened from a publicly shared Drive folder.
+  // "Save for later" saves the shared URL, which would save the whole folder, not this doc.
   const canShowSaveForLaterOption = !isLoading && isSharedUrlAFolder === false
 
   /**
@@ -180,6 +193,7 @@ export function HeaderPublicOptions({ editorController, documentState, documentT
     isAlreadyBookmarked,
     urlPassword,
     showSignupFlowModal,
+    user,
   })
 
   const saveToDriveButtonText = isAlreadyBookmarked
@@ -330,4 +344,14 @@ export function HeaderPublicOptions({ editorController, documentState, documentT
       {signupFlowModal}
     </div>
   )
+}
+
+function getLinkDetails(compat: PublicDriveCompat | undefined) {
+  if (compat) {
+    const { token, linkId, urlPassword, customPassword, isSharedUrlAFolder } = compat
+    return { token, linkId, urlPassword, customPassword, isSharedUrlAFolder }
+  }
+  const { token, urlPassword } = getPublicLinkUrlParams(window.location)
+  const { linkId, customPassword, isSharedUrlAFolder } = getPublicLinkInfo()
+  return { token, linkId, urlPassword, customPassword, isSharedUrlAFolder }
 }

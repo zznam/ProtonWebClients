@@ -1,7 +1,9 @@
-import { DynamicResult, Result, ApiResult } from '@proton/docs-shared'
+import { ApiResult } from '@proton/docs-shared/ApiResult'
+import { DynamicResult } from '@proton/docs-shared/DynamicResult'
+import { Result } from '@proton/docs-shared/Result'
 import type { DecryptCommit } from './DecryptCommit'
-import type { PublicDriveCompat } from '@proton/drive-store'
-import type { NodeMeta } from '@proton/docs-shared'
+import type { PublicDriveCompat } from '@proton/drive-store/lib/usePublicDriveCompat'
+import type { NodeMeta } from '@proton/docs-shared/BasicTypes'
 import type { DriveCompatWrapper } from '@proton/drive-store/lib/DriveCompatWrapper'
 import type { GetDocumentKeys } from './GetDocumentKeys'
 import type { GetDocumentMeta } from './GetDocumentMeta'
@@ -46,7 +48,7 @@ describe('LoadDocument', () => {
   beforeEach(() => {
     jest.spyOn(LoadLogger, 'logEventRelativeToLoadTime').mockImplementation(jest.fn())
     mockCompatWrapper = {
-      getCompat: jest.fn(),
+      getPublicCompat: jest.fn(),
     } as unknown as jest.Mocked<DriveCompatWrapper>
 
     mockGetDocumentMeta = {
@@ -208,7 +210,7 @@ describe('LoadDocument', () => {
         getDocumentKeys: jest.fn(),
       } as unknown as jest.Mocked<PublicDriveCompat>
 
-      mockCompatWrapper.getCompat.mockReturnValue(mockPublicCompat)
+      mockCompatWrapper.getPublicCompat.mockReturnValue(mockPublicCompat)
       mockGetNode.execute.mockResolvedValue(
         Result.ok({
           node: { name: 'public-doc', trashed: false },

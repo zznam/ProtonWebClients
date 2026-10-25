@@ -2,8 +2,8 @@ import { CryptoProxy } from '@protontech/crypto';
 import type { SessionKey } from '@protontech/crypto';
 import { fromUnixTime } from 'date-fns';
 
-import { getMeetingLink } from '@proton/meet';
 import type { SaveMeetingParams } from '@proton/meet/hooks/useSaveMeeting';
+import { getMeetingLink } from '@proton/meet/utils/getMeetingLink';
 import { getAppHref } from '@proton/shared/lib/apps/helper';
 import { generateAttendeeToken } from '@proton/shared/lib/calendar/attendees';
 import {
@@ -28,7 +28,7 @@ import { convertTimestampToTimezone } from '@proton/shared/lib/date/timezone';
 import { canonicalizeEmailByGuess } from '@proton/shared/lib/helpers/email';
 import { dateLocale } from '@proton/shared/lib/i18n';
 import { type CreateMeetingResponse, MeetingType } from '@proton/shared/lib/interfaces/Meet';
-import type { VcalVeventComponent } from '@proton/shared/lib/interfaces/calendar';
+import type { VcalVeventComponent } from '@proton/shared/lib/interfaces/calendar/VcalModel';
 import type { GetCanonicalEmailsMap } from '@proton/shared/lib/interfaces/hooks/GetCanonicalEmailsMap';
 import type { GetVTimezonesMap } from '@proton/shared/lib/interfaces/hooks/GetVTimezonesMap';
 

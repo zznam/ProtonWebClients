@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 
-import { FeatureCode, useFeature } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 import { useTrialInfo } from '@proton/payments-ui/ui/hooks/useTrialInfo';
 import {
     APPS,
@@ -10,7 +11,7 @@ import {
     SECOND,
     UPSELL_COMPONENT,
 } from '@proton/shared/lib/constants';
-import { getUpsellRef } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
 
 import { SUBSCRIPTION_STEPS } from '../../../../containers/payments/subscription/constants';
 import useSettingsLink from '../../../link/useSettingsLink';

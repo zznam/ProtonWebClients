@@ -3,18 +3,15 @@ import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
 import { createKTVerifier } from '@proton/key-transparency/helpers';
 import { getAndVerifyApiKeys } from '@proton/key-transparency/keys';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
-import type { GroupMembership } from '@proton/shared/lib/interfaces';
-import {
-    decryptMemberToken,
-    getActiveAddressKeys,
-    getAddressKeyToken,
-    getEmailFromKey,
-    splitKeys,
-} from '@proton/shared/lib/keys';
+import type { GroupMembership } from '@proton/shared/lib/interfaces/GroupMember';
+import { getAddressKeyToken } from '@proton/shared/lib/keys/addressKeys';
 import { generateForwardingAddressKey as generateGroupMemberAddressKey } from '@proton/shared/lib/keys/forward/generateForwardingAddressKey';
+import { getActiveAddressKeys } from '@proton/shared/lib/keys/getActiveKeys';
+import { getEmailFromKey, splitKeys } from '@proton/shared/lib/keys/keys';
+import { decryptMemberToken } from '@proton/shared/lib/keys/memberToken';
 import noop from '@proton/utils/noop';
 
 import { addressKeysThunk } from '../addressKeys';

@@ -4,7 +4,7 @@ import React from 'react';
 import { c } from 'ttag';
 
 import type { PopperPosition } from '@proton/atoms/Popper/interface';
-import { useActiveBreakpoint } from '@proton/components';
+import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import useLoading from '@proton/hooks/useLoading';
 import { IcCheckmark } from '@proton/icons/icons/IcCheckmark';
 import { IcChevronRight } from '@proton/icons/icons/IcChevronRight';
@@ -13,6 +13,7 @@ import { IcMeetBlur } from '@proton/icons/icons/IcMeetBlur';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import { selectBackgroundBlur } from '@proton/meet/store/slices/backgroundSlice';
 import { MeetingSideBars, toggleSideBarState } from '@proton/meet/store/slices/uiStateSlice';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
 import type { SerializableDeviceInfo } from '@proton/meet/utils/deviceUtils';
 import { useFlag } from '@proton/unleash/useFlag';
 
@@ -116,6 +117,10 @@ const VideoSettingsDropdownComponent = ({
                                 loadingBackgroundBlur={loadingBackgroundBlur}
                                 isBackgroundBlurSupported={isBackgroundBlurSupported}
                                 onChange={() => {
+                                    sendMeetActionsEvent(TelemetryMeetActionsEvents.background_effect_selected, {
+                                        effectType: backgroundBlur ? 'none' : 'blur',
+                                        source: 'in_call_popup',
+                                    });
                                     void withLoadingBackgroundBlur(toggleBackgroundBlur());
                                 }}
                                 withTooltip

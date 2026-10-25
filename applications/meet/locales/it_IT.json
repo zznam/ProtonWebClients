@@ -64,14 +64,32 @@
       "Background effect turned off": [
         "Effetto sfondo disattivato"
       ],
+      "Background removed": [
+        "Sfondo rimosso"
+      ],
+      "Beach landscape background applied": [
+        "Sfondo con paesaggio marino applicato"
+      ],
       "Blurred background applied": [
         "Sfondo sfocato applicato"
       ],
-      "Connected via TURN relay mode due to network restrictions. This may increase latency and affect call quality.": [
-        "Connessione tramite modalità relay TURN a causa di restrizioni di rete. Ciò potrebbe aumentare la latenza e influire sulla qualità della chiamata."
+      "Blurred office background applied": [
+        "È stato applicato uno sfondo sfocato dell'ufficio"
       ],
       "Connection lost. Reconnecting…": [
         "Connessione persa. Riconnessione in corso…"
+      ],
+      "Dark ${ BRAND_NAME } background applied": [
+        "Applicato sfondo scuro ${ BRAND_NAME }"
+      ],
+      "Library background applied": [
+        "Applicato lo sfondo della libreria"
+      ],
+      "Light ${ BRAND_NAME } background applied": [
+        "Applicato sfondo chiaro ${ BRAND_NAME }"
+      ],
+      "Mountain landscape background applied": [
+        "Sfondo con paesaggio montano applicato"
       ],
       "New chat message: ${ message }": [
         "Nuovo messaggio di chat: ${ message }"
@@ -138,6 +156,9 @@
       ],
       "Your camera has been turned off by the host": [
         "La tua fotocamera è stata spenta dall'organizzatore"
+      ],
+      "Your own background applied": [
+        "Il tuo background personale applicato"
       ]
     },
     "Action": {
@@ -153,6 +174,9 @@
       ],
       "Add another account": [
         "Aggiungi un altro account"
+      ],
+      "Add your own background": [
+        "Aggiungi il tuo sfondo"
       ],
       "Admit ${ participantName }": [
         "Ammetti ${ participantName }"
@@ -201,6 +225,9 @@
       ],
       "Change password": [
         "Cambia la password"
+      ],
+      "Chat": [
+        "Chat"
       ],
       "Chat with us": [
         "Chatta con noi"
@@ -259,6 +286,9 @@
       "Create meeting": [
         "Crea la riunione"
       ],
+      "Debug overlay": [
+        "Overlay debug"
+      ],
       "Delete": [
         "Elimina"
       ],
@@ -292,9 +322,6 @@
       "Download": [
         "Scarica"
       ],
-      "Download app": [
-        "Scarica l'app"
-      ],
       "Download local participant report": [
         "Scarica il report dei partecipanti locali"
       ],
@@ -324,9 +351,6 @@
       ],
       "Enable camera": [
         "Abilita la telecamera"
-      ],
-      "Enable captions": [
-        "Abilita didascalie"
       ],
       "Enable waiting room": [
         "Attiva sala d'attesa"
@@ -376,6 +400,12 @@
       "Join": [
         "Partecipa"
       ],
+      "Join and leave sounds": [
+        "Suoni di ingresso e di uscita"
+      ],
+      "Join in browser": [
+        "Accedi dal browser"
+      ],
       "Join meeting": [
         "Unisciti alla riunione"
       ],
@@ -387,6 +417,9 @@
       ],
       "Kick out ${ participantName }": [
         "Espelli ${ participantName }"
+      ],
+      "Layout": [
+        "Layout"
       ],
       "Leave": [
         "Abbandona"
@@ -403,11 +436,17 @@
       "Lower hand": [
         "Abbassa la mano"
       ],
+      "Meeting info": [
+        "Informazioni sulla riunione"
+      ],
       "Meeting timer": [
         "Timer della riunione"
       ],
       "Minimize preview": [
         "Riduci a icona anteprima"
+      ],
+      "More info": [
+        "Altre informazioni"
       ],
       "More info: ${ safeTitle }": [
         "Maggiori informazioni: ${ safeTitle }"
@@ -430,11 +469,14 @@
       "Noise cancellation": [
         "Eliminazione del rumore"
       ],
-      "Open app": [
-        "Apri l'app"
+      "Not now": [
+        "Non ora"
       ],
       "Open link": [
         "Apri link"
+      ],
+      "Participants": [
+        "Partecipanti"
       ],
       "Participants join after you approve them": [
         "I partecipanti si uniscono dopo che li hai approvati"
@@ -470,6 +512,9 @@
       "Record": [
         "Registra"
       ],
+      "Recording": [
+        "Registrazione"
+      ],
       "Refer a friend": [
         "Invita un amico"
       ],
@@ -487,6 +532,9 @@
       ],
       "Rejoin meeting": [
         "Unisciti alla riunione"
+      ],
+      "Remove ${ name }": [
+        "Rimuovi ${ name }"
       ],
       "Remove reaction ${ emoji }, ${ identities.length } reaction": [
         "Rimuovi reazione ${ emoji }, ${ identities.length } reazione",
@@ -555,6 +603,12 @@
       "Settings": [
         "Consenti"
       ],
+      "Share screen": [
+        "Condividi schermo"
+      ],
+      "Show captions": [
+        "Utilizza sottotitoli"
+      ],
       "Show options": [
         "Mostra opzioni"
       ],
@@ -588,6 +642,9 @@
       "Start meeting": [
         "Inizia la riunione"
       ],
+      "Start meeting in browser": [
+        "Avvia la riunione nel browser"
+      ],
       "Start new meeting": [
         "Inizia una nuova riunione"
       ],
@@ -606,9 +663,6 @@
       "Stay in meeting": [
         "Resta nella riunione"
       ],
-      "Stop opening meetings in the desktop app": [
-        "Interrompi l'apertura delle riunioni nell'app desktop"
-      ],
       "Stop receiving video": [
         "Interrompi la ricezione del video"
       ],
@@ -621,6 +675,9 @@
       "Stop Recording Track Stats": [
         "Interrompi statistiche registrazione traccia"
       ],
+      "Stop sharing": [
+        "Interrompi condivisione"
+      ],
       "Submit": [
         "Invia"
       ],
@@ -632,6 +689,9 @@
       ],
       "The current link will stop working.": [
         "Il link attuale smetterà di funzionare."
+      ],
+      "Transcription": [
+        "Trascrizione"
       ],
       "Try again": [
         "Riprova"
@@ -707,9 +767,6 @@
       "Blur background": [
         "Sfocatura dello sfondo"
       ],
-      "Chat": [
-        "Chat"
-      ],
       "Close": [
         "Chiudi"
       ],
@@ -722,20 +779,14 @@
       "Copy meeting link": [
         "Copia il link della riunione"
       ],
-      "Debug devices": [
-        "Dispositivi per il debug"
-      ],
-      "Debug overlay": [
-        "Overlay debug"
-      ],
-      "Device Debugger": [
-        "Debugger del dispositivo"
-      ],
       "Go to dashboard": [
         "Vai alla dashboard"
       ],
       "Incoming video": [
         "Videochiamata in arrivo"
+      ],
+      "Join and leave sounds": [
+        "Suoni di ingresso e di uscita"
       ],
       "Leave Meeting": [
         "Lascia la riunione"
@@ -745,12 +796,6 @@
       ],
       "Lock meeting": [
         "Blocca riunione"
-      ],
-      "Lower hand": [
-        "Abbassa la mano"
-      ],
-      "Meeting details": [
-        "Dettagli della riunione"
       ],
       "Meeting timer": [
         "Timer della riunione"
@@ -770,14 +815,8 @@
       "Participant host control options": [
         "Opzioni di controllo per i partecipanti"
       ],
-      "Participants": [
-        "Partecipanti"
-      ],
       "Picture-in-picture while sharing": [
         "Modalità Picture-in-picture durante la condivisione"
-      ],
-      "Raise hand": [
-        "Alza la mano"
       ],
       "Rotate camera": [
         "Ruota la webcam"
@@ -785,14 +824,8 @@
       "Save my name on this device": [
         "Salva il mio nome su questo dispositivo"
       ],
-      "Screen share": [
-        "Condivisione schermo"
-      ],
       "Self view": [
         "Vista personale"
-      ],
-      "Settings": [
-        "Impostazioni"
       ],
       "Stop recording and download.": [
         "Interrompi la registrazione e scarica."
@@ -803,17 +836,11 @@
       "Toggle emoji reactions": [
         "Attiva/disattiva le reazioni con emoji"
       ],
-      "Toggle meeting details": [
-        "Attiva/disattiva i dettagli della riunione"
-      ],
       "Toggle participants": [
         "Attiva/disattiva partecipanti"
       ],
       "Toggle screen share": [
         "Alterna condivisione schermo"
-      ],
-      "Toggle settings": [
-        "Cambia le impostazioni"
       ],
       "Video settings": [
         "Impostazioni video"
@@ -879,14 +906,9 @@
         "Attivo"
       ]
     },
-    "Banner": {
-      "Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.": [
-        "Connesso in modalità relay TURN a causa delle restrizioni della tua rete. Ciò potrebbe aumentare la latenza e influire sulla qualità della chiamata."
-      ]
-    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Applicazione desktop ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "${ appName } Applicazione desktop"
       ]
     },
     "Bug category": {
@@ -1854,11 +1876,29 @@
       "Cannot verify the author of this file": [
         "Impossibile verificare l'autore di questo file"
       ],
+      "Check your audio settings and try again": [
+        "Controlla le impostazioni audio e riprova"
+      ],
+      "Connection lost — captions will resume when reconnected": [
+        "Connessione interrotta — i sottotitoli riprenderanno una volta ristabilita la connessione"
+      ],
       "Copying item to a non-folder is not allowed": [
         "Non è possibile copiare l'elemento in un elemento che non è una cartella"
       ],
+      "Could not add this background. Check your connection and try again.": [
+        "Impossibile aggiungere questo sfondo. Verifica la connessione e riprova."
+      ],
+      "Could not add this background. Please try again.": [
+        "Impossibile aggiungere questo sfondo. Riprova."
+      ],
       "Could not load sharing details": [
         "Impossibile caricare i dettagli della condivisione"
+      ],
+      "Could not remove this background. Check your connection and try again.": [
+        "Impossibile rimuovere questo sfondo. Verifica la connessione e riprova."
+      ],
+      "Could not remove this background. Please try again.": [
+        "Impossibile rimuovere questo sfondo. Riprova."
       ],
       "Could not unlock the parent folder": [
         "Impossibile sbloccare la cartella principale."
@@ -1986,6 +2026,9 @@
       "Incorrect backup password. Please try again.": [
         "Password di backup errata. Riprova."
       ],
+      "Incorrect password. Please try again.": [
+        "Password errata. Per favore riprova."
+      ],
       "Incorrect second password. Please try again.": [
         "Password secondaria errata. Riprova."
       ],
@@ -2001,14 +2044,14 @@
       "Legacy public link cannot be updated. Please re-create a new public link.": [
         "Il vecchio link pubblico non può essere aggiornato. Crea un nuovo link pubblico."
       ],
-      "Live captions aren't working. Try turning them off and on again.": [
-        "I sottotitoli in tempo reale non funzionano. Prova a disattivarli e riattivarli."
-      ],
       "Live captions couldn't be started.": [
         "Impossibile avviare i sottotitoli in tempo reale."
       ],
       "Live captions have stopped.": [
         "I sottotitoli in tempo reale si sono interrotti."
+      ],
+      "Microphone not detected": [
+        "Microfono non rilevato"
       ],
       "Missing inviter email": [
         "Manca l'indirizzo email dell'invitante"
@@ -2026,6 +2069,9 @@
       "Not a valid number": [
         "Numero non valido"
       ],
+      "Not enough storage space to record. Free up space and try again.": [
+        "Spazio di archiviazione insufficiente per la registrazione. Liberare spazio e riprovare."
+      ],
       "Operation aborted": [
         "Operazione interrotta"
       ],
@@ -2038,8 +2084,14 @@
       "Passwords do not match": [
         "Le password non corrispondono"
       ],
+      "Pick a JPEG, PNG or WebP image.": [
+        "Scegli un'immagine in formato JPEG, PNG o WebP."
+      ],
       "Please allow screen sharing in your system permissions, then try again": [
         "Per favore, consenti la condivisione dello schermo nelle autorizzazioni di sistema, quindi riprova"
+      ],
+      "Recording stopped because it could not be saved. We kept it up to this point.": [
+        "La registrazione si è interrotta perché non è stato possibile salvarla. Abbiamo continuato fino a questo punto."
       ],
       "Request timed out": [
         "Timeout della richiesta"
@@ -2077,6 +2129,9 @@
       "The uploaded file does not match the original. Please try again.": [
         "Il file caricato non corrisponde all'originale. Riprova."
       ],
+      "This background could not be saved in this browser.": [
+        "Non è stato possibile salvare questo sfondo in questo browser."
+      ],
       "This field exceeds the maximum of ${ maximumLength } characters.": [
         "Questo campo supera il numero massimo di ${ maximumLength } caratteri."
       ],
@@ -2089,6 +2144,18 @@
       "This file has no version available to download": [
         "Non è disponibile alcuna versione di questo file da scaricare"
       ],
+      "This file name is too long. Rename the image and try again.": [
+        "Il nome di questo file è troppo lungo. Rinomina l'immagine e riprova."
+      ],
+      "This image could not be read. Pick another one.": [
+        "Non è stato possibile leggere questa immagine. Scegline un'altra."
+      ],
+      "This image is too big. Pick one up to ${ maxEdge } pixels wide and tall.": [
+        "Questa immagine è troppo grande. Scegline una con larghezza e altezza non superiori a ${ maxEdge } pixel."
+      ],
+      "This image is too large. Pick one under ${ maxMegabytes } MB.": [
+        "Questa immagine è troppo grande. Scegline una di dimensioni inferiori a ${ maxMegabytes } MB."
+      ],
       "This item is no longer shared": [
         "Questo elemento non è più condiviso"
       ],
@@ -2098,8 +2165,14 @@
       "This meeting is on an older version, the host must end it and refresh Meet to restart with the latest version.": [
         "Questo incontro è su una versione obsoleta, l'organizzatore deve terminarlo e aggiornare Meet per riavviare con l'ultima versione."
       ],
+      "Try turning live captions off and on again.": [
+        "Prova a disattivare e riattivare i sottotitoli in tempo reale."
+      ],
       "Try using only letters, numerals, and _.-": [
         "Prova ad usare solo lettere, numeri e _.-"
+      ],
+      "Unable to generate captions": [
+        "Impossibile generare le didascalie"
       ],
       "Unknown error": [
         "Errore sconosciuto"
@@ -2122,8 +2195,14 @@
       "We couldn’t send a verification code using this method.": [
         "Non è stato possibile inviare un codice di verifica con questo metodo."
       ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase di recupero errata. Riprova o usa un altro metodo di recupero."
+      ],
       "You do not have access to this item": [
         "Non hai accesso a questo elemento"
+      ],
+      "You have reached the maximum number of custom backgrounds.": [
+        "Hai raggiunto il numero massimo di sfondi personalizzati."
       ],
       "Your browser ran out of storage space. We saved the recording up to this point.": [
         "Lo spazio di archiviazione del tuo browser è esaurito. Abbiamo salvato la registrazione fino a questo momento."
@@ -2317,6 +2396,9 @@
       "${ MEET_APP_NAME } needs microphone access so others can hear you during the call. You can turn it off at any time.": [
         "${ MEET_APP_NAME } richiede l'accesso al microfono in modo che gli altri possano sentirti durante la chiamata. Puoi disattivarlo in qualsiasi momento."
       ],
+      "${ MEET_APP_NAME } needs screen recording access so you can share your screen during the call. After you allow it, macOS will ask you to reopen the app.": [
+        "${ MEET_APP_NAME } richiede l'autorizzazione alla registrazione dello schermo per consentirti di condividere lo schermo durante la chiamata. Dopo aver concesso l'autorizzazione, macOS ti chiederà di riaprire l'app."
+      ],
       "${ MEET_APP_NAME } needs WebRTC to run. Please update your browser or device to a version that supports WebRTC, try a different browser, or disable any extensions that might be blocking it.": [
         "${ MEET_APP_NAME } necessita di WebRTC per funzionare. Per favore, aggiorna il tuo browser o dispositivo a una versione che supporti WebRTC, prova un altro browser, o disattiva qualsiasi estensione che potrebbe bloccarlo."
       ],
@@ -2365,6 +2447,9 @@
       "A phone number can only be used to verify one ${ BRAND_NAME } account": [
         "Ogni numero di telefono può essere utilizzato per verificare un unico account ${ BRAND_NAME }"
       ],
+      "Adding ${ name }": [
+        "Aggiunta di ${ name }"
+      ],
       "Admit": [
         "Autorizza accesso"
       ],
@@ -2379,6 +2464,9 @@
       ],
       "Anyone with the link can join immediately": [
         "Chiunque abbia il link può accedere immediatamente"
+      ],
+      "App didn't open?": [
+        "L'app non si è aperta?"
       ],
       "Approve participants before they can join": [
         "Approvazione dei partecipanti prima dell'accesso"
@@ -2419,8 +2507,8 @@
       "Camera permission denied": [
         "Autorizzazione alla fotocamera negata"
       ],
-      "Captions are on": [
-        "Sottotitoli attivati"
+      "Captions on": [
+        "Didascalie attive"
       ],
       "Changes are staged. Apply to rebuild the preview with the new constants.": [
         "Le modifiche sono preparate. Applica per ricostruire l'anteprima con le nuove costanti."
@@ -2512,6 +2600,9 @@
       "End the meeting for everyone?": [
         "Terminare la riunione per tutti?"
       ],
+      "End to end encrypted chat": [
+        "Chat con crittografia end-to-end"
+      ],
       "End-to-end encryption is active for audio and video.": [
         "La crittografia end-to-end è attiva per audio e video."
       ],
@@ -2569,14 +2660,14 @@
       "Get a secure meeting link then add it to your calendar": [
         "Ottieni un link sicuro per la riunione e aggiungilo al tuo calendario"
       ],
-      "Get the best experience with the ${ protonMeet } desktop app": [
-        "Ottieni la migliore esperienza con l'app desktop ${ protonMeet }"
-      ],
       "Go to about:config, search for media.peerconnection.enabled, and set it to true.": [
         "Vai su about:config, cerca media.peerconnection.enabled e impostalo su true."
       ],
       "Host": [
         "Host"
+      ],
+      "Host has another meeting in progress": [
+        "L'organizzatore ha un'altra riunione in corso"
       ],
       "Host has disabled live captions for this meeting.": [
         "Condividi questo feedback con il team di Apertus per aiutarli a migliorare il loro modello."
@@ -2632,6 +2723,9 @@
       "Loading calendar, please wait. You will be redirected to our scheduling platform Calendly in a new tab.": [
         "Caricamento del calendario in corso. Verrai reindirizzato alla nostra piattaforma di pianificazione Calendly in una nuova scheda."
       ],
+      "Loading captions…": [
+        "Caricamento delle didascalie in corso…"
+      ],
       "Loading meeting details...": [
         "Caricamento dei dettagli della riunione..."
       ],
@@ -2677,6 +2771,9 @@
       "Meeting recordings aren’t supported in Firefox.": [
         "Le registrazioni delle riunioni non sono supportate in Firefox."
       ],
+      "Meeting recordings aren’t supported in Safari private mode.": [
+        "Le registrazioni delle riunioni non sono supportate nella modalità privata di Safari."
+      ],
       "Meeting time is up": [
         "Il tempo della riunione è scaduto"
       ],
@@ -2703,6 +2800,9 @@
       ],
       "Microphone permission denied": [
         "Autorizzazione al microfono negata"
+      ],
+      "More options": [
+        "Altre opzioni"
       ],
       "Mute microphone": [
         "Silenzia microfono"
@@ -2755,8 +2855,14 @@
       "No speaker detected": [
         "Nessun altoparlante rilevato"
       ],
+      "Noise cancellation was turned off because your device is experiencing performance issues. You can turn it back on in audio settings.": [
+        "La funzione di cancellazione del rumore è stata disattivata perché il dispositivo presenta problemi di prestazioni. È possibile riattivarla nelle impostazioni audio."
+      ],
       "Not sent, check your connection.": [
         "Messaggio non inviato. Controlla la connessione."
+      ],
+      "Only a partial meeting recording was available.": [
+        "Era disponibile solo una registrazione parziale della riunione."
       ],
       "Only meetings you created appear here": [
         "Solo le riunioni che hai creato compaiono qui"
@@ -2884,8 +2990,11 @@
       "Share screen": [
         "Condividi schermo"
       ],
-      "Share this link to invite others. You can also find it anytime by clicking the info icon in the toolbar.": [
-        "Condividi questo link per invitare altri. Puoi anche trovarlo in qualsiasi momento cliccando sull'icona info nella barra degli strumenti."
+      "Share this link to invite others. You can also find it anytime under Meeting info in the More options menu.": [
+        "Condividi questo link per invitare altre persone. Puoi trovarlo in qualsiasi momento nella sezione “Informazioni sulla riunione” nel menu “Altre opzioni”."
+      ],
+      "Show live captions?": [
+        "Mostrare i sottotitoli in tempo reale?"
       ],
       "Sign in": [
         "Accedi"
@@ -2895,9 +3004,6 @@
       ],
       "Speaker selection isn’t available in this browser. Use your system settings to choose a different speaker.": [
         "La selezione dell'altoparlante non è disponibile in questo browser. Usa le impostazioni di sistema per scegliere un altoparlante diverso."
-      ],
-      "Start recording": [
-        "Inizia registrazione"
       ],
       "Starting camera…": [
         "Avvio fotocamera in corso…"
@@ -2917,6 +3023,9 @@
       "Thank you for joining.": [
         "Grazie per aver partecipato."
       ],
+      "The captioning service uses meeting audio. Captions are visible only to you and aren’t saved.": [
+        "Il servizio di sottotitolazione utilizza l'audio della riunione. I sottotitoli sono visibili solo a te e non vengono salvati."
+      ],
       "The host has removed you from this meeting. If this was a mistake, ask the host to invite you again.": [
         "L'organizzatore ti ha rimosso da questa riunione. Se si è trattato di un errore, chiedi all'organizzatore di invitarti di nuovo."
       ],
@@ -2928,6 +3037,9 @@
       ],
       "This is an end to end encrypted chat with ephemeral messages, which disappear at the end of the call.": [
         "Questa è una chat crittografata end-to-end con messaggi temporanei, che scompaiono alla fine della chiamata."
+      ],
+      "This meeting has a time limit. This call will disconnect soon.": [
+        "Questa riunione ha una durata limitata. La chiamata terminerà a breve."
       ],
       "This meeting has a waiting room": [
         "Questa riunione ha una sala d'attesa"
@@ -2941,8 +3053,8 @@
       "This meeting reached the time limit of a free plan. Upgrade to extend your meeting length in future calls.": [
         "Questa riunione ha raggiunto il limite di tempo previsto da un piano gratuito. Effettua l'upgrade per estendere la durata delle riunioni nelle chiamate future."
       ],
-      "This meeting was opened in the ${ MEET_APP_NAME } desktop app.": [
-        "Questa riunione è stata aperta nell'app desktop ${ MEET_APP_NAME }."
+      "This meeting reached the time limit.": [
+        "La riunione è giunta al termine."
       ],
       "This recording will be permanently deleted from this device. This action cannot be undone.": [
         "Questa registrazione verrà eliminata in modo permanente da questo dispositivo. Questa azione non può essere annullata."
@@ -2958,9 +3070,6 @@
       ],
       "To create a room, you'll need **a free ${ BRAND_NAME } Account** so we can save the room. This only takes a few seconds.": [
         "Per creare una stanza, ti serve **un account ${ BRAND_NAME } gratuito** in modo da poterla salvare. Richiede solo pochi secondi."
-      ],
-      "To create live captions, the captioning service needs access to the meeting audio. Captions are only visible to you and are not saved.": [
-        "Per creare i sottotitoli in tempo reale, il servizio necessita dell'accesso all'audio della riunione. I sottotitoli sono visibili solo a te e non vengono salvati."
       ],
       "To fight spam and abuse, please verify you are human.": [
         "Completa la verifica umana. Questa è necessaria per contrastare spam e abusi."
@@ -2982,9 +3091,6 @@
       ],
       "Turn on camera": [
         "Attiva la webcam"
-      ],
-      "Turn on live captions?": [
-        "Attivare i sottotitoli in tempo reale?"
       ],
       "Unable to reconnect to the meeting. Please rejoin or leave.": [
         "Impossibile riconnettersi alla riunione. Unisciti di nuovo o esci."
@@ -3012,6 +3118,9 @@
       ],
       "Virtual background initializing": [
         "Inizializzazione dello sfondo virtuale in corso"
+      ],
+      "Waiting for speech…": [
+        "In attesa del discorso…"
       ],
       "Waiting for the host to admit you. The host has been notified that you're waiting.": [
         "In attesa dell'ammissione da parte dell'organizzatore. L'organizzatore è stato informato della tua presenza."
@@ -3049,14 +3158,17 @@
       "You are almost there": [
         "Ci sei quasi"
       ],
-      "You can close this tab.": [
-        "Puoi chiudere questa scheda."
-      ],
       "You can now return to the application to continue": [
         "Ora puoi tornare all'applicazione per continuare"
       ],
+      "You can save up to ${ max } of your own backgrounds.": [
+        "Puoi salvare fino a ${ max } dei tuoi sfondi."
+      ],
       "You can still turn off your microphone and camera anytime in the meeting": [
         "Puoi comunque disattivare il microfono e la webcam in qualsiasi momento durante la riunione"
+      ],
+      "You have too many meetings in progress": [
+        "Hai troppe riunioni in corso"
       ],
       "You left the meeting": [
         "Hai lasciato la riunione"
@@ -3081,6 +3193,9 @@
       ],
       "Your always available meeting room": [
         "La tua sala riunioni sempre disponibile"
+      ],
+      "Your backgrounds could not be loaded, so a new one cannot be added right now.": [
+        "Non è stato possibile caricare i tuoi sfondi, quindi al momento non è possibile aggiungerne uno nuovo."
       ],
       "Your browser has blocked access to your camera and microphone. To enable them, update your browser settings and rejoin the call.": [
         "Il tuo browser ha bloccato l'accesso alla fotocamera e al microfono. Per attivarli, aggiorna le impostazioni del browser e unisciti nuovamente alla chiamata."
@@ -3148,8 +3263,14 @@
       "Auto-detect": [
         "Auto-rilevamento"
       ],
+      "Beach landscape background": [
+        "Sfondo con paesaggio marino"
+      ],
       "Blurred (next)": [
         "Sfocato (successivo)"
+      ],
+      "Blurred office background": [
+        "Sfondo sfocato dell'ufficio"
       ],
       "Browser": [
         "Browser"
@@ -3187,6 +3308,9 @@
       "Created": [
         "Creato"
       ],
+      "Dark ${ BRAND_NAME } background": [
+        "Sfondo scuro ${ BRAND_NAME }"
+      ],
       "Delete": [
         "Elimina"
       ],
@@ -3198,6 +3322,9 @@
       ],
       "Does not repeat": [
         "Nessuna ripetizione"
+      ],
+      "Don’t show this message again": [
+        "Non mostrare più questo messaggio"
       ],
       "Download .ics": [
         "Scarica .ics"
@@ -3256,8 +3383,17 @@
       "Leave meeting options": [
         "Opzioni per lasciare la riunione"
       ],
+      "Library background": [
+        "Informazioni sulla biblioteca"
+      ],
+      "Light ${ BRAND_NAME } background": [
+        "Sfondo chiaro ${ BRAND_NAME }"
+      ],
       "Live caption agent": [
         "Agente per i sottotitoli in tempo reale"
+      ],
+      "Live captions": [
+        "Sottotitoli in tempo reale"
       ],
       "Manage recordings": [
         "Gestisci registrazioni"
@@ -3276,6 +3412,12 @@
       ],
       "Monday to Friday": [
         "Da lunedì a venerdì"
+      ],
+      "More options": [
+        "Altre opzioni"
+      ],
+      "Mountain landscape background": [
+        "Sfondo con paesaggio montano"
       ],
       "Muted": [
         "Muto"
@@ -3727,6 +3869,9 @@
       "Allow microphone": [
         "Consenti microfono"
       ],
+      "Allow screen recording": [
+        "Consenti la registrazione dello schermo"
+      ],
       "Are you sure?": [
         "Sei sicuro?"
       ],
@@ -3845,6 +3990,9 @@
       "Meeting": [
         "Riunione"
       ],
+      "Meeting actions": [
+        "Azioni da intraprendere durante la riunione"
+      ],
       "Meeting created": [
         "Riunione creata"
       ],
@@ -3886,6 +4034,9 @@
       ],
       "Publications": [
         "Pubblicazioni"
+      ],
+      "Quick reactions": [
+        "Reazioni immediate"
       ],
       "Reconnection Testing": [
         "Test di riconnessione"

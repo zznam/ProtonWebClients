@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { defaultLongExpiry } from '@proton/redux-utilities/fetchedAt';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
-import type { DecryptedKey } from '@proton/shared/lib/interfaces';
-import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys/getDecryptedUserKeys';
 import { getInactiveKeys } from '@proton/shared/lib/keys/getInactiveKeys';
 
-import { signoutAction } from '../authenticationService';
+import { signoutAction } from '../authenticationService/authenticationListener';
 import { inactiveKeysActions } from '../inactiveKeys';
 import { type UserState, userThunk } from '../user';
 

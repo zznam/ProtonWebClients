@@ -8,10 +8,11 @@ import { getClientKey } from '@proton/shared/lib/authentication/clientKey';
 import { InvalidPersistentSessionError } from '@proton/shared/lib/authentication/error';
 import type { LocalKeyResponse, LocalSessionResponse } from '@proton/shared/lib/authentication/interface';
 import { getDecryptedBlob, getEncryptedBlob } from '@proton/shared/lib/authentication/sessionBlobCryptoHelper';
-import type { User as UserType } from '@proton/shared/lib/interfaces';
+import type { User as UserType } from '@proton/shared/lib/interfaces/User';
 import getRandomString from '@proton/utils/getRandomString';
 
-import type { Api, Maybe, MaybeNull } from '../../types';
+import type { Api } from '../../types/api/api';
+import type { Maybe, MaybeNull } from '../../types/utils';
 import { getErrorMessage } from '../../utils/errors/get-error-message';
 import { prop } from '../../utils/fp/lens';
 import { type OfflineConfig, getOfflineVerifier } from '../cache/crypto';
@@ -43,6 +44,7 @@ export type AuthSession = {
     RefreshToken: string;
     sessionLockToken?: string;
     desktopLockVerifier?: string;
+    desktopLockUserIdentifier?: string;
     twoPasswordMode?: boolean;
     UID: string;
     unlockRetryCount?: number;
@@ -61,6 +63,7 @@ export const SESSION_KEYS: (keyof AuthSession)[] = [
     'AccessToken',
     'cookies',
     'desktopLockVerifier',
+    'desktopLockUserIdentifier',
     'encryptedOfflineKD',
     'extraPassword',
     'keyPassword',

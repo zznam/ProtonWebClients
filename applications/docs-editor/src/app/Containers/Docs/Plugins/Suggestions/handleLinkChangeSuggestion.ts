@@ -2,8 +2,8 @@ import { $createLinkNode, $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } fr
 import { $findMatchingParent, $wrapNodeInElement } from '@lexical/utils'
 import type { LexicalEditor } from 'lexical'
 import { $getSelection, $isRangeSelection, $createTextNode } from 'lexical'
-import { GenerateUUID } from '@proton/docs-shared'
-import { sanitizeUrl } from '../../../../Utils/sanitizeUrl'
+import { v4 as uuidv4 } from 'uuid'
+import { sanitizeUrl } from '../../Utils/sanitizeUrl'
 import type { LinkChangePayload } from '../Link/LinkPlugin'
 import { $createSuggestionNode, $isSuggestionNode } from './ProtonNode'
 import { $wrapSelectionInSuggestionNode } from './Utils'
@@ -21,7 +21,7 @@ export function $handleLinkChangeSuggestion(
     return true
   }
 
-  const suggestionID = GenerateUUID()
+  const suggestionID = uuidv4()
 
   const sanitizedURL = url ? sanitizeUrl(url.startsWith('http') ? url : 'https://' + url) : null
 

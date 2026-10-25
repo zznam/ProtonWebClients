@@ -7,10 +7,11 @@ import { createAddressKeysThunk, getCreateAddressKeysPayload } from '@proton/acc
 import { usePasswordPolicies } from '@proton/account/passwordPolicies/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
-import type { Address, Member } from '@proton/shared/lib/interfaces';
-import { getShouldSetupMemberKeys } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
+import { getShouldSetupMemberKeys } from '@proton/shared/lib/keys/memberKeys';
 
 import type { ModalProps } from '../../../components/modalTwo/Modal';
 import ModalTwo from '../../../components/modalTwo/Modal';
@@ -18,7 +19,7 @@ import ModalTwoContent from '../../../components/modalTwo/ModalContent';
 import ModalTwoFooter from '../../../components/modalTwo/ModalFooter';
 import ModalTwoHeader from '../../../components/modalTwo/ModalHeader';
 import PasswordWithPolicyInputs from '../../../components/passwordPolicy/PasswordWithPolicyInputs';
-import { usePasswordPolicyValidation } from '../../../components/passwordPolicy/index';
+import { usePasswordPolicyValidation } from '../../../components/passwordPolicy/usePasswordPolicyValidation';
 import Table from '../../../components/table/Table';
 import TableBody from '../../../components/table/TableBody';
 import TableHeader from '../../../components/table/TableHeader';
@@ -31,7 +32,7 @@ interface Props extends ModalProps<'form'> {
     addressesToGenerate: Address[];
 }
 
-export enum StatusEnum {
+enum StatusEnum {
     QUEUED = 0,
     DONE = 1,
     FAILURE = 2,
@@ -50,14 +51,14 @@ const getStatus = (text: 'ok' | 'loading' | 'error') => {
     }
 };
 
-export interface Status {
+interface Status {
     type: StatusEnum;
     tooltip?: string;
 }
 
 type AddressState = { [key: string]: Status };
 
-export const updateAddress = (oldAddresses: AddressState, ID: string, diff: Status) => {
+const updateAddress = (oldAddresses: AddressState, ID: string, diff: Status) => {
     return {
         ...oldAddresses,
         [ID]: diff,

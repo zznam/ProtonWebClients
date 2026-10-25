@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import type { ModalStateProps } from '@proton/components';
-import { NodeType, getDrive } from '@proton/drive';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
 import { handleSdkError } from '@proton/drive/legacy/errorHandling';
 import { type NormalizedNode, getNodeEntity } from '@proton/drive/legacy/sdkUtils/getNodeEntity';
 import { BusDriverEventName, getBusDriver } from '@proton/drive/modules/busDriver';
+import { NodeType, getDrive } from '@proton/drive/sdk';
 import { splitExtension } from '@proton/shared/lib/helpers/file';
 import { isProtonDocsDocument, isProtonDocsSpreadsheet } from '@proton/shared/lib/helpers/mimetype';
 

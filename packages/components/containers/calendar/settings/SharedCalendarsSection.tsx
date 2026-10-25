@@ -6,7 +6,7 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcCogWheel } from '@proton/icons/icons/IcCogWheel';
 import { getApiErrorMessage } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import {
@@ -26,10 +26,11 @@ import { ApiError } from '@proton/shared/lib/fetch/ApiError';
 import { getIsAddressDisabled } from '@proton/shared/lib/helpers/address';
 import { canonicalizeInternalEmail } from '@proton/shared/lib/helpers/email';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Address } from '@proton/shared/lib/interfaces';
-import type { CalendarMemberInvitation, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { CalendarMemberInvitation } from '@proton/shared/lib/interfaces/calendar/CalendarMember';
 
-import ButtonGroup from '../../../components/button/ButtonGroup';
+import { ButtonGroup } from '../../../components/button/ButtonGroup';
 import CalendarSelectIcon from '../../../components/calendarSelect/CalendarSelectIcon';
 import Info from '../../../components/link/Info';
 import SettingsLink from '../../../components/link/SettingsLink';

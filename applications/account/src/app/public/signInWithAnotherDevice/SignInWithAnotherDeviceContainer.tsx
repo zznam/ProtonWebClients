@@ -16,16 +16,16 @@ import { Href } from '@proton/atoms/Href/Href';
 import SkeletonLoader from '@proton/components/components/skeletonLoader/SkeletonLoader';
 import getBoldFormattedText from '@proton/components/helpers/getBoldFormattedText';
 import useErrorHandler from '@proton/components/hooks/useErrorHandler';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import observeApiError from '@proton/metrics/observeApiError';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import type { ProductParam } from '@proton/shared/lib/apps/product';
 import { getToAppName } from '@proton/shared/lib/authentication/apps';
 import { type APP_NAMES, BRAND_NAME, MAIL_APP_NAME, SECOND } from '@proton/shared/lib/constants';
 import { getNonEmptyErrorMessage } from '@proton/shared/lib/helpers/error';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import noop from '@proton/utils/noop';
 
 import type { OnLoginCallback } from '../../content/authSession';

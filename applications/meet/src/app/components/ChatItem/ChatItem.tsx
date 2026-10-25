@@ -22,7 +22,7 @@ import { useFlag } from '@proton/unleash/useFlag';
 import { ParticipantAvatar } from '../../atoms/ParticipantAvatar/ParticipantAvatar';
 import { useChatMessage } from '../../hooks/bridges/useChatMessage';
 import { useChatMessageReaction } from '../../hooks/bridges/useChatMessageReaction';
-import { useMentionPlainText } from '../../hooks/useMentionPlainText';
+import { useMessagePlainText } from '../../hooks/useMessagePlainText';
 import { useToolbarRovingFocus } from '../../hooks/useToolbarRovingFocus';
 import { getAgentDisplayInfo } from '../../utils/getAgentDisplayInfo';
 import { ChatMessageContent } from '../ChatMessageContent';
@@ -36,7 +36,7 @@ import './ChatItem.scss';
 const QUICK_REACTIONS = ['👍', '❤️', '😂', '😮', '🥲', '👎'];
 
 interface ChatItemProps {
-    roomName?: string;
+    meetingName?: string;
     item: MeetingRoomUpdate;
     displayDate?: boolean;
     /**
@@ -56,7 +56,7 @@ const isParticipantEventRecord = (item: MeetingRoomUpdate): item is ParticipantE
     return item.type === 'event';
 };
 
-export const ChatItem = ({ roomName, item, displayDate = true, variant = 'default', onReply }: ChatItemProps) => {
+export const ChatItem = ({ meetingName, item, displayDate = true, variant = 'default', onReply }: ChatItemProps) => {
     const { type, identity, timestamp } = item;
 
     const isThreadItem = variant === 'thread';
@@ -89,14 +89,14 @@ export const ChatItem = ({ roomName, item, displayDate = true, variant = 'defaul
 
     const roomNameLabel = (
         <span key="room-name" className="ml-1 room-name">
-            {roomName}
+            {meetingName}
         </span>
     );
 
     const isMessage = isMeetChatMessage(item);
 
     const announce = useAnnounce();
-    const toMentionPlainText = useMentionPlainText();
+    const toMessagePlainText = useMessagePlainText();
 
     const rowRef = useRef<HTMLDivElement>(null);
 
@@ -123,7 +123,7 @@ export const ChatItem = ({ roomName, item, displayDate = true, variant = 'defaul
             return;
         }
 
-        announce(announcementMessages.chatMessageContent(toMentionPlainText(item.message), participantName), {
+        announce(announcementMessages.chatMessageContent(toMessagePlainText(item.message), participantName), {
             dedupeKey: `chat-focus-${item.id}`,
         });
     };

@@ -3,7 +3,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 import fs from 'fs';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import path from 'path';
-import type { Configuration } from 'webpack';
+import type { Configuration, PathData } from 'webpack';
 import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
@@ -11,7 +11,6 @@ import getAssetsLoaders from '@proton/pack/webpack/assets.loader';
 import getCssLoaders from '@proton/pack/webpack/css.loader';
 import { getJsLoader } from '@proton/pack/webpack/js.loader.swc.js';
 import getOptimizations from '@proton/pack/webpack/optimization';
-import ProtonIconsTreeShakePlugin from '@proton/pass/utils/webpack/icons/plugin';
 import { coreJsUint8ArrayFromBase64Rule, sideEffectsRule, zipJSRule } from '@proton/pass/utils/webpack/rules';
 
 import { CRYPTO_DYNAMIC_IMPORTS_CHUNKS, IGNORED_DYNAMIC_IMPORTS_CHUNKS } from './src/app/worker/chunks';
@@ -29,6 +28,7 @@ const {
     HTTP_DEBUGGER_PORT,
     HTTP_DEBUGGER,
     MANIFEST_KEY,
+    OUTPUT_PATH,
     REDUX_DEVTOOLS,
     REDUX_DEVTOOLS_PORT,
     RELEASE,
@@ -59,6 +59,7 @@ section('Build configuration', () => {
     console.log(` ENV = ${ENV}`);
     console.log(` API_ENV=${API_ENV}`);
     console.log(` RELEASE = ${RELEASE}`);
+    console.log(` OUTPUT_PATH = ${OUTPUT_PATH}`);
     console.log(` BUILD_TARGET = ${BUILD_TARGET}`);
     console.log(` BUILD_STORE_TARGET = ${BUILD_STORE_TARGET}`);
     console.log(` BETA = ${BETA}`);
@@ -122,6 +123,31 @@ const CS_LAYER = 'injection-client';
 const INJECTION_LAYERS = ['injection', CS_LAYER];
 
 const layeredJSLoaders = { oneOf: [{ issuerLayer: INJECTION_LAYERS, ...scriptJSLoader }, appJSLoader] };
+
+/** webpack calls `output.chunkFilename` without a chunk graph when it renders the chunk loading
+ * runtime, so keep a reference to the compilation to read it from. */
+let compilation: webpack.Compilation | undefined;
+const captureCompilation: webpack.WebpackPluginInstance = {
+    apply: (compiler) => compiler.hooks.thisCompilation.tap('CaptureCompilation', (c) => (compilation = c)),
+};
+
+/** Identifies a lazy chunk by the paths of its root modules: relative to their package for
+ * dependencies, relative to this app otherwise. Unlike chunk ids, these don't depend on where
+ * the package manager stores a package or on its version. */
+const getRootModulePaths = (chunk: PathData['chunk'], chunkGraph = compilation?.chunkGraph): string[] => {
+    /** The webpack running the build (`compiler.webpack`) can be another copy than the one this
+     * file imports (pnpm installs one per peer set), so `instanceof webpack.Chunk` would fail. */
+    const Chunk = compilation?.compiler.webpack.Chunk;
+    if (!chunkGraph || !Chunk || !(chunk instanceof Chunk)) return [];
+    return chunkGraph.getChunkRootModules(chunk).flatMap((module) => {
+        const resource = module.nameForCondition()?.split(path.sep).join('/');
+        if (!resource) return [];
+        const nodeModulesIdx = resource.lastIndexOf('/node_modules/');
+        return nodeModulesIdx === -1
+            ? [path.relative(__dirname, resource).split(path.sep).join('/')]
+            : [resource.slice(nodeModulesIdx + '/node_modules/'.length)];
+    });
+};
 
 const nonAccessibleWebResource = (entry: string) => [entry, './src/lib/utils/web-accessible-resource.ts'];
 const disableBrowserTrap = (entry: string) => [entry, './src/lib/utils/disable-browser-trap.ts'];
@@ -204,7 +230,7 @@ const config: Configuration = {
             layeredJSLoaders,
             ...(BUILD_TARGET === 'safari' ? [coreJsUint8ArrayFromBase64Rule] : []),
             ...getCssLoaders({ browserslist: undefined, noLogicalScss: true }),
-            ...getAssetsLoaders({ inlineIcons: true }),
+            ...getAssetsLoaders(),
         ],
     },
     optimization: {
@@ -241,10 +267,15 @@ const config: Configuration = {
             ...(BUILD_TARGET === 'safari'
                 ? /* exclude `webextension-polyfill` from safari build to avoid
                    * service-worker registration errors when worker fails. */
-                  { 'webextension-polyfill': '@proton/pass/lib/globals/webextension-polyfill.stub.ts' }
+                  {
+                      'webextension-polyfill': path.resolve(
+                          __dirname,
+                          'node_modules/@proton/pass/lib/globals/webextension-polyfill.stub.ts'
+                      ),
+                  }
                 : {}),
             /* friends don't let friends publish code with `eval` : but that didn't stop `ttag`  */
-            ttag$: path.resolve(__dirname, '../../node_modules/ttag/dist/ttag.min.js'),
+            ttag$: path.resolve(__dirname, 'node_modules/ttag/dist/ttag.min.js'),
 
             /** Patch openpgp argon2id.min.mjs to avoid WASM base64 inlining
              * which gets flagged as code-obfuscation on chrome store review */
@@ -259,16 +290,17 @@ const config: Configuration = {
         /** Some chunks need to be predictable in order for
          * importScripts to work properly in the context of
          * chromium builds (eg crypto lazy loaded modules) */
-        chunkFilename: ({ chunk }) => {
+        chunkFilename: ({ chunk, chunkGraph }) => {
             if (!chunk?.name) {
                 if (chunk?.id) {
-                    const maybeCryptoChunkName = CRYPTO_DYNAMIC_IMPORTS_CHUNKS[chunk.id.toString()];
+                    const modulePaths = getRootModulePaths(chunk, chunkGraph);
+                    const maybeCryptoChunkName = modulePaths.map((p) => CRYPTO_DYNAMIC_IMPORTS_CHUNKS[p]).find(Boolean);
                     if (maybeCryptoChunkName) return maybeCryptoChunkName;
 
                     /** throw on all unhandled chunks for chrome/safari builds requiring manual
                      * dynamic import registration in service-worker importScripts sequence */
-                    if (USE_IMPORT_SCRIPTS && !IGNORED_DYNAMIC_IMPORTS_CHUNKS.has(chunk.id.toString())) {
-                        throw new Error(`lazy loaded chunk needs manual handling: ${chunk?.id.toString()}`);
+                    if (USE_IMPORT_SCRIPTS && !modulePaths.some((p) => IGNORED_DYNAMIC_IMPORTS_CHUNKS.has(p))) {
+                        throw new Error(`lazy loaded chunk needs manual handling: ${modulePaths.join(', ')}`);
                     }
                 }
 
@@ -277,7 +309,7 @@ const config: Configuration = {
 
             return 'chunk.[name].js';
         },
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, OUTPUT_PATH),
         clean: true,
         assetModuleFilename: (asset) => {
             if (asset.filename && /\.wasm$/.test(asset.filename)) return 'assets/wasm/[hash].wasm';
@@ -286,6 +318,7 @@ const config: Configuration = {
         publicPath: '/',
     },
     plugins: [
+        captureCompilation,
         new webpack.EnvironmentPlugin({ NODE_ENV: ENV }),
         new webpack.DefinePlugin({
             /** ProtonConfigV2 (see `packages/pack/webpack/plugins.js`) */
@@ -360,6 +393,12 @@ const config: Configuration = {
                                 break;
                         }
 
+                        /* onboarding is only opened from the account app */
+                        const onboardingResource = manifest.web_accessible_resources.find(
+                            ({ resources }: { resources: string[] }) => resources.includes('onboarding.html')
+                        );
+                        onboardingResource.matches = [`https://account.${API_ENV}/*`];
+
                         if (BETA) {
                             manifest.name = 'Proton Pass (BETA)';
                             manifest.icons = {
@@ -387,14 +426,6 @@ const config: Configuration = {
               ]
             : []),
         ...(WEBPACK_BUNDLE_ANALYZER ? [new BundleAnalyzerPlugin({ generateStatsFile: true })] : []),
-        ...(webpackOptions.isProduction
-            ? [
-                  new ProtonIconsTreeShakePlugin({
-                      entries: ['dropdown', 'notification', 'onboarding', 'popup', 'settings', 'internal'],
-                      excludeMimeIcons: true,
-                  }),
-              ]
-            : []),
     ],
     experiments: {
         asyncWebAssembly: true,

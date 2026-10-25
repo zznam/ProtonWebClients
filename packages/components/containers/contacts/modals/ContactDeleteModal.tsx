@@ -3,12 +3,12 @@ import { c, msgid } from 'ttag';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useContacts } from '@proton/mail/store/contacts/hooks';
 import { clearContacts, deleteContacts } from '@proton/shared/lib/api/contacts';
 import { allSucceded } from '@proton/shared/lib/api/helpers/response';
 import { wait } from '@proton/shared/lib/helpers/promise';
-import type { Contact } from '@proton/shared/lib/interfaces/contacts';
+import type { Contact } from '@proton/shared/lib/interfaces/contacts/Contact';
 
 import Alert from '../../../components/alert/Alert';
 import type { ModalProps } from '../../../components/modalTwo/Modal';

@@ -18,7 +18,8 @@ import { APPS, BRAND_NAME } from '@proton/shared/lib/constants';
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 import { getVpnAccountUrl } from '@proton/shared/lib/helpers/url';
-import type { Api, Domain } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
 import noop from '@proton/utils/noop';
 
 import type { ModalProps } from '../../../components/modalTwo/Modal';
@@ -26,7 +27,7 @@ import ModalTwo from '../../../components/modalTwo/Modal';
 import ModalTwoContent from '../../../components/modalTwo/ModalContent';
 import ModalTwoFooter from '../../../components/modalTwo/ModalFooter';
 import ModalTwoHeader from '../../../components/modalTwo/ModalHeader';
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import useFormErrors from '../../../components/v2/useFormErrors';
 import getBoldFormattedText from '../../../helpers/getBoldFormattedText';
 import useErrorHandler from '../../../hooks/useErrorHandler';

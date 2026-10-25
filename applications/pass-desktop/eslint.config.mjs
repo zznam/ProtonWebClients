@@ -1,14 +1,10 @@
 import { defineConfig } from 'eslint/config';
 
 import defaultConfig from '@proton/eslint-config-proton/all';
-import { createBarrelPaths } from '@proton/eslint-config-proton/barrel';
 import {
     createExtraneousDependenciesRule,
     extraneousDependenciesDevDependencies,
 } from '@proton/eslint-config-proton/extraneousDependencies';
-import { createRestrictedImportRule } from '@proton/eslint-config-proton/restrictedImports';
-
-const restrictedImportOptions = { paths: createBarrelPaths() };
 
 /**
  * lint-staged runs ESLint from the monorepo root with repo-relative file paths
@@ -52,13 +48,6 @@ export default defineConfig([
         rules: {
             'no-console': ['error', { allow: ['warn', 'error'] }],
             curly: ['error', 'multi-line'],
-            'no-restricted-imports': createRestrictedImportRule(restrictedImportOptions),
-        },
-    },
-    {
-        files: ['**/*.tsx', '**/*.jsx'],
-        rules: {
-            'no-restricted-imports': createRestrictedImportRule({ ...restrictedImportOptions, tsx: true }),
         },
     },
     {

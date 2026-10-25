@@ -7,12 +7,13 @@ import { useConfig } from '@proton/app-context/useConfig';
 import { Button } from '@proton/atoms/Button/Button';
 import { SCOPE_REAUTH_SSO, getInfo } from '@proton/shared/lib/api/auth';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
+// eslint-disable-next-line proton/restricted-imports
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import type { SSOInfoResponse } from '@proton/shared/lib/authentication/interface';
 import { ExternalSSOError, handleExternalSSOLogin } from '@proton/shared/lib/authentication/ssoExternalLogin';
 import { API_CODES, APPS } from '@proton/shared/lib/constants';
 import { getVpnAccountUrl } from '@proton/shared/lib/helpers/url';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import noop from '@proton/utils/noop';
 
 import Prompt, { type PromptProps } from '../../components/prompt/Prompt';
@@ -34,7 +35,7 @@ type State =
 
 const initialState = { type: 'init' } as const;
 
-export interface SSOAuthModalProps
+interface SSOAuthModalProps
     extends Omit<OwnAuthModalProps, 'onSuccess'>, Omit<PromptProps, 'title' | 'buttons' | 'children' | 'onError'> {
     onSuccess?: (data: SSOAuthModalResult) => Promise<void> | void;
     api?: Api;

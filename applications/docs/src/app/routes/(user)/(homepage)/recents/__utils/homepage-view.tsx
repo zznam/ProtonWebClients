@@ -1,17 +1,19 @@
-import { RecentDocumentsItem } from '@proton/docs-core'
+import { RecentDocumentsItem } from '@proton/docs-core/Services/recent-documents'
 import { useHistory, useRouteMatch } from 'react-router'
 import { HOMEPAGE_RECENTS_PATH, HOMEPAGE_TRASH_PATH } from '../../../__utils/homepage-paths'
 import type { ReactNode } from 'react'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom-v5-compat'
-import type { DecryptedLink } from '@proton/drive-store/store'
-import { useDefaultShare, useDriveEventManager, useTrashView } from '@proton/drive-store/store'
-import { ServerTime } from '@proton/docs-shared'
+import type { DecryptedLink } from '@proton/drive-store/store/_links/interface'
+import { useDriveEventManager } from '@proton/drive-store/store/_events/useDriveEventManager'
+import useDefaultShare from '@proton/drive-store/store/_shares/useDefaultShare'
+import useTrashView from '@proton/drive-store/store/_views/useTrashView'
+import { ServerTime } from '@proton/docs-shared/ServerTime'
 import { useApplication } from '~/utils/application-context'
 import { useEvent, useSubscribe } from '~/utils/misc'
 import { useContactEmails } from '@proton/mail/store/contactEmails/hooks'
-import { VolumeTypeForEvents } from '@proton/drive-store/store/_volumes'
-import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts'
+import { VolumeTypeForEvents } from '@proton/drive-store/store/_volumes/interface'
+import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts/Contact'
 import { getOwnerName } from './get-owner-name'
 import {
   isProtonDocsDocument,
@@ -19,7 +21,7 @@ import {
   type ProtonDocumentType,
 } from '@proton/shared/lib/helpers/mimetype'
 import { useAddresses } from '@proton/account/addresses/hooks'
-import type { Address } from '@proton/shared/lib/interfaces'
+import type { Address } from '@proton/shared/lib/interfaces/Address'
 import { isMyDocument } from './is-my-document'
 
 // constants

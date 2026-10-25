@@ -3,9 +3,11 @@ import { useMemo } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
 
 import type { CTAModalBaseProps } from '../shared/types';
 import { EndCallModalShell } from './EndCallModalShell';
+import { PostCallTitle } from './PostCallTitle';
 
 export const GuestAccountModal = ({ open, onClose, action, rejoin }: CTAModalBaseProps) => {
     const subtitle = useMemo(() => {
@@ -27,6 +29,7 @@ export const GuestAccountModal = ({ open, onClose, action, rejoin }: CTAModalBas
                     <Button
                         className="secondary rounded-full px-10 py-4 text-semibold flex-auto w-full md:w-auto"
                         onClick={() => {
+                            sendMeetDashboardEvent(TelemetryMeetDashboardEvents.sign_up_clicked);
                             onClose();
                             action();
                         }}
@@ -47,7 +50,7 @@ export const GuestAccountModal = ({ open, onClose, action, rejoin }: CTAModalBas
                 </>
             }
             rejoin={rejoin}
-            title={c('Info').t`You left the meeting`}
+            title={<PostCallTitle kind="left" />}
             subtitle={subtitle}
         />
     );

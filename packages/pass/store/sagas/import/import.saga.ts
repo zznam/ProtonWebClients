@@ -7,49 +7,36 @@ import chunk from '@proton/utils/chunk';
 import { MAX_BATCH_PER_IMPORT_REQUEST } from '../../../constants';
 import type { FolderLimits, FoldersById } from '../../../lib/folders/folder.utils';
 import { planImportFolders } from '../../../lib/import/helpers/folders';
-import { type ImportReport, formatIgnoredItem } from '../../../lib/import/helpers/report';
+import { type ImportReport, formatIgnoredItem, getSampleLoginPreview } from '../../../lib/import/helpers/report';
 import type { ImportFolder, ImportVault } from '../../../lib/import/types';
 import { importItemsBatch } from '../../../lib/items/item.requests';
 import { createTelemetryEvent } from '../../../lib/telemetry/utils';
 import { isAutofillModeDataOfTypeUrl, uniqueAutofillUrls } from '../../../lib/urls/utils/autofill';
 import { isPaidPlan } from '../../../lib/user/user.predicates';
-import type {
-    FolderData,
-    IndexedByShareIdAndItemId,
-    ItemImportIntent,
-    ItemRevision,
-    Maybe,
-    MaybeNull,
-    PassPlanResponse,
-} from '../../../types';
 import { PassFeature } from '../../../types/api/features';
+import type { PassPlanResponse } from '../../../types/api/pass';
 import type { UserPassPlan } from '../../../types/api/plan';
+import type { FolderData } from '../../../types/data/folders';
+import type { IndexedByShareIdAndItemId, ItemRevision } from '../../../types/data/items';
+import type { ItemImportIntent } from '../../../types/data/items.dto';
 import { TelemetryEventName } from '../../../types/data/telemetry';
 import { AutofillMode } from '../../../types/protobuf';
+import type { Maybe, MaybeNull } from '../../../types/utils';
+import type { LoginItemPreview } from '../../../types/worker/data';
 import { groupByKey } from '../../../utils/array/group-by-key';
 import { getErrorMessage } from '../../../utils/errors/get-error-message';
 import { prop } from '../../../utils/fp/lens';
 import { logger } from '../../../utils/logger';
 import { getEpoch } from '../../../utils/time/epoch';
-import {
-    foldersUpdated,
-    importItems,
-    importItemsProgress,
-    notification,
-    startEventPolling,
-    stopEventPolling,
-    vaultCreationIntent,
-} from '../../actions';
+import { startEventPolling, stopEventPolling } from '../../actions/creators/client';
+import { foldersUpdated } from '../../actions/creators/folders';
+import { importItems, importItemsProgress } from '../../actions/creators/import';
+import { notification } from '../../actions/creators/notification';
+import { vaultCreationIntent } from '../../actions/creators/vault';
 import type { WithSenderAction } from '../../actions/enhancers/endpoint';
 import { matchCancel } from '../../request/actions';
-import {
-    selectFeatureFlag,
-    selectFolderLimits,
-    selectPassPlan,
-    selectShareFolders,
-    selectUserFolderAllowed,
-    selectUserPlan,
-} from '../../selectors';
+import { selectFolderLimits, selectShareFolders } from '../../selectors/folders';
+import { selectFeatureFlag, selectPassPlan, selectUserFolderAllowed, selectUserPlan } from '../../selectors/user';
 import type { RootSagaOptions } from '../../types';
 import { createFolderWorker } from '../folders/folders.saga';
 import { createVaultWorker } from '../vaults/vault-creation.saga';
@@ -149,7 +136,7 @@ function* importFoldersForVault(options: { state: ImportWorkerState; shareId: st
 function* importWorker(
     state: ImportWorkerState,
     { getTelemetry }: RootSagaOptions,
-    { payload: { data, provider }, meta }: WithSenderAction<ReturnType<typeof importItems.intent>>
+    { payload: { data, provider, importEntryPoint }, meta }: WithSenderAction<ReturnType<typeof importItems.intent>>
 ): Generator {
     const telemetry = getTelemetry();
     const requestID = meta.request.id;
@@ -165,6 +152,7 @@ function* importWorker(
     const pendingFiles: string[] = [];
     const filesForImport: IndexedByShareIdAndItemId<string[]> = {};
     const ignored = [...data.ignored];
+    let sampleItem: MaybeNull<LoginItemPreview> = null;
 
     const passPlan: UserPassPlan = yield select(selectPassPlan);
     const userPlan: MaybeNull<PassPlanResponse> = yield select(selectUserPlan);
@@ -226,6 +214,7 @@ function* importWorker(
             total: counts.items,
             totalFiles: counts.files,
             warnings: data.warnings.concat(folderWarnings),
+            sampleItem,
         };
     };
 
@@ -264,6 +253,8 @@ function* importWorker(
                         assertNotAborted(state);
 
                         const items: ItemRevision[] = yield importItemsBatch({ shareId, importIntents });
+
+                        if (sampleItem === null) sampleItem = getSampleLoginPreview(items);
 
                         items.forEach(({ data, shareId, itemId }) => {
                             const { itemUuid } = data.metadata;
@@ -314,7 +305,7 @@ function* importWorker(
             createTelemetryEvent(
                 TelemetryEventName.ImportCompletion,
                 { item_count: counts.items, vaults: importVaults.length },
-                { source: provider }
+                { source: provider, importEntryPoint }
             )
         );
 

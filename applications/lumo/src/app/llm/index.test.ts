@@ -41,7 +41,45 @@ describe('prepareTurns — artifact tool nudge', () => {
             'create'
         );
         const nudge = turns.find((turn) => turn.role === Role.System && turn.content?.includes('create_artifact'));
-        expect(nudge?.content).toContain('activated Create Artifact mode');
+        expect(nudge?.content).toContain('answered as a creation in the canvas');
+    });
+
+    it('injects the judgment-based nudge (not the forced one) when artifactToolMode is "auto"', () => {
+        const turns = prepareTurns(
+            [message],
+            personalization,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            false,
+            'auto'
+        );
+        const nudge = turns.find((turn) => turn.role === Role.System && turn.content?.includes('create_artifact'));
+        expect(nudge?.content).toContain('most messages should be answered normally in the chat');
+        expect(nudge?.content).not.toContain('answered as a creation in the canvas');
+    });
+
+    it('lists slide decks in the auto nudge only with LumoArtifactSlides', () => {
+        const getNudge = (artifactPresentationEnabled: boolean) => {
+            const turns = prepareTurns(
+                [message],
+                personalization,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                false,
+                'auto',
+                false,
+                undefined,
+                artifactPresentationEnabled
+            );
+            return turns.find((turn) => turn.role === Role.System && turn.content?.includes('create_artifact'));
+        };
+
+        expect(getNudge(true)?.content).toContain('slide deck');
+        expect(getNudge(false)?.content).not.toContain('slide deck');
     });
 
     it('injects the revise-only nudge when artifactToolMode is "revise"', () => {
@@ -57,7 +95,7 @@ describe('prepareTurns — artifact tool nudge', () => {
         );
         const nudge = turns.find((turn) => turn.role === Role.System && turn.content?.includes('create_artifact'));
         expect(nudge?.content).toContain('only to revise');
-        expect(nudge?.content).not.toContain('activated Create Artifact mode');
+        expect(nudge?.content).not.toContain('answered as a creation in the canvas');
     });
 });
 
@@ -211,12 +249,7 @@ describe('prepareTurns — attachment content blocks', () => {
             },
         ] as unknown as Attachment[];
 
-        const turns = prepareTurns(
-            [manualMessage, autoMessage],
-            personalization,
-            undefined,
-            makeContext(attachments)
-        );
+        const turns = prepareTurns([manualMessage, autoMessage], personalization, undefined, makeContext(attachments));
 
         const joined = turns.map((t) => t.content).join('\n');
         expect(joined.match(/----- BEGIN FILE CONTENTS -----/g)).toHaveLength(1);

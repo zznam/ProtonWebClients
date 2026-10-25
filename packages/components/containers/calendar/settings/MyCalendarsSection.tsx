@@ -9,15 +9,17 @@ import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { Card } from '@proton/atoms/Card/Card';
 import { Href } from '@proton/atoms/Href/Href';
 import type { MaybeFreeSubscription } from '@proton/payments/core/subscription/helpers';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
 import { removeCalendar, updateCalendarUserSettings } from '@proton/shared/lib/api/calendars';
 import { getProbablyActiveCalendars } from '@proton/shared/lib/calendar/calendar';
 import { getCalendarsLimitReachedText } from '@proton/shared/lib/calendar/calendarLimits';
 import { APP_UPSELL_REF_PATH, CALENDAR_UPSELL_PATHS, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
-import { addUpsellPath, getUpgradePath, getUpsellRef } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Address, UserModel } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
 import type { ModalWithProps } from '@proton/shared/lib/interfaces/Modal';
-import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
 
 import Alert from '../../../components/alert/Alert';
 import SettingsLink from '../../../components/link/SettingsLink';
@@ -181,7 +183,7 @@ const MyCalendarsSection = ({
                 <p className="flex-1 my-0 pr-7">{calendarsLimitReachedText}</p>
                 <ButtonLike
                     as={SettingsLink}
-                    path={addUpsellPath(getUpgradePath({ user, subscription }), upsellRef)}
+                    path={getUpgradePath({ user, subscription }, upsellRef)}
                     color="norm"
                     shape="solid"
                     size="small"

@@ -15,9 +15,10 @@ import { IcCross } from '@proton/icons/icons/IcCross';
 import { useFeatureFlag } from '../../../../hooks/useFeatureFlag';
 import { getRegexError } from '../../../../lib/urls/safe-regex/safe-regex';
 import { getModeLabel, getModeWarning, sortDefaultFirst } from '../../../../lib/urls/utils/autofill';
-import type { MaybeNull, UrlGroupValues, UrlItem } from '../../../../types';
 import { PassFeature } from '../../../../types/api/features';
+import type { UrlGroupValues, UrlItem } from '../../../../types/forms/fields';
 import { AutofillMode } from '../../../../types/protobuf';
+import type { MaybeNull } from '../../../../types/utils';
 import { usePassCore } from '../../../Core/PassCoreProvider';
 import { ButtonBar } from '../../../Layout/Button/ButtonBar';
 import { SidebarModal } from '../../../Layout/Modal/SidebarModal';
@@ -51,6 +52,7 @@ const ModeCheckbox: FC<ModeCheckboxProps> = ({ fieldName, currentMode, mode, onS
     return (
         <InputField
             as={Radio}
+            className="inline-flex flex-nowrap"
             name={fieldName}
             checked={currentMode === mode}
             onChange={handleChange}

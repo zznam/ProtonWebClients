@@ -1,19 +1,18 @@
 import { isDevOrBlackHost } from '@proton/shared/lib/env';
 import { getItem } from '@proton/shared/lib/helpers/storage';
 
-/**
- * Set this key to the string `'true'` to keep the toolbar off a dev or black host — in devtools to
- * silence it locally, or from a Playwright init script so it stays out of visual snapshots.
- *
- * Any other value, including a missing one, leaves the toolbar enabled, so that an unrelated
- * `'false'` or `'0'` lying around in storage cannot read as "disabled".
- */
-export const DISABLE_UNLEASH_TOOLBAR_KEY = 'disable-unleash-toolbar';
+/** Set to the string `'true'` to show the toolbar on a dev or black host outside a development build.
+ * While it is shown, startup modals, spotlights and nudges stay hidden (see below). */
+export const ENABLE_UNLEASH_TOOLBAR_KEY = 'enable-unleash-toolbar';
 
 const isWebDriverControlled = () => navigator.webdriver === true;
 
+const isOptedInOnDevOrBlackHost = () =>
+    isDevOrBlackHost(window.location.host) && getItem(ENABLE_UNLEASH_TOOLBAR_KEY) === 'true';
+
+/** Opt-in outside development builds: the toolbar's pre-filled context inputs make `domIsBusy()`
+ * permanently true, which silently suppresses startup modals, spotlights and nudges. */
 export const isUnleashToolbarEnabled = () =>
     typeof window !== 'undefined' &&
     !isWebDriverControlled() &&
-    getItem(DISABLE_UNLEASH_TOOLBAR_KEY) !== 'true' &&
-    isDevOrBlackHost(window.location.host);
+    (process.env.NODE_ENV === 'development' || isOptedInOnDevOrBlackHost());

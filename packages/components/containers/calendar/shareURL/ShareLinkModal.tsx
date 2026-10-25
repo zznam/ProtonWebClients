@@ -14,17 +14,17 @@ import {
     getCreatePublicLinkPayload,
     transformLinksFromAPI,
 } from '@proton/shared/lib/calendar/sharing/shareUrl/shareUrl';
-import type { CalendarLink, CalendarUrlResponse } from '@proton/shared/lib/interfaces/calendar';
-import { ACCESS_LEVEL } from '@proton/shared/lib/interfaces/calendar';
-import { splitKeys } from '@proton/shared/lib/keys';
+import type { CalendarLink, CalendarUrlResponse } from '@proton/shared/lib/interfaces/calendar/Link';
+import { ACCESS_LEVEL } from '@proton/shared/lib/interfaces/calendar/Link';
+import { splitKeys } from '@proton/shared/lib/keys/keys';
 
 import Form from '../../../components/form/Form';
 import type { BasicModalProps } from '../../../components/modalTwo/BasicModal';
 import BasicModal from '../../../components/modalTwo/BasicModal';
 import Option from '../../../components/option/Option';
 import SelectTwo from '../../../components/selectTwo/SelectTwo';
-import InputFieldTwo from '../../../components/v2/field/InputField';
-import useGetCalendarInfo from '../../../hooks/useGetCalendarInfo';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
+import { useGetCalendarInfo } from '../../../hooks/useGetCalendarInfo';
 
 interface Props extends Omit<BasicModalProps, 'children' | 'footer'> {
     calendarID: string;

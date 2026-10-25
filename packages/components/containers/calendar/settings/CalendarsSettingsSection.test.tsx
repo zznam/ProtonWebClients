@@ -20,8 +20,10 @@ import {
     BRAND_NAME,
     MAIL_SHORT_APP_NAME,
 } from '@proton/shared/lib/constants';
-import type { RequireOnly, UserModel } from '@proton/shared/lib/interfaces';
-import type { SubscribedCalendar, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { SubscribedCalendar } from '@proton/shared/lib/interfaces/calendar/Subscription';
+import type { RequireOnly } from '@proton/shared/lib/interfaces/utils';
 
 import { mockUseAuthentication } from '../../../testing/mockUseAuthentication';
 import type { CalendarsSettingsSectionProps } from './CalendarsSettingsSection';
@@ -60,7 +62,7 @@ jest.mock('@proton/app-context/useApi', () => ({
 }));
 
 jest.mock('../../../hooks/useEventManager', () => () => ({}));
-jest.mock('../../eventManager/calendar/useCalendarsInfoListener', () => () => ({}));
+jest.mock('../../eventManager/calendar/useCalendarsInfoListener', () => ({ useCalendarsInfoListener: () => ({}) }));
 jest.mock('../../eventManager/calendar/CalendarModelEventManagerProvider', () => ({
     useCalendarModelEventManager: jest.fn(() => ({ call: jest.fn() })),
 }));

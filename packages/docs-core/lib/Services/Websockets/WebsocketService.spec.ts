@@ -1,13 +1,17 @@
 import { utf8StringToUint8Array } from '@protontech/crypto/utils'
+import type { NodeMeta } from '@proton/docs-shared/BasicTypes'
+import type { DocumentKeys } from '@proton/docs-shared/CryptoTypes'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { WebsocketConnectionInterface } from '@proton/docs-shared/Realtime/WebsocketConnectionInterface'
+import { BroadcastSource } from '@proton/docs-shared/Bridge/BroadcastSource'
+import { ConnectionType } from '@proton/docs-shared/Realtime/WebsocketConnectionInterface'
+import { Result } from '@proton/docs-shared/Result'
 import type {
-  DocumentKeys,
-  NodeMeta,
-  InternalEventBusInterface,
-  WebsocketConnectionInterface,
-} from '@proton/docs-shared'
-import { BroadcastSource, ConnectionType, Result } from '@proton/docs-shared'
-import type { ServerMessageWithDocumentUpdates, ServerMessageWithEvents } from '@proton/docs-proto'
-import { DecryptedValue, EventTypeEnum } from '@proton/docs-proto'
+  ServerMessageWithDocumentUpdates,
+  ServerMessageWithEvents,
+} from '@proton/docs-proto/Generated/ServerMessage'
+import { DecryptedValue } from '@proton/docs-proto/DecryptedValue'
+import { EventTypeEnum } from '@proton/docs-proto/Event/EventTypeEnum'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import type { FetchRealtimeToken } from '../../UseCase/FetchRealtimeToken'
 import type { DecryptMessage } from '../../UseCase/DecryptMessage'

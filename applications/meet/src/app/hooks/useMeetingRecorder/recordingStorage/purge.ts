@@ -1,4 +1,10 @@
-export const RECORDING_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 7 days
+import { logger } from '@protontech/logger';
+
+import { DAY } from '@proton/shared/lib/constants';
+
+import { getRecordingFolder } from './getRecordingFolder';
+
+export const RECORDING_MAX_AGE_MS = 30 * DAY;
 
 // Matches `recording-<timestamp>.<ext>` as written by the storage worker.
 const RECORDING_FILENAME_RE = /^recording-(\d+)\./;
@@ -24,8 +30,7 @@ const purgeRecordingsInDirectory = async (directory: FileSystemDirectoryHandle, 
             await directory.removeEntry(name);
         } catch (error) {
             // File may be locked by an active recording in another tab — skip.
-            // eslint-disable-next-line no-console
-            console.error('Purge old recordings: Failed to remove recording file', error);
+            logger.error('Purge old recordings: Failed to remove recording file', error);
         }
     }
 };
@@ -35,8 +40,7 @@ export const purgeOldRecordings = async (maxAgeMs: number): Promise<void> => {
     try {
         root = await navigator.storage.getDirectory();
     } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Purge old recordings: Failed to get storage directory', error);
+        logger.error('Purge old recordings: Failed to get storage directory', error);
         return;
     }
 
@@ -65,8 +69,7 @@ export const purgeOldRecordings = async (maxAgeMs: number): Promise<void> => {
         }
     } catch (error) {
         // Iteration failed (eviction, quota error). Best-effort: don't block boot.
-        // eslint-disable-next-line no-console
-        console.error('Purge old recordings: Failed to purge recordings', error);
+        logger.error('Purge old recordings: Failed to purge recordings', error);
     }
 };
 
@@ -75,10 +78,17 @@ export const purgeUserRecordings = async (userId: string): Promise<void> => {
     if (!userId || !navigator.storage?.getDirectory) {
         return;
     }
-    try {
-        const root = await navigator.storage.getDirectory();
-        await root.removeEntry(userId, { recursive: true });
-    } catch {
-        // No directory for this user (nothing recorded) — nothing to purge.
+
+    const root = await navigator.storage.getDirectory().catch(() => null);
+    if (!root) {
+        return;
+    }
+
+    for (const folder of [userId, getRecordingFolder(userId)]) {
+        try {
+            await root.removeEntry(folder, { recursive: true });
+        } catch {
+            // No directory for this user (nothing recorded) — nothing to purge.
+        }
     }
 };

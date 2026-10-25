@@ -8,6 +8,7 @@ import { Button } from '@proton/atoms/Button/Button';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { Card } from '@proton/atoms/Card/Card';
 import type { MaybeFreeSubscription } from '@proton/payments/core/subscription/helpers';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
 import { removeInvitation, removeMember } from '@proton/shared/lib/api/calendars';
 import { CALENDAR_SETTINGS_SECTION_ID, MAX_CALENDAR_MEMBERS } from '@proton/shared/lib/calendar/constants';
 import { filterOutAcceptedInvitations } from '@proton/shared/lib/calendar/sharing/shareProton/shareProton';
@@ -18,10 +19,12 @@ import {
     MAIL_SHORT_APP_NAME,
     UPSELL_COMPONENT,
 } from '@proton/shared/lib/constants';
-import { addUpsellPath, getUpgradePath, getUpsellRef } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Address, UserModel } from '@proton/shared/lib/interfaces';
-import type { CalendarMember, CalendarMemberInvitation, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { CalendarMember, CalendarMemberInvitation } from '@proton/shared/lib/interfaces/calendar/CalendarMember';
 
 import SettingsLink from '../../../components/link/SettingsLink';
 import useModalState from '../../../components/modalTwo/useModalState';
@@ -175,7 +178,7 @@ const CalendarShareSection = ({
                             </p>
                             <ButtonLike
                                 as={SettingsLink}
-                                path={addUpsellPath(getUpgradePath({ user, subscription }), upsellRef)}
+                                path={getUpgradePath({ user, subscription }, upsellRef)}
                                 color="norm"
                                 shape="solid"
                                 size="small"

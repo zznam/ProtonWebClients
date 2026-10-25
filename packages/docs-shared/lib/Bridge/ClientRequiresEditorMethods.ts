@@ -3,7 +3,7 @@ import type { RtsMessagePayload } from '../Doc/RtsMessagePayload'
 import type { EditorInitializationConfig } from '../EditorInitializationConfig'
 import type { DataTypesThatDocumentCanBeExportedAs } from '../ExportableDataType'
 import type { SerializedEditorState } from 'lexical'
-import type { UserSettings } from '@proton/shared/lib/interfaces'
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings'
 import type { YjsState } from '../YjsState'
 import type { SyncedEditorEvent, SyncedEditorStateValues } from '../State/SyncedEditorState'
 import type { SheetImportData } from '../SheetImportData'
@@ -20,6 +20,11 @@ export interface ClientRequiresEditorMethods {
   getLocalSpreadsheetStateJSON(): Promise<unknown>
   /** Returns the current Y.Doc as JSON */
   getYDocAsJSON(): Promise<unknown>
+  /**
+   * Returns the APP_VERSION and COMMIT the editor was built with. The editor can be deployed separately from the
+   * client, so these can differ from the client's own and from the `appVersion` passed to `initializeEditor`.
+   */
+  getEditorBuildInfo(): Promise<{ appVersion: string; commit: string }>
   /**
    * A destructive operation that replaces the current editor state with the given state,
    * used when restoring a document from history

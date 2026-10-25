@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { fromPromise } from 'xstate';
 
 import { renderWithProviders } from '@proton/components/testing/renderWithProviders';
+import type { SSOInfoResponse } from '@proton/shared/lib/authentication/interface';
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors';
 import { useFlag } from '@proton/unleash/useFlag';
 
@@ -10,12 +11,16 @@ import type { Paths } from '../../../content/helper';
 import { SignInWizard } from '../../SignInWizard';
 import { AuthType, type AuthTypeData } from '../../auth/interface';
 import { SignInPageLayout } from '../../components/SignInPageLayout';
-import { RememberMode } from '../../rememberMode';
 import { SignInStateMachine } from '../../state-machine/SignInStateMachine';
 import { SignInContext } from '../../wizard/SignInContext';
 import { SignInProvider } from '../../wizard/SignInProvider';
-import type { CredentialsFormValues, PrimaryAuthResult } from './state-machine/credentialsActors';
-import { InvalidLoginError } from './state-machine/credentialsErrors';
+import type {
+    AccountType,
+    CredentialsFormValues,
+    PrimaryAuthResult,
+    SSOProviderResult,
+} from './state-machine/credentialsActors';
+import { InvalidLoginError, SSOSignInRejectedError } from './state-machine/credentialsErrors';
 import { credentialsStateMachine } from './state-machine/credentialsStateMachine';
 
 jest.mock('./useLoginChallenge', () => ({
@@ -39,11 +44,14 @@ const renderForm = ({
     compactForm = false,
     testflight,
     authenticateWithPassword = jest.fn((_values: CredentialsFormValues) => new Promise<PrimaryAuthResult>(() => {})),
+    authenticateWithSSOToken,
 }: {
     authTypeData?: AuthTypeData;
     compactForm?: boolean;
     testflight?: 'vpn';
     authenticateWithPassword?: jest.Mock;
+    /** Also signs in with the identity provider right away, without its window. */
+    authenticateWithSSOToken?: jest.Mock;
 } = {}) => {
     const machine = SignInStateMachine.provide({
         actors: {
@@ -51,7 +59,17 @@ const renderForm = ({
             credentialsFlow: credentialsStateMachine.provide({
                 actors: {
                     startAuthSession: fromPromise(() => Promise.resolve()),
+                    fetchAccountType: fromPromise(() => Promise.resolve<AccountType>({ type: 'srp' })),
                     authenticateWithPassword: fromPromise(({ input }) => authenticateWithPassword(input)),
+                    ...(authenticateWithSSOToken && {
+                        fetchSSOInfo: fromPromise(() =>
+                            Promise.resolve({ SSOChallengeToken: 'challenge' } as SSOInfoResponse)
+                        ),
+                        authorizeWithSSOProvider: fromPromise(() =>
+                            Promise.resolve<SSOProviderResult>({ uid: 'uid', token: 'token' })
+                        ),
+                        authenticateWithSSOToken: fromPromise(({ input }) => authenticateWithSSOToken(input)),
+                    }),
                 },
             }),
         },
@@ -78,7 +96,7 @@ const renderForm = ({
                 toAppName={undefined}
                 showContinueTo={false}
                 paths={paths}
-                remember={RememberMode.Visible}
+                showRememberCheckbox
                 testflight={testflight}
                 isPorkbun={false}
                 onError={jest.fn()}
@@ -95,7 +113,21 @@ describe('the credentials screens', () => {
         jest.mocked(useFlag).mockReset();
     });
 
-    it('asks for username and password, then submits them with the remember choice', async () => {
+    it.each([
+        ['one-page password sign-in', { type: AuthType.Srp }, true],
+        ['username-first sign-in', { type: AuthType.Auto }, false],
+        ['second password step', { type: AuthType.AutoSrp, username: 'member@example.com' }, false],
+        ['SSO sign-in', { type: AuthType.ExternalSSO }, false],
+    ] as const)('shows the sign-in change banner only for %s', (_, authTypeData, showsBanner) => {
+        renderForm({ authTypeData });
+        if (showsBanner) {
+            expect(screen.getByTestId('sign-in-change-banner')).toBeInTheDocument();
+        } else {
+            expect(screen.queryByTestId('sign-in-change-banner')).not.toBeInTheDocument();
+        }
+    });
+
+    it('asks for username and password, then submits them defaulting remember to true', async () => {
         const { authenticateWithPassword } = renderForm();
         const user = userEvent.setup();
 
@@ -108,9 +140,27 @@ describe('the credentials screens', () => {
             expect(authenticateWithPassword).toHaveBeenCalledWith({
                 username: 'user@example.com',
                 password: 'secret',
-                persistent: false,
+                persistent: true,
                 payload: undefined,
             })
+        );
+    });
+
+    it('keeps "Keep me signed in" off on the auto password screen when the username step turned it off', async () => {
+        const { authenticateWithPassword } = renderForm({ authTypeData: { type: AuthType.Auto } });
+        const user = userEvent.setup();
+
+        expect(screen.queryByTestId('sign-in-change-banner')).not.toBeInTheDocument();
+        expect(screen.getByLabelText('Keep me signed in')).toBeChecked();
+        await user.click(screen.getByLabelText('Keep me signed in'));
+        await user.type(screen.getByLabelText('Email or username'), 'user@example.com');
+        await user.click(screen.getByRole('button', { name: 'Continue' }));
+        await user.type(await screen.findByLabelText('Enter your password'), 'secret');
+        expect(screen.queryByTestId('sign-in-change-banner')).not.toBeInTheDocument();
+        await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+        await waitFor(() =>
+            expect(authenticateWithPassword).toHaveBeenCalledWith(expect.objectContaining({ persistent: false }))
         );
     });
 
@@ -188,6 +238,24 @@ describe('the credentials screens', () => {
         renderForm({ authTypeData: { type: AuthType.ExternalSSO } });
         await userEvent.setup().click(screen.getByRole('button', { name: 'Sign in' }));
         expect(screen.getByText('This field is required')).toBeInTheDocument();
+    });
+
+    it("shows the API's refusal of the SSO sign-in inline and clears it when the user edits the email", async () => {
+        const message = 'There is an error in the configuration of single sign-on';
+        renderForm({
+            authTypeData: { type: AuthType.ExternalSSO },
+            authenticateWithSSOToken: jest.fn(() =>
+                Promise.reject(new SSOSignInRejectedError({ status: 422, data: { Code: 2011, Error: message } }))
+            ),
+        });
+        const user = userEvent.setup();
+
+        await user.type(screen.getByLabelText('Email'), 'member@company.com');
+        await user.click(screen.getByRole('button', { name: 'Sign in' }));
+
+        expect(await screen.findByTestId('login:error-block')).toHaveTextContent(message);
+        await user.type(screen.getByLabelText('Email'), 'x');
+        await waitFor(() => expect(screen.queryByTestId('login:error-block')).not.toBeInTheDocument());
     });
 
     it('asks only for the email with SSO, and switches to the password form on request', async () => {

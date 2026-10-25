@@ -4,11 +4,11 @@ import type { PrivateKeyReference } from '@protontech/crypto';
 import { CryptoProxy, KeyCompatibilityLevel } from '@protontech/crypto';
 import { c } from 'ttag';
 
-import { useUserSettings } from '@proton/account';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { ArmoredKeyWithInfo } from '@proton/shared/lib/keys';
+import type { ArmoredKeyWithInfo } from '@proton/shared/lib/keys/keyImport';
 import generateUID from '@proton/utils/generateUID';
 import noop from '@proton/utils/noop';
 
@@ -17,7 +17,7 @@ import Modal from '../../../components/modalTwo/Modal';
 import ModalContent from '../../../components/modalTwo/ModalContent';
 import ModalFooter from '../../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../../components/modalTwo/ModalHeader';
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import PasswordInputTwo from '../../../components/v2/input/PasswordInput';
 import useFormErrors from '../../../components/v2/useFormErrors';
 

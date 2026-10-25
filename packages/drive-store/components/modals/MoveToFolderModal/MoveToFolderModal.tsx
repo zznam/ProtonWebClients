@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 
 import { c } from 'ttag';
 
-import { ModalTwo, useActiveBreakpoint, useModalTwoStatic } from '@proton/components';
-import { useLoading } from '@proton/hooks';
+import ModalTwo from '@proton/components/components/modalTwo/Modal';
+import { useModalTwoStatic } from '@proton/components/components/modalTwo/useModalTwo';
+import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
+import useLoading from '@proton/hooks/useLoading';
 
-import type { DecryptedLink } from '../../../store';
-import { useActions, useTreeForModals } from '../../../store';
+import useActions from '../../../store/_actions/useActions';
+import type { DecryptedLink } from '../../../store/_links/interface';
+import { useTreeForModals } from '../../../store/_views/useTree';
 import { getMovedFiles } from '../../../utils/moveTexts';
 import { selectMessageForItemList } from '../../sections/helpers';
 import CreateFolderModal from '../CreateFolderModal';
@@ -111,7 +114,6 @@ const MoveToFolderModal = ({ shareId, selectedItems, onClose, ...modalProps }: P
                 {isTreeLoaded ? (
                     <ModalContent
                         isLoading={loading}
-                        isTreeLoaded={isTreeLoaded}
                         title={title}
                         rootItems={rootItems}
                         selectedLinkId={selectedFolder}

@@ -17,24 +17,22 @@ import {
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import {
-    ApiProvider,
-    AuthenticationProvider,
-    ErrorBoundary,
-    EventManagerProvider,
-    LoaderPage,
-    ProtonApp,
-    StandardErrorPage,
-    StandardLoadErrorPage,
-    StandardPrivateApp,
-} from '@proton/components';
+import ApiProvider from '@proton/components/containers/api/ApiProvider';
+import ErrorBoundary from '@proton/components/containers/app/ErrorBoundary';
+import LoaderPage from '@proton/components/containers/app/LoaderPage';
+import ProtonApp from '@proton/components/containers/app/ProtonApp';
+import StandardErrorPage from '@proton/components/containers/app/StandardErrorPage';
+import StandardLoadErrorPage from '@proton/components/containers/app/StandardLoadErrorPage';
+import StandardPrivateApp from '@proton/components/containers/app/StandardPrivateApp';
+import AuthenticationProvider from '@proton/components/containers/authentication/Provider';
+import EventManagerProvider from '@proton/components/containers/eventManager/EventManagerProvider';
 import useEffectOnce from '@proton/hooks/useEffectOnce';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import { WALLET_APP_NAME } from '@proton/shared/lib/constants';
 import { getNonEmptyErrorMessage } from '@proton/shared/lib/helpers/error';
-import { DRAWER_VISIBILITY } from '@proton/shared/lib/interfaces';
-import { FlagProvider } from '@proton/unleash/proxy';
-import { ExtendedApiProvider } from '@proton/wallet/contexts';
+import { DRAWER_VISIBILITY } from '@proton/shared/lib/interfaces/UserSettings';
+import { UnleashFlagProviderWithToolbar } from '@proton/unleash/UnleashFlagProviderWithToolbar';
+import ExtendedApiProvider from '@proton/wallet/contexts/ExtendedApiContext/ExtendedApiProvider';
 import type { WalletStore } from '@proton/wallet/store/store';
 import { extraThunkArguments } from '@proton/wallet/store/thunk';
 import { isWasmSupported } from '@proton/wallet/utils/wasm';
@@ -97,7 +95,7 @@ const AppInner = () => {
     return (
         <ProtonStoreProvider store={state.store}>
             <AuthenticationProvider store={extraThunkArguments.authentication}>
-                <FlagProvider unleashClient={extraThunkArguments.unleashClient} startClient={false}>
+                <UnleashFlagProviderWithToolbar unleashClient={extraThunkArguments.unleashClient}>
                     <Router history={extraThunkArguments.history}>
                         <EventManagerProvider eventManager={extraThunkArguments.eventManager}>
                             <ApiProvider api={extraThunkArguments.api}>
@@ -113,7 +111,7 @@ const AppInner = () => {
                             </ApiProvider>
                         </EventManagerProvider>
                     </Router>
-                </FlagProvider>
+                </UnleashFlagProviderWithToolbar>
             </AuthenticationProvider>
         </ProtonStoreProvider>
     );

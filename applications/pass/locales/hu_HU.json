@@ -607,6 +607,12 @@
       "Show Less": [
         "Kevesebb mutatása"
       ],
+      "Show less": [
+        "Kevesebb megjelenítése"
+      ],
+      "Show more": [
+        "Több megjelenítése"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Bejelentkezés ${ BRAND_NAME }nal"
       ],
@@ -716,11 +722,6 @@
       ],
       "Your password manager is not here? Request it.": [
         "Az Ön jelszómenedzsere nem látható? Kérje."
-      ]
-    },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } asztali alkalmazás"
       ]
     },
     "Button": {
@@ -933,6 +934,9 @@
       "Editing item failed": [
         "Az elem szerkesztése nem sikerült"
       ],
+      "Email is not valid": [
+        "Érvénytelen e-mail cím"
+      ],
       "Empty CSV file": [
         "Üres CSV fájl"
       ],
@@ -1095,6 +1099,9 @@
       "Incorrect backup password. Please try again.": [
         "Hibás biztonsági mentés jelszó. Próbálja meg újra."
       ],
+      "Incorrect password. Please try again.": [
+        "Hibás jelszó. Próbálja meg újra."
+      ],
       "Incorrect second password. Please try again.": [
         "Hibás második jelszó. Próbálja meg újra."
       ],
@@ -1125,8 +1132,14 @@
       "Network error": [
         "Hálózati hiba"
       ],
+      "Not a valid number": [
+        "Érvénytelen szám"
+      ],
       "Passphrase is incorrect": [
         "A jelmondat hibás"
+      ],
+      "Passwords do not match": [
+        "A jelszavak nem egyeznek"
       ],
       "PIN codes do not match": [
         "A PIN-kódok nem egyeznek"
@@ -1164,11 +1177,23 @@
       "Something went wrong. Please sign in again.": [
         "Valami félrement. Kérjük jelentkezzen be újból."
       ],
+      "The email addresses do not match": [
+        "Az e-mail címek nem egyeznek"
+      ],
       "The session has expired. Please sign in again.": [
         "Ez a munkamenet lejárt. Lépjen be újra."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Hiba történt a biztonságos hivatkozás eltávolítása közben. Próbálja meg újra néhány perc múlva."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "A mező tartalma hosszabb a megengedett maximum ${ maximumLength } karakternél."
+      ],
+      "This field is required": [
+        "A mező kitöltése kötelező"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Legalább ${ minimumLength } karakter szükséges ebben a mezőben."
       ],
       "Too many failed attempts. Please sign in again.": [
         "Túl sok sikertelen kísérlet. Próbáljon meg újra bejelentkezni."
@@ -1178,6 +1203,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Próbáljon meg kapcsolatba lépni a hivatkozás tulajdonosával."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Próbáljon csak betűket, számokat és _.-t használni"
       ],
       "Unable to generate an OTP code for this item": [
         "Ebből az elemből nem sikerült OTP kódot generálni"
@@ -1209,6 +1237,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "A(z) \"${ payload.content.name }\" tároló frissítése nem sikerült"
       ],
+      "Username must begin with a letter or digit": [
+        "Felhasználónévnek betűvel vagy számmal kell kezdődnie"
+      ],
+      "Username must end with a letter or digit": [
+        "Felhasználónévnek betűvel vagy számmal kell végződnie"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "A(z) \"${ payload.content.name }\" tároló létrehozása nem sikerült"
       ],
@@ -1232,6 +1266,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Hibás PIN-kód. Próbálja meg újra."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Hibás helyreállító jelmondat. Próbálja meg újra vagy próbáljon másik helyreállítási módszert."
       ],
       "Wrong second password": [
         "Rossz második jelszó"
@@ -1538,9 +1575,6 @@
       "Can view this item.": [
         "Megtekintheti ezt az elemet."
       ],
-      "Change your password": [
-        "Jelszó megváltoztatása"
-      ],
       "Confirm your extra password to proceed with its removal.": [
         "Be kell írnia az extra jelszót, hogy folytatni tudja annak törlését."
       ],
@@ -1597,9 +1631,6 @@
       ],
       "Editor": [
         "Szerkesztő"
-      ],
-      "email": [
-        "e-mail cím"
       ],
       "Email address successfully deleted from monitoring": [
         "Az e-mail cím sikeresen törölve a figyelésből"
@@ -1675,9 +1706,6 @@
       ],
       "Fill in the CSV with your data": [
         "Töltse ki a CSV fájlt az adataival"
-      ],
-      "finance": [
-        "pénzügyi"
       ],
       "Follow those steps to import your data with a generic CSV:": [
         "A következő lépésekkel importálhat adatokat általános CSV fájlból:"
@@ -1823,9 +1851,6 @@
       "Medium Priority": [
         "Közepes prioritású"
       ],
-      "Monitor accounts": [
-        "Fiókok megfigyelése"
-      ],
       "Monitoring settings successfully updated": [
         "A megfigyelési beállítások frissítve"
       ],
@@ -1838,6 +1863,10 @@
       ],
       "Moving all items from \"${ payload.content.name }\"": [
         "Az összes elem áthelyezése innen: \"${ payload.content.name }\""
+      ],
+      "Moving an item to another vault will erase its secure links.": [
+        "Egy elem másik tárolóba történő áthelyezése törli a biztonságos hivatkozásokat.",
+        "Az elemek másik tárolóba történő áthelyezése törli a biztonságos hivatkozásokat."
       ],
       "Moving items": [
         "Elemek áthelyezése"
@@ -1892,9 +1921,6 @@
       ],
       "Pass Plus trial": [
         "Pass Plus próbaverzió"
-      ],
-      "password": [
-        "jelszó"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Jelszózár sikeresen regisztrálva. Használja a ${ PASS_APP_NAME } feloldásához"
@@ -2281,9 +2307,6 @@
       ],
       "User's access successfully updated": [
         "A felhasználói hozzáférés frissítve"
-      ],
-      "username": [
-        "felhasználónév"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Tároló törölve: \"${ payload.content.name }\""
@@ -4516,8 +4539,16 @@
       "OTP secret or URI is invalid": [
         "OTP titok vagy URL megadása kötelező"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "A jelszónak legalább ${ MIN_PASSWORD_LENGTH } karakterből kell állnia",
+        "A jelszónak legalább ${ MIN_PASSWORD_LENGTH } karakterből kell állnia"
+      ],
       "Section name cannot be empty": [
         "A szakasznév nem lehet üres"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Próbáljon egy rövidebb felhasznlónevet használni (maximum ${ n } karakter)",
+        "Próbáljon egy rövidebb felhasznlónevet használni (maximum ${ n } karakter)"
       ],
       "URL already exists": [
         "Az URL már létezik"
@@ -4661,9 +4692,6 @@
       ],
       "Move to trash": [
         "Áthelyezés a Lomtárba"
-      ],
-      "Name is required": [
-        "Név megadása kötelező"
       ],
       "No items": [
         "Nincsenek elemek"

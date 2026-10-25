@@ -1,9 +1,10 @@
 import { c } from 'ttag';
 
-import { DropdownMenuButton, ToolbarButton } from '@proton/components';
-import { getDriveForPhotos } from '@proton/drive/index';
+import DropdownMenuButton from '@proton/components/components/dropdown/DropdownMenuButton';
+import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton';
 import { getNodeName, getNodeNameFallback, isMissingNode } from '@proton/drive/modules/nodes';
-import { useLoading } from '@proton/hooks';
+import { getDriveForPhotos } from '@proton/drive/sdk';
+import useLoading from '@proton/hooks/useLoading';
 import { IcTrash } from '@proton/icons/icons/IcTrash';
 import clsx from '@proton/utils/clsx';
 

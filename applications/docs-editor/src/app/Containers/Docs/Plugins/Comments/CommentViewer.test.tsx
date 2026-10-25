@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { CommentViewer } from './CommentViewer'
 import { DocsDependenciesProvider, type DocsDependencies } from '../../DocsDependenciesProvider'
+import { defaultDocsMessages } from '../../messages/defaultDocsMessages'
 
 jest.mock('./CommentsContext', () => ({
   useCommentsContext: jest.fn(() => ({
@@ -10,14 +11,48 @@ jest.mock('./CommentsContext', () => ({
 
 function createDependencies(reportError: DocsDependencies['reportError']): DocsDependencies {
   return {
+    userName: 'Test user',
+    defaultMessages: defaultDocsMessages,
+    suggestionsEnabled: true,
+    isAlpha: false,
+    canEdit: true,
+    canComment: true,
+    languageCode: 'en',
+    dateFormat: { localeCode: 'en-US', hourCycle: 'h12' },
+    getDisplayNameForEmail: (email) => email ?? 'Anonymous',
+    comments: {
+      getAllThreads: jest.fn(),
+      createCommentThread: jest.fn(),
+      createSuggestionThread: jest.fn(),
+      createComment: jest.fn(),
+      editComment: jest.fn(),
+      deleteComment: jest.fn(),
+      resolveThread: jest.fn(),
+      unresolveThread: jest.fn(),
+      deleteThread: jest.fn(),
+      acceptSuggestion: jest.fn(),
+      rejectSuggestion: jest.fn(),
+      reopenSuggestion: jest.fn(),
+      beganTypingInThread: jest.fn(),
+      stoppedTypingInThread: jest.fn(),
+      markThreadAsRead: jest.fn(),
+      getTypersExcludingSelf: jest.fn(),
+      subscribeToEvents: jest.fn(() => () => {}),
+      subscribeToAwarenessStates: jest.fn(() => () => {}),
+    },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
     getDocumentUrl: jest.fn(),
     replaceDocumentUrl: jest.fn(),
     reportTelemetry: jest.fn(),
     reportError,
     openLink: jest.fn(),
-    isDevOrBlack: jest.fn(),
     showGenericAlertModal: jest.fn(),
+    createWarningNotification: jest.fn(),
+    createInfoNotification: jest.fn(),
+    showAlert: jest.fn(),
+    reportToolbarInteraction: jest.fn(),
+    reportWordCount: jest.fn(),
+    subscribeToCollaboratorCursorNavigation: jest.fn(() => () => {}),
     createSuggestionThread: jest.fn(),
     getAllThreads: jest.fn(),
     reopenSuggestion: jest.fn(),

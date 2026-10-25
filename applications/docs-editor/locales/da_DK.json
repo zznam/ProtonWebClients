@@ -122,8 +122,11 @@
       "Fit table to page width": [
         "Tilpas tabel til sidens bredde"
       ],
-      "Go to label": [
-        "Gå til etikette"
+      "Header column": [
+        "Overskriftskolonne"
+      ],
+      "Header row": [
+        "Overskriftsrække"
       ],
       "Indent": [
         "Indryk"
@@ -136,6 +139,9 @@
       ],
       "Insert comment": [
         "Indsæt kommentar"
+      ],
+      "Insert emoji": [
+        "Indsæt emoji"
       ],
       "Insert image": [
         "Indsæt billede"
@@ -197,9 +203,6 @@
       "Refresh the page": [
         "Opdater siden"
       ],
-      "Remove": [
-        "Fjern"
-      ],
       "Remove link": [
         "Fjern link"
       ],
@@ -227,9 +230,6 @@
       "Strike-through": [
         "Gennemstreget"
       ],
-      "Submit": [
-        "Indsend"
-      ],
       "Subscript": [
         "Sænket skrift"
       ],
@@ -247,143 +247,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "æble"
-      ],
-      "azureish white": [
-        "azurblålig hvid"
-      ],
       "black": [
         "sort"
-      ],
-      "blanched almond": [
-        "blancherede mandler"
-      ],
-      "blue-gray": [
-        "blågrå"
-      ],
-      "caramel": [
-        "karamel"
       ],
       "carrot": [
         "gulerod"
       ],
-      "cerise": [
-        "kirsebærrød"
-      ],
-      "cinnabar": [
-        "cinnober"
-      ],
-      "cobalt": [
-        "kobolt"
-      ],
-      "copper": [
-        "kobber"
-      ],
-      "cyan-blue azure": [
-        "cyanblå azur"
-      ],
-      "dandelion": [
-        "mælkebøtte"
-      ],
-      "dark cerulean": [
-        "mørk cerulean"
-      ],
-      "dark midnight blue": [
-        "mørk midnatsblå"
-      ],
-      "dim gray": [
-        "svag grå"
-      ],
-      "enzian": [
-        "ensian"
-      ],
-      "fern": [
-        "bregne"
-      ],
-      "field drab": [
-        "brun"
-      ],
-      "forest": [
-        "skov"
-      ],
-      "gainsboro": [
-        "gainsboro"
-      ],
       "gray": [
         "grå"
-      ],
-      "japanese laurel": [
-        "japansk laurbær"
-      ],
-      "kiwi": [
-        "kiwi"
-      ],
-      "lemon yellow": [
-        "citrongul"
-      ],
-      "light carmine pink": [
-        "lys karminrosa"
-      ],
-      "light moss green": [
-        "lys mosgrøn"
-      ],
-      "light red": [
-        "lysrød"
-      ],
-      "maize": [
-        "majs"
-      ],
-      "mughal green": [
-        "mughal grøn"
-      ],
-      "ocean": [
-        "ocean"
       ],
       "olive": [
         "oliven"
       ],
-      "outer space": [
-        "det ydre rum"
-      ],
       "pacific": [
         "stillehav"
       ],
-      "palatinate blue": [
-        "palatinatblå"
-      ],
-      "pale cerulean": [
-        "lys cerulean"
-      ],
-      "pastel gray": [
-        "pastelgrå"
-      ],
-      "persian plum": [
-        "persisk blomme"
-      ],
-      "persian red": [
-        "persisk rød"
-      ],
-      "philippine gray": [
-        "filippinsk grå"
-      ],
-      "philippine silver": [
-        "filippinsk sølv"
-      ],
-      "pickle": [
-        "syltet agurk"
-      ],
-      "pine": [
-        "fyr"
-      ],
       "pink": [
         "pink"
-      ],
-      "pistachio": [
-        "pistacie"
-      ],
-      "plum": [
-        "blomme"
       ],
       "purple": [
         "lilla"
@@ -394,29 +274,8 @@
       "reef": [
         "rev"
       ],
-      "ruddy pink": [
-        "rødlig pink"
-      ],
-      "sahara": [
-        "sahara"
-      ],
-      "satin sheen gold": [
-        "satinglans guld"
-      ],
       "slateblue": [
         "skiferblå"
-      ],
-      "soil": [
-        "jord"
-      ],
-      "strawberry": [
-        "jordbær"
-      ],
-      "vivid auburn": [
-        "levende rødbrun"
-      ],
-      "white": [
-        "hvid"
       ]
     },
     "Confirm": {
@@ -433,17 +292,46 @@
       ],
       "Read or print final document": [
         "Læs eller print det endelige dokument"
+      ]
+    },
+    "Emoji category": {
+      "Activities": [
+        "Aktiviteter"
       ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "Brug dropdownmenuen ovenfor til at skifte og begynde at komme med forslag."
+      "Animals and nature": [
+        "Dyr og natur"
+      ],
+      "Flags": [
+        "Flag"
+      ],
+      "Food and drink": [
+        "Mad og drikke"
+      ],
+      "Objects": [
+        "Objekter"
+      ],
+      "Smileys and people": [
+        "Smileyer og mennesker"
+      ],
+      "Symbols": [
+        "Symboler"
+      ],
+      "Travel and places": [
+        "Rejser og destinationer"
       ]
     },
     "Error": {
       "An error occurred while loading the document. To prevent document corruption, the editor has been locked. Please reload the page and try again. If the error persists, please open Version History from the menu options to attempt to restore your document to an earlier version.": [
         "Der opstod en fejl under indlæsning af dokumentet. For at forhindre beskadigelse af dokumentet er editoren låst. Genindlæs siden og prøv igen. Hvis fejlen fortsætter, skal du åbne Versionshistorik i menuen for at forsøge at gendanne dit dokument til en tidligere version."
       ],
+      "Could not load emoji. Close the picker and try again.": [
+        "Kunne ikke indlæse emojien. Luk vælgeren og prøv igen."
+      ],
       "Failed to export document.": [
         "Dokumentet kunne ikke eksporteres."
+      ],
+      "Failed to import document due to unsupported file format.": [
+        "Dokumentet kunne ikke importeres, da filformatet ikke understøttes."
       ],
       "Failed to import HTML due to unknown error.": [
         "Kunne ikke importere HTML pga. ukendt fejl."
@@ -468,9 +356,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "Dette regneark er ikke kompatibelt med den nuværende klientversion. Prøv at genindlæse klienten. Kontakt support hvis problemet fortsætter."
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "Forsøgte at importere regnearksdata i Lexical."
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "Ikke muligt at konvertere Word-dokument. Er det adgangskodebeskyttet? Hvis ja, så fjern adgangskoden og prøv igen."
@@ -547,11 +432,11 @@
       "Just now": [
         "Lige nu"
       ],
-      "Labels:": [
-        "Etiketter:"
-      ],
       "Loading": [
         "Indlæser"
+      ],
+      "Loading emoji…": [
+        "Indlæser emoji..."
       ],
       "Loading spreadsheet content...": [
         "Indlæser regneark..."
@@ -564,6 +449,9 @@
       ],
       "No comments": [
         "Ingen kommentarer"
+      ],
+      "No emoji found": [
+        "Ingen emoji fundet"
       ],
       "No title": [
         "Ingen titel"
@@ -624,6 +512,9 @@
       "Clear formatting": [
         "Ryd formatering"
       ],
+      "Comments": [
+        "Kommentarer"
+      ],
       "Delete": [
         "Slet"
       ],
@@ -653,6 +544,12 @@
       ],
       "Duplicate table row": [
         "Dupliker tabelrække"
+      ],
+      "Emoji": [
+        "Emoji"
+      ],
+      "Emoji suggestions": [
+        "Emoji-forslag"
       ],
       "Format": [
         "Format"
@@ -693,11 +590,26 @@
       "Page break": [
         "Sideskift"
       ],
+      "Recent": [
+        "Seneste"
+      ],
       "Replace": [
         "Erstat"
       ],
       "Replace link": [
         "Erstat link"
+      ],
+      "Resize outline": [
+        "Tilpas størrelse på indholdsfortegnelse"
+      ],
+      "Search emoji": [
+        "Søg efter emoji"
+      ],
+      "Search results": [
+        "Søgeresultater"
+      ],
+      "Table": [
+        "Tabel"
       ],
       "Text and highlight color": [
         "Tekst og fremhævelsesfarve"
@@ -858,7 +770,377 @@
         "Note"
       ]
     },
+    "sheets_2025:Spreadsheet cellFormatOptions": {
+      "Accounting": [
+        "Regnskab"
+      ],
+      "Bottom": [
+        "Nederst"
+      ],
+      "Center": [
+        "Centreret"
+      ],
+      "Clip": [
+        "Klip"
+      ],
+      "Currency": [
+        "Valuta"
+      ],
+      "Currency formats are used for general monetary values.": [
+        "Valutaformater bruges til generelle pengeværdier."
+      ],
+      "Custom": [
+        "Brugerdefineret"
+      ],
+      "Date": [
+        "Dato"
+      ],
+      "Date formats display date and time serial numbers as date values.": [
+        "Datoformater viser datoer og tidsserienumre som datoværdier."
+      ],
+      "Fraction": [
+        "Brøkdel"
+      ],
+      "General": [
+        "Generelt"
+      ],
+      "General format cells have no specific number format.": [
+        "Celler i generelt format angiver ikke et specifikt talformat."
+      ],
+      "Left": [
+        "Venstre"
+      ],
+      "Number": [
+        "Tal"
+      ],
+      "Number is used for general display of numbers.": [
+        "Tal bruges til at vise tal generelt."
+      ],
+      "Overflow": [
+        "Overflow"
+      ],
+      "Percentage": [
+        "Procentdel"
+      ],
+      "Right": [
+        "Højre"
+      ],
+      "Scientific": [
+        "Videnskabelig"
+      ],
+      "Text": [
+        "Tekst"
+      ],
+      "Time": [
+        "Tid"
+      ],
+      "Time formats display date and time serial numbers as date values.": [
+        "Tidsformater viser datoer og tidsserienumre som datoværdier."
+      ],
+      "Top": [
+        "Øverst"
+      ],
+      "Wrap": [
+        "Ombryd"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartAggregates": {
+      "Average": [
+        "Gennemsnit"
+      ],
+      "Count": [
+        "Antal"
+      ],
+      "Max": [
+        "Maks"
+      ],
+      "Median": [
+        "Median"
+      ],
+      "Min": [
+        "Min"
+      ],
+      "Sum": [
+        "Sum"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartEditorDialog": {
+      "None": [
+        "Ingen"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartTypes": {
+      "2D Pie": [
+        "2D lagkage"
+      ],
+      "Clustered Column": [
+        "Grupperet kolonne"
+      ],
+      "Column": [
+        "Kolonne"
+      ],
+      "Doughnut": [
+        "Donut"
+      ],
+      "Hierarchy": [
+        "Hierarki"
+      ],
+      "Line": [
+        "Linje"
+      ],
+      "Pie": [
+        "Lagkage"
+      ],
+      "Smooth line": [
+        "Glat linje"
+      ],
+      "Stacked column": [
+        "Stablet kolonne"
+      ],
+      "Stacked line": [
+        "Stablet linje"
+      ],
+      "Sunburst": [
+        "Sunburst"
+      ],
+      "Treemap": [
+        "Træstruktur"
+      ]
+    },
+    "sheets_2025:Spreadsheet conditions": {
+      "Above average": [
+        "Over gennemsnit"
+      ],
+      "April": [
+        "April"
+      ],
+      "August": [
+        "August"
+      ],
+      "Below average": [
+        "Under gennemsnit"
+      ],
+      "Between": [
+        "Mellem"
+      ],
+      "Bottom N items": [
+        "Nederste N elementer"
+      ],
+      "Bottom N percent": [
+        "Nedre N procent"
+      ],
+      "Checkbox": [
+        "Afkrydsningsfelt"
+      ],
+      "Custom formula": [
+        "Brugerdefineret formular"
+      ],
+      "Date is after": [
+        "Dato er efter"
+      ],
+      "Date is before": [
+        "Dato er før"
+      ],
+      "Date is between": [
+        "Dato er mellem"
+      ],
+      "Date is equal to": [
+        "Dato er lig med"
+      ],
+      "Date is not between": [
+        "Dato er ikke mellem"
+      ],
+      "Date is not equal to": [
+        "Dato er ikke lig med"
+      ],
+      "Date is on or after": [
+        "Dato er på eller efter"
+      ],
+      "Date is on or before": [
+        "Dato er på eller før"
+      ],
+      "Date is valid": [
+        "Dato er gyldig"
+      ],
+      "December": [
+        "December"
+      ],
+      "Dropdown": [
+        "Dropdown"
+      ],
+      "Dropdown (from a range)": [
+        "Dropdown (fra et interval)"
+      ],
+      "Equal to": [
+        "Lig med"
+      ],
+      "Errors": [
+        "Fejl"
+      ],
+      "February": [
+        "Februar"
+      ],
+      "Greater than": [
+        "Større end"
+      ],
+      "Greater than or equal to": [
+        "Større end eller lig med"
+      ],
+      "Greater than or equal to previous": [
+        "Større end eller lig med forrige"
+      ],
+      "Greater than previous": [
+        "Større end forrige"
+      ],
+      "Is empty": [
+        "Er tom"
+      ],
+      "Is not empty": [
+        "Er ikke tom"
+      ],
+      "January": [
+        "Januar"
+      ],
+      "July": [
+        "Juli"
+      ],
+      "June": [
+        "Juni"
+      ],
+      "Last 7 days": [
+        "Sidste 7 dage"
+      ],
+      "Last month": [
+        "Forrige måned"
+      ],
+      "Last quarter": [
+        "Sidste kvartal"
+      ],
+      "Last week": [
+        "Sidste uge"
+      ],
+      "Last year": [
+        "Sidste år"
+      ],
+      "Less than": [
+        "Mindre end"
+      ],
+      "Less than or equal to": [
+        "Mindre end eller lig med"
+      ],
+      "Less than or equal to previous": [
+        "Mindre end eller lig med forrige"
+      ],
+      "Less than previous": [
+        "Mindre end forrige"
+      ],
+      "March": [
+        "Marts"
+      ],
+      "May": [
+        "Maj"
+      ],
+      "Next month": [
+        "Næste måned"
+      ],
+      "Next quarter": [
+        "Næste kvartal"
+      ],
+      "Next week": [
+        "Næste uge"
+      ],
+      "Next year": [
+        "Næste år"
+      ],
+      "No errors": [
+        "Ingen fejl"
+      ],
+      "Not between": [
+        "Ikke mellem"
+      ],
+      "Not equal to": [
+        "Ikke lig med"
+      ],
+      "November": [
+        "November"
+      ],
+      "October": [
+        "Oktober"
+      ],
+      "Quarter 1": [
+        "Kvartal 1"
+      ],
+      "Quarter 2": [
+        "Kvartal 2"
+      ],
+      "Quarter 3": [
+        "Kvartal 3"
+      ],
+      "Quarter 4": [
+        "Kvartal 4"
+      ],
+      "September": [
+        "September"
+      ],
+      "Text contains": [
+        "Tekst indeholder"
+      ],
+      "Text does not contain": [
+        "Teksten indeholder ikke"
+      ],
+      "Text ends with": [
+        "Tekst slutter på"
+      ],
+      "Text is email": [
+        "Tekst er e-mail"
+      ],
+      "Text is exactly": [
+        "Tekst er nøjagtig"
+      ],
+      "Text is not equal": [
+        "Tekst er ikke lig med"
+      ],
+      "Text is URL": [
+        "Tekst er URL"
+      ],
+      "Text starts with": [
+        "Tekst starter med"
+      ],
+      "This month": [
+        "Denne måned"
+      ],
+      "This quarter": [
+        "Dette kvartal"
+      ],
+      "This week": [
+        "Denne uge"
+      ],
+      "This year": [
+        "I år"
+      ],
+      "Today": [
+        "I dag"
+      ],
+      "Tomorrow": [
+        "I morgen"
+      ],
+      "Top N items": [
+        "Øverste N elementer"
+      ],
+      "Top N percent": [
+        "Øverste N procent"
+      ],
+      "Year to date": [
+        "År til dato"
+      ],
+      "Yesterday": [
+        "I går"
+      ]
+    },
     "sheets_2025:Spreadsheet context menu": {
+      "(Blanks)": [
+        "(Tomme)"
+      ],
       "AI Quick Edit": [
         "AI Quick Edit"
       ],
@@ -1204,6 +1486,14 @@
         "År"
       ]
     },
+    "sheets_2025:Spreadsheet customCurrencyFormatDialog": {
+      "Format": [
+        "Format"
+      ],
+      "Symbol": [
+        "Symbol"
+      ]
+    },
     "sheets_2025:Spreadsheet delete sheet dialog": {
       "Are you sure you want to delete ${ sheetName }?": [
         "Er du sikker på at du vil slette ${ sheetName }?"
@@ -1230,6 +1520,11 @@
       ],
       "Your screen is too small to edit this spreadsheet. You’re in view-only mode. To make changes, please open this spreadsheet on a larger screen or expand your browser window.": [
         "Din skærm er for lille til at redigere dette regneark. Du er i skrivebeskyttet tilstand. For at foretage ændringer, skal du åbne dette regneark på en større skærm eller udvide dit browservindue."
+      ]
+    },
+    "sheets_2025:Spreadsheet editingDisabledButton": {
+      "Edit": [
+        "Rediger"
       ]
     },
     "sheets_2025:Spreadsheet editor": {
@@ -1666,6 +1961,9 @@
       ]
     },
     "sheets_2025:Spreadsheet editor search dialog": {
+      "${ current } of ${ total }": [
+        "${ current } af ${ total }"
+      ],
       "Close": [
         "Luk"
       ],
@@ -1697,11 +1995,29 @@
       ]
     },
     "sheets_2025:Spreadsheet editor toolbar": {
+      "Apply border": [
+        "Anvend kant"
+      ],
+      "Apply fill color": [
+        "Anvend fyldfarve"
+      ],
+      "Apply text color": [
+        "Anvend tekstfarve"
+      ],
       "Bold": [
         "Fed"
       ],
       "Border": [
         "Kant"
+      ],
+      "Choose border": [
+        "Vælg kant"
+      ],
+      "Choose fill color": [
+        "Vælg fyldfarve"
+      ],
+      "Choose text color": [
+        "Vælg tekstfarve"
       ],
       "Clear formatting": [
         "Ryd formatering"
@@ -1850,6 +2166,35 @@
         "Sortér Z → A"
       ]
     },
+    "sheets_2025:Spreadsheet filterByCondition": {
+      "None": [
+        "Ingen"
+      ]
+    },
+    "sheets_2025:Spreadsheet formatMenu": {
+      "Coming soon...": [
+        "Kommer snart..."
+      ]
+    },
+    "sheets_2025:Spreadsheet formulaBar": {
+      "Edit": [
+        "Rediger"
+      ],
+      "Remove": [
+        "Fjern"
+      ],
+      "View": [
+        "Visning"
+      ]
+    },
+    "sheets_2025:Spreadsheet gridFooter": {
+      "Add": [
+        "Tilføj"
+      ],
+      "more rows at the bottom": [
+        "flere rækker i bunden"
+      ]
+    },
     "sheets_2025:Spreadsheet insert link dialog": {
       "Apply": [
         "Anvend"
@@ -1885,23 +2230,23 @@
       "Cancel": [
         "Annuller"
       ],
-      "column": [
-        "kolonne"
-      ],
-      "column width": [
-        "kolonnebredde"
-      ],
-      "Default": [
-        "Standard"
+      "Default ${ size }": [
+        "Standard ${ size }"
       ],
       "OK": [
         "OK"
       ],
-      "row": [
-        "række"
+      "Resize column ${ title }": [
+        "Tilpas kolonnestørrelse ${ title }"
       ],
-      "row height": [
-        "rækkehøjde"
+      "Resize row ${ title }": [
+        "Tilpas rækkestørrelse ${ title }"
+      ],
+      "Specify column width (px)": [
+        "Angiv kolonnebredde (px)"
+      ],
+      "Specify row height (px)": [
+        "Angiv rækkehøjde (px)"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2076,6 +2421,18 @@
       ],
       "Series": [
         "Serie"
+      ],
+      "Series ${ seriesNumber }": [
+        "Serie ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Aggregate": [
+        "Serie ${ seriesNumber } aggregeret"
+      ],
+      "Series ${ seriesNumber } Name": [
+        "Serie ${ seriesNumber } navn"
+      ],
+      "Series ${ seriesNumber } Range": [
+        "Serie ${ seriesNumber } interval"
       ],
       "Show data in hidden rows and columns": [
         "Vis data i skjulte rækker og kolonner"
@@ -2341,15 +2698,32 @@
         "Titel på tabel"
       ]
     },
+    "sheets_2025:Spreadsheet viewMenu": {
+      "1 column": [
+        "1 kolonne"
+      ],
+      "1 row": [
+        "1 række"
+      ],
+      "2 columns": [
+        "2 kolonner"
+      ],
+      "2 rows": [
+        "2 rækker"
+      ],
+      "No columns": [
+        "Ingen kolonner"
+      ],
+      "No rows": [
+        "Ingen rækker"
+      ]
+    },
     "Title": {
       "Delete comment": [
         "Slet kommentar"
       ],
       "Delete thread": [
         "Slet tråd"
-      ],
-      "Explore the New Suggestion Mode": [
-        "Udforsk den nye forslagstilstand"
       ],
       "Language not supported": [
         "Sprog ikke understøttet"

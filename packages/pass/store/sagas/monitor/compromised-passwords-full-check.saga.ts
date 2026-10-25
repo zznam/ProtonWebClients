@@ -5,9 +5,8 @@ import { getItemKey, intoSelectedItem } from '../../../lib/items/item.utils';
 import { checkPasswordCompromised, getLastChangeTimestamp } from '../../../lib/monitor/compromised-password.request';
 import type { CompromisedPasswordEntry } from '../../../lib/monitor/types';
 import { isOnline } from '../../../lib/network/connectivity.utils';
-import { isPaidPlan } from '../../../lib/user/user.predicates';
-import type { ItemRevision, UniqueItem } from '../../../types';
 import { PassFeature } from '../../../types/api/features';
+import type { ItemRevision, UniqueItem } from '../../../types/data/items';
 import { pool } from '../../../utils/fp/promises';
 import { deobfuscate } from '../../../utils/obfuscate/xor';
 import type { CompromisedPasswordsCheckDTO } from '../../actions/creators/monitor';
@@ -19,12 +18,12 @@ import {
 } from '../../actions/creators/monitor';
 import { createRequestSaga } from '../../request/sagas';
 import {
+    selectCanCheckCompromisedPasswords,
     selectCompromisedPasswordsCache,
-    selectFeatureFlag,
     selectLastSyncedChange,
     selectMonitoredLogins,
-    selectPassPlan,
-} from '../../selectors';
+} from '../../selectors/monitor';
+import { selectFeatureFlag } from '../../selectors/user';
 
 const COMPROMISED_PASSWORD_CHECK_CONCURRENCY = 4;
 const COMPROMISED_PASSWORD_PERSIST_THROTTLE_MS = 1_000;
@@ -35,7 +34,7 @@ function* checkCompromisedPasswordsWorker(payload: CompromisedPasswordsCheckDTO)
     try {
         if (!isOnline(api.getState())) return [];
         if (!(yield select(selectFeatureFlag(PassFeature.PassCompromisedPasswords)))) return [];
-        if (!isPaidPlan(yield select(selectPassPlan))) return [];
+        if (!(yield select(selectCanCheckCompromisedPasswords))) return [];
 
         const logins: ReturnType<ReturnType<typeof selectMonitoredLogins>> = yield select(selectMonitoredLogins(payload.shareIds));
         const candidates = logins.filter((item) => item.data.content.password.v.length);

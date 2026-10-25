@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } Androidille"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } iOS:lle"
-      ],
       "Accept": [
         "Hyväksy"
       ],
@@ -336,6 +330,12 @@
       ],
       "Do not suggest on this website": [
         "Älä tarjoa tällä verkkosivustolla"
+      ],
+      "Download for macOS": [
+        "Lataa macOS:lle"
+      ],
+      "Download for Windows": [
+        "Lataa Windowsille"
       ],
       "Download this CSV template": [
         "Lataa tämä CSV-malli"
@@ -694,6 +694,12 @@
       "Show Less": [
         "Näytä vähemmän"
       ],
+      "Show less": [
+        "Näytä vähemmän"
+      ],
+      "Show more": [
+        "Näytä lisää"
+      ],
       "Sign back in": [
         "Kirjaudu uudelleen"
       ],
@@ -837,9 +843,10 @@
         "Holvi"
       ]
     },
-    "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME }in työpöytäsovellus"
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "Näytä ${ hiddenResultsCount } piilotettu tulos",
+        "Näytä ${ hiddenResultsCount } piilotettua tulosta"
       ]
     },
     "Button": {
@@ -1090,6 +1097,9 @@
       "Editing item failed": [
         "Kohteen muokkaus epäonnistui"
       ],
+      "Email is not valid": [
+        "Virheellinen sähköpostiosoite"
+      ],
       "Empty CSV file": [
         "Tyhjä CSV-tiedosto"
       ],
@@ -1101,6 +1111,9 @@
       ],
       "Encrypted JSON not supported": [
         "Salattua JSON-tiedostoa ei tueta"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Syötä käyttäjätunnuksesi ilman verkkotunnusta (@example.com)"
       ],
       "Error reporting problem": [
         "Virheraportoinnin ongelma"
@@ -1279,6 +1292,9 @@
       "Incorrect backup password. Please try again.": [
         "Väärä varasalasana. Yritä uudelleen."
       ],
+      "Incorrect password. Please try again.": [
+        "Virheellinen salasana. Yritä uudelleen."
+      ],
       "Incorrect second password. Please try again.": [
         "Väärä toine salasana. Yritä uudelleen."
       ],
@@ -1321,8 +1337,14 @@
       "Network error": [
         "Verkkovirhe"
       ],
+      "Not a valid number": [
+        "Virheellinen numero"
+      ],
       "Passphrase is incorrect": [
         "Salalause on virheellinen"
+      ],
+      "Passwords do not match": [
+        "Salasanat eivät täsmää"
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "Pääsy verkkosivustolle estetty kohteissa ${ domainsJSX }."
@@ -1396,6 +1418,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "${ PASS_APP_NAME } -työpöytäsovelluksessa pitäisi olla kirjautuneena sisään."
       ],
+      "The email addresses do not match": [
+        "Sähköpostiosoitteet eivät täsmää"
+      ],
       "The URL is in the list": [
         "URL-osoite on jo listalla"
       ],
@@ -1405,6 +1430,15 @@
       "This domain is already managed by your organization": [
         "Organtisaatiosi hallinnoi jo tätä verkkotunnusta"
       ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Kenttä ylittää ${ maximumLength }-merkin enimmäismäärän."
+      ],
+      "This field is required": [
+        "Tämä kenttä vaaditaan"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Kenttä edellyttää vähintään ${ minimumLength } merkkiä."
+      ],
       "This may occur after a long time of not using ${ PASS_SHORT_APP_NAME }, or clearing your Safari history.": [
         "Tämä voi tapahtua, jos ${ PASS_SHORT_APP_NAME } on ollut pitkään käyttämättä tai olet tyhjentänyt Safari-historiasi."
       ],
@@ -1413,6 +1447,9 @@
       ],
       "Trashing item failed": [
         "Kohteen siirto roskakoriin epäonnistui"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Kokeile vain kirjaimia, numeroita ja merkkejä _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "OTP-koodia ei voida luoda tälle kohteelle"
@@ -1450,6 +1487,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Holvin \"${ payload.content.name }\" päivitys epäonnistui"
       ],
+      "Username must begin with a letter or digit": [
+        "Käyttäjätunnuksen on alettava kirjaimella tai numerolla"
+      ],
+      "Username must end with a letter or digit": [
+        "Käyttäjätunnuksen on päätyttävä kirjaimella tai numerolla"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Holvin \"${ payload.content.name }\" luonti epäonnistui"
       ],
@@ -1473,6 +1516,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Väärä PIN-koodi. Yritä uudelleen."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Väärä palautuslauseke. Yritä uudelleen tai kokeile toista palautustapaa."
       ],
       "Wrong second password": [
         "Toinen salasana on väärin"
@@ -1561,6 +1607,15 @@
       ],
       "Username": [
         "Käyttäjätunnus"
+      ]
+    },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Löydettiin ${ itemsCount } ehdotus, käytä siirtymiseen näppäimistöä.",
+        "Löydettiin ${ itemsCount } ehdotusta, käytä siirtymiseen näppäimistöä."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "Selaa kirjoituksen jälkeen näytettäviä ehdotuksia Ylös- ja Alas-näppäimillä, ja vahvista valinta Enter-näppäimellä tai sulje ehdotukset Esc-näppäimellä."
       ]
     },
     "Info": {
@@ -1864,9 +1919,6 @@
       "Can view this item.": [
         "Voi tarkastella tätä kohdetta."
       ],
-      "Change your password": [
-        "Vaihda salasanasi"
-      ],
       "Choose a saved passkey to sign-in to ${ domain }": [
         "Valitse tallennettu pääsyavain, jolla kirjaudutaan osoitteeseen ${ domain }"
       ],
@@ -1966,9 +2018,6 @@
       "Editor": [
         "Muokkaus"
       ],
-      "email": [
-        "sähköpostiosoite"
-      ],
       "Email address successfully deleted from monitoring": [
         "Sähköpostiosoite poistettiin valvonnasta"
       ],
@@ -2065,8 +2114,8 @@
       "Fill in the CSV with your data": [
         "Täytä CSV omilla tiedoillasi"
       ],
-      "finance": [
-        "rahoitus"
+      "Folder deleted": [
+        "Kansio poistettiin"
       ],
       "Follow those steps to import your data with a generic CSV:": [
         "Noudata ohjeita tuodaksesi tietosi yleisellä CSV-tiedostolla:"
@@ -2224,9 +2273,6 @@
       "Medium Priority": [
         "Keskitason tärkeys"
       ],
-      "Monitor accounts": [
-        "Valvo tilejä"
-      ],
       "Monitoring settings successfully updated": [
         "Valvonnan asetukset päivitettiin"
       ],
@@ -2244,7 +2290,8 @@
         "Siirretään kohteen \"${ payload.content.name }\" kaikkia kohteita"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Kohteen siirtäminen toiseen holviin pyyhkii sen suojatut linkit."
+        "Kohteen siirto toiseen holviin poistaa sen suojatut linkit.",
+        "Kohteiden siirto toiseen holviin poistaa niiden suojatut linkit."
       ],
       "Moving items": [
         "Siirretään kohteita"
@@ -2338,9 +2385,6 @@
       ],
       "Passkey sign-in": [
         "Kirjaudu pääsyavaimella"
-      ],
-      "password": [
-        "salasana"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Salasanalukitus on aktivoitu ja voit nyt avata ${ PASS_APP_NAME }in salasanallasi."
@@ -2830,9 +2874,6 @@
       "User's access successfully updated": [
         "Käyttäjän käyttöoikeutta muutettiin"
       ],
-      "username": [
-        "käyttäjätunnus"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Holvi \"${ payload.content.name }\" poistettiin"
       ],
@@ -3046,6 +3087,9 @@
       "${ hours } hour": [
         "${ hours } tunti",
         "${ hours } tuntia"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } merkkiä"
       ],
       "${ minutes } minute": [
         "${ minutes } minuutti",
@@ -4922,6 +4966,9 @@
       "Excluded items": [
         "Poissuljetut kohteet"
       ],
+      "Export": [
+        "Vienti"
+      ],
       "Fill & copy password": [
         "Täytä ja kopioi salasana"
       ],
@@ -4957,6 +5004,9 @@
       ],
       "Import - ${ date }": [
         "Tuontipäivä - ${ date }"
+      ],
+      "Import failed": [
+        "Tuonti epäonnistui"
       ],
       "Import to vault(s)": [
         "Tuo holviin/holveihin"
@@ -5115,6 +5165,9 @@
       ],
       "Remove secure link?": [
         "Poistetaanko suojattu linkki?"
+      ],
+      "Rename folder": [
+        "Nimeä kansio uudelleen"
       ],
       "Reset history for this item?": [
         "Nollataanko tämän kohteen historia?"
@@ -5306,8 +5359,16 @@
       "OTP secret or URI is invalid": [
         "OTP-salaisuus tai URI on virheellinen"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Salasanan täytyy sisältää ainakin ${ MIN_PASSWORD_LENGTH } merkki",
+        "Salasanan täytyy sisältää vähintään ${ MIN_PASSWORD_LENGTH }-merkkiä"
+      ],
       "Section name cannot be empty": [
         "Osion nimi ei voi olla tyhjä"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Kokeile lyhyempää käyttäjätunnusta (enintään ${ n } merkki)",
+        "Kokeile lyhyempää käyttäjätunnusta (enintään ${ n } merkkiä)"
       ],
       "URL already exists": [
         "URL-osoite on jo olemassa"
@@ -5466,9 +5527,6 @@
       ],
       "Move to trash": [
         "Siirrä roskakoriin"
-      ],
-      "Name is required": [
-        "Nimi vaaditaan"
       ],
       "No items": [
         "Kohteita ei ole"

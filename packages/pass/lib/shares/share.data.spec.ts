@@ -1,12 +1,13 @@
 import noop from '@proton/utils/noop';
 
-import type { FolderData, ItemRevision } from '../../types';
-import { ShareType } from '../../types';
+import type { FolderData } from '../../types/data/folders';
+import type { ItemRevision } from '../../types/data/items';
+import { ShareType } from '../../types/data/shares';
 import { logger } from '../../utils/logger';
+import { createTestShare } from '../../utils/tests/fixtures/shares';
 import * as folderRequests from '../folders/folders.requests';
 import * as itemRequests from '../items/item.requests';
 import { requestShareData, requestSharesData } from './share.data';
-import { createTestShare } from './share.test.utils';
 
 jest.mock('../folders/folders.requests', () => ({
     ...jest.requireActual('../folders/folders.requests'),

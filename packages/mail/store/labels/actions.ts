@@ -4,7 +4,7 @@ import type { AddressesState } from '@proton/account/addresses';
 import type { KtState } from '@proton/account/kt';
 import type { OrganizationKeyState } from '@proton/account/organizationKey';
 import type { UserKeysState } from '@proton/account/userKeys';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import {
     checkLabelAvailability as checkLabelAvailabilityConfig,
     create as createConfig,
@@ -12,7 +12,8 @@ import {
     updateLabel as updateLabelConfig,
     updateLastSeenEventID,
 } from '@proton/shared/lib/api/labels';
-import type { Category, Label } from '@proton/shared/lib/interfaces';
+import type { Category } from '@proton/shared/lib/interfaces/Category';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 
 import type { CategoriesState } from './index';
 import { categoriesActions, getCategory } from './index';

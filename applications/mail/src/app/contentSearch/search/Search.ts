@@ -1,8 +1,9 @@
 import * as Comlink from 'comlink';
 import isDeepEqual from 'lodash/isEqual';
 
-import type { ESItem, NormalizedSearchParams } from '@proton/encrypted-search/models';
-import createListeners from '@proton/shared/lib/helpers/listeners.ts';
+import type { ESItem } from '@proton/encrypted-search/models/interfaces';
+import type { NormalizedSearchParams } from '@proton/encrypted-search/models/mail';
+import createListeners from '@proton/shared/lib/helpers/listeners';
 
 import type { ESBaseMessage, ESMessageContent } from '../../models/encryptedSearch.ts';
 import type { DatabaseLock } from '../db/DatabaseLock';

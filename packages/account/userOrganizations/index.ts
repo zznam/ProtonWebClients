@@ -1,16 +1,14 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import { getAllUserOrganizations } from '@proton/shared/lib/api/members';
 import type { UserOrganization } from '@proton/shared/lib/interfaces/Organization';
 
-import { isOwnerRole } from '../organizationRoles/helpers';
-import { userThunk } from '../user';
-import { type UserPermissionsState, userPermissionsThunk } from '../userPermissions';
+import { type UserPermissionsState, isOrganizationOwnerThunk } from '../userPermissions';
 
 const name = 'userOrganizations' as const;
 
@@ -26,9 +24,7 @@ export const selectUserOrganizations = (state: UserOrganizationsState) => state[
 const modelThunk = createAsyncModelThunk<Model, UserOrganizationsState, ProtonThunkArguments>(`${name}/fetch`, {
     miss: async ({ extraArgument, dispatch }) => {
         // MSP owners are shown their subsidiaries instead (see mspSubsidiaries), skip the fetch.
-        const isAdminRoleMVPEnabled = extraArgument.unleashClient?.isEnabled('AdminRoleMVP') ?? false;
-        const [user, userPermissions] = await Promise.all([dispatch(userThunk()), dispatch(userPermissionsThunk())]);
-        const isOwner = isAdminRoleMVPEnabled ? userPermissions.Roles.some(isOwnerRole) : user.isAdmin;
+        const isOwner = await dispatch(isOrganizationOwnerThunk());
         if (isOwner) {
             return [];
         }

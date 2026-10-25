@@ -1,49 +1,39 @@
 import { utf8StringToUint8Array, uint8ArrayToUtf8String } from '@protontech/crypto/utils'
-import type {
-  DocumentKeys,
-  PublicDocumentKeys,
-  NodeMeta,
-  PublicNodeMeta,
-  InternalEventBusInterface,
-  WebsocketConnectionInterface,
-  WebsocketCallbacks,
-  DocumentType,
-} from '@proton/docs-shared'
-import {
-  BroadcastSource,
-  ProcessedIncomingRealtimeEventMessage,
-  assertUnreachableAndLog,
-  GenerateUUID,
-  ConnectionType,
-} from '@proton/docs-shared'
+import type { NodeMeta, PublicNodeMeta, DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { DocumentKeys, PublicDocumentKeys } from '@proton/docs-shared/CryptoTypes'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
+import type { WebsocketCallbacks } from '@proton/docs-shared/Realtime/WebsocketCallbacks'
+import type { WebsocketConnectionInterface } from '@proton/docs-shared/Realtime/WebsocketConnectionInterface'
+import { assertUnreachableAndLog } from '@proton/docs-shared/AssertUnreachable'
+import { BroadcastSource } from '@proton/docs-shared/Bridge/BroadcastSource'
+import { GenerateUUID } from '@proton/docs-shared/GenerateUuid'
+import { ProcessedIncomingRealtimeEventMessage } from '@proton/docs-shared/Realtime/ProcessedIncomingRealtimeMessage'
+import { ConnectionType } from '@proton/docs-shared/Realtime/WebsocketConnectionInterface'
 import type { EncryptMessage } from '../../UseCase/EncryptMessage'
 import type { AnonymousEncryptionMetadata, EncryptionMetadata } from '../../Types/EncryptionMetadata'
 import type { LoggerInterface } from '@proton/shared/lib/logs'
 import { WebsocketConnection } from '../../Realtime/WebsocketConnection'
 import type { FetchRealtimeToken } from '../../UseCase/FetchRealtimeToken'
 import type { WebsocketServiceInterface } from './WebsocketServiceInterface'
-import metrics from '@proton/metrics'
+import metrics from '@proton/metrics/metricsInstance'
 import type {
   ServerMessageWithEvents,
   ServerMessageWithDocumentUpdates,
   ServerMessageWithMessageAcks,
-  ConnectionReadyPayload,
-} from '@proton/docs-proto'
-import {
-  CreateDocumentUpdate,
-  DocumentUpdate,
-  ClientMessage,
-  ServerMessage,
-  ServerMessageType,
-  EventTypeEnum,
-  EventType,
-  CreateClientEventMessage,
-  ClientEventVersion,
-  CreateDocumentUpdateMessage,
-  DocumentUpdateVersion,
-  ConnectionCloseReason,
-  DecryptedValue,
-} from '@proton/docs-proto'
+} from '@proton/docs-proto/Generated/ServerMessage'
+import type { ConnectionReadyPayload } from '@proton/docs-proto/Payload/ConnectionReadyPayload'
+import { ConnectionCloseReason } from '@proton/docs-proto/ConnectionCloseReason/ConnectionCloseReason'
+import { DecryptedValue } from '@proton/docs-proto/DecryptedValue'
+import { EventType } from '@proton/docs-proto/Event/EventType'
+import { EventTypeEnum } from '@proton/docs-proto/Event/EventTypeEnum'
+import { CreateClientEventMessage } from '@proton/docs-proto/Factory/CreateClientEventMessage'
+import { CreateDocumentUpdate } from '@proton/docs-proto/Factory/CreateDocumentUpdate'
+import { CreateDocumentUpdateMessage } from '@proton/docs-proto/Factory/CreateDocumentUpdateMessage'
+import { ClientMessage } from '@proton/docs-proto/Generated/ClientMessage'
+import { DocumentUpdate } from '@proton/docs-proto/Generated/DocumentUpdate'
+import { ServerMessage } from '@proton/docs-proto/Generated/ServerMessage'
+import { ServerMessageType } from '@proton/docs-proto/ServerMessage/ServerMessageType'
+import { ClientEventVersion, DocumentUpdateVersion } from '@proton/docs-proto/Version'
 import { c } from 'ttag'
 import type { DecryptMessage } from '../../UseCase/DecryptMessage'
 import type { DocumentConnectionRecord } from './DocumentConnectionRecord'
@@ -77,7 +67,7 @@ import {
 } from '../../utils/document-update-chunking'
 import type { UnleashClient } from '@proton/unleash/UnleashClient'
 import type { DocSizeTracker } from '../../SizeTracker/SizeTracker'
-import { tmpConvertOldDocTypeToNew } from '../../utils/convert-doc-type'
+import { tmpConvertOldDocTypeToNew } from '@proton/docs-shared/Doc/convert-doc-type'
 import { traceError } from '@proton/shared/lib/helpers/sentry'
 import { seconds_to_ms } from '../../Util/time-utils'
 import type { APP_NAMES } from '@proton/shared/lib/constants'

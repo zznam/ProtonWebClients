@@ -8,7 +8,12 @@ import { addDevEntry, getConfig } from '@proton/pack/webpack.config'
 import appConfig from './appConfig'
 
 const isStandaloneSheet = process.env.STANDALONE_SHEET === 'true'
-if (!isStandaloneSheet) {
+const isStandaloneDoc = process.env.STANDALONE_DOC === 'true'
+if (isStandaloneSheet && isStandaloneDoc) {
+  throw new Error('STANDALONE_SHEET and STANDALONE_DOC cannot both be enabled')
+}
+const isStandaloneEditor = isStandaloneSheet || isStandaloneDoc
+if (!isStandaloneEditor) {
   dotenvConfig({ path: path.join(__dirname, '.env') })
 }
 
@@ -16,8 +21,19 @@ const result = (opts: WebpackEnvArguments): Configuration => {
   const webpackOptions = getWebpackOptions(opts, { appConfig })
   const config = getConfig(webpackOptions)
 
-  if (isStandaloneSheet) {
-    config.entry = { index: [path.resolve(__dirname, 'src/standalone-sheet/index.tsx')] }
+  // Keep dependencies such as Jotai on the editor's React runtime, including JSX and renderer subpaths.
+  config.resolve = {
+    ...config.resolve,
+    alias: {
+      ...config.resolve?.alias,
+      react: path.dirname(require.resolve('react/package.json', { paths: [__dirname] })),
+      'react-dom': path.dirname(require.resolve('react-dom/package.json', { paths: [__dirname] })),
+    },
+  }
+
+  if (isStandaloneEditor) {
+    const standaloneEntry = isStandaloneDoc ? 'standalone-doc' : 'standalone-sheet'
+    config.entry = { index: [path.resolve(__dirname, `src/${standaloneEntry}/index.tsx`)] }
     if (config.devServer) {
       config.devServer.host = '127.0.0.1'
       config.devServer.allowedHosts = ['localhost', '127.0.0.1']
@@ -33,10 +49,10 @@ const result = (opts: WebpackEnvArguments): Configuration => {
   }
   config.plugins?.push(
     new DefinePlugin({
-      'process.env.DOCS_SHEETS_KEY': JSON.stringify(isStandaloneSheet ? undefined : process.env.DOCS_SHEETS_KEY),
+      'process.env.DOCS_SHEETS_KEY': JSON.stringify(isStandaloneEditor ? undefined : process.env.DOCS_SHEETS_KEY),
     }),
   )
-  if (webpackOptions.appMode === 'standalone' && !isStandaloneSheet) {
+  if (webpackOptions.appMode === 'standalone' && !isStandaloneEditor) {
     addDevEntry(config)
   }
   // @ts-ignore

@@ -1,8 +1,8 @@
 import { c } from 'ttag';
 
-import { ToolbarButton } from '@proton/components';
-import { type NodeType, getDrivePerNodeType } from '@proton/drive';
-import { useLoading } from '@proton/hooks';
+import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton';
+import { type NodeType, getDrivePerNodeType } from '@proton/drive/sdk';
+import useLoading from '@proton/hooks/useLoading';
 import { IcTrash } from '@proton/icons/icons/IcTrash';
 
 import { noSelection } from '../../../legacy/components/sections/ToolbarButtons/utils';

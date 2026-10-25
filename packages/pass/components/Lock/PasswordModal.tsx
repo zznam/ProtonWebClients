@@ -8,14 +8,14 @@ import ModalTwo from '@proton/components/components/modalTwo/Modal';
 import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
 import ModalTwoFooter from '@proton/components/components/modalTwo/ModalFooter';
 import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import PasswordInputTwo from '@proton/components/components/v2/input/PasswordInput';
 
 import { usePasswordForm } from '../../hooks/auth/usePasswordForm';
 import type { AsyncModalState } from '../../hooks/useAsyncModalHandles';
 import type { RequestForkOptions } from '../../lib/auth/fork';
 import type { ReauthActionPayload } from '../../lib/auth/reauth';
-import type { Maybe, MaybePromise } from '../../types';
+import type { Maybe, MaybePromise } from '../../types/utils';
 import type { XorObfuscation } from '../../utils/obfuscate/xor';
 import { Card } from '../Layout/Card/Card';
 import type { OnReauthFn } from './PasswordUnlockProvider';

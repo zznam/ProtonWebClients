@@ -6,6 +6,7 @@ import { c } from 'ttag';
 import { useConfig } from '@proton/app-context/useConfig';
 import { Button } from '@proton/atoms/Button/Button';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
+import { useHotkeys } from '@proton/hooks/useHotkeys';
 import { IcCrossBig } from '@proton/icons/icons/IcCrossBig';
 import {
     closeDrawerFromChildApp,
@@ -14,18 +15,17 @@ import {
     postMessageFromIframe,
 } from '@proton/shared/lib/drawer/helpers';
 import { DRAWER_EVENTS } from '@proton/shared/lib/drawer/interfaces';
-import { KeyboardKey } from '@proton/shared/lib/interfaces';
+import { KeyboardKey } from '@proton/shared/lib/interfaces/Hotkeys';
 import clsx from '@proton/utils/clsx';
 
 import Header from '../../components/header/Header';
 import useDrawer from '../../hooks/drawer/useDrawer';
 import useEventManager from '../../hooks/useEventManager';
-import { useHotkeys } from '../../hooks/useHotkeys';
 import { useTheme } from '../themes/ThemeProvider';
 
 import './DrawerAppHeader.scss';
 
-export interface PrivateIframeHeaderProps {
+interface PrivateIframeHeaderProps {
     title?: ReactNode;
     onCloseDropdown?: () => void;
     isUsingTabs?: boolean;

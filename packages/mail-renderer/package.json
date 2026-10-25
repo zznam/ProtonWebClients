@@ -14,6 +14,7 @@
         "./helpers/getIframeHtml": "./src/helpers/getIframeHtml.ts",
         "./helpers/transforms/transformAnchors": "./src/helpers/transforms/transformAnchors.ts",
         "./helpers/transforms/transformBase": "./src/helpers/transforms/transformBase.ts",
+        "./helpers/transforms/transformEmbeddedMarkers": "./src/helpers/transforms/transformEmbeddedMarkers.ts",
         "./helpers/transforms/transformEscape": "./src/helpers/transforms/transformEscape.ts",
         "./helpers/transforms/transformLinks": "./src/helpers/transforms/transformLinks.ts",
         "./helpers/transforms/transformRawLinks": "./src/helpers/transforms/transformRawLinks.ts",
@@ -28,8 +29,8 @@
         "./hooks/useObserveIframeHeight": "./src/hooks/useObserveIframeHeight.ts"
     },
     "scripts": {
-        "check-types": "tsc --checkers 1",
-        "lint": "eslint --quiet",
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet",
         "test": "jest --logHeapUsage --forceExit",
         "test:ci": "jest --runInBand --ci --forceExit --logHeapUsage",
         "test:coverage": "jest --collectCoverage",
@@ -47,17 +48,24 @@
         "@proton/types": "workspace:^",
         "@proton/unleash": "workspace:^",
         "@proton/utils": "workspace:^",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "ttag": "^1.8.12"
+        "react": "catalog:",
+        "react-dom": "catalog:",
+        "ttag": "catalog:"
     },
     "devDependencies": {
         "@proton/jest-swc-preset": "workspace:^",
-        "@testing-library/jest-dom": "^6.9.1",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.11.0",
-        "jest": "^30.5.2",
-        "jest-environment-jsdom": "^30.5.2",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
+        "@proton/oxlint-config": "workspace:^",
+        "@testing-library/jest-dom": "catalog:",
+        "@types/jest": "catalog:",
+        "@types/node": "catalog:",
+        "@types/react": "catalog:",
+        "@types/react-dom": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "jest": "catalog:",
+        "jest-environment-jsdom": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:"
     }
 }

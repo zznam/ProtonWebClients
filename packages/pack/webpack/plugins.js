@@ -15,7 +15,6 @@ const PostCssLogicalWebpackPlugin = require('./postcss-logical-webpack-plugin').
 const WriteWebpackPlugin = require('./write-webpack-plugin').default;
 const HtmlEditWebpackPlugin = require('./html-edit-webpack-plugin').default;
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const SriWebpackPlugin = require('./sri-webpack-plugin').default;
 const { WebpackInvalidation: WebpackInvalidationPlugin } = require('./benchmark-apps-build/WebpackInvalidation');
 
 const defaultFaviconConfig = require('./favicon.config');
@@ -24,6 +23,9 @@ const { getIndexChunks } = require('../webpack/entries');
 
 const { CI, CI_SERVER_HOST } = process.env;
 const isProtonCI = Boolean(CI) && (CI_SERVER_HOST || '').includes('protontech.ch');
+const hasEslintConfig = ['js', 'mjs', 'cjs', 'ts', 'mts', 'cts'].some((extension) =>
+    fs.existsSync(path.resolve(`eslint.config.${extension}`))
+);
 
 module.exports = ({
     isProduction,
@@ -46,7 +48,8 @@ module.exports = ({
     let WebpackCollectMetricsPlugin;
 
     if (isProtonCI) {
-        WebpackCollectMetricsPlugin = require('@proton/collect-metrics').WebpackCollectMetricsPlugin;
+        WebpackCollectMetricsPlugin =
+            require('@proton/collect-metrics/helpers/webpack-collect-metrics-plugin').WebpackCollectMetricsPlugin;
     }
 
     return [
@@ -57,6 +60,7 @@ module.exports = ({
                       overlay: false,
                   }),
                   (warningLogs || errorLogs) &&
+                      hasEslintConfig &&
                       new ESLintPlugin({
                           extensions: ['js', 'ts', 'tsx'],
                           eslintPath: require.resolve('eslint'),
@@ -211,8 +215,6 @@ module.exports = ({
                   }),
               ]
             : []),
-
-        new SriWebpackPlugin(),
 
         new HtmlEditWebpackPlugin((tag) => {
             // Remove the favicon.ico tag that the FaviconsWebpackPlugin generates because:

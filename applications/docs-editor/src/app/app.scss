@@ -5,11 +5,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-	--primary-rgb: 109 74 255;
-	--docs-primary-accent: #0284c7;
-}
-
+// Sheets and the host shell still rely on these; Docs keeps its own copy in Containers/Docs/docs.scss.
 *:focus,
 *:focus-visible {
 	outline-color: var(--primary-major-3);
@@ -42,21 +38,13 @@ body {
 }
 
 @media print {
-	// prevent cursors and names/email to be printed
-	.Lexical__cursorsContainer {
-		display: none;
-	}
-
+	// Kept for Sheets and the host shell, like the focus outline colour above.
 	::-webkit-scrollbar {
 		display: none !important;
 	}
 
 	* {
 		scrollbar-width: none !important;
-	}
-
-	.Lexical__table {
-		min-inline-size: 0;
 	}
 }
 

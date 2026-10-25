@@ -4,7 +4,7 @@ import { getLoginHref, getSwitchHref, handleSwitchAccountFork } from '@proton/ac
 import { selectSessionRecoveryData } from '@proton/account/recovery/sessionRecoverySelectors';
 import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor';
 import { useSelector } from '@proton/redux-shared-store/sharedProvider';
-import type { ForkType } from '@proton/shared/lib/authentication/fork';
+import type { ForkType } from '@proton/shared/lib/authentication/fork/constants';
 import type { ExtraSessionForkData } from '@proton/shared/lib/authentication/interface';
 import { APPS, type APP_NAMES } from '@proton/shared/lib/constants';
 import {
@@ -137,10 +137,9 @@ const UserDropdown = ({
         }
     }, [isOpen]);
 
-    const inboxDesktopMultiAccountSupport = useFlag('InboxDesktopMultiAccountSupport');
     const showSwitchAccountButton =
         isElectronApp && authentication.mode === 'sso'
-            ? inboxDesktopMultiAccountSupport && hasInboxDesktopFeature('MultiAccount')
+            ? hasInboxDesktopFeature('MultiAccount')
             : authentication.mode === 'sso';
 
     const value: UserDropdownValue = {

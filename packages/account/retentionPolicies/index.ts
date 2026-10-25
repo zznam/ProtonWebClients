@@ -1,14 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { createAsyncModelThunk, handleAsyncModel, previousSelector } from '@proton/redux-utilities/creator';
 import { getInitialModelState } from '@proton/redux-utilities/initialModelState';
 import type { ModelState } from '@proton/redux-utilities/initialModelState/interface';
 import { getRetentionRules } from '@proton/shared/lib/api/retentionPolicies';
 import updateCollection from '@proton/shared/lib/helpers/updateCollection';
-import type { Organization, UserModel } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 import type { RetentionRule } from '@proton/shared/lib/interfaces/RetentionRule';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { isAdminOrLoginAsAdmin } from '@proton/shared/lib/user/helpers';
 
 import { serverEvent } from '../eventLoop';

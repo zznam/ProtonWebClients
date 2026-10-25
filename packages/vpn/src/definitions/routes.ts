@@ -1,5 +1,6 @@
 import { c } from 'ttag';
 
+import { getCanShowSignInRestriction } from '@proton/account/signInRestriction/helpers';
 import { IcArrowDownLine } from '@proton/icons/icons/IcArrowDownLine';
 import { IcArrowDownToSquare } from '@proton/icons/icons/IcArrowDownToSquare';
 import { IcBrandProtonVpnFilled } from '@proton/icons/icons/IcBrandProtonVpnFilled';
@@ -20,17 +21,17 @@ import type { NavContext } from '@proton/nav/types/models';
 import type { NavDefinition, NavItemDefinition, NavItemResolved, NavResolved } from '@proton/nav/types/nav';
 import type { NavDefinitionIds, NavSectionIds as SectionIds } from '@proton/nav/types/navIds';
 import type { NavSectionResolved } from '@proton/nav/types/section';
-import type { EntitlementChecks } from '@proton/payments/core/entitlements/resolver';
-import { getIsB2BAudienceFromPlan, planSupportsSSO, upsellPlanSSO } from '@proton/payments/core/plan/helpers';
+import type { EntitlementChecksForOrgAndUser } from '@proton/payments/core/entitlements/interface';
+import { getHasSsoUpsell, getIsB2BAudienceFromPlan, getIsSsoAvailable } from '@proton/payments/core/plan/helpers';
 import {
     type MaybeFreeSubscription,
     getHasExternalMemberCapableB2BPlan,
     getHasMemberCapablePlan,
     getHasVpnB2BPlan,
-    getHasVpnGatewaysUpsellPlan,
     hasCancellablePlan,
     isCancellableOnlyViaSupport,
 } from '@proton/payments/core/subscription/helpers';
+import type { Subscription } from '@proton/payments/core/subscription/interface';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import {
     APPS,
@@ -43,26 +44,29 @@ import {
     VPN_APP_NAME,
 } from '@proton/shared/lib/constants';
 import { hasOrganizationSetup, hasOrganizationSetupWithKeys } from '@proton/shared/lib/helpers/organization';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
 import type { OrgPermissions } from '@proton/shared/lib/interfaces/UserPermission';
 import {
     getIsBYOEAccount,
     getIsExternalAccount,
     getIsGlobalSSOAccount,
     getIsSSOVPNOnlyAccount,
-} from '@proton/shared/lib/keys';
+} from '@proton/shared/lib/keys/accountType';
 import { getOrganizationDenomination } from '@proton/shared/lib/organization/helper';
 import { isSubscriptionRenewEnabled } from '@proton/shared/lib/payments/subscription/helpers/renew';
-import type { FeatureFlag } from '@proton/unleash/UnleashFeatureFlags';
+import type { FeatureFlag } from '@proton/unleash/Flags';
 
 type PropContext = {
     isDataRecoveryAvailable: boolean;
     isSessionRecoveryAvailable: boolean;
     appName: APP_NAMES;
+    addresses?: Address[];
 };
 
 type VpnNavContext = {
     subscription: MaybeFreeSubscription;
-    entitlements: EntitlementChecks;
+    allSubscriptions: Subscription[];
+    entitlements: EntitlementChecksForOrgAndUser;
     notifications?: Record<NavItemDefinition<NavContext>['id'], any>;
     canHaveOrganization: boolean;
     hasActiveOrganizationKey: boolean;
@@ -80,7 +84,7 @@ const routesDefinition = {
         {
             id: 'organization',
             label: () => c('Title').t`Organization`,
-            isVisible: ({ context }) => context.entitlements.orgIsBusiness && context.entitlements.orgHasVpn,
+            isVisible: ({ context }) => context.entitlements.isVpnB2B,
             children: [
                 {
                     id: 'organization.home',
@@ -250,8 +254,7 @@ const routesDefinition = {
                             to: '/gateways',
                             isVisible: ({ context }) =>
                                 context.permissions['account.gateway.read'] &&
-                                (context.entitlements.orgHasMaxDedicatedIps ||
-                                    getHasVpnGatewaysUpsellPlan(context.subscription)),
+                                context.entitlements.hasDedicatedIpsOrIsVpnB2B,
                             sections: [{ id: 'organization.vpn.gateways.servers', to: 'servers' }],
                         },
                         {
@@ -260,7 +263,7 @@ const routesDefinition = {
                             to: '/shared-servers',
                             isVisible: ({ context }) =>
                                 context.permissions['account.shared_server.read'] &&
-                                context.entitlements.orgHasVpnLocationFilter,
+                                context.entitlements.hasVpnLocationFilter,
                             sections: [{ id: 'organization.vpn.shared-servers.servers', to: 'servers' }],
                         },
                         {
@@ -277,7 +280,7 @@ const routesDefinition = {
                             to: '/gateway-monitor',
                             isVisible: ({ context }) =>
                                 context.permissions['account.activity_log.read'] &&
-                                context.entitlements.orgHasVpnActivityMonitor &&
+                                context.entitlements.hasVpnActivityMonitor &&
                                 context.hasOrganizationAccess,
                             sections: [
                                 {
@@ -330,8 +333,12 @@ const routesDefinition = {
                     isVisible: ({ context }) =>
                         !!(
                             context.permissions['account.sso_config.read'] &&
-                            (planSupportsSSO(context.organization?.PlanName, !!context.flags?.SsoForPbs) ||
-                                upsellPlanSSO(context.organization?.PlanName)) &&
+                            (getIsSsoAvailable({
+                                hasSso: context.entitlements.hasSso,
+                                subscriptions: context.allSubscriptions,
+                                isSsoForPbsEnabled: !!context.flags?.SsoForPbs,
+                            }) ||
+                                getHasSsoUpsell(context.allSubscriptions)) &&
                             (context.hasActiveOrganization || context.hasActiveOrganizationKey)
                         ),
                 },
@@ -436,6 +443,17 @@ const routesDefinition = {
                             text: DARK_WEB_MONITORING_NAME,
                             to: 'breaches',
                             isVisible: ({ context }) => !getIsSSOVPNOnlyAccount(context.user),
+                        },
+                        {
+                            id: 'my-account.security-and-privacy.sign-in-protection',
+                            text: () => c('Title').t`Sign-in protection`,
+                            to: 'sign-in-protection',
+                            isVisible: ({ context }) =>
+                                !!context.flags.ShowSignInRestrictionToggle &&
+                                getCanShowSignInRestriction({
+                                    user: context.user,
+                                    addresses: context.addresses,
+                                }),
                         },
                         {
                             id: 'my-account.security-and-privacy.devices',
@@ -570,7 +588,8 @@ type Args = {
     organization?: NavContext['organization'];
     notifications?: Record<NavItemDefinition<NavContext>['id'], any>;
     subscription: MaybeFreeSubscription;
-    entitlements: EntitlementChecks;
+    allSubscriptions: Subscription[];
+    entitlements: EntitlementChecksForOrgAndUser;
     context: PropContext;
     flags?: Partial<Record<FeatureFlag, boolean>>;
     permissions: OrgPermissions;
@@ -581,6 +600,7 @@ export const resolveNavigation = ({
     notifications,
     user,
     subscription,
+    allSubscriptions,
     entitlements,
     organization,
     flags,
@@ -606,6 +626,7 @@ export const resolveNavigation = ({
         context: {
             user,
             subscription,
+            allSubscriptions,
             entitlements,
             organization,
             notifications,

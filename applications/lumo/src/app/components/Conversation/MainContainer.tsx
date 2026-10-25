@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { useModalStateObject } from '@proton/components';
+import { useModalStateObject } from '@proton/components/components/modalTwo/useModalState';
 
 import PaperTrailPanel from '../../features/aiPaperTrail/PaperTrailPanel';
 import ApertusAnnouncementPanel from '../../features/notification/ApertusAnnouncementPanel';
@@ -127,7 +127,6 @@ const MainContainer = ({ isProcessingAttachment, initialQuery, prefillQuery }: M
                                 onOpenFilePreview={handleOpenFilePreview}
                                 canShowLegalDisclaimer={isGuest && isSmallScreen}
                                 canShowLumoUpsellToggle={true}
-                                canDisplayArtifactSpotlight={!shouldShowApertusAnnouncement}
                                 initialQuery={promptSuggestion || initialQuery}
                                 prefillQuery={prefillQuery}
                                 optionalElementBelowComposer={

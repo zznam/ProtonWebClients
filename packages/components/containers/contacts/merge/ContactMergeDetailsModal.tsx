@@ -8,7 +8,7 @@ import { Button } from '@proton/atoms/Button/Button';
 import { useContact } from '@proton/mail/store/contacts/contactHooks';
 import { useContactGroups } from '@proton/mail/store/labels/hooks';
 import { toMap } from '@proton/shared/lib/helpers/object';
-import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts';
+import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts/Contact';
 import noop from '@proton/utils/noop';
 
 import Loader from '../../../components/loader/Loader';
@@ -21,7 +21,7 @@ import useContactList from '../hooks/useContactList';
 import useVCardContact from '../hooks/useVCardContact';
 import ContactView from '../view/ContactView';
 
-export interface ContactMergeDetailsModalProps {
+interface ContactMergeDetailsModalProps {
     contactID: string;
 }
 

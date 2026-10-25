@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react';
 
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import observeApiError from '@proton/metrics/observeApiError';
 import { checkReferrer } from '@proton/shared/lib/api/core/referrals';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { HTTP_STATUS_CODE } from '@proton/shared/lib/constants';
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors';
-import type { Api, ReferralData } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { ReferralData } from '@proton/shared/lib/interfaces/referral';
 
 export class InvalidReferrerError extends Error {
     name = 'InvalidReferrerError';

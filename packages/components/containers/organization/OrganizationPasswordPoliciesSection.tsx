@@ -15,20 +15,21 @@ import '@proton/shared/lib/api/passwordPolicies';
 import { BRAND_NAME, MIN_PASSWORD_LENGTH } from '@proton/shared/lib/constants';
 import { omit } from '@proton/shared/lib/helpers/object';
 import { getBlogURL } from '@proton/shared/lib/helpers/url';
+import type { OrganizationExtended } from '@proton/shared/lib/interfaces/Organization';
 import {
-    type OrganizationExtended,
     type PasswordPoliciesState,
     type PasswordPolicyName,
     type PasswordPolicySetting,
     type PasswordPolicySettings,
     PasswordPolicyState,
-} from '@proton/shared/lib/interfaces';
+} from '@proton/shared/lib/interfaces/PasswordPolicy';
 import noop from '@proton/utils/noop';
 
 import RadioGroup from '../../components/input/RadioGroup';
 import Info from '../../components/link/Info';
-import { PermissionBanner, PermissionTooltip } from '../../components/orgPermissions/index';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import PermissionBanner from '../../components/orgPermissions/PermissionBanner';
+import PermissionTooltip from '../../components/orgPermissions/PermissionTooltip';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import getBoldFormattedText from '../../helpers/getBoldFormattedText';
 import SettingsLayout from '../account/SettingsLayout';
 import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
@@ -231,6 +232,7 @@ const OrganizationPasswordPoliciesSection = ({ organization }: OrganizationProto
     ];
 
     const handleSave = async () => {
+        const previousPolicies = organization?.Settings?.PasswordPolicies;
         const serializedPolicies = serializePolicyState({ ...defaultPolicyState, ...policyState });
 
         try {
@@ -242,10 +244,10 @@ const OrganizationPasswordPoliciesSection = ({ organization }: OrganizationProto
             createNotification({ text: c('Info').t`Preference saved` });
         } catch (error) {
             setPolicyState(policyState);
-            // Revert change on 403 cancellation
+            // Revert optimistic update on failure
             dispatch(
                 organizationActions.updateOrganizationSettings({
-                    value: { PasswordPolicies: serializedPolicies },
+                    value: { PasswordPolicies: previousPolicies },
                 })
             );
         }

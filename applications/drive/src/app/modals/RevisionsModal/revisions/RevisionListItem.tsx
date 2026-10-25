@@ -3,8 +3,8 @@ import { useRef } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { TimeIntl } from '@proton/components';
-import type { Revision } from '@proton/drive';
+import TimeIntl from '@proton/components/components/time/TimeIntl';
+import type { Revision } from '@proton/drive/sdk';
 import { IcThreeDotsVertical } from '@proton/icons/icons/IcThreeDotsVertical';
 
 import { useContextMenuControls } from '../../../legacy/components/FileBrowser';

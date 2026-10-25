@@ -1,14 +1,14 @@
 import { createContext, useContext, useMemo, useRef } from 'react';
 
 import { useApi } from '@proton/app-context/useApi';
-import { useEventManager } from '@proton/components';
-import metrics from '@proton/metrics';
+import useEventManager from '@proton/components/hooks/useEventManager';
 import { eventLoopTimingTracker } from '@proton/metrics/eventLoopMetrics';
+import metrics from '@proton/metrics/metricsInstance';
 import { queryLatestVolumeEvent, queryVolumeEvents } from '@proton/shared/lib/api/drive/volume';
 import type { EventManager } from '@proton/shared/lib/eventManager/eventManager';
 import createEventManager from '@proton/shared/lib/eventManager/eventManager';
 import { captureMessage } from '@proton/shared/lib/helpers/sentry';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import type { DriveEventsResult } from '@proton/shared/lib/interfaces/drive/events';
 import generateUID from '@proton/utils/generateUID';
 
@@ -16,7 +16,7 @@ import { isIgnoredErrorForReporting, logError } from '../../utils/errorHandling'
 import { UserAvailabilityTypes } from '../../utils/metrics/types/userSuccessMetricsTypes';
 import { userSuccessMetrics } from '../../utils/metrics/userSuccessMetrics';
 import { driveEventsResultToDriveEvents } from '../_api/transformers';
-import type { VolumeTypeForEvents } from '../_volumes';
+import type { VolumeTypeForEvents } from '../_volumes/interface';
 import { EventsMetrics, countEventsPerType, getErrorCategory } from './driveEventsMetrics';
 import type { DriveCoreEvent, DriveEvent, EventHandler } from './interface';
 
@@ -36,7 +36,6 @@ const DRIVE_EVENT_MANAGER_FUNCTIONS_STUB = {
         startSubscription: () => {
             throw Error('Usage of uninitialized DriveEventManager!');
         },
-        pauseSubscription: () => {},
         unsubscribe: () => {},
     },
 
@@ -145,20 +144,6 @@ export function useDriveEventManagerProvider(api: Api, generalEventManager: Even
             await subscribeToVolume(volumeId, type);
         }
         eventManagers.current.get(volumeId)!.start();
-    };
-
-    /**
-     * Pauses event polling for the volume. Returns false if there's no event manager
-     * associated with the volumeId
-     */
-    const pauseVolumeSubscription = (volumeId: string): boolean => {
-        const volumeSubscription = eventManagers.current.get(volumeId);
-        if (volumeSubscription) {
-            volumeSubscription.stop();
-            return true;
-        }
-
-        return false;
     };
 
     /**
@@ -281,7 +266,6 @@ export function useDriveEventManagerProvider(api: Api, generalEventManager: Even
 
         volumes: {
             startSubscription: startVolumeSubscription,
-            pauseSubscription: pauseVolumeSubscription,
             unsubscribe: unsubscribeFromVolume,
         },
 

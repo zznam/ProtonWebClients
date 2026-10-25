@@ -1,6 +1,10 @@
+import { IcArchiveBox } from '@proton/icons/icons/IcArchiveBox';
+import { IcEnvelopeOpen } from '@proton/icons/icons/IcEnvelopeOpen';
+import { IcTrash } from '@proton/icons/icons/IcTrash';
 import { FILTER_STATUS, MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import type { Folder, UserModel } from '@proton/shared/lib/interfaces';
+import type { Folder } from '@proton/shared/lib/interfaces/Folder';
 import type { NewsletterSubscription } from '@proton/shared/lib/interfaces/NewsletterSubscription';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import type { Filter } from '@proton/sieve/filterModel';
 
 import {
@@ -288,17 +292,17 @@ describe('Newsletter subscriptions helpers', () => {
                 movingToTrash: false,
                 menuItems: [
                     {
-                        icon: 'envelope-open',
+                        icon: IcEnvelopeOpen,
                         label: 'Stop marking as read',
                         filter: 'MarkAsRead',
                     },
                     {
-                        icon: 'archive-box',
+                        icon: IcArchiveBox,
                         label: 'Move to Archive',
                         filter: 'MoveToArchive',
                     },
                     {
-                        icon: 'trash',
+                        icon: IcTrash,
                         label: 'Move to Trash',
                         filter: 'MoveToTrash',
                     },
@@ -322,17 +326,17 @@ describe('Newsletter subscriptions helpers', () => {
                 movingToTrash: false,
                 menuItems: [
                     {
-                        icon: 'envelope-open',
+                        icon: IcEnvelopeOpen,
                         label: 'Mark as read',
                         filter: 'MarkAsRead',
                     },
                     {
-                        icon: 'archive-box',
+                        icon: IcArchiveBox,
                         label: 'Stop moving to Archive',
                         filter: 'MoveToArchive',
                     },
                     {
-                        icon: 'trash',
+                        icon: IcTrash,
                         label: 'Move to Trash',
                         filter: 'MoveToTrash',
                     },
@@ -356,17 +360,17 @@ describe('Newsletter subscriptions helpers', () => {
                 movingToTrash: true,
                 menuItems: [
                     {
-                        icon: 'envelope-open',
+                        icon: IcEnvelopeOpen,
                         label: 'Mark as read',
                         filter: 'MarkAsRead',
                     },
                     {
-                        icon: 'archive-box',
+                        icon: IcArchiveBox,
                         label: 'Move to Archive',
                         filter: 'MoveToArchive',
                     },
                     {
-                        icon: 'trash',
+                        icon: IcTrash,
                         label: 'Stop moving to Trash',
                         filter: 'MoveToTrash',
                     },

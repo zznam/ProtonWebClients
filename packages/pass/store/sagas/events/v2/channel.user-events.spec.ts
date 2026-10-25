@@ -3,11 +3,13 @@ import { runSaga } from 'redux-saga';
 import * as processor from '../../../../lib/sync/v2/user-events.processor';
 import * as requests from '../../../../lib/sync/v2/user-events.requests';
 import * as sync from '../../../../lib/sync/v2/user-events.sync';
-import type { Api, MaybeNull, SyncEventListOutput } from '../../../../types';
-import { setUserEventID } from '../../../actions';
+import type { Api } from '../../../../types/api/api';
+import type { SyncEventListOutput } from '../../../../types/api/pass';
+import type { MaybeNull } from '../../../../types/utils';
+import { sagaReturn, sagaSetup } from '../../../../utils/tests/saga';
 import { forcePollV2 } from '../../../actions/creators/polling';
+import { setUserEventID } from '../../../actions/creators/user';
 import type { RootSagaOptions } from '../../../types';
-import { sagaReturn, sagaSetup } from '../../testing';
 import { userEventsChannel } from './channel.user-events';
 
 jest.mock('@proton/pass/lib/sync/v2/user-events.requests', () => ({

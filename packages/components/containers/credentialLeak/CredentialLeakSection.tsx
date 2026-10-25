@@ -7,7 +7,7 @@ import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Href } from '@proton/atoms/Href/Href';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcExclamationCircleFilled } from '@proton/icons/icons/IcExclamationCircleFilled';
 import { getBreaches, updateBreachEmailNotificationsState, updateBreachState } from '@proton/shared/lib/api/breaches';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
@@ -23,7 +23,7 @@ import {
     DARK_WEB_MONITORING_ELIGIBILITY_STATE,
     DARK_WEB_MONITORING_EMAILS_STATE,
     DARK_WEB_MONITORING_STATE,
-} from '@proton/shared/lib/interfaces';
+} from '@proton/shared/lib/interfaces/UserSettings';
 import freeUserBreachImg from '@proton/styles/assets/img/breach-alert/img-breaches-found.svg';
 import freeUserNoBreachImg from '@proton/styles/assets/img/breach-alert/img-no-breaches-found-inactive.svg';
 import { useFlag } from '@proton/unleash/useFlag';

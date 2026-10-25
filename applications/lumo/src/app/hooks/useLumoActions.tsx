@@ -1,9 +1,11 @@
 import { useRef } from 'react';
 
 import { useApi } from '@proton/app-context/useApi';
-import type { User } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
 import { buildArtifactActionLlmPrompt } from '../components/Conversation/artifact/artifactActionPrompts';
+import { messageHasCreateArtifactToolCall } from '../components/Conversation/artifact/artifactGenerationState';
+import { markArtifactTelemetryLiveMessage } from '../components/Conversation/artifact/artifactVersionTelemetry';
 import { CREATE_ARTIFACT_TOOL_NAME } from '../components/Conversation/artifact/createArtifactTool';
 import type { ArtifactType } from '../components/Conversation/artifact/parseArtifacts';
 import {
@@ -13,11 +15,13 @@ import {
     sendMessage,
 } from '../components/Conversation/helper';
 import type { AesGcmCryptoKey } from '../crypto/types';
+import { formatQuestionAnswersForModel } from '../features/client-tools/askUserQuestionsTool/askUserQuestionsTool';
 import { useLumoPlan } from '../hooks/useLumoPlan';
 import { addContextToMessages, fillAttachmentData } from '../llm/attachments';
 import { addToolCallBlock, addToolResultBlock } from '../messageHelpers';
 import { buildLinearChain } from '../messageTree';
 import { useGhostChat } from '../providers/GhostChatProvider';
+import { useIsGuest } from '../providers/IsGuestProvider';
 import { useModelTier } from '../providers/ModelTierProvider';
 import { useLumoDispatch, useLumoSelector } from '../redux/hooks';
 import {
@@ -41,6 +45,7 @@ import type {
     Attachment,
     ErrorContext,
     ImageGenerationOptions,
+    QuestionAnswer,
     RetryStrategy,
 } from '../types';
 import {
@@ -64,6 +69,7 @@ import { useConversationState } from './useConversationState';
 import { useLumoFlags } from './useLumoFlags';
 import { usePersonalization } from './usePersonalization';
 import usePreferredSiblings from './usePreferredSiblings';
+import { useMessagesLimitStatus } from './useResourceLimitStatus';
 
 // Constants
 const OPERATION_MESSAGES = {
@@ -87,10 +93,10 @@ export type HandleSendMessage = (
     newMessage: string,
     isWebSearchButtonToggled: boolean,
     imageOptions?: ImageGenerationOptions,
-    artifactModeActive?: boolean,
     isFromQueryParam?: boolean,
     artifactRevisionTargetId?: string
 ) => Promise<void>;
+export type HandleSendQuestionAnswers = (answers: QuestionAnswer[], isWebSearchButtonToggled: boolean) => Promise<void>;
 export type HandleSendArtifactAction = (meta: ArtifactActionMeta, isWebSearchButtonToggled: boolean) => Promise<void>;
 export type HandleRegenerateMessage = (
     message: Message,
@@ -124,12 +130,15 @@ export const useLumoActions = ({
     const { preferredSiblings, preferSibling, getSiblingInfo } = usePreferredSiblings(messageMap);
     const { hasConversationErrors, clearErrors } = useConversationErrors(conversationId);
     const { isBlocked: isChatLimitBlocked, ensureTierError } = useChatLimitGate();
+    const { isAtLimit: isMessageLimitReached } = useMessagesLimitStatus(conversationId);
     const {
         smoothRendering: ffSmoothRendering,
         externalTools: ffExternalTools,
         imageTools: ffImageTools,
         memory: ffMemory,
         artifactsView: ffArtifactsView,
+        artifactSlides: ffArtifactSlides,
+        askUserQuestionsTool: ffAskUserQuestionsTool,
         visualizationInstructions: ffVisualizationInstructions,
     } = useLumoFlags();
     const contextFilters = useLumoSelector(selectContextFilters);
@@ -143,6 +152,7 @@ export const useLumoActions = ({
 
     // Custom hooks
     const { isGhostChatMode: isGhostMode } = useGhostChat();
+    const isGuest = useIsGuest();
     const { hasLumoPlus } = useLumoPlan();
     const { isThinkingEnabled, modelTier } = useModelTier();
     const { ensureConversationAndSpace } = useConversationState({
@@ -230,11 +240,12 @@ export const useLumoActions = ({
             newMessageContent,
             isWebSearchButtonToggled,
             imageOptions,
-            artifactModeActive,
             artifactAction,
+            questionAnswers,
             artifactRevisionTargetId,
             isFromQueryParam,
         } = actionParams;
+
         if (!newMessageContent?.trim() && provisionalAttachments.length === 0) return;
 
         const enableExternalTools = ffExternalTools && isWebSearchButtonToggled;
@@ -295,7 +306,7 @@ export const useLumoActions = ({
                     content: newMessageContent ?? '',
                     attachments: filledAttachments,
                     ...(artifactAction && { artifactAction }),
-                    ...(artifactModeActive && { artifactCreateModeActive: true }),
+                    ...(questionAnswers && { questionAnswers }),
                     ...(artifactRevisionTargetId && { artifactRevisionTargetId }),
                 },
                 conversationContext: {
@@ -306,6 +317,7 @@ export const useLumoActions = ({
                     contextFilters,
                 },
                 uiContext: {
+                    enableAskUserQuestionsTool: ffAskUserQuestionsTool,
                     enableExternalTools,
                     enableImageTools,
                     enableReasoning: isThinkingEnabled,
@@ -314,15 +326,17 @@ export const useLumoActions = ({
                     enableSmoothing,
                     isGhostMode,
                     imageAspectRatio: imageOptions?.aspectRatio,
-                    canvasModeActive: artifactModeActive ?? false,
+                    canvasModeActive: false,
                     isFromQueryParam,
                 },
                 settingsContext: {
                     personalization,
                     isMemoryFeatureEnabled: ffMemory,
                     isArtifactsViewFeatureEnabled: ffArtifactsView,
+                    isArtifactSlidesFeatureEnabled: ffArtifactSlides,
                     hasLumoPlus,
                     isVisualizationInstructionsFeatureEnabled: ffVisualizationInstructions,
+                    isGuestUser: isGuest,
                 },
             })
         );
@@ -400,6 +414,7 @@ export const useLumoActions = ({
                     allAttachments,
                 },
                 uiContext: {
+                    enableAskUserQuestionsTool: ffAskUserQuestionsTool,
                     // Pin the freshly created assistant message so the regenerated answer is the
                     // one displayed. Without this, the new assistant is added as a hidden sibling
                     // of the failed attempt and the retry does nothing.
@@ -415,7 +430,9 @@ export const useLumoActions = ({
                 settingsContext: {
                     personalization,
                     isArtifactsViewFeatureEnabled: ffArtifactsView,
+                    isArtifactSlidesFeatureEnabled: ffArtifactSlides,
                     isVisualizationInstructionsFeatureEnabled: ffVisualizationInstructions,
+                    isGuestUser: isGuest,
                 },
                 retryData: {
                     lastUserMessage,
@@ -469,6 +486,7 @@ export const useLumoActions = ({
                     contextFilters,
                 },
                 uiContext: {
+                    enableAskUserQuestionsTool: ffAskUserQuestionsTool,
                     isEdit: true,
                     editOriginalContent: originalMessage.content,
                     updateSibling: preferSibling,
@@ -483,7 +501,9 @@ export const useLumoActions = ({
                 settingsContext: {
                     personalization,
                     isArtifactsViewFeatureEnabled: ffArtifactsView,
+                    isArtifactSlidesFeatureEnabled: ffArtifactSlides,
                     isVisualizationInstructionsFeatureEnabled: ffVisualizationInstructions,
+                    isGuestUser: isGuest,
                 },
             })
         );
@@ -572,6 +592,7 @@ export const useLumoActions = ({
                     contextFilters,
                 },
                 uiContext: {
+                    enableAskUserQuestionsTool: ffAskUserQuestionsTool,
                     enableExternalTools,
                     enableImageTools,
                     enableReasoning: isThinkingEnabled,
@@ -583,7 +604,9 @@ export const useLumoActions = ({
                 settingsContext: {
                     personalization,
                     isArtifactsViewFeatureEnabled: ffArtifactsView,
+                    isArtifactSlidesFeatureEnabled: ffArtifactSlides,
                     isVisualizationInstructionsFeatureEnabled: ffVisualizationInstructions,
+                    isGuestUser: isGuest,
                 },
                 regenerateData: {
                     assistantMessageId,
@@ -600,6 +623,10 @@ export const useLumoActions = ({
         // Validate input parameters
         if (!validateActionParams(actionParams)) {
             console.warn(`Invalid parameters for action: ${actionType}`);
+            return;
+        }
+
+        if (isMessageLimitReached) {
             return;
         }
 
@@ -692,7 +719,6 @@ export const useLumoActions = ({
         messageContent: string,
         isWebSearchButtonToggled: boolean,
         imageOptions?: ImageGenerationOptions,
-        artifactModeActive?: boolean,
         isFromQueryParam?: boolean,
         artifactRevisionTargetId?: string
     ) => {
@@ -703,9 +729,18 @@ export const useLumoActions = ({
             newMessageContent: messageContent,
             isWebSearchButtonToggled,
             imageOptions,
-            artifactModeActive,
             isFromQueryParam,
             artifactRevisionTargetId,
+        });
+    };
+
+    const handleSendQuestionAnswers: HandleSendQuestionAnswers = async (questionAnswers, isWebSearchButtonToggled) => {
+        sendMessageSendEvent();
+        return handleMessageAction({
+            actionType: 'send',
+            newMessageContent: formatQuestionAnswersForModel(questionAnswers),
+            isWebSearchButtonToggled,
+            questionAnswers,
         });
     };
 
@@ -724,7 +759,8 @@ export const useLumoActions = ({
             newMessageContent: buildArtifactActionLlmPrompt(meta),
             isWebSearchButtonToggled,
             artifactAction: meta,
-            artifactRevisionTargetId: meta.artifactId,
+            // Explain only answers in chat — it doesn't revise the artifact.
+            artifactRevisionTargetId: meta.kind === 'explain' ? undefined : meta.artifactId,
         });
     };
 
@@ -774,7 +810,7 @@ export const useLumoActions = ({
         artifactTitle,
         newContent,
     }) => {
-        if (!ffArtifactsView) {
+        if (!ffArtifactsView || isMessageLimitReached) {
             return;
         }
 
@@ -808,6 +844,7 @@ export const useLumoActions = ({
             artifactManualEdit: { artifactId, artifactTitle, artifactType },
         };
 
+        markArtifactTelemetryLiveMessage(manualEdit.id);
         dispatch(addMessage(manualEdit));
         dispatch(pushMessageRequest({ id: manualEdit.id }));
     };
@@ -822,13 +859,16 @@ export const useLumoActions = ({
             return;
         }
 
-        sendMessageGenerationAbortedEvent();
+        const lastMessage = messageChain.at(-1);
+        sendMessageGenerationAbortedEvent({
+            artifactInFlight: lastMessage?.role === Role.Assistant && messageHasCreateArtifactToolCall(lastMessage),
+        });
         dispatch((d, getState) => cancelConversationGeneration(d, getState, conversationId));
     };
 
     // For retry actions initiated in ErrorCard component due to generation errors
     const handleRetryGeneration = async (error: ConversationError) => {
-        if (!error.actionParams || isOperationInProgress()) return;
+        if (!error.actionParams || isOperationInProgress() || isMessageLimitReached) return;
 
         if (error.actionParams.actionType === 'send') {
             // Reuse the existing retry action logic
@@ -893,6 +933,7 @@ export const useLumoActions = ({
         handleRegenerateMessage,
         handleSendMessage,
         handleSendArtifactAction,
+        handleSendQuestionAnswers,
         handleSaveManualArtifactEdit,
         handleEditMessage,
         handleAbort,

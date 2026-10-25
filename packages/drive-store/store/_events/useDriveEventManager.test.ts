@@ -5,11 +5,11 @@ import { renderHook } from '@testing-library/react-hooks';
 import { EVENT_TYPES } from '@proton/shared/lib/drive/constants';
 import type { EventManager } from '@proton/shared/lib/eventManager/eventManager';
 import createEventManager from '@proton/shared/lib/eventManager/eventManager';
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 import type { DriveEventsResult } from '@proton/shared/lib/interfaces/drive/events';
 
 import { driveEventsResultToDriveEvents } from '../_api/transformers';
-import { VolumeTypeForEvents } from '../_volumes';
+import { VolumeTypeForEvents } from '../_volumes/interface';
 import { useDriveEventManagerProvider } from './useDriveEventManager';
 
 const VOLUME_ID_1 = 'volumeId-1';

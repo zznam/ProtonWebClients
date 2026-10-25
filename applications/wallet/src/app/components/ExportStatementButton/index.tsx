@@ -10,16 +10,17 @@ import {
 } from '@proton/andromeda';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import type { ButtonProps } from '@proton/atoms/Button/Button';
-import { useModalState } from '@proton/components';
-import { useLoading } from '@proton/hooks/index';
+import useModalState from '@proton/components/components/modalTwo/useModalState';
+import useLoading from '@proton/hooks/useLoading';
 import { IcArrowDownLine } from '@proton/icons/icons/IcArrowDownLine';
 import { SECOND } from '@proton/shared/lib/constants';
 import walletDownloadDark from '@proton/styles/assets/img/wallet/wallet-download-dark.png';
 import walletDownload from '@proton/styles/assets/img/wallet/wallet-download.png';
 import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';
-import { useWalletAccountExchangeRate } from '@proton/wallet/store/hooks';
-import type { IWasmApiWalletData, WalletChainDataByWalletId } from '@proton/wallet/types';
+import { useWalletAccountExchangeRate } from '@proton/wallet/store/hooks/useWalletAccountExchangeRate';
+import type { WalletChainDataByWalletId } from '@proton/wallet/types/wallet';
+import type { IWasmApiWalletData } from '@proton/wallet/types/wasm';
 import { WalletThemeOption } from '@proton/wallet/utils/theme';
 
 import { Button, CoreButton, Modal, Select } from '../../atoms';

@@ -1,7 +1,8 @@
-import { ADDON_NAMES, PLANS } from '../constants';
+import { buildSubscription } from '../../testing/buildSubscription';
+import { ADDON_NAMES, ADDON_PREFIXES, PLANS } from '../constants';
 import type { PlanIDs } from '../interface';
 import type { SupportedAddons } from './addons';
-import { getSupportedAddons, supportsMemberAddon } from './addons';
+import { getSubscriptionSupportingAddon, getSupportedAddons, supportsAddonType, supportsMemberAddon } from './addons';
 
 describe('getSupportedAddons', () => {
     describe('B2C plans', () => {
@@ -232,6 +233,7 @@ describe('getSupportedAddons', () => {
                 [ADDON_NAMES.MEMBER_PASS_BUSINESS]: true,
                 [ADDON_NAMES.LUMO_PASS_BUSINESS]: true,
                 [ADDON_NAMES.MEET_PASS_BUSINESS]: true,
+                [ADDON_NAMES.MSP_PASS_BUSINESS]: true,
             };
             expect(result).toEqual(expected);
         });
@@ -379,6 +381,7 @@ describe('getSupportedAddons', () => {
                 PLANS.VPN_BUSINESS,
                 PLANS.PASS_PRO,
                 PLANS.PASS_BUSINESS,
+                PLANS.PASS_BASIC,
                 PLANS.LUMO_BUSINESS,
                 PLANS.VPN_PASS_BUNDLE_BUSINESS,
                 PLANS.MEET_BUSINESS,
@@ -396,5 +399,45 @@ describe('supportsMemberAddon', () => {
 
     it('should return false if the plan does not support member addon', () => {
         expect(supportsMemberAddon({ [PLANS.MAIL]: 1 })).toBe(false);
+    });
+});
+
+describe('supportsAddonType', () => {
+    it.each([PLANS.VPN_BUSINESS, PLANS.BUNDLE_PRO_2024, PLANS.BUNDLE_BIZ_2025, PLANS.VPN_PASS_BUNDLE_BUSINESS])(
+        'should return true for the IP addon on %s',
+        (plan) => {
+            expect(supportsAddonType({ [plan]: 1 }, ADDON_PREFIXES.IP)).toBe(true);
+        }
+    );
+
+    it.each([PLANS.VPN_PRO, PLANS.PASS_BUSINESS, PLANS.MAIL_PRO, PLANS.VPN2024])(
+        'should return false for the IP addon on %s',
+        (plan) => {
+            expect(supportsAddonType({ [plan]: 1 }, ADDON_PREFIXES.IP)).toBe(false);
+        }
+    );
+
+    it('should return false for an empty selection', () => {
+        expect(supportsAddonType({}, ADDON_PREFIXES.IP)).toBe(false);
+    });
+});
+
+describe('getSubscriptionSupportingAddon', () => {
+    it('returns the first subscription whose plan supports the addon', () => {
+        const passPro = buildSubscription(PLANS.PASS_PRO);
+        const mailPro = buildSubscription(PLANS.MAIL_PRO);
+        const bundlePro = buildSubscription(PLANS.BUNDLE_PRO_2024);
+
+        expect(getSubscriptionSupportingAddon([passPro, mailPro, bundlePro], ADDON_PREFIXES.SCRIBE)).toBe(mailPro);
+    });
+
+    it('returns undefined when no subscription supports the addon', () => {
+        expect(
+            getSubscriptionSupportingAddon([buildSubscription(PLANS.PASS_PRO)], ADDON_PREFIXES.SCRIBE)
+        ).toBeUndefined();
+    });
+
+    it('returns undefined without subscriptions', () => {
+        expect(getSubscriptionSupportingAddon([], ADDON_PREFIXES.SCRIBE)).toBeUndefined();
     });
 });

@@ -5,8 +5,8 @@ import { differenceInMilliseconds, fromUnixTime } from 'date-fns';
 import { c } from 'ttag';
 
 import { useApi } from '@proton/app-context/useApi';
+import { useGetCalendarEventRaw } from '@proton/calendar/calendarEvent/useGetCalendarEventRaw';
 import { useContactEmailsCache } from '@proton/components/containers/contacts/ContactEmailsProvider';
-import useGetCalendarEventRaw from '@proton/components/hooks/useGetCalendarEventRaw';
 import useHasSuspendedCounter from '@proton/components/hooks/useHasSuspendedCounter';
 import { getEvent as getEventRoute } from '@proton/shared/lib/api/calendars';
 import { getAlarmMessage, getNextEventTime } from '@proton/shared/lib/calendar/alarms';
@@ -15,7 +15,8 @@ import { getIsIframe } from '@proton/shared/lib/helpers/browser';
 import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
 import { create, createElectronNotification } from '@proton/shared/lib/helpers/desktopNotification';
 import { dateLocale } from '@proton/shared/lib/i18n';
-import type { CalendarAlarm, CalendarEvent } from '@proton/shared/lib/interfaces/calendar';
+import type { CalendarAlarm } from '@proton/shared/lib/interfaces/calendar/Alarm';
+import type { CalendarEvent } from '@proton/shared/lib/interfaces/calendar/Event';
 import noop from '@proton/utils/noop';
 
 import notificationIcon from '../../../assets/notification.png';

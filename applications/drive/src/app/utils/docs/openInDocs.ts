@@ -1,6 +1,6 @@
-import { splitNodeUid } from '@proton/drive';
 import { featureFlagStore } from '@proton/drive/modules/flags';
 import { handleDocsCustomPassword } from '@proton/drive/modules/publicDocsSharing';
+import { splitNodeUid } from '@proton/drive/sdk';
 import { getAppHref } from '@proton/shared/lib/apps/helper';
 import { APPS } from '@proton/shared/lib/constants';
 import { isDevOrBlack } from '@proton/shared/lib/env';
@@ -230,11 +230,6 @@ export const downloadPublicDocument = async ({
 const convertDocument = async ({ uid, type }: { uid: string; type: DocumentType | ProtonDocumentType }) => {
     const { volumeId, nodeId } = splitNodeUid(uid);
     getNewWindow(buildDocumentUrl({ type, mode: 'convert', volumeId, linkId: nodeId }).toString());
-};
-
-export const openDocumentHistory = async ({ uid, type }: { uid: string; type: DocumentType | ProtonDocumentType }) => {
-    const { volumeId, nodeId } = splitNodeUid(uid);
-    getNewWindow(buildDocumentUrl({ type, mode: 'history', volumeId, linkId: nodeId }).toString());
 };
 
 export const openDocsOrSheetsDocument = async ({

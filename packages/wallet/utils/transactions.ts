@@ -1,15 +1,13 @@
-import type { WasmApiClients, WasmApiWalletTransaction, WasmTransactionDetails } from '@proton/andromeda';
 import type { PrivateKeyReference } from '@protontech/crypto';
+
+import type { WasmApiClients, WasmApiWalletTransaction, WasmTransactionDetails } from '@proton/andromeda';
 import { SECOND } from '@proton/shared/lib/constants';
-import type { DecryptedKey, SimpleMap } from '@proton/shared/lib/interfaces';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 import noop from '@proton/utils/noop';
 
-import type {
-    AccountIdByDerivationPathAndWalletId,
-    DecryptedTransactionData,
-    NetworkTransactionByHashedTxId,
-    SenderObject,
-} from '../types';
+import type { DecryptedTransactionData, NetworkTransactionByHashedTxId, SenderObject } from '../types/transactions';
+import type { AccountIdByDerivationPathAndWalletId } from '../types/wallet';
 import { removeMasterPrefix } from './account';
 import { decryptTextData, decryptWalletData, encryptPgp, hmac } from './crypto';
 

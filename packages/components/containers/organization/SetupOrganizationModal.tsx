@@ -2,20 +2,20 @@ import { useState } from 'react';
 
 import { c } from 'ttag';
 
-import {
-    MAX_CHARS_API,
-    type OrganizationKeyRotationPayload,
-    createPasswordlessOrganizationKeys,
-    getKeyRotationPayload,
-} from '@proton/account';
 import { useMembers } from '@proton/account/members/hooks';
+import { MAX_CHARS_API } from '@proton/account/organization';
 import { resetSelfVpnConnections, setSelfQuota, updateOrganizationName } from '@proton/account/organization/actions';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { getInitialStorage, getStorageRange, getTotalStorage } from '@proton/account/organization/storage';
+import {
+    type OrganizationKeyRotationPayload,
+    createPasswordlessOrganizationKeys,
+    getKeyRotationPayload,
+} from '@proton/account/organizationKey/actions';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { getHasExternalMemberCapableB2BPlan, hasPassFamily } from '@proton/payments/core/subscription/helpers';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
@@ -30,7 +30,7 @@ import Modal from '../../components/modalTwo/Modal';
 import ModalContent from '../../components/modalTwo/ModalContent';
 import ModalFooter from '../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../components/modalTwo/ModalHeader';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import useFormErrors from '../../components/v2/useFormErrors';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import { useSilentApi } from '../../hooks/useSilentApi';

@@ -3,17 +3,12 @@ import { useState } from 'react';
 
 import { c } from 'ttag';
 
-import {
-    InvalidAddressesError,
-    MemberCreationValidationError,
-    UnavailableAddressesError,
-    assignMemberRoles,
-    createMember,
-    getPrivateAdminError,
-    getPrivateText,
-    getRolesTabBanner,
-} from '@proton/account';
+import { assignMemberRoles, createMember } from '@proton/account/members/actions';
+import InvalidAddressesError from '@proton/account/members/errors/InvalidAddressesError';
+import MemberCreationValidationError from '@proton/account/members/errors/MemberCreationValidationError';
+import UnavailableAddressesError from '@proton/account/members/errors/UnavailableAddressesError';
 import { getInitialStorage, getStorageRange, getTotalStorage } from '@proton/account/organization/storage';
+import { getPrivateAdminError, getPrivateText, getRolesTabBanner } from '@proton/account/organizationKey/actions';
 import { useOrganizationKey } from '@proton/account/organizationKey/hooks';
 import { usePasswordPolicies } from '@proton/account/passwordPolicies/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
@@ -22,8 +17,9 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import { InlineLinkButton } from '@proton/atoms/InlineLinkButton/InlineLinkButton';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { FeatureCode, useFeature } from '@proton/features';
-import { useLoading } from '@proton/hooks';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
+import useLoading from '@proton/hooks/useLoading';
 import { IcInfoCircleFilled } from '@proton/icons/icons/IcInfoCircleFilled';
 import { getHasVpnB2BPlan, hasDuo, hasFamily, hasVisionary } from '@proton/payments/core/subscription/helpers';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
@@ -40,9 +36,11 @@ import { getEmailParts } from '@proton/shared/lib/helpers/email';
 import { emailValidator, requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 import { sizeUnits } from '@proton/shared/lib/helpers/size';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Domain, EnhancedMember, Organization } from '@proton/shared/lib/interfaces';
-import { CreateMemberMode } from '@proton/shared/lib/interfaces';
-import { getIsPasswordless } from '@proton/shared/lib/keys';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
+import { CreateMemberMode } from '@proton/shared/lib/interfaces/Member';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import { getIsPasswordless } from '@proton/shared/lib/keys/organizationKeys';
 import clamp from '@proton/utils/clamp';
 import isTruthy from '@proton/utils/isTruthy';
 
@@ -53,10 +51,10 @@ import Modal from '../../components/modalTwo/Modal';
 import ModalFooter from '../../components/modalTwo/ModalFooter';
 import Option from '../../components/option/Option';
 import PasswordWithPolicyInputs from '../../components/passwordPolicy/PasswordWithPolicyInputs';
-import { usePasswordPolicyValidation } from '../../components/passwordPolicy/index';
+import { usePasswordPolicyValidation } from '../../components/passwordPolicy/usePasswordPolicyValidation';
 import SelectTwo from '../../components/selectTwo/SelectTwo';
 import Toggle from '../../components/toggle/Toggle';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 import useFormErrors from '../../components/v2/useFormErrors';
 import useErrorHandler from '../../hooks/useErrorHandler';
 import useEventManager from '../../hooks/useEventManager';
@@ -637,6 +635,7 @@ const SubUserCreateModal = ({
                                           selectedRoles={selectedRoles}
                                           onChange={setSelectedRoles}
                                           disabled={
+                                              submitting ||
                                               model.mode !== CreateMemberMode.Password ||
                                               adminRolesUIState !== AdminRolesUIState.Enabled
                                           }

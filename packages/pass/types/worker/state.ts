@@ -1,6 +1,6 @@
 import type { AuthSession } from '../../lib/auth/session';
 import type { QA_STATE_KEY } from '../../lib/qa/service';
-import type { ItemFilters, SelectedItem } from '../data';
+import type { ItemFilters, SelectedItem } from '../data/items';
 import type { Maybe, MaybeNull } from '../utils';
 
 export enum AppStatus {
@@ -47,6 +47,10 @@ export type AppState = {
      * the extension context. For web/desktop, prefer using the
      * `authStore` directly. */
     UID?: Maybe<string>;
+    /** Extension only: the user dismissed the desktop unlock prompt.
+     * Auto-unlock then waits for an explicit gesture until the
+     * client status changes. */
+    unlockDeclined?: boolean;
 };
 
 export type SessionStoreData = AuthSession & { resumeCount: number; resumeAttemptedAt: MaybeNull<number> };

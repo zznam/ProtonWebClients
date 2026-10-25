@@ -1,4 +1,5 @@
-import type { Api, User } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { User } from '@proton/shared/lib/interfaces/User';
 import { isAdmin, isPaid } from '@proton/shared/lib/user/helpers';
 
 import type { BillingAddressExtended } from '../billing-address/billing-address';
@@ -13,7 +14,7 @@ import type {
     PLANS,
 } from '../constants';
 import { PLAN_TYPES } from '../constants';
-import type { Entitlements } from '../entitlements/interface';
+import type { EntitlementCatalog, Entitlements } from '../entitlements/interface';
 import { formatPaymentMethods } from '../formatPaymentMethods';
 import type {
     AmountAndCurrency,
@@ -74,12 +75,6 @@ export interface FeedbackDowngradeData {
     ReasonDetails: string | null;
     Context: 'vpn' | 'mail';
 }
-
-export const deleteSubscription = (data: FeedbackDowngradeData) => ({
-    url: `payments/v5/subscription`,
-    method: 'delete',
-    data,
-});
 
 export enum ProrationMode {
     Default = 0,
@@ -148,6 +143,30 @@ export const queryEntitlements = () => ({
 export async function getEntitlements(api: Api) {
     return api<Entitlements>(queryEntitlements());
 }
+
+export const queryEntitlementCatalog = () => ({
+    url: `payments/v6/plans/entitlements`,
+    method: 'get',
+});
+
+export async function getEntitlementCatalog(api: Api) {
+    return api<EntitlementCatalog>(queryEntitlementCatalog());
+}
+
+export interface CouponRedemption {
+    Code: string;
+    Redemptions: number;
+}
+
+export interface CouponRedemptionsResponse {
+    Redemptions: CouponRedemption[];
+}
+
+export const queryCouponRedemptions = (codes: string[]) => ({
+    url: `payments/v5/coupons/redemptions`,
+    method: 'get',
+    params: { Codes: codes.join(',') },
+});
 
 export const getInvoicePDF = (invoiceID: string, version: PaymentsVersion) => ({
     url: `payments/${version}/invoices/${invoiceID}`,

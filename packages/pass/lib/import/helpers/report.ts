@@ -1,7 +1,11 @@
 import capitalize from '@proton/utils/capitalize';
 
 import { MAX_BATCH_PER_IMPORT_REQUEST } from '../../../constants';
-import type { ItemImportIntent, MaybeNull } from '../../../types';
+import type { ItemRevision } from '../../../types/data/items';
+import type { ItemImportIntent } from '../../../types/data/items.dto';
+import type { MaybeNull } from '../../../types/utils';
+import type { LoginItemPreview } from '../../../types/worker/data';
+import { intoLoginItemPreview } from '../../items/item.utils';
 import type { ImportPayload, ImportProvider } from '../types';
 
 export type ImportReport = {
@@ -21,6 +25,9 @@ export type ImportReport = {
      * `totalFiles - ignoredFiles.length` */
     totalFiles?: number;
     warnings?: string[];
+    /** The preview of the first imported login item to be able
+     * to show a sample to the user */
+    sampleItem: MaybeNull<LoginItemPreview>;
 };
 
 export type ImportCounts = { totalItems: number; totalFiles: number };
@@ -69,3 +76,8 @@ export const computeProgress = (progress: MaybeNull<ImportProgress>, itemProgres
 };
 
 export const formatIgnoredItem = (item: ItemImportIntent) => `[${capitalize(item.type)}] ${item.metadata.name}`;
+
+export const getSampleLoginPreview = (items: ItemRevision[]): MaybeNull<LoginItemPreview> => {
+    const login = items.find((item): item is ItemRevision<'login'> => item.data.type === 'login');
+    return login ? intoLoginItemPreview(login) : null;
+};

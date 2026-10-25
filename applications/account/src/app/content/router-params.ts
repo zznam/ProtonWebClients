@@ -1,15 +1,14 @@
-import type { ThemeColor } from '@proton/colors';
-import type { EntitlementChecks } from '@proton/payments/core/entitlements/resolver';
+import type { ThemeColor } from '@proton/colors/types';
+import type { EntitlementChecksForOrgAndUser } from '@proton/payments/core/entitlements/interface';
 import type { MaybeFreeSubscription } from '@proton/payments/core/subscription/helpers';
+import type { Subscription } from '@proton/payments/core/subscription/interface';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
-import type {
-    Address,
-    Group,
-    GroupMembershipReturn,
-    OrgPermissions,
-    OrganizationExtended,
-    UserModel,
-} from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Group } from '@proton/shared/lib/interfaces/Group';
+import type { GroupMembershipReturn } from '@proton/shared/lib/interfaces/GroupMember';
+import type { OrganizationExtended } from '@proton/shared/lib/interfaces/Organization';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { OrgPermissions } from '@proton/shared/lib/interfaces/UserPermission';
 import type { DriveDashboardVariant, VPNDashboardVariant } from '@proton/unleash/UnleashFeatureFlagsVariants';
 
 export type AccountRecoveryRouterFlags = {
@@ -45,7 +44,6 @@ export type AccountSettingsRouterParams = {
 // Define the feature flag that are used in the account app
 export type Flags = {
     canDisplayNonPrivateEmailPhone: boolean;
-    isUserGroupsNoCustomDomainEnabled: boolean;
     isScribeEnabled: boolean;
     isZoomIntegrationEnabled: boolean;
     isProtonMeetIntegrationEnabled: boolean;
@@ -53,16 +51,18 @@ export type Flags = {
     isCryptoPostQuantumOptInEnabled: boolean;
     isSsoForPbsEnabled: boolean;
     isRetentionPoliciesEnabled: boolean;
-    isAuthenticatorAvailable: boolean;
     isCategoryViewEnabled: boolean;
+    isLumoApiEnabled: boolean;
     isReferralProgramEnabled: boolean;
     isDriveEasySwitchNewUIEnabled: boolean;
+    showSignInRestrictionToggle: boolean;
 };
 
 export type OrganizationSettingsRouterParams = {
     organization: OrganizationExtended | undefined;
     isB2BDrive: boolean;
     isGroupOwner: boolean | null;
+    isOrganizationOwner: boolean;
     memberships: GroupMembershipReturn[] | undefined;
     groups: Group[] | undefined;
     permissions: OrgPermissions;
@@ -73,7 +73,8 @@ export type GeneralRouterParams = {
     user: UserModel;
     addresses?: Address[];
     subscription: MaybeFreeSubscription;
-    entitlements: EntitlementChecks;
+    allSubscriptions: Subscription[];
+    entitlements: EntitlementChecksForOrgAndUser;
     flags: Flags;
 };
 

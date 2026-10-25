@@ -7,7 +7,7 @@ import { useUser } from '@proton/account/user/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { categoriesThunk } from '@proton/mail/store/labels';
 import { useLabels } from '@proton/mail/store/labels/hooks';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
@@ -15,7 +15,7 @@ import { CacheType } from '@proton/redux-utilities/interface';
 import { orderLabels } from '@proton/shared/lib/api/labels';
 import { MAIL_UPSELL_PATHS } from '@proton/shared/lib/constants';
 import { hasReachedLabelLimit } from '@proton/shared/lib/helpers/folder';
-import type { Label } from '@proton/shared/lib/interfaces';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 import move from '@proton/utils/move';
 
 import useDebounceInput from '../../components/input/useDebounceInput';

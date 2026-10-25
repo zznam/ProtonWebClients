@@ -2,7 +2,9 @@ import { MESSAGE_ACTIONS } from '@proton/mail-renderer/constants';
 import { parseDOMStringToBodyElement } from '@proton/mail/helpers/parseDOMStringToBodyElement';
 import type { MessageDecryption, MessageState } from '@proton/mail/store/messages/messagesTypes';
 import { MIME_TYPES } from '@proton/shared/lib/constants';
-import type { Address, MailSettings, UserSettings } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
 import type { Attachment, Message } from '@proton/shared/lib/interfaces/mail/Message';
 import { PM_SIGNATURE } from '@proton/shared/lib/mail/mailSettings';
 
@@ -59,7 +61,7 @@ On Friday, January 1st, 2021 at 12:00 AM, ${fromFields.fromName} <${fromFields.f
     const htmlReferenceMessageBody = '<div>Hello this is the reference message</div>';
     const htmlReplyContent = '<div>Hello this is the reply<div>';
     const htmlTextContent = `${htmlReplyContent} ${protonSignature}
-<div class=\"protonmail_quote\">
+<div class=\"protonmail_quote\"><br>
         On Friday, January 1st, 2021 at 12:00 AM, ${fromFields.fromName} &lt;${fromFields.fromAddress}&gt; wrote:<br>
         <blockquote class=\"protonmail_quote\" type=\"cite\">
             <div>Hello this is the reference message</div>

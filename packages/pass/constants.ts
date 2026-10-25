@@ -29,6 +29,7 @@ export const FOLDER_MAX_DEPTH = 5;
 export const API_CONCURRENCY_TRESHOLD = 20;
 
 export const PASS_VIDEO_URL = 'https://proton.me/download/pass/videos/proton-pass-tutorial.webm';
+export const PASS_APP_QR_URL = 'https://proton.me/passapp';
 export const PASS_X_URL = 'https://x.com/Proton_Pass';
 export const PASS_REDDIT_URL = 'https://www.reddit.com/r/ProtonPass/';
 export const PASS_REQUEST_URL = 'https://protonmail.uservoice.com/forums/953584-proton-pass';
@@ -50,6 +51,7 @@ export const PASS_CREDENTIAL_CHECK_URL = 'https://credential-check.protonweb.com
 
 export const PRIVATE_DOMAINS_URL = 'https://proton.me/download/pass/auto-detection/public_suffix_list.dat';
 export const WEBSITE_RULES_URL = 'https://proton.me/download/pass/auto-detection/rules.json';
+export const PASS_POPULAR_SERVICES_URL = 'https://proton.me/download/pass/popular-services/services.json';
 
 export const MODEL_REGISTRY_URL = 'https://proton.me/download/pass/model-registry/model-registry.json';
 export const MODEL_ARTIFACTS_BASE_URL = 'https://proton.me/download/pass/model-artifacts';

@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
 
+import { logger } from '@protontech/logger';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { useMeetSelector } from '@proton/meet/store/hooks';
 import { selectCaptionsAgentPresent } from '@proton/meet/store/slices/participants/agentParticipantsSlice';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
 
 import { CAPTIONS_AGENT_WAIT_MS } from '../../constants';
 import { retry } from '../../utils/retry';
@@ -26,6 +28,9 @@ export const useCaptionsAgentWaitTimeout = () => {
     const stillWaiting = useStableCallback(() => waitingForCaptionsAgent);
 
     const giveUpOnCaptions = useStableCallback(async () => {
+        sendMeetActionsEvent(TelemetryMeetActionsEvents.captions_failed, {
+            captionsFailureReason: agentEverPresent.current ? 'agent_stopped' : 'agent_start_timeout',
+        });
         createNotification({
             type: 'error',
             text: agentEverPresent.current
@@ -39,8 +44,7 @@ export const useCaptionsAgentWaitTimeout = () => {
             stopAfterFirstSuccess: true,
             shouldAttempt: stillWaiting,
             onFailure: (error) => {
-                // eslint-disable-next-line no-console
-                console.error('Failed to turn live captions off', error);
+                logger.error('Failed to turn live captions off', error);
             },
         });
     });

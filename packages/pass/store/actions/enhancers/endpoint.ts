@@ -1,6 +1,6 @@
 import type { Action } from 'redux';
 
-import type { ClientEndpoint, TabId } from '../../../types';
+import type { ClientEndpoint, TabId } from '../../../types/worker/runtime';
 import { type WithMeta, withMetaFactory } from './meta';
 
 export type EndpointOptions = { endpoint?: ClientEndpoint; tabId?: TabId };
@@ -21,6 +21,11 @@ export const isActionWithSender = <T extends Action>(action?: T): action is With
     const { meta } = action as any;
     return meta?.sender !== undefined;
 };
+
+/** Forwards the intent's sender to a result action. Only used by the
+ * extension to process result actions for a specific endpoint */
+export const withIntentSender = <A extends Action>(action: A, intent: Action): A =>
+    isActionWithSender(intent) && intent.meta.sender ? withSender(intent.meta.sender)(action) : action;
 
 export const isActionFrom =
     (endpoint: ClientEndpoint) =>

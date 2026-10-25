@@ -6,13 +6,13 @@ import { useGetAddressKeys } from '@proton/account/addressKeys/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useCalendarBootstrap } from '@proton/calendar/calendarBootstrap/hooks';
 import { useGetCalendarKeys } from '@proton/calendar/calendarBootstrap/keys';
-import Badge from '@proton/components/components/badge/Badge';
+import { Badge } from '@proton/components/components/badge/Badge';
 import CalendarEventDateHeader from '@proton/components/components/calendarEventDateHeader/CalendarEventDateHeader';
 import Loader from '@proton/components/components/loader/Loader';
 import CalendarInviteButtons from '@proton/components/containers/calendar/CalendarInviteButtons';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { useLinkHandler } from '@proton/components/hooks/useLinkHandler';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { TelemetryCalendarEvents } from '@proton/shared/lib/api/telemetry';
 import {
@@ -28,11 +28,8 @@ import { getTimezonedFrequencyString } from '@proton/shared/lib/calendar/recurre
 import type { WeekStartsOn } from '@proton/shared/lib/date-fns-utc/interface';
 import { wait } from '@proton/shared/lib/helpers/promise';
 import { dateLocale } from '@proton/shared/lib/i18n';
-import type {
-    CalendarEventSharedData,
-    PartstatData,
-    VcalVeventComponent,
-} from '@proton/shared/lib/interfaces/calendar';
+import type { CalendarEventSharedData, PartstatData } from '@proton/shared/lib/interfaces/calendar/Event';
+import type { VcalVeventComponent } from '@proton/shared/lib/interfaces/calendar/VcalModel';
 import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';

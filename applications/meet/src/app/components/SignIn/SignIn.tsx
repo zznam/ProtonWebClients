@@ -1,7 +1,8 @@
 import { Button } from '@proton/atoms/Button/Button';
 import { ButtonLikeShapeEnum, ButtonLikeSizeEnum } from '@proton/atoms/Button/ButtonLike';
 import { isUrlPasswordValid } from '@proton/meet/utils/isUrlPasswordValid';
-import { ForkType, requestFork } from '@proton/shared/lib/authentication/fork';
+import { ForkType } from '@proton/shared/lib/authentication/fork/constants';
+import { requestFork } from '@proton/shared/lib/authentication/fork/consume';
 import { APPS } from '@proton/shared/lib/constants';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
     size?: ButtonLikeSizeEnum;
     shape?: ButtonLikeShapeEnum;
     style?: React.CSSProperties;
+    onClick?: () => void;
 };
 
 export const MeetSignIn = ({
@@ -18,6 +20,7 @@ export const MeetSignIn = ({
     size = ButtonLikeSizeEnum.Medium,
     shape = ButtonLikeShapeEnum.Ghost,
     style,
+    onClick,
 }: Props) => {
     const handleSignIn = (returnUrl: string) =>
         requestFork({
@@ -29,6 +32,7 @@ export const MeetSignIn = ({
         });
 
     const handleSignInClick = () => {
+        onClick?.();
         const hash = window.location.hash;
 
         if (hash && !isUrlPasswordValid(hash)) {

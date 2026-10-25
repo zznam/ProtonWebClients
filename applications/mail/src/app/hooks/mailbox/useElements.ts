@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { LEGACY_FORUM_CATEGORY_ID } from '@proton/mail/helpers/location';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { useConversationCounts, useGetConversationCounts } from '@proton/mail/store/counts/conversationCountsSlice';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line proton/restricted-imports
 import { useGetMessageCounts, useMessageCounts } from '@proton/mail/store/counts/messageCountsSlice';
 import { useFolders, useLabels } from '@proton/mail/store/labels/hooks';
 import { selectDisabledCategoriesIDs } from '@proton/mail/store/labels/selector';
@@ -14,7 +14,8 @@ import type { CategoryLabelID } from '@proton/shared/lib/constants';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
 import { omit } from '@proton/shared/lib/helpers/object';
 import { SentryMailInitiatives, captureMessage, traceInitiativeError } from '@proton/shared/lib/helpers/sentry';
-import type { Label, MailSettings } from '@proton/shared/lib/interfaces';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { HUMAN_TO_LABEL_IDS, LABEL_IDS_TO_HUMAN } from '@proton/shared/lib/mail/constants';
 import type { MAIL_PAGE_SIZE } from '@proton/shared/lib/mail/mailSettings';
 import type { Filter, SearchParameters, Sort } from '@proton/shared/lib/mail/search';

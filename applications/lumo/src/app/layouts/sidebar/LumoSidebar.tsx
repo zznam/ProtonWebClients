@@ -1,11 +1,11 @@
 import { Suspense, lazy, memo, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { clsx } from 'clsx';
 import { c } from 'ttag';
 
 import { Scroll } from '@proton/atoms/Scroll/Scroll';
-import { AppsDropdown, useModalStateObject } from '@proton/components';
+import { useModalStateObject } from '@proton/components/components/modalTwo/useModalState';
+import AppsDropdown from '@proton/components/containers/app/AppsDropdown';
 import lumoCatIcon from '@proton/styles/assets/img/lumo/lumo-cat-icon.svg';
 
 import { GuestSidebarSignInSection } from '../../components/Guest/ChatHistoryUpsell.tsx/GuestSidebarSignInSection';
@@ -18,13 +18,13 @@ import { useSearchModal } from '../../providers/SearchModalProvider';
 import { useSidebar } from '../../providers/SidebarProvider';
 import { LumoSidebarUpsell } from '../../upsells';
 import LumoLogoHeader from '../header/LumoLogo';
-import { ChatsSidebarButton } from './components/ChatsSidebarButton';
 import { ChatsSidebarSection } from './components/ChatsSidebarSection';
-import { GallerySidebarButton } from './components/GallerySidebarButton';
+import { LibrarySidebarButton } from './components/LibrarySidebarButton';
 import { NewChatSidebarButton } from './components/NewChatSidebarButton';
 import { SearchSection } from './components/SearchSection';
 import { SidebarBottomUserArea } from './components/SidebarBottomUserArea';
 import { SidebarItem } from './components/SidebarItem';
+import { SidebarRouteButton } from './components/SidebarRouteButton';
 import { useNativeComposerAccountApi } from './hooks/useNativeComposerAccountApi';
 import { useSidebarVisibility } from './hooks/useSidebarVisibility';
 
@@ -37,12 +37,14 @@ const ProjectsSidebarSection = lazy(() =>
 
 const LumoSidebarContent = () => {
     const { isSmallScreen, toggle, closeOnItemClick } = useSidebar();
-    const history = useHistory();
-    const { showMobileHeader, showSearch, showGallery } = useSidebarVisibility();
+    const { showMobileHeader, showSearch, showGallery, showLibrary, showSchedules } = useSidebarVisibility();
     const isGuest = useIsGuest();
     const settingsModal = useModalStateObject();
-    const { modalProps: searchModalProps, openModal: openSearchModal, render: searchModalRender } =
-        useModalStateObject();
+    const {
+        modalProps: searchModalProps,
+        openModal: openSearchModal,
+        render: searchModalRender,
+    } = useModalStateObject();
     const { registerOpenFunction } = useSearchModal();
 
     const { apiKeyManagement } = useLumoFlags();
@@ -77,18 +79,39 @@ const LumoSidebarContent = () => {
                 <Scroll className="sidebar-main-scroll flex flex-column flex-1 min-h-0" scrollContained>
                     <div className="sidebar-section flex flex-column gap-1">
                         {showSearch && <SearchSection onSearchClick={() => openSearchModal(true)} />}
-                        {showGallery && <GallerySidebarButton onItemClick={closeOnItemClick} />}
-                        {apiKeyManagement && (
-                            <SidebarItem
-                                icon="CodeXml"
-                                label={c('collider_2025:Button').t`API`}
-                                onClick={() => {
-                                    history.push('/docs/api');
-                                    closeOnItemClick?.();
-                                }}
+                        {showSchedules && (
+                            <SidebarRouteButton
+                                icon="Clock"
+                                label={c('collider_2025:Button').t`Scheduled`}
+                                onItemClick={closeOnItemClick}
+                                pathname="/schedules"
                             />
                         )}
-                        {!isGuest && <ChatsSidebarButton onItemClick={closeOnItemClick ?? (() => {})} />}
+                        {showGallery && (
+                            <SidebarRouteButton
+                                icon="Images"
+                                label={c('collider_2025:Button').t`Images`}
+                                onItemClick={closeOnItemClick}
+                                pathname="/images"
+                            />
+                        )}
+                        {showLibrary && <LibrarySidebarButton onItemClick={closeOnItemClick} />}
+                        {apiKeyManagement && (
+                            <SidebarRouteButton
+                                icon="CodeXml"
+                                label={c('collider_2025:Button').t`API`}
+                                onItemClick={closeOnItemClick}
+                                pathname="/docs/api"
+                            />
+                        )}
+                        {!isGuest && (
+                            <SidebarRouteButton
+                                icon="MessagesSquare"
+                                label={c('collider_2025:Button').t`All chats`}
+                                onItemClick={closeOnItemClick}
+                                pathname="/chats"
+                            />
+                        )}
                     </div>
                     <Suspense fallback={null}>
                         <ProjectsSidebarSection onItemClick={closeOnItemClick} isSmallScreen={isSmallScreen} />

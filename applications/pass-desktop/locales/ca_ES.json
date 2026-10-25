@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } per Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } per iOS"
-      ],
       "Accept": [
         "Accepta"
       ],
@@ -38,7 +32,7 @@
         "Accepta i mostra l'element"
       ],
       "Accept invitation": [
-        "Accepta invitació"
+        "Accepta la invitació"
       ],
       "Account": [
         "Compte"
@@ -346,6 +340,15 @@
       "Done": [
         "Fet"
       ],
+      "Download for Linux": [
+        "Descarregar-ho per a Linux"
+      ],
+      "Download for macOS": [
+        "Descarrega per a macOS"
+      ],
+      "Download for Windows": [
+        "Descarrega per a Windows"
+      ],
       "Download this CSV template": [
         "Descarrega aquesta plantilla CSV"
       ],
@@ -417,6 +420,9 @@
       ],
       "Hide": [
         "Amaga"
+      ],
+      "Hide passwords": [
+        "Amagar les contrasenyes"
       ],
       "How do I export my data from ${ PROVIDER_INFO_MAP[form.values.provider].title }?": [
         "Com exporto les meves dades de ${ PROVIDER_INFO_MAP[form.values.provider].title }?"
@@ -555,6 +561,9 @@
       ],
       "Open navigation": [
         "Obre la navegació"
+      ],
+      "Open platform selection dropdown": [
+        "Obriu el menú desplegable de selecció de plataformes"
       ],
       "Organize vaults": [
         "Organitza les caixes fortes"
@@ -718,6 +727,12 @@
       "Show Less": [
         "Mostra menys"
       ],
+      "Show less": [
+        "Mostra'n menys"
+      ],
+      "Show more": [
+        "Mostrar més"
+      ],
       "Sign in with ${ BRAND_NAME }": [
         "Inicia sessió amb ${ BRAND_NAME }"
       ],
@@ -879,8 +894,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Aplicació d'escriptori de ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Aplicació d'escriptori de ${ appName }"
       ]
     },
     "Button": {
@@ -929,6 +944,9 @@
       ],
       "Change your passwords": [
         "Canvieu les vostres contrasenyes"
+      ],
+      "Check if you're reusing passwords": [
+        "Comproveu si reutilitzeu contrasenyes"
       ],
       "Check if your passwords have been exposed": [
         "Comproveu si les vostres contrasenyes s'han exposat"
@@ -1054,6 +1072,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "S'ha produït un error amb l'autenticació. Confirmeu la segona contrasenya per continuar amb l'exportació."
       ],
+      "Biometric authentication cancelled.": [
+        "S'ha cancel·lat l'autenticació biomètrica."
+      ],
       "Biometric authentication failed.": [
         "L'autenticació biomètrica ha fallat."
       ],
@@ -1134,6 +1155,9 @@
       "Editing item failed": [
         "No s'ha pogut editar l'element"
       ],
+      "Email is not valid": [
+        "El correu electrònic no és vàlid"
+      ],
       "Empty CSV file": [
         "El fitxer CSV està buit"
       ],
@@ -1145,6 +1169,9 @@
       ],
       "Encrypted JSON not supported": [
         "El JSON xifrat no és compatible"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Introduïu el vostre nom d'usuari sense el domini (@exemple.cat)"
       ],
       "Error reporting problem": [
         "S'ha produït un error en informar del problema"
@@ -1336,6 +1363,9 @@
       "Incorrect backup password. Please try again.": [
         "La contrasenya de recuperació no és correcta. Torneu-ho a intentar."
       ],
+      "Incorrect password. Please try again.": [
+        "Contrasenya incorrecta, torneu-ho a intentar."
+      ],
       "Incorrect second password. Please try again.": [
         "La segona contrasenya no és correcta. Torneu-ho a intentar."
       ],
@@ -1369,8 +1399,14 @@
       "Network error": [
         "Error de xarxa"
       ],
+      "Not a valid number": [
+        "Número no vàlid"
+      ],
       "Passphrase is incorrect": [
         "La frase de contrasenya no és correcta"
+      ],
+      "Passwords do not match": [
+        "Les contrasenyes no coincideixen."
       ],
       "PIN codes do not match": [
         "Els codis PIN no coincideixen"
@@ -1435,11 +1471,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "L'aplicació d'escriptori ${ PASS_APP_NAME } hauria de tenir la sessió iniciada."
       ],
+      "The email addresses do not match": [
+        "Les adreces de correu electrònic no coincideixen."
+      ],
       "The session has expired. Please sign in again.": [
         "La sessió ha caducat. Torneu a accedir."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "S'ha produït un error en eliminar l'enllaç segur. Torneu a provar-ho en uns minuts."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Aquest camp excedeix el màxim de ${ maximumLength } caràcters."
+      ],
+      "This field is required": [
+        "Aquest camp és obligatori."
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Aquest camp requereix un mínim de ${ minimumLength } caràcters."
       ],
       "This invite is no longer available": [
         "Aquesta invitació ja no està disponible"
@@ -1452,6 +1500,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Intenteu contactar el propietari de l'enllaç."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Intenteu utilitzar només lletres, numerals i _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "No s'ha pogut generar un codi OTP per a aquest element"
@@ -1486,6 +1537,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "No s'ha pogut actualitzar la caixa forta \"${ payload.content.name }\""
       ],
+      "Username must begin with a letter or digit": [
+        "El nom d'usuari ha de començar amb una lletra o un dígit."
+      ],
+      "Username must end with a letter or digit": [
+        "El nom d'usuari ha d'acabar amb una lletra o un dígit."
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "No s'ha pogut crear la caixa forta \"${ payload.content.name }\""
       ],
@@ -1509,6 +1566,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "El codi PIN no és correcte. Torneu a provar."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase de recuperació incorrecta. Torneu-ho a provar o utilitzeu un altre mètode de recuperació."
       ],
       "Wrong second password": [
         "La segona contrasenya és incorrecta."
@@ -1650,6 +1710,9 @@
       "${ forwardedEmailsCount } forwarded": [
         "${ forwardedEmailsCount } reenviat",
         "${ forwardedEmailsCount } reenviats"
+      ],
+      "${ importantBold } This doesn't prevent viewers from retrieving passwords through other means.": [
+        "${ importantBold }. Això no impedeix que els espectadors recuperin les contrasenyes per altres mitjans."
       ],
       "${ inviterEmail } wants to share an item with a group you administer.": [
         "${ inviterEmail } vol compartir un element amb un grup que administreu."
@@ -1882,9 +1945,6 @@
       "Can view this item.": [
         "Pot veure aquest element."
       ],
-      "Change your password": [
-        "Canvieu la vostra contrasenya"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "S'estan comprovant ${ compromised.progress.completed } de ${ compromised.progress.total } contrasenyes"
       ],
@@ -1964,16 +2024,13 @@
         "Descarregueu-vos pass-cli des de ${ passCliLink }."
       ],
       "Drop file here to upload": [
-        "Arrossegueu el fitxer aquí per carregar-lo."
+        "Arrossegueu el fitxer aquí per a carregar-lo."
       ],
       "Drop to import": [
         "Arrossegueu aquí per a importar"
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "corrreu electrònic"
       ],
       "Email address successfully deleted from monitoring": [
         "L'adreça de correu electrònic s'ha suprimit del monitoratge."
@@ -2065,11 +2122,11 @@
       "Failed updating your vault organization": [
         "No s'ha pogut actualitzar l'organització de la vostra caixa forta"
       ],
+      "Field hidden. You can still autofill it.": [
+        "Camp ocult. Encara el podeu emplenar automàticament."
+      ],
       "Fill in the CSV with your data": [
         "Empleneu el CSV amb les vostres dades"
-      ],
-      "finance": [
-        "finances"
       ],
       "Find \"OpenSSH Authentication Agent\", right-click Properties.": [
         "Cerqueu \"Agent d'Autenticació d'OpenSSH\", feu clic amb el botó dret a Propietats."
@@ -2139,6 +2196,9 @@
       "Import the CSV file below.": [
         "Importa el fitxer CSV de sota."
       ],
+      "Important:": [
+        "Important:"
+      ],
       "Imported on ${ date }": [
         "Importat el ${ date }"
       ],
@@ -2171,6 +2231,9 @@
       ],
       "invites you to access items in": [
         "us convida a accedir a elements a"
+      ],
+      "iOS and Android Apps": [
+        "Aplicacions per a iOS i Android"
       ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Sembla que ja heu iniciat sessió a ${ PASS_APP_NAME }. Si esteu intentant iniciar sessió amb un altre compte, tanqueu primer la sessió de l'extensió."
@@ -2257,9 +2320,6 @@
       "Medium Priority": [
         "Prioritat mitjana"
       ],
-      "Monitor accounts": [
-        "Supervisar els comptes"
-      ],
       "Monitoring settings successfully updated": [
         "S'han actualitzat les preferències de seguiment."
       ],
@@ -2277,8 +2337,7 @@
         "S'estan movent tots els elements de «${ payload.content.name }»"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Si moveu un element a una altra caixa forta, se n'esborrarà els enllaces segurs.",
-        "Si moveu els elements a una altra caixa forta, se n'esborrarà els enllaces segurs."
+        "Si moveu un element a una altra caixa forta, se n'esborraran els enllaços segurs."
       ],
       "Moving items": [
         "S'estan movent elements"
@@ -2369,8 +2428,8 @@
       "Pass Plus trial": [
         "Prova Pass Plus"
       ],
-      "password": [
-        "contrasenya"
+      "Password hidden. You can still autofill it.": [
+        "Contrasenya amagada. Encara la podeu emplenar automàticament."
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "S'ha registrat el bloqueig de la contrasenya. Utilitzeu-lo per desbloquejar ${ PASS_APP_NAME }."
@@ -2577,6 +2636,12 @@
       "Restoring trashed items...": [
         "S'estan restaurant els elements de la paperera..."
       ],
+      "Scan to download": [
+        "Escanegeu per a descarregar"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "Escaneja per descarregar ${ PASS_APP_NAME } per a iOS i Android"
+      ],
       "Secure links": [
         "Enllaços segurs"
       ],
@@ -2779,6 +2844,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "Per revisar les dades importades, feu clic a la icona del ${ PASS_APP_NAME } de la barra d'eines del navegador."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "Per configurar el desbloqueig biomètric, ${ PASS_APP_NAME } necessita un nou permís del navegador."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "Per configurar el desbloqueig biomètric, ${ PASS_APP_NAME } requereix un nou permís del navegador. Un cop l'hàgiu acceptat, l'extensió es tornarà a carregar. Torneu a obrir aquesta pàgina després."
       ],
@@ -2839,9 +2907,6 @@
       "User's access successfully updated": [
         "S'ha actualitzat l'accés de l'usuari."
       ],
-      "username": [
-        "nom d'usuari"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "S'ha eliminat la caixa forta \"${ payload.content.name }\""
       ],
@@ -2872,6 +2937,12 @@
       ],
       "Viewer": [
         "Lector"
+      ],
+      "Viewers can still autofill passwords, but won't see them in ${ PASS_APP_NAME }. This discourages casual viewing and reduces the risk of accidental disclosure.": [
+        "Els espectadors encara poden emplenar automàticament les contrasenyes, però no les veuran a ${ PASS_APP_NAME }. Això desincentiva la visualització casual i redueix el risc de divulgació accidental."
+      ],
+      "Viewers can still autofill. Editors and admins always see passwords.": [
+        "Els espectadors encara ho poden emplenar automàticament. Els editors i els administradors sempre veuen les contrasenyes."
       ],
       "We are having trouble syncing data to your local storage. Please make sure you have sufficient disk space for ${ PASS_SHORT_APP_NAME } to work smoothly.": [
         "Estem tenint problemes per sincronitzar les dades amb el vostre emmagatzematge local. Assegureu-vos que teniu prou espai al disc perquè ${ PASS_SHORT_APP_NAME } funcioni correctament."
@@ -3056,6 +3127,9 @@
         "${ hours } hora",
         "${ hours } hores"
       ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } caràcters"
+      ],
       "${ minutes } minute": [
         "${ minutes } minut",
         "${ minutes } minuts"
@@ -3199,6 +3273,9 @@
       ],
       "All items": [
         "Tots els elements"
+      ],
+      "Allow viewers to see passwords": [
+        "Permeteu als espectadors veure les contrasenyes"
       ],
       "Alphabetical": [
         "Alfabètic"
@@ -3456,7 +3533,7 @@
         "Testimonis caducats (${ expired.length })"
       ],
       "Expires in": [
-        "Caducarà d'aquí a"
+        "Caduca en"
       ],
       "Expiry Date": [
         "Data d'expiració"
@@ -3695,11 +3772,17 @@
       "LinkedIn account": [
         "Compte de LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Inici de sessió"
       ],
       "Logins": [
         "Inicis de sessió"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Bústies de correu"
@@ -4289,6 +4372,9 @@
       "WiFi network": [
         "Xarxa wifi"
       ],
+      "Windows": [
+        "Windows"
+      ],
       "Work details": [
         "Detalls de la feina"
       ],
@@ -4399,7 +4485,7 @@
     },
     "Notification": {
       "${ reason } has been disabled": [
-        "${ reason } s'ha desactivat"
+        "S'ha desactivat ${ reason }"
       ],
       "${ reason } has been enabled": [
         "S'ha activat ${ reason } "
@@ -4596,7 +4682,7 @@
         "per exemple: 60"
       ],
       "e.g. My automation script": [
-        "per exemple, el meu guió d'automatització"
+        "p. ex. El meu script d'automatització"
       ],
       "E.g., ": [
         "Ex., "
@@ -5088,11 +5174,20 @@
       "Folder options": [
         "Opcions de carpeta"
       ],
+      "Get mobile and desktop apps": [
+        "Obteniu les aplicacions per a mòbil i per a escriptori"
+      ],
+      "Get mobile apps": [
+        "Obtingueu aplicacions mòbils"
+      ],
       "Get Started": [
         "Comenceu"
       ],
       "Hidden vaults": [
         "Caixes fortes ocultes"
+      ],
+      "Hide passwords from viewers?": [
+        "Voleu amagar les contrasenyes dels espectadors?"
       ],
       "Hide-my-email aliases": [
         "Àlies hide-my-email"
@@ -5389,6 +5484,9 @@
       "Upgrade to check for compromised passwords": [
         "Milloreu el pla per comprovar les contrasenyes en risc"
       ],
+      "Upgrade to check for reused passwords": [
+        "Actualitza per comprovar si hi ha contrasenyes reutilitzades"
+      ],
       "URL matching": [
         "Coincidència d'URL"
       ],
@@ -5487,8 +5585,16 @@
       "OTP secret or URI is invalid": [
         "La clau secreta OTP o l'URL no són vàlids."
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "La contrasenya ha de tenir com a mínim ${ MIN_PASSWORD_LENGTH } caràcter",
+        "La contrasenya ha de tenir com a mínim ${ MIN_PASSWORD_LENGTH } caràcters"
+      ],
       "Section name cannot be empty": [
         "El nom de la selecció no pot estar buit."
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Proveu amb un nom d'usuari més curt (${ n } caràcter màx.)",
+        "Proveu amb un nom d'usuari més curt (${ n } caràcters màx.)"
       ],
       "URL already exists": [
         "L'URL ja existeix."
@@ -5509,6 +5615,22 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "Es requereix la contrasenya de ${ BRAND_NAME }."
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "S'ha fusionat ${ count } carpeta a la seva carpeta principal perquè s'ha assolit el nivell màxim de nius.",
+        "S'han fusionat ${ count } carpetes a la seva carpeta principal perquè s'ha assolit el nivell màxim de nius."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "No s'ha importat ${ count } carpeta perquè la seva carpeta principal ha assolit el nombre màxim de subcarpetes. Els seus elements s'han importat a la carpeta més propera disponible.",
+        "No s'han importat ${ count } carpetes perquè la seva carpeta principal ha assolit el nombre màxim de subcarpetes. Els seus elements s'han importat a la carpeta més propera disponible."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "No s'ha importat ${ count } carpeta perquè aquesta caixa forta ha assolit el seu límit de carpetes. Els seus elements s'han importat a la carpeta més propera disponible.",
+        "No s'han importat ${ count } carpetes perquè aquesta caixa forta ha assolit el seu límit de carpetes. Els seus elements s'han importat a la carpeta més propera disponible."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "No s'ha pogut crear ${ failed } carpeta. Els seus elements s'han importat a la carpeta més propera disponible.",
+        "No s'han pogut crear ${ failed } carpetes. Els seus elements s'han importat a la carpeta més propera disponible."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "${ modeLabelStong } proporciona un control potent, però un sol error pot fer que l'emplenament automàtic coincideixi i empleni dades a llocs web fraudulents o de suplantació de credencials."
@@ -5650,9 +5772,6 @@
       ],
       "Move to trash": [
         "Mou a la paperera"
-      ],
-      "Name is required": [
-        "Es requereix un nom."
       ],
       "No items": [
         "Sense elements"

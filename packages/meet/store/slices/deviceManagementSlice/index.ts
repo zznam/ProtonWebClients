@@ -1,7 +1,7 @@
 import type { PayloadAction, ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { isMobile, isSafari } from '@proton/shared/lib/helpers/browser';
 import { getItem, removeItem, setItem } from '@proton/shared/lib/helpers/storage';
 
@@ -25,6 +25,16 @@ const deviceManagementInitialState: DeviceManagementState = {
     activeCameraId: '',
     activeMicrophoneId: '',
     activeAudioOutputId: null,
+    disconnectedActiveDevices: {
+        audioinput: null,
+        audiooutput: null,
+        videoinput: null,
+    },
+    activeChangedSinceList: {
+        audioinput: false,
+        audiooutput: false,
+        videoinput: false,
+    },
     initialCameraState: false,
     initialAudioState: false,
     userCameraIntent: null,
@@ -32,6 +42,16 @@ const deviceManagementInitialState: DeviceManagementState = {
     uiModals: {
         permissionsModal: PermissionsModalType.NONE,
     },
+};
+
+const getActiveDeviceId = (state: DeviceManagementState, kind: DeviceKind): string | null => {
+    const activeDeviceIdByKind: Record<DeviceKind, string | null> = {
+        audioinput: state.activeMicrophoneId,
+        audiooutput: state.activeAudioOutputId,
+        videoinput: state.activeCameraId,
+    };
+
+    return activeDeviceIdByKind[kind];
 };
 
 const slice = createSlice({
@@ -53,6 +73,38 @@ const slice = createSlice({
         },
         setDeviceList: (state, action: PayloadAction<{ kind: DeviceKind; devices: SerializableDeviceInfo[] }>) => {
             const { kind, devices } = action.payload;
+
+            const previousDevicesByKind: Record<DeviceKind, SerializableDeviceInfo[]> = {
+                audioinput: state.microphones,
+                audiooutput: state.speakers,
+                videoinput: state.cameras,
+            };
+
+            const preferredDeviceIdByKind: Record<DeviceKind, string | null> = {
+                audioinput: state.preferredMicrophoneId,
+                audiooutput: state.preferredSpeakerId,
+                videoinput: state.preferredCameraId,
+            };
+
+            // A preference only says which device was in use when the active device moved since the last list,
+            // which is what recovering a dead track does; otherwise it may be a device plugged back in that the user is not on
+            const inUseDeviceIds = [
+                getActiveDeviceId(state, kind),
+                state.activeChangedSinceList[kind] ? preferredDeviceIdByKind[kind] : null,
+            ].filter((deviceId): deviceId is string => !!deviceId);
+
+            const disconnectedInUseDevice = previousDevicesByKind[kind].find(
+                (device) =>
+                    inUseDeviceIds.includes(device.deviceId) &&
+                    !devices.some((listedDevice) => listedDevice.deviceId === device.deviceId)
+            );
+
+            if (disconnectedInUseDevice) {
+                state.disconnectedActiveDevices[kind] = disconnectedInUseDevice;
+            }
+
+            state.activeChangedSinceList[kind] = false;
+
             switch (kind) {
                 case 'videoinput':
                     state.cameras = devices;
@@ -64,6 +116,9 @@ const slice = createSlice({
                     state.speakers = devices;
                     break;
             }
+        },
+        clearDisconnectedActiveDevice: (state, action: PayloadAction<{ kind: DeviceKind }>) => {
+            state.disconnectedActiveDevices[action.payload.kind] = null;
         },
         setPreferredDevice: (state, action: PayloadAction<{ kind: DeviceKind; deviceId: string | null }>) => {
             const { kind, deviceId } = action.payload;
@@ -81,6 +136,11 @@ const slice = createSlice({
         },
         setActiveDevice: (state, action: PayloadAction<{ kind: DeviceKind; deviceId: string }>) => {
             const { kind, deviceId } = action.payload;
+
+            if (getActiveDeviceId(state, kind) !== deviceId) {
+                state.activeChangedSinceList[kind] = true;
+            }
+
             switch (kind) {
                 case 'videoinput':
                     state.activeCameraId = deviceId;
@@ -131,16 +191,21 @@ const getAutoRejectThresholdMs = () => {
     return AUTOREJECT_THRESHOLD_MS;
 };
 
+export interface PermissionRequestResult {
+    state: PermissionState;
+    isPermissionAnswer: boolean;
+}
+
 export const requestPermission =
     (
         deviceType: 'camera' | 'microphone',
         deviceId?: string
-    ): ThunkAction<Promise<PermissionState>, MeetState, ProtonThunkArguments, UnknownAction> =>
+    ): ThunkAction<Promise<PermissionRequestResult>, MeetState, ProtonThunkArguments, UnknownAction> =>
     async (dispatch, getState) => {
         const permissions = getState().deviceManagement.permissions;
         const currentPermission = permissions[deviceType];
         if (currentPermission === 'granted') {
-            return 'granted';
+            return { state: 'granted', isPermissionAnswer: true };
         }
 
         let queryState: PermissionState = 'prompt';
@@ -152,7 +217,7 @@ export const requestPermission =
 
         if (queryState === 'granted') {
             dispatch(slice.actions.setPermissions({ [deviceType]: 'granted' }));
-            return 'granted';
+            return { state: 'granted', isPermissionAnswer: true };
         }
 
         const start = performance.now();
@@ -174,7 +239,7 @@ export const requestPermission =
             stream.getTracks().forEach((track) => track.stop());
 
             dispatch(slice.actions.setPermissions({ [deviceType]: 'granted' }));
-            return 'granted';
+            return { state: 'granted', isPermissionAnswer: true };
         } catch (error) {
             const end = performance.now();
             // If the permission request takes less than 300ms, the browser is blocking the permission request.
@@ -193,11 +258,11 @@ export const requestPermission =
                     throw new PermissionBlockedError('Permissions are blocked by the browser');
                 }
 
-                return actualState;
+                return { state: actualState, isPermissionAnswer: true };
             }
 
             dispatch(slice.actions.setPermissions({ [deviceType]: 'prompt' }));
-            return 'prompt';
+            return { state: 'prompt', isPermissionAnswer: false };
         }
     };
 
@@ -224,6 +289,7 @@ export const setPreferredDeviceAndPersist =
 export const {
     setPermissions,
     setDeviceList,
+    clearDisconnectedActiveDevice,
     setActiveDevice,
     setInitialCameraState,
     setInitialAudioState,

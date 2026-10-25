@@ -6,17 +6,19 @@ import { useAddresses } from '@proton/account/addresses/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { Button } from '@proton/atoms/Button/Button';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
-import InputFieldTwo from '@proton/components/components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '@proton/components/components/v2/field/InputField';
 import useFormErrors from '@proton/components/components/v2/useFormErrors';
 import OnboardingStep from '@proton/components/containers/onboarding/OnboardingStep';
 import type { OnboardingStepRenderCallback } from '@proton/components/containers/onboarding/interface';
 import useLoading from '@proton/hooks/useLoading';
 import { updateAddress } from '@proton/shared/lib/api/addresses';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
-import type { Address } from '@proton/shared/lib/interfaces';
-import { getLocalPart } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import { getLocalPart } from '@proton/shared/lib/keys/setupAddress';
 import displayNameImage from '@proton/styles/assets/img/onboarding/img-display-name.svg';
 
+import { TrackOnboardingStepLoad } from '../../../../telemetry/TrackOnboardingStepLoad';
+import { ONBOARDING_STEPS, useOnboardingTracking } from '../../../../telemetry/onboardingEvents';
 import type { OnboardingStepEligibleCallback } from '../interface';
 import OnboardingContent from '../layout/OnboardingContent';
 
@@ -33,6 +35,7 @@ const DisplayNameStep = ({ onNext }: OnboardingStepRenderCallback) => {
     const { validator, onFormSubmit } = useFormErrors();
     const [loadingSubmit, withLoading] = useLoading();
     const api = useApi();
+    const { trackStepCompleted } = useOnboardingTracking();
 
     const onSubmit = async ({ address, displayName }: { address: Address; displayName: string }) => {
         await api(
@@ -41,6 +44,7 @@ const DisplayNameStep = ({ onNext }: OnboardingStepRenderCallback) => {
                 Signature: address.Signature,
             })
         );
+        trackStepCompleted(ONBOARDING_STEPS.displayName);
         onNext();
     };
 
@@ -52,6 +56,7 @@ const DisplayNameStep = ({ onNext }: OnboardingStepRenderCallback) => {
 
     return (
         <OnboardingStep>
+            <TrackOnboardingStepLoad step={ONBOARDING_STEPS.displayName} />
             <form
                 name="accountForm"
                 onSubmit={(e) => {

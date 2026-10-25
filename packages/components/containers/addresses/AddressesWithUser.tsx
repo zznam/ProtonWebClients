@@ -29,9 +29,12 @@ import {
 } from '@proton/shared/lib/constants';
 import { getIsBYOEOnlyAccount } from '@proton/shared/lib/helpers/address';
 import { textToClipboard } from '@proton/shared/lib/helpers/browser';
-import { getUpsellRef } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Address, CachedOrganizationKey, Member, UserModel } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
+import type { CachedOrganizationKey } from '@proton/shared/lib/interfaces/OrganizationKey';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { getIsNonDefault, sortAddresses } from '@proton/shared/lib/mail/addresses';
 import addressesImg from '@proton/styles/assets/img/illustrations/new-upsells-img/addresses.svg';
 import move from '@proton/utils/move';

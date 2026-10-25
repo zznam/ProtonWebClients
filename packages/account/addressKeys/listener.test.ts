@@ -3,14 +3,17 @@ import { CryptoProxy } from '@protontech/crypto';
 import { combineReducers } from '@reduxjs/toolkit';
 import { waitFor } from '@testing-library/react';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { getTestStore } from '@proton/redux-shared-store/test';
 import { EVENT_ACTIONS } from '@proton/shared/lib/constants';
-import type { Address, AddressKey, DecryptedAddressKey, UserModel } from '@proton/shared/lib/interfaces';
-import { getDecryptedAddressKeysHelper, getDecryptedUserKeysHelper } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { AddressKey, DecryptedAddressKey } from '@proton/shared/lib/interfaces/Key';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import { getDecryptedAddressKeysHelper } from '@proton/shared/lib/keys/getDecryptedAddressKeys';
+import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys/getDecryptedUserKeys';
 
 import { addressesReducer } from '../addresses';
-import { getModelState } from '../tests';
+import { getModelState } from '../testing/getModelState';
 import { getServerEvent } from '../tests/getServerEvent';
 import { userReducer } from '../user';
 import { userKeysReducer } from '../userKeys';
@@ -40,9 +43,13 @@ jest.mock('@protontech/crypto', () => {
         },
     };
 });
-jest.mock('@proton/shared/lib/keys', () => {
+jest.mock('@proton/shared/lib/keys/getDecryptedAddressKeys', () => {
     return {
         getDecryptedAddressKeysHelper: jest.fn(),
+    };
+});
+jest.mock('@proton/shared/lib/keys/getDecryptedUserKeys', () => {
+    return {
         getDecryptedUserKeysHelper: jest.fn(),
     };
 });

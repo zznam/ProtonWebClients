@@ -1,7 +1,7 @@
 import type { ReactNode, RefObject } from 'react';
 import { createContext, useContext, useEffect } from 'react';
 
-import { useHandler } from '@proton/components/hooks/useHandler';
+import { useHandler } from '@proton/hooks/useHandler';
 
 const MailContentRefContext = createContext<RefObject<HTMLDivElement>>(null as any);
 
@@ -20,6 +20,7 @@ export const useClickMailContent = (handler: (event: Event) => void) => {
         mailContentRef.current?.addEventListener('touchstart', stableHandler, { passive: true });
 
         return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps -- the ref points to the stable mail content container
             mailContentRef.current?.removeEventListener('mousedown', stableHandler);
             // eslint-disable-next-line react-hooks/exhaustive-deps -- autofix-eslint-44599F
             mailContentRef.current?.removeEventListener('touchstart', stableHandler);

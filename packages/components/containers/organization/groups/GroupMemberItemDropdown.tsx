@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 
 import { c } from 'ttag';
 
-import { resumeGroupMember as resumeGroupMemberAction, updateOverridePermissions } from '@proton/account';
+import { resumeGroupMember as resumeGroupMemberAction, updateOverridePermissions } from '@proton/account/groupMembers';
 import { addGroupOwnerThunk } from '@proton/account/groups/addGroupOwner';
 import { deleteGroupMemberThunk } from '@proton/account/groups/deleteGroupMember';
 import { getIsScimGroup } from '@proton/account/groups/groupFlags';
@@ -21,8 +21,10 @@ import {
     updateGroupMember,
 } from '@proton/shared/lib/api/groups';
 import { clearBit, hasBit, setBit } from '@proton/shared/lib/helpers/bitset';
-import type { EnhancedMember, Group, GroupMember } from '@proton/shared/lib/interfaces';
-import { GROUP_MEMBER_PERMISSIONS, GROUP_MEMBER_STATE } from '@proton/shared/lib/interfaces';
+import type { Group } from '@proton/shared/lib/interfaces/Group';
+import type { GroupMember } from '@proton/shared/lib/interfaces/GroupMember';
+import { GROUP_MEMBER_PERMISSIONS, GROUP_MEMBER_STATE } from '@proton/shared/lib/interfaces/GroupMember';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
 import { useFlag } from '@proton/unleash/useFlag';
 import isTruthy from '@proton/utils/isTruthy';
 

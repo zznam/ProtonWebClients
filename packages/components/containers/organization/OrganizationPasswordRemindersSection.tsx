@@ -10,11 +10,12 @@ import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { updateOrganizationSettings } from '@proton/shared/lib/api/organization';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { OrganizationExtended, OrganizationSettings } from '@proton/shared/lib/interfaces';
+import type { OrganizationExtended, OrganizationSettings } from '@proton/shared/lib/interfaces/Organization';
 
 import Info from '../../components/link/Info';
 import Loader from '../../components/loader/Loader';
-import { PermissionBanner, PermissionTooltip } from '../../components/orgPermissions/index';
+import PermissionBanner from '../../components/orgPermissions/PermissionBanner';
+import PermissionTooltip from '../../components/orgPermissions/PermissionTooltip';
 import Toggle from '../../components/toggle/Toggle';
 import SettingsLayout from '../account/SettingsLayout';
 import SettingsLayoutLeft from '../account/SettingsLayoutLeft';

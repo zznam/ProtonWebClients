@@ -4,16 +4,17 @@ import { c } from 'ttag';
 
 import { useAddresses } from '@proton/account/addresses/hooks';
 import { useUser } from '@proton/account/user/hooks';
-import { useOAuthToken } from '@proton/activation/index';
 import { OAUTH_PROVIDER } from '@proton/activation/src/interface';
+import { useOAuthToken } from '@proton/activation/src/logic/oauthToken/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useModalStateObject } from '@proton/components';
+import { useModalStateObject } from '@proton/components/components/modalTwo/useModalState';
 import { createZoomMeeting } from '@proton/shared/lib/api/calendars';
 import { getApiError, getApiErrorMessage } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
-import type { VideoConferenceMeetingCreation } from '@proton/shared/lib/interfaces/calendar';
-import { type EventModel, VIDEO_CONFERENCE_PROVIDER } from '@proton/shared/lib/interfaces/calendar';
+import { VIDEO_CONFERENCE_PROVIDER } from '@proton/shared/lib/interfaces/calendar/Api';
+import type { VideoConferenceMeetingCreation } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { EventModel } from '@proton/shared/lib/interfaces/calendar/Event';
 
 import { VIDEO_CONF_API_ERROR_CODES } from '../videoConferencing/constants';
 import { VideoConferenceZoomIntegration, useVideoConfTelemetry } from '../videoConferencing/useVideoConfTelemetry';

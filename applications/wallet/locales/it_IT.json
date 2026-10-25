@@ -130,9 +130,6 @@
       "Done": [
         "Fatto"
       ],
-      "Downgrade": [
-        "Effettua il downgrade"
-      ],
       "Download ${ DRIVE_APP_NAME } apps": [
         "Scarica le app per ${ DRIVE_APP_NAME }"
       ],
@@ -232,6 +229,9 @@
       "More benefits": [
         "Più vantaggi"
       ],
+      "More info": [
+        "Altre informazioni"
+      ],
       "More info: ${ safeTitle }": [
         "Maggiori informazioni: ${ safeTitle }"
       ],
@@ -282,9 +282,6 @@
       ],
       "Remove": [
         "Rimuovi"
-      ],
-      "Remove bonuses": [
-        "Rimuovi bonus"
       ],
       "Remove gift code": [
         "Rimuovi codice regalo"
@@ -369,6 +366,9 @@
       ],
       "Switch or add account": [
         "Cambia o aggiungi account"
+      ],
+      "Switch to ${ planName }": [
+        "Passa al piano ${ planName }"
       ],
       "Take a tour": [
         "Fai un tour"
@@ -508,6 +508,12 @@
       ],
       "Domains": [
         "Domini"
+      ],
+      "Managed Service Provider": [
+        "Fornitore di servizi gestiti"
+      ],
+      "Organizations with the Managed Service Provider addon can create and manage subsidiary organizations.": [
+        "Le organizzazioni che dispongono dell'estensione “Managed Service Provider” possono creare e gestire organizzazioni affiliate."
       ],
       "Servers": [
         "Server"
@@ -894,8 +900,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Applicazione desktop ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "${ appName } Applicazione desktop"
       ]
     },
     "Bug category": {
@@ -1100,6 +1106,15 @@
         "${ users } utente",
         "${ users } utenti"
       ],
+      "Amount due": [
+        "Ammontare dovuto"
+      ],
+      "Amount due after trial": [
+        "Importo dovuto dopo il periodo di prova"
+      ],
+      "Amount due now": [
+        "Importo dovuto ora"
+      ],
       "Subtotal": [
         "Subtotale"
       ],
@@ -1109,6 +1124,10 @@
       ],
       "Total": [
         "Totale"
+      ],
+      "Total for ${ cycle } month": [
+        "Totale per ${ cycle } mese",
+        "Totale per ${ cycle } mesi"
       ]
     },
     "Collapsible tooltip": {
@@ -1125,9 +1144,6 @@
       ],
       "Basic chat history": [
         "Cronologia chat di base"
-      ],
-      "Built and based in Europe": [
-        "Sviluppato e basato in Europa"
       ],
       "Compliance with data protection regulations": [
         "Conformità con le normative sulla protezione dei dati"
@@ -2348,6 +2364,9 @@
       "Incorrect backup password. Please try again.": [
         "Password di backup errata. Riprova."
       ],
+      "Incorrect password. Please try again.": [
+        "Password errata. Per favore riprova."
+      ],
       "Incorrect second password. Please try again.": [
         "Password secondaria errata. Riprova."
       ],
@@ -2497,6 +2516,9 @@
       ],
       "Wrong billing address": [
         "Indirizzo di fatturazione errato"
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Frase di recupero errata. Riprova o usa un altro metodo di recupero."
       ]
     },
     "Error message": {
@@ -2548,38 +2570,6 @@
       ],
       "We strongly recommend using the descriptor above instead, as it contains all necessary information to ensure correct address generation. xpub, ypub, and zpub are not part of standard BIPs and should only be used with caution.": [
         "Ti consigliamo vivamente di usare il descrittore qui sopra, poiché contiene tutte le informazioni necessarie per garantire la corretta generazione dell'indirizzo. xpub, ypub e zpub non fanno parte dei BIP standard e dovrebbero essere usati solo con cautela."
-      ]
-    },
-    "familyOffer_2023:Error": {
-      "Family group not recognized. Try again.": [
-        "Gruppo familiare non riconosciuto. Riprova."
-      ],
-      "Organization not recognized. Try again.": [
-        "Organizzazione non riconosciuta. Riprova."
-      ]
-    },
-    "familyOffer_2023:Label": {
-      "Enter family group name to confirm": [
-        "Inserisci il nome del gruppo familiare per confermare"
-      ],
-      "Enter organization name to confirm": [
-        "Inserisci il nome dell'organizzazione per confermare"
-      ]
-    },
-    "familyOffer_2023:Member downgrade modal": {
-      "This will permanently delete all sub-users, accounts, and data associated with your organization.": [
-        "Questa operazione eliminerà definitivamente tutti i sottoutenti, gli account e i dati associati alla tua organizzazione."
-      ],
-      "This will remove all ${ BRAND_NAME } premium features for every family member.": [
-        "Questa operazione rimuoverà tutte le funzioni premium di ${ BRAND_NAME } per ogni membro della famiglia."
-      ]
-    },
-    "familyOffer_2023:Title": {
-      "Delete family group?": [
-        "Vuoi eliminare il gruppo famigliare?"
-      ],
-      "Delete organization?": [
-        "Vuoi eliminare l'organizzazione?"
       ]
     },
     "Feature": {
@@ -2784,15 +2774,11 @@
       "(${ serverPrice }/month)": [
         "(${ serverPrice }/mese)"
       ],
-      "+${ bonusSpace } bonus storage": [
-        "+${ bonusSpace } memoria bonus"
+      "1 device per user": [
+        "1 dispositivo per utente"
       ],
-      "+${ organization.BonusVPN } connection for ${ VPN_APP_NAME } (allows you to connect more devices to VPN)": [
-        "+${ organization.BonusVPN } connessione per ${ VPN_APP_NAME } (consente di connettere più dispositivi alla VPN)",
-        "+${ organization.BonusVPN } connessioni per ${ VPN_APP_NAME } (consente di connettere più dispositivi alla VPN)"
-      ],
-      "30-day money-back guarantee.": [
-        "Garanzia di rimborso entro 30 giorni"
+      "1 vault per user": [
+        "1 cassaforte per utente"
       ],
       "A phone number can only be used to verify one ${ BRAND_NAME } account": [
         "Ogni numero di telefono può essere utilizzato per verificare un unico account ${ BRAND_NAME }"
@@ -2845,9 +2831,6 @@
       "Bitcoin": [
         "Bitcoin"
       ],
-      "By downgrading to a Free plan, you will permanently lose these benefits, even if you upgrade again in the future.": [
-        "Declassando ad un piano gratuito, perderai definitivamente questi benefici, anche se in futuro effettuerai un nuovo upgrade."
-      ],
       "Click \"Request new code\" to have a new verification code sent to ${ strong }. If this phone number is incorrect, click \"Edit\" to correct it.": [
         "Clicca \"Richiedi nuovo codice\" per ricevere un nuovo codice di verifica al ${ strong }. Se questo numero telefonico è incorretto, clicca su \"Modifica\" per correggerlo."
       ],
@@ -2890,9 +2873,6 @@
       ],
       "Downgrade": [
         "Effettua il downgrade"
-      ],
-      "Downgrading will terminate any connections to paid ${ VPN_APP_NAME } servers.": [
-        "Il downgrading terminerà qualsiasi connessione ai server ${ VPN_APP_NAME } a pagamento."
       ],
       "Download current logs": [
         "Scarica i log correnti"
@@ -2963,15 +2943,6 @@
       "If you lost access to your authenticator app, you can use 1 of the 16 backup recovery codes provided when you set up two-factor authentication. ${ learnMoreLink }": [
         "Se hai perso l'accesso alla tua app di autenticazione, puoi usare 1 dei 16 codici di recupero forniti durante la configurazione dell'autenticazione a due fattori. ${ learnMoreLink }"
       ],
-      "If you proceed with the downgrade, you will lose access to ${ MAIL_APP_NAME } and ${ VPN_APP_NAME } paid features.": [
-        "Se procedi con il downgrade, perderai l'accesso alle funzionalità a pagamento di ${ MAIL_APP_NAME } e ${ VPN_APP_NAME }."
-      ],
-      "If you proceed with the downgrade, you will lose access to ${ MAIL_APP_NAME } paid features, including additional storage and filters.": [
-        "Se procedi con il downgrade, perderai l'accesso alle funzionalità a pagamento di ${ MAIL_APP_NAME }, incluse archiviazione e filtri aggiuntivi."
-      ],
-      "If you proceed with the downgrade, you will lose access to ${ VPN_APP_NAME } paid features.": [
-        "Se procedi con il downgrade, perderai l'accesso alle funzionalità a pagamento di ${ VPN_APP_NAME }."
-      ],
       "In the next step, you’ll be able to submit a deposit using a Bitcoin address.": [
         "Nel passaggio successivo, sarai in grado di inviare un deposito utilizzando un indirizzo Bitcoin."
       ],
@@ -3013,6 +2984,9 @@
       ],
       "No payment is required at this time.": [
         "Al momento non è richiesto alcun pagamento."
+      ],
+      "No payment is required.": [
+        "Non è richiesto alcun pagamento."
       ],
       "No results found": [
         "Nessun risultato trovato"
@@ -3073,9 +3047,6 @@
       ],
       "Setting up your new address…": [
         "Configurazione del tuo nuovo indirizzo…"
-      ],
-      "Since you're a loyal user, your account has additional features enabled.": [
-        "Dato che sei un utente fedele, il tuo account ha funzionalità aggiuntive abilitate."
       ],
       "Start sharing it with contacts and use it for online services.": [
         "Inizia a condividerlo con i contatti e utilizzalo per i servizi online."
@@ -3159,6 +3130,9 @@
       "We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.": [
         "Sarai reindirizzato su PayPal in una nuova scheda del browser per completare questa transazione. Se utilizzi un blocco pop-up, disattivalo per continuare."
       ],
+      "We'll get back to you shortly.": [
+        "Ti risponderemo a breve."
+      ],
       "We'll send a new verification code to ${ strong }": [
         "Invieremo un nuovo codice di verifica a ${ strong }"
       ],
@@ -3208,9 +3182,6 @@
       ],
       "You may be redirected to your bank’s website.": [
         "Potresti essere reindirizzato al sito web della tua banca."
-      ],
-      "You must disable or remove any additional ${ MAIL_APP_NAME } users, addresses, and custom domains before you can downgrade.": [
-        "Devi disabilitare o rimuovere qualsiasi utente aggiuntivo di ${ MAIL_APP_NAME }, indirizzi e domini personalizzati prima di poter effettuare il downgrade."
       ],
       "You will lose access to ${ planTitle } features on this date.": [
         "Perderai l'accesso alle funzionalità del piano ${ planTitle } a partire da questa data."
@@ -3463,6 +3434,9 @@
       "Phone number": [
         "Numero di telefono"
       ],
+      "Please share any feedback to help us improve.": [
+        "Condividi un feedback per aiutarci a migliorare."
+      ],
       "Postal code": [
         "Codice postale"
       ],
@@ -3507,6 +3481,9 @@
       ],
       "What happened?": [
         "Cos'è successo?"
+      ],
+      "Why would you like to cancel?": [
+        "Perché vorresti annullare?"
       ],
       "Your password (admin)": [
         "La tua password (admin)"
@@ -3764,31 +3741,11 @@
       ]
     },
     "new_plans: action": {
-      "Delete account": [
-        "Elimina l'account"
-      ],
-      "Downgrade account": [
-        "Esegui il downgrade dell'account"
-      ],
       "Get ${ BRAND_NAME } for free": [
         "Ottieni ${ BRAND_NAME } gratis"
       ],
       "Get ${ planName }": [
         "Ottieni il piano ${ planName }"
-      ],
-      "Keep ${ plan }": [
-        "Mantieni ${ plan }"
-      ],
-      "Keep account": [
-        "Mantieni l'account"
-      ],
-      "Switch plan": [
-        "Cambia piano"
-      ]
-    },
-    "new_plans: Action": {
-      "Downgrade to ${ downgradedPlanName }": [
-        "Esegui il downgrade a ${ downgradedPlanName }"
       ]
     },
     "new_plans: feature": {
@@ -3926,9 +3883,6 @@
       "Auto-reply": [
         "Risposta automatica"
       ],
-      "Autofill credit cards (coming soon)": [
-        "Compilazione automatica carte di credito (prossimamente)"
-      ],
       "Automatic email forwarding": [
         "Inoltro automatico delle email"
       ],
@@ -3955,9 +3909,6 @@
       ],
       "Custom and secure business email": [
         "Email aziendale protetta e personalizzata"
-      ],
-      "Custom domains for email aliases": [
-        "Domini personalizzati per alias email"
       ],
       "Custom email domains": [
         "Domini email personalizzati"
@@ -4016,9 +3967,6 @@
       "Free features from ${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }, ${ CALENDAR_SHORT_APP_NAME }, and ${ DRIVE_SHORT_APP_NAME }": [
         "Funzioni gratuite da ${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }, ${ CALENDAR_SHORT_APP_NAME } e ${ DRIVE_SHORT_APP_NAME }"
       ],
-      "Free VPN on a single device": [
-        "VPN gratuita su un solo dispositivo"
-      ],
       "Fully refundable for 30 days": [
         "Completamente rimborsabile per 30 giorni"
       ],
@@ -4027,10 +3975,6 @@
       ],
       "Group management (coming soon)": [
         "Gestione dei gruppi (in arrivo)"
-      ],
-      "High-speed VPN on ${ n } device": [
-        "VPN ad alta velocità su ${ n } dispositivo",
-        "VPN ad alta velocità su ${ n } dispositivi"
       ],
       "HTML signatures": [
         "Firme HTML"
@@ -4170,9 +4114,6 @@
       "Unlimited shared ${ PASS_SHORT_APP_NAME } vaults per user": [
         "Casseforti ${ PASS_SHORT_APP_NAME } condivise illimitate per utente"
       ],
-      "Unlimited shared vaults with access permissions": [
-        "Casseforti condivise illimitate con autorizzazioni di accesso"
-      ],
       "Unlimited vault sharing": [
         "Casseforti condivise illimitate"
       ],
@@ -4276,18 +4217,6 @@
       "For next-level password management and identity protection.": [
         "Per una gestione delle password e protezione dell'identità di livello superiore."
       ],
-      "If you delete your account, you lose all ${ visionary } plan benefits and it won’t be available if you create a new account.": [
-        "Se elimini il tuo account, perdi tutti i vantaggi del piano ${ visionary } e non sarà più disponibile se crei un nuovo account."
-      ],
-      "If you downgrade your account, you lose all ${ visionary } plan benefits and it won’t be available if you try to subscribe again.": [
-        "Se esegui il downgrade del tuo account, perdi tutti i vantaggi del piano ${ visionary } e non sarà più disponibile se proverai ad abbonarti in futuro."
-      ],
-      "If you switch to a different plan, you lose all ${ visionary } plan benefits and won’t be able to switch back to ${ visionary }.": [
-        "Se passi a un piano diverso, perdi tutti i vantaggi del piano ${ visionary } e non potrai più tornare a ${ visionary }."
-      ],
-      "Our ${ visionary } plan is no longer available to new subscribers as it is a special plan for original ${ BRAND_NAME } users with special features and benefits.": [
-        "Il nostro piano ${ visionary } non è più disponibile per i nuovi abbonati perché è un piano speciale per utenti originali ${ BRAND_NAME } con funzioni e vantaggi speciali."
-      ],
       "Pay once, secure your passwords and identity forever.": [
         "Paga solo una volta, e metti in sicuro le tue password e identità per sempre."
       ],
@@ -4317,29 +4246,14 @@
       ],
       "Unlimited privacy and more storage for up to 2 people.": [
         "Privacy illimitata e più spazio di archiviazione fino a 2 persone."
-      ],
-      "You’re enjoying a promotional price on your current plan. If you delete your account, you will lose your promotional price and it won’t be available if you create a new account.": [
-        "Stai godendo di un prezzo promozionale sul tuo piano attuale. Se elimini il tuo account, perderai la possibilità di usufruire di questa promozione e non sarà più disponibile se crei un nuovo account."
-      ],
-      "You’re enjoying a promotional price on your current plan. If you downgrade your account, you will lose your promotional price and it won’t be available if you try to subscribe again.": [
-        "Stai godendo di un prezzo promozionale sul tuo piano attuale. Se esegui il downgrade del tuo account, perderai la possibilità di usufruire di questa promozione e non sarà più disponibile se provi ad abbonarti di nuovo."
       ]
     },
     "new_plans: title": {
-      "Delete account?": [
-        "Vuoi eliminare l'account?"
-      ],
-      "Downgrade account?": [
-        "Vuoi effettuare il downgrade dell'account?"
-      ],
       "Review subscription": [
         "Rivedi abbonamento"
       ],
       "Review subscription and pay": [
         "Controlla abbonamento e paga"
-      ],
-      "Switch plans?": [
-        "Vuoi cambiare il piano?"
       ]
     },
     "new_plans: tooltip": {
@@ -4461,9 +4375,6 @@
       "Our servers’ hard disks are fully encrypted with multiple password layers so your data is protected even if our hardware is compromised": [
         "Gli hard disk dei nostri server sono completamente crittografati con più livelli di password, in tal modo i tuoi dati rimarrebbero protetti anche se il nostro hardware dovesse essere compromesso"
       ],
-      "Password management and identity protection": [
-        "Gestione delle password e protezione dell'identità"
-      ],
       "Personalize your email signature with logos, images, social media icons, links to your contact details, and more": [
         "Personalizza la tua firma email con loghi, immagini, icone di social media, link ai tuoi dettagli di contatto e molto altro"
       ],
@@ -4566,12 +4477,6 @@
         "${ n } paese",
         "${ n } paesi"
       ],
-      "Access advanced VPN features": [
-        "Accedi a funzionalità VPN avanzate"
-      ],
-      "Add more personalization with 15 email addresses and support for 3 custom email domains": [
-        "Aggiungi più personalizzazione con 15 indirizzi email e 3 domini email personalizzati inclusi"
-      ],
       "AES 256-bit VPN encryption": [
         "Crittografia VPN AES a 256 bit"
       ],
@@ -4581,9 +4486,6 @@
       "Boost your storage space to ${ bundleStorage } per user": [
         "Aumenta il tuo spazio di archiviazione a ${ bundleStorage } per utente"
       ],
-      "Boost your storage space to ${ bundleStorage } total": [
-        "Aumenta il tuo spazio di archiviazione a un totale di ${ bundleStorage }"
-      ],
       "Browser extension": [
         "Estensione per il browser"
       ],
@@ -4592,13 +4494,6 @@
       ],
       "Central control panel": [
         "Pannello di controllo centrale"
-      ],
-      "Create up to ${ n } calendar": [
-        "Crea fino a ${ n } calendario",
-        "Crea fino a ${ n } calendari"
-      ],
-      "Dedicated Account manager": [
-        "Gestore account dedicato"
       ],
       "Dedicated server locations in ${ numberOfCountries }+ countries": [
         "Locazioni server dedicati in ${ numberOfCountries }+ paesi"
@@ -4665,9 +4560,6 @@
       ],
       "Secure vault, item and link sharing": [
         "Cassaforte sicura, oggetti e condivisione dei link"
-      ],
-      "Unlimited logins, notes, credit cards and more": [
-        "Login, note, carte di credito illimitati e molto altro ancora"
       ]
     },
     "pass_signup_2023: Title": {
@@ -4725,6 +4617,11 @@
         "Devi avere accesso alla chiave dell'organizzazione per eseguire questa operazione."
       ]
     },
+    "Payment Method": {
+      "Bank Account": [
+        "Conto bancario"
+      ]
+    },
     "Payment method option": {
       "Apple Pay": [
         "Apple Pay"
@@ -4754,6 +4651,12 @@
       "${ formattedPrice } (excl. tax)": [
         "${ formattedPrice } (IVA esclusa)"
       ],
+      "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } can’t be combined with ${ PLAN_NAMES[PLANS.PASS] }.": [
+        "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } non può essere combinato con ${ PLAN_NAMES[PLANS.PASS] }."
+      ],
+      "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } is only available on business plans.": [
+        "${ PLAN_NAMES[PLANS.PASS_LIFETIME] } è disponibile solo nei piani aziendali."
+      ],
       "${ rate }% tax: ${ taxAmountElement }": [
         "Imposta del ${ rate }%: ${ taxAmountElement }"
       ],
@@ -4763,8 +4666,17 @@
       "Amount due after trial on ${ formattedDate }": [
         "Importo dovuto dopo la prova il ${ formattedDate }"
       ],
+      "An organization is required for this plan.": [
+        "Per questo piano è necessaria un'organizzazione."
+      ],
       "Billing Country": [
         "Paese di fatturazione"
+      ],
+      "Buying credits requires a separate purchase.": [
+        "L'acquisto dei crediti richiede un acquisto separato."
+      ],
+      "By switching, you agree to our ${ termsLink }.": [
+        "Effettuando il passaggio, accetti i nostri ${ termsLink }."
       ],
       "Card number": [
         "Numero della carta"
@@ -4805,11 +4717,20 @@
       "More plans are available in other currencies": [
         "Sono disponibili altri piani in altre valute"
       ],
+      "Only one ${ PLAN_NAMES[PLANS.PASS_LIFETIME] } can be purchased.": [
+        "È possibile acquistare solo un ${ PLAN_NAMES[PLANS.PASS_LIFETIME] }."
+      ],
       "Pay with ${ IDEAL_WERO_BRAND_NAME }": [
         "Paga con ${ IDEAL_WERO_BRAND_NAME }"
       ],
       "Payment method required for the subscription to be activated after the trial ends.": [
         "Serve un metodo di pagamento per attivare l'abbonamento una volta terminata la prova."
+      ],
+      "Please close extra wallet accounts before changing your plan.": [
+        "Ti preghiamo di chiudere eventuali conti aggiuntivi del portafoglio prima di cambiare piano."
+      ],
+      "Please close extra wallets before changing your plan.": [
+        "Ti preghiamo di chiudere i portafogli in più prima di modificare il tuo piano."
       ],
       "Please reactivate your subscription first to decrease the number of add-ons.": [
         "Riattiva prima l'abbonamento per ridurre il numero di componenti aggiuntivi."
@@ -4819,6 +4740,9 @@
       ],
       "Renews at ${ renewPriceStr }, cancel anytime.": [
         "Rinnova a ${ renewPriceStr }, annulla in qualsiasi momento."
+      ],
+      "Scribe seats can’t exceed the number of members.": [
+        "Il numero dei seggi riservati agli scribi non può superare il numero dei membri."
       ],
       "Tax ${ rate }%": [
         "Imposta ${ rate }%"
@@ -4832,6 +4756,18 @@
       "The discount is valid for ${ renewalsWithCoupon } renewal.": [
         "Lo sconto è valido per ${ renewalsWithCoupon } rinnovo.",
         "Lo sconto è valido per ${ renewalsWithCoupon } rinnovi."
+      ],
+      "The selected plan doesn’t offer enough addresses for your account.": [
+        "Il piano selezionato non offre un numero sufficiente di indirizzi per il tuo account."
+      ],
+      "The selected plan doesn’t offer enough domains for your account.": [
+        "Il piano selezionato non offre un numero sufficiente di domini per il tuo account."
+      ],
+      "The selected plan doesn’t offer enough members for your account.": [
+        "Il piano selezionato non offre un numero sufficiente di iscritti per il tuo account."
+      ],
+      "The selected plan doesn’t offer enough storage for your account.": [
+        "Il piano selezionato non offre spazio di archiviazione sufficiente per il tuo account."
       ],
       "The specially discounted price is valid for ${ couponRedemptions } month. Then it will automatically be renewed at ${ renewPriceStr } for 1 month. You can cancel at any time.": [
         "Il prezzo scontato speciale è valido per ${ couponRedemptions } mese. Poi si rinnoverà automaticamente a ${ renewPriceStr } per 1 mese. Puoi annullare in qualsiasi momento.",
@@ -4862,14 +4798,35 @@
       "This action expands the existing subscription. You will be charged only for the new add-ons and the remaining time of the current billing cycle. The renewal date of your subscription will not be changed.": [
         "Questa azione estende l'abbonamento esistente. Ti verranno addebitati solo i nuovi add-on e il tempo rimanente del ciclo di fatturazione corrente. La data di rinnovo del tuo abbonamento non verrà modificata."
       ],
+      "This dedicated server is assigned to a gateway and can’t be changed.": [
+        "Questo server dedicato è assegnato a un gateway e non può essere modificato."
+      ],
       "This offer is not available with your current plan.": [
         "Questa offerta non è disponibile con il tuo piano attuale."
       ],
       "This payment method will become your new default for all future renewals.": [
         "Questo diventerà il tuo nuovo metodo di pagamento predefinito per tutti i rinnovi futuri."
       ],
+      "This plan doesn’t support the members on your account.": [
+        "Questo piano non include l'assistenza per gli utenti associati al tuo account."
+      ],
       "Timeout exceeded": [
         "Limite di tempo superato"
+      ],
+      "Trial plans don’t support ${ LUMO_SHORT_APP_NAME } seats.": [
+        "I piani di prova non supportano le licenze di ${ LUMO_SHORT_APP_NAME }."
+      ],
+      "Trial plans don’t support custom domains.": [
+        "I piani di prova non supportano i domini personalizzati."
+      ],
+      "Trial plans don’t support dedicated IPs.": [
+        "I piani di prova non supportano gli indirizzi IP dedicati."
+      ],
+      "Trial plans don’t support Scribe seats.": [
+        "I piani di prova non supportano le licenze Scribe."
+      ],
+      "Trial plans don’t support this many members.": [
+        "I piani di prova non supportano un numero così elevato di iscritti."
       ],
       "VAT number": [
         "Numero partita IVA"
@@ -4882,6 +4839,9 @@
       ],
       "You already have a subscription to this plan. You can change your subscription on ${ subscriptionPlatform }.": [
         "Hai già un abbonamento a questo piano. Puoi cambiare il tuo abbonamento su ${ subscriptionPlatform }."
+      ],
+      "You already own ${ PLAN_NAMES[PLANS.PASS_LIFETIME] }.": [
+        "Possiedi già ${ PLAN_NAMES[PLANS.PASS_LIFETIME] }."
       ],
       "You will soon be redirected to PayPal to verify your payment.": [
         "Sarai presto reindirizzato a PayPal per verificare il pagamento."
@@ -4933,11 +4893,6 @@
         "Qualcosa è andato storto. La verifica di Google Pay non è riuscita."
       ]
     },
-    "Payments.iDEAL": {
-      "By confirming, you authorise ${ BRAND_NAME } and Stripe, our payment service provider, our payment service provider, to collect future payments for your subscription from this bank account by SEPA Direct Debit, and your bank to debit those payments. Your first payment is made now by ${ IDEAL_WERO_BRAND_NAME }. Your plan auto renews, until you cancel; we'll notify you before each collection. For direct debit collections you can request a refund from your bank within 8 weeks of the debit date, under the terms of your agreement with your bank. This does not apply to the ${ IDEAL_WERO_BRAND_NAME } payment you're making now.": [
-        "Confermando, autorizzi ${ BRAND_NAME } e Stripe, il nostro fornitore di servizi di pagamento, a riscuotere i futuri pagamenti del tuo abbonamento da questo conto bancario tramite addebito diretto SEPA e autorizzi la tua banca ad addebitare tali importi. Il primo pagamento viene effettuato ora tramite ${ IDEAL_WERO_BRAND_NAME }. Il tuo piano si rinnoverà automaticamente fino a quando non lo annullerai; ti informeremo prima di ogni addebito. Per gli addebiti diretti, puoi richiedere un rimborso alla tua banca entro 8 settimane dalla data dell'addebito, secondo i termini del tuo accordo con la banca. Questo non si applica al pagamento tramite ${ IDEAL_WERO_BRAND_NAME } che stai effettuando ora."
-      ]
-    },
     "Payments.info": {
       "Credit for the unused portion of your previous plan subscription": [
         "Credito per la parte non usata del tuo precedente abbonamento"
@@ -4980,6 +4935,11 @@
       ],
       "Renewal price is dependent on the billing region and VAT number.": [
         "Il prezzo del rinnovo dipende dalla regione di fatturazione e dal numero di partita IVA."
+      ]
+    },
+    "Payments.Saved payment method details": {
+      "Google Pay - card ending in ${ Last4 }": [
+        "Google Pay - carta che termina con ${ Last4 }"
       ]
     },
     "Payments.Sepa": {
@@ -5064,6 +5024,9 @@
       ],
       "Please select a country": [
         "Seleziona un paese"
+      ],
+      "Please select the main reason": [
+        "Seleziona il motivo principale"
       ],
       "Postal code": [
         "Codice postale"
@@ -5379,9 +5342,6 @@
       "Storage used": [
         "Memoria utilizzata"
       ],
-      "We’ll add the credits for the remaining time to your ${ BRAND_NAME } Account.": [
-        "Aggiungeremo i crediti per il tempo rimanente al tuo account ${ BRAND_NAME }."
-      ],
       "You still have **${ daysRemaining }** day left on your **${ currentPlanName }** plan.": [
         "Hai ancora **${ daysRemaining }** giorno rimanente con il piano **${ currentPlanName }**.",
         "Hai ancora **${ daysRemaining }** giorni rimanenti con il piano **${ currentPlanName }**."
@@ -5424,10 +5384,6 @@
       "${ n } VPN connection": [
         "${ n } connessione VPN",
         "${ n } connessioni VPN"
-      ],
-      "${ n } VPN connection per user": [
-        "${ n } connessioni VPN per utente",
-        "${ n } connessioni VPN per utente"
       ],
       "VPN connection for ${ n } device per user": [
         "Connessione VPN per ${ n } dispositivo per ogni utente",
@@ -5555,9 +5511,6 @@
       ],
       "You have successfully canceled your subscription.": [
         "Hai annullato l'abbonamento con successo."
-      ],
-      "You have successfully unsubscribed": [
-        "Abbonamento annullato con successo"
       ]
     },
     "Suffix": {
@@ -5662,6 +5615,9 @@
       "Billing cycle": [
         "Ciclo di fatturazione"
       ],
+      "Black Friday": [
+        "Black Friday"
+      ],
       "Cancel ${ MAIL_SHORT_APP_NAME } subscription": [
         "Annulla l'abbonamento a ${ MAIL_SHORT_APP_NAME }"
       ],
@@ -5674,12 +5630,6 @@
       "Collaborate on documents": [
         "Collabora sui documenti"
       ],
-      "Confirm downgrade": [
-        "Conferma il downgrade"
-      ],
-      "Confirm loss of ${ BRAND_NAME } bonuses": [
-        "Conferma la perdita dei bonus di ${ BRAND_NAME }"
-      ],
       "Connect apps and devices": [
         "Connetti app e dispositivi"
       ],
@@ -5689,6 +5639,9 @@
       "Connect your custom domain": [
         "Connetti il tuo dominio personalizzato"
       ],
+      "Contact us": [
+        "Contattaci"
+      ],
       "Coupon": [
         "Coupon"
       ],
@@ -5697,9 +5650,6 @@
       ],
       "Downgrade account": [
         "Effettua il downgrade dell'account"
-      ],
-      "Downgrade to ${ downgradedPlanName }?": [
-        "Vuoi effettuare il downgrade a ${ downgradedPlanName }?"
       ],
       "Download ${ DRIVE_APP_NAME } apps": [
         "Scarica le app di ${ DRIVE_APP_NAME }"
@@ -5770,14 +5720,14 @@
       "Request new code": [
         "Richiedi nuovo codice"
       ],
+      "Request sent": [
+        "Richiesta inviata"
+      ],
       "Reverse charge not supported": [
         "Inversione contabile non supportata"
       ],
       "Select a plan": [
         "Seleziona un piano"
-      ],
-      "September Sale": [
-        "Sconti di settembre"
       ],
       "Set recovery methods": [
         "Imposta i metodi di ripristino"
@@ -5938,6 +5888,20 @@
       "Try a shorter username (${ n } character max)": [
         "Prova un nome utente più corto (massimo ${ n } carattere)",
         "Prova un nome utente più corto (massimo ${ n } caratteri)"
+      ]
+    },
+    "VPN B2B cancellation reason": {
+      "I found another service that I like better": [
+        "Ho trovato un altro servizio che mi piace di più"
+      ],
+      "It’s missing a key feature": [
+        "Manca una caratteristica chiave"
+      ],
+      "It’s too expensive": [
+        "È troppo caro"
+      ],
+      "Other": [
+        "Altro"
       ]
     },
     "VPN Plan Feature": {

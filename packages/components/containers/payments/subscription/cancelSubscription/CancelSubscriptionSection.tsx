@@ -1,5 +1,6 @@
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { usePaymentMethods } from '@proton/account/paymentMethods/hooks';
 import { useReferralInfo } from '@proton/account/referralInfo/hooks';
 import { useSubscription } from '@proton/account/subscription/hooks';
@@ -12,7 +13,7 @@ import { BRAND_NAME, PASS_APP_NAME } from '@proton/shared/lib/constants';
 import getBoldFormattedText from '../../../../helpers/getBoldFormattedText';
 import SettingsParagraph from '../../../account/SettingsParagraph';
 import SettingsSection from '../../../account/SettingsSection';
-import credits from '../../../referral/components/TrialInfo/credits.svg';
+import credits from '../../../referral/components/ReferralTrialInfo/credits.svg';
 import useCancellationFlow from '../cancellationFlow/useCancellationFlow';
 import useCancellationTelemetry from '../cancellationFlow/useCancellationTelemetry';
 import { useFeedbackFirstCancellationFlow } from '../cancellationFlowFeedbackFirst/hooks/useFeedbackFirstCancellationFlow';
@@ -32,13 +33,14 @@ export const CancelSubscriptionSection = ({ app }: { app: APP_NAMES }) => {
     const { startFlow: startFeedbackFirstFlow, modals: feedbackFirstModals } = useFeedbackFirstCancellationFlow();
     const [subscription] = useSubscription();
     const [paymentMethods, loadingPaymentMethods] = usePaymentMethods();
-    const { isB2BTrial, isReferralTrial } = getTrialInfoForSingleSubscription(subscription);
+    const [entitlementCatalog, loadingEntitlementCatalog] = useEntitlementCatalog();
+    const { isB2BTrial, isReferralTrial } = getTrialInfoForSingleSubscription(entitlementCatalog, subscription);
     const [referralInfo] = useReferralInfo();
     const { referrerRewardAmount } = referralInfo.uiData;
 
     const { startCancellation } = useFeedbackFirstTelemetry();
 
-    if (loadingCancelSubscription || loadingPaymentMethods) {
+    if (loadingCancelSubscription || loadingPaymentMethods || loadingEntitlementCatalog) {
         return null;
     }
 

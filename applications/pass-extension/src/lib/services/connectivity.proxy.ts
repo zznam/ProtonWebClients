@@ -1,6 +1,6 @@
 import type { ConnectivityEvent, ConnectivityService } from '@proton/pass/lib/network/connectivity.service';
 import { ConnectivityStatus } from '@proton/pass/lib/network/connectivity.utils';
-import type { ClientEndpoint } from '@proton/pass/types';
+import type { ClientEndpoint } from '@proton/pass/types/worker/runtime';
 import { throwError } from '@proton/pass/utils/fp/throw';
 import { createListenerStore } from '@proton/pass/utils/listener/factory';
 import { createPubSub } from '@proton/pass/utils/pubsub/factory';
@@ -30,8 +30,11 @@ export const createConnectivityProxy = (endpoint: ClientEndpoint): ConnectivityS
         sendMessage(message({ type: WorkerMessageType.CONNECTIVITY_SYNC, payload: { online } })).catch(noop);
     };
 
-    if (endpoint === 'popup') {
-        /** Only the popup forwards navigator transitions to the worker. */
+    /** Mirrors the worker's `isNavigatorSource`: embedded extension frames
+     * would forward their host tab's devtools throttling. */
+    const isTopLevelPage = endpoint === 'page' && window.top === window;
+
+    if (endpoint === 'popup' || isTopLevelPage) {
         listeners.addListener(window, 'online', handleEvent);
         listeners.addListener(window, 'offline', handleEvent);
     }

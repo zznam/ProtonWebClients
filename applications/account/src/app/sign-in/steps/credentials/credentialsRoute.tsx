@@ -7,7 +7,7 @@ import { useNotifications } from '@proton/app-context/useNotifications';
 
 import TroubleshootWithLumo from '../../../public/TroubleshootWithLumo';
 import PorkbunHeader from '../../../single-signup-v2/mail/PorkbunHeader';
-import { AuthType } from '../../auth/interface';
+import { SignInChangeTopBanner } from '../../components/SignInChangeTopBanner';
 import { signInRoute } from '../../routes/signInRoute';
 import { useSignInProps } from '../../wizard/SignInProvider';
 import { CredentialsContext } from './CredentialsContext';
@@ -16,7 +16,11 @@ import { AutoPasswordScreen } from './screens/AutoPasswordScreen';
 import { AutoScreen } from './screens/AutoScreen';
 import { PasswordScreen } from './screens/PasswordScreen';
 import { SSOScreen } from './screens/SSOScreen';
-import { selectAuthType, selectCanNavigateBack } from './state-machine/credentialsStateMachine';
+import {
+    ClaimedAddressChoiceScreen,
+    ClaimedAddressVerifyScreen,
+} from './screens/claimed-address/ClaimedAddressScreens';
+import { selectCanNavigateBack, selectCredentialsForm } from './state-machine/credentialsStateMachine';
 import { useLoginChallenge } from './useLoginChallenge';
 
 /**
@@ -65,16 +69,19 @@ const PorkbunBeforeMain = () => {
 export const credentialsRoute = signInRoute({
     provider: CredentialsContext.Provider,
     Frame: CredentialsFrame,
+    TopBanner: SignInChangeTopBanner,
     BeforeMain: PorkbunBeforeMain,
     BottomRight: TroubleshootWithLumo,
     decorated: true,
     // Back leaves the page, which only works when it has somewhere to go back to
     offersBack: selectCanNavigateBack,
-    screen: selectAuthType,
+    screen: selectCredentialsForm,
     screens: {
-        [AuthType.Auto]: AutoScreen,
-        [AuthType.AutoSrp]: AutoPasswordScreen,
-        [AuthType.Srp]: PasswordScreen,
-        [AuthType.ExternalSSO]: SSOScreen,
+        auto: AutoScreen,
+        autoSrp: AutoPasswordScreen,
+        srp: PasswordScreen,
+        externalSSO: SSOScreen,
+        claimedChoice: ClaimedAddressChoiceScreen,
+        claimedVerify: ClaimedAddressVerifyScreen,
     },
 });

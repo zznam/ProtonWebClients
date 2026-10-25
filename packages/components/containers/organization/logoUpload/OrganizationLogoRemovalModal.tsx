@@ -4,14 +4,14 @@ import { organizationThunk } from '@proton/account/organization';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
-import metrics from '@proton/metrics';
+import useLoading from '@proton/hooks/useLoading';
+import metrics from '@proton/metrics/metricsInstance';
 import observeApiError from '@proton/metrics/observeApiError';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { deleteOrganizationLogo, updateOrganizationSettings } from '@proton/shared/lib/api/organization';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
-import type { Organization } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 import noop from '@proton/utils/noop';
 
 import Form from '../../../components/form/Form';

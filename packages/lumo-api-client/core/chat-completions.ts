@@ -1,5 +1,6 @@
 import type {
     ChatCompletionsContentPart,
+    ChatCompletionsFeatureFlags,
     ChatCompletionsFunctionTool,
     ChatCompletionsImagePart,
     ChatCompletionsLumoExtension,
@@ -13,14 +14,15 @@ import type {
     WireImage,
     WireTurn,
 } from '../types-api';
-import { Role } from '../types-api';
+import { LumoClientType, Role } from '../types-api';
 
 export const DEFAULT_CHAT_MODEL = 'lumo-lite';
 export const LUMO_LITE_MODEL = 'lumo-lite';
 export const LUMO_MAX_MODEL = 'lumo-max';
 export const APERTUS_15_MODEL = 'apertus-15';
+export const LUMO_PREVIEW_MODEL = 'lumo-preview';
 
-export type LumoApiModelTier = 'auto' | 'lumo-lite' | 'lumo-max' | 'apertus-15';
+export type LumoApiModelTier = 'auto' | 'lumo-lite' | 'lumo-max' | 'apertus-15' | 'lumo-preview';
 
 export type ToChatCompletionsOptions = {
     enableReasoning?: boolean;
@@ -40,6 +42,10 @@ export type ToChatCompletionsOptions = {
      * request. Merged with `request.options.tools`.
      */
     serverTools?: ToolName[];
+    /** Lumo Unleash toggles attached to `lumo.feature_flags` for observability. */
+    featureFlags?: ChatCompletionsFeatureFlags;
+    /** Sent as `lumo.client_type`. Defaults to `Frontend`. */
+    clientType?: LumoClientType;
 };
 
 export function resolveChatModel(modelTier: LumoApiModelTier = 'auto', model?: string): string {
@@ -54,6 +60,8 @@ export function resolveChatModel(modelTier: LumoApiModelTier = 'auto', model?: s
             return LUMO_MAX_MODEL;
         case 'apertus-15':
             return APERTUS_15_MODEL;
+        case 'lumo-preview':
+            return LUMO_PREVIEW_MODEL;
         default:
             return DEFAULT_CHAT_MODEL;
     }
@@ -210,7 +218,7 @@ function buildLumoExtension(
     options: ToChatCompletionsOptions
 ): ChatCompletionsLumoExtension {
     const lumo: ChatCompletionsLumoExtension = {
-        client_type: 'frontend',
+        client_type: options.clientType ?? LumoClientType.Frontend,
     };
 
     if (options.target) {
@@ -228,6 +236,10 @@ function buildLumoExtension(
 
     if (request.options?.image_aspect_ratio) {
         lumo.image_aspect_ratio = request.options.image_aspect_ratio;
+    }
+
+    if (options.featureFlags !== undefined) {
+        lumo.feature_flags = options.featureFlags;
     }
 
     return lumo;

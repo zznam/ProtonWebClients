@@ -13,13 +13,15 @@ import { setQuantity } from '@proton/payments/core/planIDs';
 import type { MaybeFreeSubscription } from '@proton/payments/core/subscription/helpers';
 import { SelectedPlan } from '@proton/payments/core/subscription/selected-plan';
 import type { PaymentTelemetryContext } from '@proton/payments/telemetry/helpers';
-import type { Audience } from '@proton/shared/lib/interfaces';
+import type { ProductParam } from '@proton/shared/lib/apps/product';
+import type { Audience } from '@proton/shared/lib/interfaces/Subscription';
 import { MailFeatureFlag } from '@proton/unleash/Flags';
 import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';
 
 import Price from '../../../components/price/Price';
 import ScribeAddon from '../ScribeAddon';
+import { CondensedAddonsCard } from './CondensedAddonsCard';
 import { IPsNumberCustomiser } from './IPsNumberCustomiser';
 import LumoAddon from './LumoAddon';
 import MeetAddon from './MeetAddon';
@@ -39,6 +41,7 @@ interface AddonCustomizerProps {
     telemetryContext: PaymentTelemetryContext;
     sharedAddonCustomizerProps: SharedAddonCustomizerProps;
     memberCount: number;
+    condensed?: boolean;
 }
 
 type AddonRenderer = (props: AddonCustomizerProps) => ReactNode;
@@ -115,6 +118,7 @@ const getLumoAddonComponent: AddonRenderer = (props) => {
                 onChangePlanIDs(setQuantity(selectedPlan.planIDs, addon.Name, max));
             }}
             telemetryContext={telemetryContext}
+            condensed={props.condensed}
             {...sharedAddonCustomizerProps}
         />
     );
@@ -135,6 +139,7 @@ const getMeetAddonComponent: AddonRenderer = (props) => {
             }}
             locked={selectedPlan.getTotal('MaxMembers') > 0}
             telemetryContext={telemetryContext}
+            condensed={props.condensed}
             {...sharedAddonCustomizerProps}
         />
     );
@@ -147,6 +152,8 @@ const ADDON_RENDERERS_MAPPING: Record<ADDON_PREFIXES, AddonRenderer> = {
     [ADDON_PREFIXES.SCRIBE]: getScribeAddonComponent,
     [ADDON_PREFIXES.LUMO]: getLumoAddonComponent,
     [ADDON_PREFIXES.MEET]: getMeetAddonComponent,
+    // MSP addon can't be added by a user, so we don't need to render it
+    [ADDON_PREFIXES.MSP]: () => null,
 };
 
 const AddonCustomizer = (props: AddonCustomizerProps) => {
@@ -172,7 +179,16 @@ export interface Props extends ComponentPropsWithoutRef<'div'> {
     separator?: boolean;
     telemetryContext: PaymentTelemetryContext;
     header?: ReactNode;
+    /** App the checkout was opened from; Lumo/Meet addons are hidden for Mail and Calendar. */
+    app?: ProductParam;
+    /** Checkout experiment CheckoutCondensedAddons: group Lumo/Meet into one card. Only SubscriptionContainer passes it. */
+    condensedAddons?: boolean;
 }
+
+const isCondensableAddon = (addonName: ADDON_NAMES) => {
+    const addonType = getAddonType(addonName);
+    return addonType === ADDON_PREFIXES.LUMO || addonType === ADDON_PREFIXES.MEET;
+};
 
 export const ProtonPlanCustomizer = ({
     cycle,
@@ -193,6 +209,8 @@ export const ProtonPlanCustomizer = ({
     separator = false,
     telemetryContext,
     header,
+    app,
+    condensedAddons = false,
     ...rest
 }: Props) => {
     const scribeToLumo = useFlag(MailFeatureFlag.ScribeToLumo);
@@ -212,11 +230,62 @@ export const ProtonPlanCustomizer = ({
         scribeToLumo,
         couponConfig,
         isSignup: mode === 'signup',
+        app,
     });
 
     if (addonCustomizerItems.length === 0) {
         return null;
     }
+
+    const renderItem = (
+        {
+            addonName,
+            sharedAddonCustomizerProps,
+            memberCount,
+            preferredAddonType,
+        }: (typeof addonCustomizerItems)[number],
+        condensed?: boolean
+    ) => (
+        <AddonCustomizer
+            key={addonName}
+            addonName={addonName}
+            selectedPlan={normalizedSelectedPlan}
+            onChangePlanIDs={(planIDs) => {
+                const normalizedPlanIDs = preferredAddonType
+                    ? SelectedPlan.createNormalized(planIDs, plansMap, cycle, currency, preferredAddonType).planIDs
+                    : planIDs;
+                onChangePlanIDs(normalizedPlanIDs);
+            }}
+            showUsersTooltip={showUsersTooltip}
+            audience={audience}
+            mode={mode}
+            telemetryContext={telemetryContext}
+            sharedAddonCustomizerProps={sharedAddonCustomizerProps}
+            memberCount={memberCount}
+            condensed={condensed}
+        />
+    );
+
+    const renderItems = () => {
+        if (!condensedAddons) {
+            return addonCustomizerItems.map((item) => renderItem(item));
+        }
+
+        // The card takes the place of the first Lumo/Meet item, the other items keep their order
+        const condensableItems = addonCustomizerItems.filter(({ addonName }) => isCondensableAddon(addonName));
+        const cardIndex = addonCustomizerItems.findIndex(({ addonName }) => isCondensableAddon(addonName));
+
+        return addonCustomizerItems.flatMap((item, index) => {
+            if (index === cardIndex) {
+                return [
+                    <CondensedAddonsCard key="condensed-addons">
+                        {condensableItems.map((condensableItem) => renderItem(condensableItem, true))}
+                    </CondensedAddonsCard>,
+                ];
+            }
+            return isCondensableAddon(item.addonName) ? [] : [renderItem(item)];
+        });
+    };
 
     return (
         <>
@@ -229,33 +298,7 @@ export const ProtonPlanCustomizer = ({
                 ])}
                 {...rest}
             >
-                {addonCustomizerItems.map(
-                    ({ addonName, sharedAddonCustomizerProps, memberCount, preferredAddonType }) => (
-                        <AddonCustomizer
-                            key={addonName}
-                            addonName={addonName}
-                            selectedPlan={normalizedSelectedPlan}
-                            onChangePlanIDs={(planIDs) => {
-                                const normalizedPlanIDs = preferredAddonType
-                                    ? SelectedPlan.createNormalized(
-                                          planIDs,
-                                          plansMap,
-                                          cycle,
-                                          currency,
-                                          preferredAddonType
-                                      ).planIDs
-                                    : planIDs;
-                                onChangePlanIDs(normalizedPlanIDs);
-                            }}
-                            showUsersTooltip={showUsersTooltip}
-                            audience={audience}
-                            mode={mode}
-                            telemetryContext={telemetryContext}
-                            sharedAddonCustomizerProps={sharedAddonCustomizerProps}
-                            memberCount={memberCount}
-                        />
-                    )
-                )}
+                {renderItems()}
             </div>
         </>
     );

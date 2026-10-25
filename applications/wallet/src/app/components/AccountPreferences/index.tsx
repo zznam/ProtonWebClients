@@ -4,19 +4,17 @@ import { c } from 'ttag';
 
 import type { WasmApiWalletAccount } from '@proton/andromeda';
 import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor';
-import {
-    Dropdown,
-    DropdownButton,
-    DropdownMenu,
-    DropdownMenuButton,
-    DropdownSizeUnit,
-    useModalState,
-} from '@proton/components';
+import Dropdown from '@proton/components/components/dropdown/Dropdown';
+import DropdownButton from '@proton/components/components/dropdown/DropdownButton';
+import DropdownMenu from '@proton/components/components/dropdown/DropdownMenu';
+import DropdownMenuButton from '@proton/components/components/dropdown/DropdownMenuButton';
+import { DropdownSizeUnit } from '@proton/components/components/dropdown/utils';
 import InputFieldStackedGroup from '@proton/components/components/inputFieldStacked/InputFieldStackedGroup';
+import useModalState from '@proton/components/components/modalTwo/useModalState';
 import { IcKey } from '@proton/icons/icons/IcKey';
 import { IcPassTrash } from '@proton/icons/icons/IcPassTrash';
 import { IcThreeDotsVertical } from '@proton/icons/icons/IcThreeDotsVertical';
-import type { IWasmApiWalletData } from '@proton/wallet/types';
+import type { IWasmApiWalletData } from '@proton/wallet/types/wasm';
 
 import { Input } from '../../atoms';
 import { CurrencySelect } from '../../atoms/CurrencySelect';

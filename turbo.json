@@ -1,4 +1,5 @@
 {
+    "agentGuidance": false,
     "$schema": "https://turbo.build/schema.json",
     "globalEnv": ["APPLICATION", "CI_COMMIT_TAG"],
     "globalPassThroughEnv": [
@@ -43,7 +44,7 @@
         "i18n:validate:context:web": {
             "inputs": ["po/**"]
         },
-        "check-types": {
+        "check:types": {
             "dependsOn": ["transit"]
         },
         "dev": {

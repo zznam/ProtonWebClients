@@ -1,12 +1,13 @@
-import type { NodeEntity, ProtonDriveClient, ProtonDrivePublicLinkClient } from '@proton/drive';
-import { AbortError, NodeType, SDKEvent } from '@proton/drive';
 import { getNodeName } from '@proton/drive/modules/nodes';
 import { TransferSpeedMetrics } from '@proton/drive/modules/transferPerformance';
-import metrics from '@proton/metrics';
+import type { NodeEntity, ProtonDriveClient, ProtonDrivePublicLinkClient } from '@proton/drive/sdk';
+import { AbortError, NodeType, SDKEvent } from '@proton/drive/sdk';
+import metrics from '@proton/metrics/metricsInstance';
 
 import { fileSaver } from '../../modules/fileSaver/fileSaver';
 import { getNodeStorageSize } from '../../utils/sdk/getNodeStorageSize';
 import { bufferToStream } from '../../utils/stream';
+import { isTransferCancelError } from '../../utils/transfer';
 import { loadCreateReadableStreamWrapper } from '../../utils/webStreamsPolyfill';
 import ArchiveGenerator from './ArchiveGenerator';
 import { ArchiveStreamGenerator } from './ArchiveStreamGenerator';
@@ -50,6 +51,15 @@ type ActiveDownload = {
     controller: DownloadController;
     abortController: AbortController;
     completionPromise?: Promise<void>;
+};
+
+// The browser can cancel the save on its own (e.g. the user dismisses the Save As dialog);
+// the transfer must stop too, or it keeps fetching blocks nobody saves
+const abortOnSaveCancel = (abortController: AbortController, error: unknown): never => {
+    if (isTransferCancelError(error)) {
+        abortController.abort(error);
+    }
+    throw error;
 };
 
 export class DownloadManager {
@@ -317,14 +327,16 @@ export class DownloadManager {
 
             const streamWrapperPromise = loadCreateReadableStreamWrapper(stream);
 
-            const savePromise = streamWrapperPromise.then((streamForSaver) =>
-                fileSaver.saveAsFile(streamForSaver, {
-                    downloadId,
-                    filename: getNodeName(node),
-                    mimeType: DEFAULT_MIME_TYPE,
-                    size: storageSize,
-                })
-            );
+            const savePromise = streamWrapperPromise
+                .then((streamForSaver) =>
+                    fileSaver.saveAsFile(streamForSaver, {
+                        downloadId,
+                        filename: getNodeName(node),
+                        mimeType: DEFAULT_MIME_TYPE,
+                        size: storageSize,
+                    })
+                )
+                .catch((error) => abortOnSaveCancel(abortController, error));
 
             const abortSaving = async (reason?: unknown) => {
                 abortWriter(reason);
@@ -488,12 +500,14 @@ export class DownloadManager {
 
             const savingPromise = (async () => {
                 await waitForFirstItemPromise;
-                const savePromise = fileSaver.saveAsFile(archiveGenerator.stream, {
-                    downloadId,
-                    filename: archiveName,
-                    mimeType: 'application/zip',
-                    size: totalEncryptedSize > 0 ? totalEncryptedSize : undefined,
-                });
+                const savePromise = fileSaver
+                    .saveAsFile(archiveGenerator.stream, {
+                        downloadId,
+                        filename: archiveName,
+                        mimeType: 'application/zip',
+                        size: totalEncryptedSize > 0 ? totalEncryptedSize : undefined,
+                    })
+                    .catch((error) => abortOnSaveCancel(abortController, error));
 
                 if (abortController.signal.aborted || archiveStreamGenerator.lastError) {
                     return;

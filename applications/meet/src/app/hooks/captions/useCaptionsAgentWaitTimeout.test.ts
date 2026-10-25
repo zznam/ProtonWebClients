@@ -1,3 +1,4 @@
+import { logger } from '@protontech/logger';
 import { act, renderHook } from '@testing-library/react';
 
 import type { MeetState } from '@proton/meet/store/rootReducer';
@@ -10,12 +11,15 @@ import { useCaptionsPreference } from './useCaptionsPreference';
 
 const createNotification = vi.fn();
 const setWantsCaptions = vi.fn();
-const consoleError = vi.fn();
 
 const state = vi.hoisted(() => ({ joinedRoom: true, agentIdentities: [] as string[] }));
 
 vi.mock('@proton/app-context/useNotifications', () => ({
     useNotifications: () => ({ createNotification }),
+}));
+
+vi.mock('@protontech/logger', () => ({
+    logger: { error: vi.fn() },
 }));
 
 // Runs the real selectors against a minimal state, rather than stubbing their results.
@@ -48,7 +52,6 @@ describe('useCaptionsAgentWaitTimeout', () => {
     beforeEach(() => {
         vi.useFakeTimers();
         vi.clearAllMocks();
-        vi.spyOn(console, 'error').mockImplementation(consoleError);
         setWantsCaptions.mockReset();
         setWantsCaptions.mockResolvedValue(undefined);
         state.joinedRoom = true;
@@ -168,7 +171,7 @@ describe('useCaptionsAgentWaitTimeout', () => {
         await advance(CAPTIONS_AGENT_WAIT_MS + ALL_RETRIES_MS);
 
         expect(setWantsCaptions).toHaveBeenCalledTimes(DEFAULT_RETRY_DELAYS_MS.length);
-        expect(consoleError).toHaveBeenCalledWith('Failed to turn live captions off', expect.any(Error));
+        expect(logger.error).toHaveBeenCalledWith('Failed to turn live captions off', expect.any(Error));
     });
 
     it('stops retrying once the agent turns up', async () => {

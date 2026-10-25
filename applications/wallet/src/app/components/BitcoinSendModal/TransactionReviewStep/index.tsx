@@ -3,12 +3,13 @@ import { c } from 'ttag';
 import type { WasmApiExchangeRate, WasmApiWalletAccount } from '@proton/andromeda';
 import { CircleLoader } from '@proton/atoms/CircleLoader/CircleLoader';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { useModalState, useModalStateWithData } from '@proton/components';
+import useModalState, { useModalStateWithData } from '@proton/components/components/modalTwo/useModalState';
 import useLoading from '@proton/hooks/useLoading';
 import { IcChevronRight } from '@proton/icons/icons/IcChevronRight';
 import { COMPUTE_BITCOIN_UNIT, PriorityTargetBlock } from '@proton/wallet/constants/bitcoin';
-import { useExchangeRate, useUserWalletSettings } from '@proton/wallet/store/hooks';
-import type { IWasmApiWalletData } from '@proton/wallet/types';
+import { useExchangeRate } from '@proton/wallet/store/hooks/useExchangeRate';
+import { useUserWalletSettings } from '@proton/wallet/store/hooks/useUserWalletSettings';
+import type { IWasmApiWalletData } from '@proton/wallet/types/wasm';
 import { WalletThemeOption } from '@proton/wallet/utils/theme';
 
 import { Button, CoreButton } from '../../../atoms';

@@ -3,33 +3,33 @@ import { c } from 'ttag';
 import { useApi } from '@proton/app-context/useApi';
 import { Button } from '@proton/atoms/Button/Button';
 import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor';
-import { Prompt, useModalState } from '@proton/components';
 import Dropdown from '@proton/components/components/dropdown/Dropdown';
 import DropdownMenu from '@proton/components/components/dropdown/DropdownMenu';
 import DropdownMenuButton from '@proton/components/components/dropdown/DropdownMenuButton';
-import { useLoading } from '@proton/hooks';
+import useModalState from '@proton/components/components/modalTwo/useModalState';
+import Prompt from '@proton/components/components/prompt/Prompt';
+import useLoading from '@proton/hooks/useLoading';
 import { IcThreeDotsVertical } from '@proton/icons/icons/IcThreeDotsVertical';
 import { IcTrash } from '@proton/icons/icons/IcTrash';
 
-import { getTokensByFeature } from '../../../api';
+import { getTokensByFeature } from '../../../api/api';
 import { ApiSyncState } from '../../../api/api.interface';
 import useOAuthPopup from '../../../hooks/useOAuthPopup';
 import type { ImportToken, OAuthProps } from '../../../interface';
 import { EASY_SWITCH_FEATURES, EASY_SWITCH_SOURCES, OAUTH_PROVIDER } from '../../../interface';
-import { useEasySwitchDispatch, useEasySwitchSelector } from '../../../logic/store';
+import { useEasySwitchDispatch } from '../../../logic/store';
 import { SyncTokenStrategy, deleteSyncItem, resumeSyncItem } from '../../../logic/sync/sync.actions';
-import { selectSyncById } from '../../../logic/sync/sync.selectors';
+import type { Sync } from '../../../logic/sync/sync.interface';
 
 interface Props {
-    syncId: string;
+    syncItem: Sync;
 }
 
-const SyncRowActions = ({ syncId }: Props) => {
+const SyncRowActions = ({ syncItem }: Props) => {
     const api = useApi();
+    const syncId = syncItem.id;
     const dispatch = useEasySwitchDispatch();
     const { anchorRef, isOpen, close, toggle } = usePopperAnchor<HTMLButtonElement>();
-
-    const syncItem = useEasySwitchSelector((state) => selectSyncById(state, syncId));
 
     const [deleteModalProps, showDeleteModal, renderDeleteModal] = useModalState();
 

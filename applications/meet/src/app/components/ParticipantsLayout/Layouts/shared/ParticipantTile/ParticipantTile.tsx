@@ -1,6 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react';
 
 import { VideoTrack, useLocalParticipant, useParticipantTracks } from '@livekit/components-react';
+import { logger } from '@protontech/logger';
 import type { Participant, RemoteTrackPublication } from 'livekit-client';
 import { Track } from 'livekit-client';
 import { c } from 'ttag';
@@ -8,11 +9,11 @@ import { c } from 'ttag';
 import { IcArrowsRotate } from '@proton/icons/icons/IcArrowsRotate';
 import { IcMeetMicrophoneOff } from '@proton/icons/icons/IcMeetMicrophoneOff';
 import { useMeetSelector } from '@proton/meet/store/hooks';
+import { selectDisplayName } from '@proton/meet/store/slices/currentMeeting';
 import {
     selectInitialCameraState,
     selectIsMediaInitializing,
 } from '@proton/meet/store/slices/deviceManagementSlice/selectors';
-import { selectDisplayName } from '@proton/meet/store/slices/meetingInfo';
 import { selectParticipantName } from '@proton/meet/store/slices/participants/participantsSlice';
 import { selectMeetSettings, selectParticipantsWithDisabledVideos } from '@proton/meet/store/slices/settings';
 import { isMobile, isSafari } from '@proton/shared/lib/helpers/browser';
@@ -190,8 +191,7 @@ export const ParticipantTile = memo(({ participant, viewSize = 'large' }: Partic
                 }
             }
         } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Failed to refresh tracks', error);
+            logger.error('Failed to refresh tracks', error);
         } finally {
             setIsRefreshing(false);
         }

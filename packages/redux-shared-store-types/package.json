@@ -2,17 +2,24 @@
     "name": "@proton/redux-shared-store-types",
     "description": "",
     "exports": {
-        ".": {
-            "types": "./index.ts",
-            "default": "./index.ts"
-        }
+        "./interface": "./interface.ts"
     },
-    "types": "./index.ts",
+    "scripts": {
+        "lint": "oxlint --quiet"
+    },
     "dependencies": {
         "@proton/shared": "workspace:^",
         "@proton/unleash": "workspace:^",
-        "@reduxjs/toolkit": "^2.12.0",
-        "react": "^18.3.1",
-        "react-redux": "^9.3.0"
+        "@reduxjs/toolkit": "catalog:",
+        "history": "catalog:",
+        "react": "catalog:",
+        "react-redux": "catalog:"
+    },
+    "devDependencies": {
+        "@proton/oxlint-config": "workspace:^",
+        "@types/history": "catalog:",
+        "@types/react": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:"
     }
 }

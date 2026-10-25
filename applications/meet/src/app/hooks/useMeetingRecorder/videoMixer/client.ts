@@ -1,7 +1,7 @@
 import type { ReportMeetError } from '@proton/meet/hooks/useMeetErrorReporting';
 
+import { forwardWorkerLog } from '../../../utils/forwardWorkerLog';
 import type { AudioTapSamples } from '../mediaEncoder/types';
-import { forwardWorkerLog } from '../workerLogger';
 import { CANVAS_HEIGHT, CANVAS_WIDTH, RECORDING_FPS } from './constants';
 import { type TrackCapture, startTrackCapture } from './trackCapture';
 import { type RecordingTrackInfo, type SceneState, VideoMixerMessageType } from './types';
@@ -24,8 +24,9 @@ export class VideoMixerClient {
     private canvasStream: MediaStream;
     private trackCaptures: Map<string, TrackCapture> = new Map();
     private reportMeetError: ReportMeetError;
-    private encoderOnChunk: ((data: Uint8Array<ArrayBuffer>, position: number) => void) | null = null;
+    private encoderOnChunk: ((data: Uint8Array<ArrayBuffer>) => void) | null = null;
     private encoderDoneResolve: (() => void) | null = null;
+    private audioCodec: string | null = null;
 
     constructor({
         initialScene,
@@ -52,22 +53,16 @@ export class VideoMixerClient {
 
             const message = event.data;
             if (message?.type === 'encoderChunk') {
-                this.encoderOnChunk?.(message.data, message.position);
+                this.encoderOnChunk?.(message.data);
             } else if (message?.type === 'encoderDone') {
                 this.encoderDoneResolve?.();
                 this.encoderDoneResolve = null;
+            } else if (message?.type === 'encoderStarted') {
+                this.audioCodec = message.audioCodec;
             }
         };
 
         this.worker.onerror = (event) => {
-            // eslint-disable-next-line no-console
-            console.error('[MeetingRecorder/renderWorker] uncaught error in worker:', {
-                message: event.message,
-                filename: event.filename,
-                lineno: event.lineno,
-                colno: event.colno,
-                error: event.error,
-            });
             this.reportMeetError('MeetingRecording Error: renderWorker uncaught error', {
                 context: {
                     message: event.message,
@@ -135,7 +130,11 @@ export class VideoMixerClient {
         return this.canvasStream.getVideoTracks();
     }
 
-    public startEncoder(onChunk: (data: Uint8Array<ArrayBuffer>, position: number) => void): void {
+    public getAudioCodec(): string | null {
+        return this.audioCodec;
+    }
+
+    public startEncoder(onChunk: (data: Uint8Array<ArrayBuffer>) => void): void {
         this.encoderOnChunk = onChunk;
         this.worker.postMessage({ type: VideoMixerMessageType.START_ENCODER });
     }

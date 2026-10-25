@@ -1,7 +1,6 @@
 import { format, fromUnixTime } from 'date-fns';
 import { c } from 'ttag';
 
-import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { useConfig } from '@proton/app-context/useConfig';
 import { InlineLinkButton } from '@proton/atoms/InlineLinkButton/InlineLinkButton';
@@ -14,6 +13,7 @@ import {
     willTrialExpireInLessThan1Week,
 } from '@proton/payments/core/subscription/helpers';
 import type { Subscription } from '@proton/payments/core/subscription/interface';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import {
     APPS,
@@ -22,7 +22,7 @@ import {
     SHARED_UPSELL_PATHS,
     UPSELL_COMPONENT,
 } from '@proton/shared/lib/constants';
-import { addUpsellPath, getUpgradePath, getUpsellRefFromApp } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRefFromApp } from '@proton/shared/lib/helpers/ref';
 import { dateLocale } from '@proton/shared/lib/i18n';
 
 import SettingsLink from '../../../components/link/SettingsLink';
@@ -30,15 +30,23 @@ import { useSubscriptionModal } from '../../payments/subscription/SubscriptionMo
 import { SUBSCRIPTION_STEPS } from '../../payments/subscription/constants';
 import TopBanner from '../TopBanner';
 
-const ModalAction = ({ textAction, upsellRef }: { textAction: string; upsellRef: string | undefined }) => {
-    const [subscription] = useSubscription();
-    const [openSubscriptionModal] = useSubscriptionModal();
+const ModalAction = ({
+    subscription,
+    textAction,
+    upsellRef,
+}: {
+    subscription: Subscription;
+    textAction: string;
+    upsellRef: string | undefined;
+}) => {
+    const [openSubscriptionModal, loadingSubscriptionModal] = useSubscriptionModal();
 
     return (
         <InlineLinkButton
             className="color-inherit"
+            disabled={loadingSubscriptionModal}
             onClick={() => {
-                openSubscriptionModal({
+                void openSubscriptionModal({
                     step: SUBSCRIPTION_STEPS.CHECKOUT,
                     cycle: CYCLE.YEARLY,
                     planIDs: getPlanIDs(subscription),
@@ -52,20 +60,18 @@ const ModalAction = ({ textAction, upsellRef }: { textAction: string; upsellRef:
 };
 
 const TrialEndsActionButton = ({
+    subscription,
     refApp,
     fromApp,
     textAction,
 }: {
+    subscription: Subscription;
     refApp?: APP_NAMES;
     fromApp: APP_NAMES;
     textAction: string;
 }) => {
     const { APP_NAME } = useConfig();
     const [user] = useUser();
-    const [subscription, subscriptionLoading] = useSubscription();
-    if (subscriptionLoading) {
-        return null;
-    }
 
     const upsellRef = getUpsellRefFromApp({
         app: refApp ?? APP_NAME,
@@ -76,11 +82,11 @@ const TrialEndsActionButton = ({
     // If that's already Account or VPN settings app then we render the button that will open the subscription modal
     // directly
     if (APP_NAME === APPS.PROTONACCOUNT || APP_NAME === APPS.PROTONVPN_SETTINGS) {
-        return <ModalAction upsellRef={upsellRef} textAction={textAction} />;
+        return <ModalAction subscription={subscription} upsellRef={upsellRef} textAction={textAction} />;
     }
 
     // For all other apps we render the button that will redirect to the account app
-    const upgradePath = addUpsellPath(getUpgradePath({ user, subscription, app: APP_NAME }), upsellRef);
+    const upgradePath = getUpgradePath({ user, subscription, app: APP_NAME }, upsellRef);
     return (
         <SettingsLink path={upgradePath} className="color-inherit">
             {textAction}
@@ -102,9 +108,13 @@ const UpgradeBannerLink = ({ textAction }: { textAction: string }) => {
     );
 };
 
-const TrialEndsActionButtonSwitcher = ({ fromApp }: { fromApp: APP_NAMES }) => {
-    const [subscription] = useSubscription();
-
+const TrialEndsActionButtonSwitcher = ({
+    fromApp,
+    subscription,
+}: {
+    fromApp: APP_NAMES;
+    subscription: Subscription;
+}) => {
     if (isTrial(subscription, PLANS.MAIL)) {
         const textAction = c('Button').t`Continue using ${MAIL_APP_NAME}.`;
         return <UpgradeBannerLink textAction={textAction} />;
@@ -113,27 +123,28 @@ const TrialEndsActionButtonSwitcher = ({ fromApp }: { fromApp: APP_NAMES }) => {
     if (isTrial(subscription, PLANS.BUNDLE)) {
         const planTitle = PLAN_NAMES[PLANS.BUNDLE];
         const textAction = c('Button').t`Continue using ${planTitle}`;
-        return <TrialEndsActionButton fromApp={fromApp} textAction={textAction} />;
+        return <TrialEndsActionButton subscription={subscription} fromApp={fromApp} textAction={textAction} />;
     }
 
     // a catch-all for all other cases
-    if (subscription && isTrial(subscription)) {
+    if (isTrial(subscription)) {
         const planTitle = getPlanTitle(subscription);
         let textAction = c('Button').t`Continue using ${planTitle}`;
         if (!planTitle) {
             textAction = c('Button').t`Continue your subscription`;
         }
 
-        return <TrialEndsActionButton fromApp={fromApp} textAction={textAction} />;
+        return <TrialEndsActionButton subscription={subscription} fromApp={fromApp} textAction={textAction} />;
     }
 
     return null;
 };
 
 const LegacyReferralTopBanner = ({ fromApp, subscription }: { fromApp: APP_NAMES; subscription: Subscription }) => {
-    const action = <TrialEndsActionButtonSwitcher key="trial-action-button" fromApp={fromApp} />;
-    const { PeriodEnd = 0 } = subscription || {};
-    const textDate = format(fromUnixTime(PeriodEnd), 'PPP', { locale: dateLocale });
+    const action = (
+        <TrialEndsActionButtonSwitcher key="trial-action-button" fromApp={fromApp} subscription={subscription} />
+    );
+    const textDate = format(fromUnixTime(subscription.PeriodEnd), 'PPP', { locale: dateLocale });
 
     // 1 week before the trial ends
     const willExpire = willTrialExpireInLessThan1Week(subscription);

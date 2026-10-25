@@ -7,25 +7,24 @@ import type { RenderOptions } from '@testing-library/react';
 import { render as originalRender, renderHook } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 
+import { getModelState } from '@proton/account/testing/getModelState';
 import { getOrganizationState } from '@proton/account/testing/redux-state';
-import { getModelState } from '@proton/account/tests';
 import { ApiContext } from '@proton/app-context/apiContext';
 import { NotificationsContext } from '@proton/app-context/notifications/notificationsContext';
 import { FREE_PLAN } from '@proton/payments/core/subscription/freePlans';
+import { buildEntitlementCatalog } from '@proton/payments/testing/buildEntitlementCatalog';
 import { getPaymentStatusState, getSubscriptionState } from '@proton/payments/testing/redux-state';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import { APPS, CONTACT_CARD_TYPE } from '@proton/shared/lib/constants';
 import { prepareVCardContact } from '@proton/shared/lib/contacts/encrypt';
 import { parseToVCard } from '@proton/shared/lib/contacts/vcard';
-import type {
-    ApiEnvironmentConfig,
-    CachedOrganizationKey,
-    DecryptedKey,
-    MailSettings,
-    ProtonConfig,
-    UserModel,
-    UserSettings,
-} from '@proton/shared/lib/interfaces';
+import type { ApiEnvironmentConfig } from '@proton/shared/lib/interfaces/ApiEnvironmentConfig';
+import type { DecryptedKey } from '@proton/shared/lib/interfaces/Key';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { CachedOrganizationKey } from '@proton/shared/lib/interfaces/OrganizationKey';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { UserSettings } from '@proton/shared/lib/interfaces/UserSettings';
+import type { ProtonConfig } from '@proton/shared/lib/interfaces/config';
 import { apiMock } from '@proton/test-api/api';
 
 import { mockCache } from '../../../testing/cache';
@@ -71,13 +70,13 @@ export const notificationManager = {
     setOffset: jest.fn(),
 };
 
-export const config = {
+const config = {
     APP_NAME: APPS.PROTONMAIL,
     APP_VERSION: 'test-version',
     DATE_VERSION: 'test-date-version',
 } as ProtonConfig;
 
-export const eventManager = {
+const eventManager = {
     start: jest.fn(),
     stop: jest.fn(),
     call: jest.fn(),
@@ -126,6 +125,7 @@ export const getStoreWrapper = (preloadedState?: ExtendedRenderOptions['preloade
             organizationKey: getModelState({} as CachedOrganizationKey),
             userInvitations: getModelState([]),
             plans: getModelState({ plans: [], freePlan: FREE_PLAN }),
+            entitlementCatalog: getModelState(buildEntitlementCatalog()),
             features: {},
             importerConfig: getModelState({} as ApiEnvironmentConfig),
             ...preloadedState,
@@ -183,7 +183,7 @@ export const getCard = (cards: any[], encrypted = false) => {
     ).Data;
 };
 
-export const componentsHookWrapper = ({ children }: { children: any }) => {
+const componentsHookWrapper = ({ children }: { children: any }) => {
     const { Wrapper } = getStoreWrapper();
     return (
         <Wrapper>

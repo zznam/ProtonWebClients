@@ -2,13 +2,12 @@ import type { ReactNode } from 'react';
 
 import { c } from 'ttag';
 
-import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
 import { Card } from '@proton/atoms/Card/Card';
 import { PLANS } from '@proton/payments/core/constants';
-import { addUpsellPath, getUpgradePath } from '@proton/shared/lib/helpers/upsell';
-import { Audience } from '@proton/shared/lib/interfaces';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
 import clsx from '@proton/utils/clsx';
 
 import SettingsLink from '../../components/link/SettingsLink';
@@ -23,7 +22,6 @@ interface Props {
 
 const UpgradeBanner = ({ className, children, audience, upsellPath }: Props) => {
     const [user] = useUser();
-    const [subscription] = useSubscription();
     const bundleProPlan = useBundleProPlan();
 
     return (
@@ -32,13 +30,12 @@ const UpgradeBanner = ({ className, children, audience, upsellPath }: Props) => 
             <ButtonLike
                 as={SettingsLink}
                 path={(() => {
-                    return addUpsellPath(
-                        getUpgradePath({
+                    return getUpgradePath(
+                        {
                             user,
-                            subscription,
                             plan: audience === Audience.B2B ? bundleProPlan : PLANS.BUNDLE,
                             audience,
-                        }),
+                        },
                         upsellPath
                     );
                 })()}

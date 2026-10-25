@@ -3,41 +3,43 @@ import { c } from 'ttag';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { Prompt, useEventManager, useModalState } from '@proton/components';
-import { useLoading } from '@proton/hooks';
+import useModalState from '@proton/components/components/modalTwo/useModalState';
+import Prompt from '@proton/components/components/prompt/Prompt';
+import useEventManager from '@proton/components/hooks/useEventManager';
+import useLoading from '@proton/hooks/useLoading';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
 
-import { createToken, getTokensByFeature, resumeImport, updateImport } from '../../../api';
+import { createToken, getTokensByFeature, resumeImport, updateImport } from '../../../api/api';
 import { ApiImporterError, ApiImporterState } from '../../../api/api.interface';
 import { getImportProviderFromApiProvider } from '../../../helpers/getImportProviderFromApiProvider';
 import useOAuthPopup from '../../../hooks/useOAuthPopup';
 import { getEasySwitchFeaturesFromProducts, getProviderNumber } from '../../../hooks/useOAuthPopup.helpers';
+import { useTrackImportAction } from '../../../hooks/useTrackImportAction';
 import type { ImportToken, OAuthProps } from '../../../interface';
 import { AuthenticationMethod, EASY_SWITCH_SOURCES } from '../../../interface';
 import { reconnectImapImport } from '../../../logic/draft/imapDraft/imapDraft.actions';
 import { cancelImporter } from '../../../logic/importers/importers.actions';
-import type { ActiveImportID } from '../../../logic/importers/importers.interface';
-import { selectActiveImporterById, selectImporterById } from '../../../logic/importers/importers.selectors';
-import { useEasySwitchDispatch, useEasySwitchSelector } from '../../../logic/store';
+import type { ActiveImporter, Importer } from '../../../logic/importers/importers.interface';
+import { useEasySwitchDispatch } from '../../../logic/store';
 import { getScopeFromProvider } from '../../Modals/OAuth/OAuthModal.helpers';
 
 interface Props {
-    activeImporterID: ActiveImportID;
+    activeImporter: ActiveImporter;
+    importer: Importer;
 }
 
-const ImporterRowActions = ({ activeImporterID }: Props) => {
+const ImporterRowActions = ({ activeImporter, importer }: Props) => {
     const dispatch = useEasySwitchDispatch();
-    const activeImporter = useEasySwitchSelector((state) => selectActiveImporterById(state, activeImporterID));
-    const importer = useEasySwitchSelector((state) => selectImporterById(state, activeImporter.importerID));
     const { ID, account, sasl, provider, products } = importer;
-    const importProvider = getImportProviderFromApiProvider(provider);
     const { product, errorCode, importState } = activeImporter;
+    const importProvider = getImportProviderFromApiProvider(provider);
 
     const { triggerOAuthPopup, loadingConfig } = useOAuthPopup({
         errorMessage: c('Error').t`Your import will not be processed.`,
     });
 
     const api = useApi();
+    const trackEvent = useTrackImportAction({ account, provider, product });
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const [loadingPrimaryAction, withLoadingPrimaryAction] = useLoading();
@@ -95,9 +97,6 @@ const ImporterRowActions = ({ activeImporterID }: Props) => {
 
     const handleReconnect = async (importerID: string) => {
         await dispatch(reconnectImapImport(importerID));
-        // const apiImporterResponse = await api<ApiImportResponse>(getImport(importerID));
-        // const activeImport = getDeprecatedImporterFormatByID(apiImporterResponse);
-        // await createModal(<ImportMailModal addresses={addresses} currentImport={activeImport} />);
     };
 
     const handleResume = async (ImporterID: string) => {
@@ -111,23 +110,30 @@ const ImporterRowActions = ({ activeImporterID }: Props) => {
         createNotification({ text: c('Success').t`Resuming import` });
     };
 
+    const handleCancel = () => {
+        const activeImporterID = activeImporter.localID;
+        void withLoadingPrimaryAction(dispatch(cancelImporter({ activeImporterID })));
+        void trackEvent('cancel_import');
+        showCancelModal(false);
+    };
+
     const isAuthError = errorCode === ApiImporterError.ERROR_CODE_IMAP_CONNECTION;
+
+    const handleResumeOrReconnect = async () => {
+        if (isAuthError) {
+            const isOAuth = !sasl || sasl === AuthenticationMethod.OAUTH;
+            void withLoadingSecondaryAction(isOAuth ? handleReconnectOAuth(ID) : handleReconnect(ID));
+        } else {
+            void withLoadingSecondaryAction(handleResume(ID));
+        }
+        void trackEvent('resume_import');
+    };
 
     return (
         <div className="inline-flex gap-1">
             {importState === ApiImporterState.PAUSED && (
                 <Button
-                    onClick={() => {
-                        if (isAuthError) {
-                            return withLoadingSecondaryAction(
-                                !sasl || sasl === AuthenticationMethod.OAUTH
-                                    ? handleReconnectOAuth(ID)
-                                    : handleReconnect(ID)
-                            );
-                        }
-
-                        return withLoadingSecondaryAction(handleResume(ID));
-                    }}
+                    onClick={handleResumeOrReconnect}
                     loading={loadingConfig || loadingSecondaryAction}
                     data-testid="ReportsTable:reconnectImporter"
                 >
@@ -148,13 +154,7 @@ const ImporterRowActions = ({ activeImporterID }: Props) => {
                     {...cancelModalProps}
                     title={c('Confirm modal title').t`Import is incomplete!`}
                     buttons={[
-                        <Button
-                            color="danger"
-                            onClick={() => {
-                                void withLoadingPrimaryAction(dispatch(cancelImporter({ activeImporterID })));
-                                showCancelModal(false);
-                            }}
-                        >{c('Action').t`Cancel`}</Button>,
+                        <Button color="danger" onClick={handleCancel}>{c('Action').t`Cancel`}</Button>,
                         <Button
                             color="weak"
                             onClick={() => {

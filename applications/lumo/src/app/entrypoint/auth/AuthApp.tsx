@@ -1,26 +1,24 @@
 import { Suspense, lazy, useState } from 'react';
 import { Router } from 'react-router-dom';
 
-import {
-    ApiProvider,
-    AuthenticationProvider,
-    DrawerProvider,
-    ErrorBoundary,
-    EventManagerProvider,
-    ProtonApp,
-    StandardErrorPage,
-    StandardLoadErrorPage,
-    StandardPrivateApp,
-} from '@proton/components';
+import ApiProvider from '@proton/components/containers/api/ApiProvider';
+import ErrorBoundary from '@proton/components/containers/app/ErrorBoundary';
+import ProtonApp from '@proton/components/containers/app/ProtonApp';
+import StandardErrorPage from '@proton/components/containers/app/StandardErrorPage';
+import StandardLoadErrorPage from '@proton/components/containers/app/StandardLoadErrorPage';
+import StandardPrivateApp from '@proton/components/containers/app/StandardPrivateApp';
+import AuthenticationProvider from '@proton/components/containers/authentication/Provider';
+import EventManagerProvider from '@proton/components/containers/eventManager/EventManagerProvider';
+import { DrawerProvider } from '@proton/components/hooks/drawer/useDrawer';
 import useEffectOnce from '@proton/hooks/useEffectOnce';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import { ProtonStoreProvider } from '@proton/redux-shared-store/sharedProvider';
 import { getClientID } from '@proton/shared/lib/apps/helper';
-import { newVersionUpdater } from '@proton/shared/lib/busy';
+import { newVersionUpdater } from '@proton/shared/lib/busy/busy';
 import { getNonEmptyErrorMessage } from '@proton/shared/lib/helpers/error';
 import { setTtagLocales } from '@proton/shared/lib/i18n/locales';
-import type { UserModel } from '@proton/shared/lib/interfaces';
-import { FlagProvider } from '@proton/unleash/proxy';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import { UnleashFlagProviderWithToolbar } from '@proton/unleash/UnleashFlagProviderWithToolbar';
 
 import { bootstrapApp } from '../../bootstrap';
 import ConditionalNotificationsChildren from '../../components/ConditionalNotificationsChildren';
@@ -121,7 +119,7 @@ const AuthApp = () => {
                         <AuthenticationProvider store={extraThunkArguments.authentication}>
                             <ApiProvider api={extraThunkArguments.api}>
                                 <DrawerProvider defaultShowDrawerSidebar={state.showDrawerSidebar}>
-                                    <FlagProvider unleashClient={extraThunkArguments.unleashClient} startClient={false}>
+                                    <UnleashFlagProviderWithToolbar unleashClient={extraThunkArguments.unleashClient}>
                                         <Router history={extraThunkArguments.history}>
                                             <EventManagerProvider eventManager={extraThunkArguments.eventManager}>
                                                 <ErrorBoundary big component={<StandardErrorPage big />}>
@@ -137,7 +135,7 @@ const AuthApp = () => {
                                                 </ErrorBoundary>
                                             </EventManagerProvider>
                                         </Router>
-                                    </FlagProvider>
+                                    </UnleashFlagProviderWithToolbar>
                                 </DrawerProvider>
                             </ApiProvider>
                         </AuthenticationProvider>

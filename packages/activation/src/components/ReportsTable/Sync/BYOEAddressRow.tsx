@@ -1,28 +1,27 @@
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { TableCell, TableRow } from '@proton/components';
 import useSettingsLink from '@proton/components/components/link/useSettingsLink';
+import TableCell from '@proton/components/components/table/TableCell';
+import TableRow from '@proton/components/components/table/TableRow';
 import { APPS } from '@proton/shared/lib/constants';
-import type { Address } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
 
 import { ApiImportProvider, ApiSyncState } from '../../../api/api.interface';
 import { ImportType } from '../../../interface';
-import { useEasySwitchSelector } from '../../../logic/store';
-import { selectSyncByEmail } from '../../../logic/sync/sync.selectors';
+import type { Sync } from '../../../logic/sync/sync.interface';
 import ReportsTableCell from '../ReportsTableCell';
 import SyncRowStatus from './SyncRowStatus';
 
 interface Props {
     address: Address;
+    sync: Sync | undefined;
 }
 
-export const BYOEAddressRow = ({ address }: Props) => {
+export const BYOEAddressRow = ({ address, sync }: Props) => {
     const goToSettings = useSettingsLink();
 
-    const syncItem = useEasySwitchSelector((state) => selectSyncByEmail(state, address.Email));
-
-    const isAddressDisconnected = !syncItem || syncItem.state !== ApiSyncState.ACTIVE;
+    const isAddressDisconnected = !sync || sync.state !== ApiSyncState.ACTIVE;
 
     return (
         <TableRow data-testid="reportsTable:byoeAddressRow">
@@ -30,7 +29,7 @@ export const BYOEAddressRow = ({ address }: Props) => {
             <TableCell className="easy-switch-table-size">-</TableCell>
             <TableCell className="easy-switch-table-status">
                 {!isAddressDisconnected ? (
-                    <SyncRowStatus state={syncItem!.state} />
+                    <SyncRowStatus state={sync!.state} />
                 ) : (
                     <span className="color-weak">{c('Address status').t`Disconnected`}</span>
                 )}

@@ -1,9 +1,10 @@
 import { c } from 'ttag';
 
-import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
+import { useSubscriptionForApp } from '@proton/payments-ui/ui/hooks/useSubscriptionForApp';
+import { getUpgradePath } from '@proton/payments/core/subscription/upsell';
 import { APP_UPSELL_REF_PATH, MAIL_APP_NAME, MAIL_UPSELL_PATHS, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
-import { addUpsellPath, getUpgradePath, getUpsellRef } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
 
 import useSettingsLink from '../../components/link/useSettingsLink';
@@ -21,7 +22,7 @@ interface Props {
 const PmMeSection = ({ isPMAddressActive }: Props) => {
     const goToSettings = useSettingsLink();
     const [user] = useUser();
-    const [subscription] = useSubscription();
+    const [subscription] = useSubscriptionForApp();
 
     const [upsellModalProps, handleUpsellModalDisplay, renderUpsellModal] = useModalState();
 
@@ -33,7 +34,7 @@ const PmMeSection = ({ isPMAddressActive }: Props) => {
             isSettings: true,
         });
 
-        goToSettings(addUpsellPath(getUpgradePath({ user, subscription }), upsellRef), undefined, false);
+        goToSettings(getUpgradePath({ user, subscription }, upsellRef), undefined, false);
     };
 
     const display: 'can-enable' | 'has-enabled' | 'free-needs-upgrade' | 'free-can-only-receive' = (() => {

@@ -3,7 +3,7 @@ import { Button } from '@proton/atoms/Button/Button'
 import BasicModal from '@proton/components/components/modalTwo/BasicModal'
 import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState'
 import { useModalTwoStatic } from '@proton/components/components/modalTwo/useModalTwo'
-import type { DocumentType } from '@proton/docs-shared'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
 import { useState } from 'react'
 import { c } from 'ttag'
 import { useQuickReportModal } from '~/components/QuickReportModal'
@@ -38,6 +38,7 @@ function DriftDetectionErrorModal({
         isOpen={isOpen === undefined ? true : isOpen}
         onClose={handleClose}
         {...modalProps}
+        data-testid="drift-detection-error-modal"
         title={c('Title').t`Editing paused`}
         footer={
           <div className="flex items-center gap-2.5">

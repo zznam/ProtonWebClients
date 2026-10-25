@@ -14,14 +14,11 @@ import {
 } from '@proton/shared/lib/constants';
 import { getIsBYOEAddress } from '@proton/shared/lib/helpers/address';
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
-import type {
-    Address,
-    CachedOrganizationKey,
-    Member,
-    PartialMemberAddress,
-    UserModel,
-} from '@proton/shared/lib/interfaces';
-import { AddressConfirmationState } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import { AddressConfirmationState } from '@proton/shared/lib/interfaces/Address';
+import type { Member, PartialMemberAddress } from '@proton/shared/lib/interfaces/Member';
+import type { CachedOrganizationKey } from '@proton/shared/lib/interfaces/OrganizationKey';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { getCanGenerateMemberAddressKeys } from '@proton/shared/lib/keys/memberKeys';
 import { getIsNonDefault } from '@proton/shared/lib/mail/addresses';
 
@@ -154,26 +151,6 @@ export const getPermissions = ({
 
 export type AddressPermissions = ReturnType<typeof getPermissions>;
 export type AddressStatuses = ReturnType<typeof getStatus>;
-
-export interface AddressWithMemberID extends PartialMemberAddress {
-    MemberID: string;
-    MemberName?: string;
-}
-
-export interface MembersMap {
-    [MemberID: string]: Member;
-}
-
-export interface SwitchAddressPermissionMultiResponses {
-    Responses: SwitchAddressPermissionResponse[];
-}
-
-export interface SwitchAddressPermissionResponse {
-    AddressID: string;
-    Response: {
-        Code: number;
-    };
-}
 
 export interface PermissionOption {
     text: string;

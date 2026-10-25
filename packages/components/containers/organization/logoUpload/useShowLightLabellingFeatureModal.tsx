@@ -1,8 +1,9 @@
-import { useWelcomeFlags } from '@proton/account';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { useUser } from '@proton/account/user/hooks';
+import { useWelcomeFlags } from '@proton/account/welcomeFlags';
 import { useConfig } from '@proton/app-context/useConfig';
-import { FeatureCode, useFeature } from '@proton/features';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 import { APPS } from '@proton/shared/lib/constants';
 import { hasOrganizationSetupWithKeys } from '@proton/shared/lib/helpers/organization';
 import { getOrganizationDenomination } from '@proton/shared/lib/organization/helper';

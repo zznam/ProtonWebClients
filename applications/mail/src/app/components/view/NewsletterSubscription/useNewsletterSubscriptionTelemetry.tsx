@@ -1,6 +1,6 @@
-import { useUserSettings } from '@proton/account';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
+import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { isCustomFolder } from '@proton/mail/helpers/location';
 import { useFolders } from '@proton/mail/store/labels/hooks';
@@ -10,7 +10,7 @@ import {
     TelemetryMeasurementGroups,
 } from '@proton/shared/lib/api/telemetry';
 import { sendTelemetryReportWithBaseDimensions } from '@proton/shared/lib/helpers/metrics';
-import type { SimpleMap } from '@proton/shared/lib/interfaces';
+import type { SimpleMap } from '@proton/shared/lib/interfaces/utils';
 
 import { useMailSelector } from '../../../store/hooks';
 import type { SortSubscriptionsValue } from '../../../store/newsletterSubscriptions/interface';

@@ -9,7 +9,7 @@ import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
 import useLoading from '@proton/hooks/useLoading';
-import metrics from '@proton/metrics';
+import metrics from '@proton/metrics/metricsInstance';
 import observeApiError from '@proton/metrics/observeApiError';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { CacheType } from '@proton/redux-utilities/interface';
@@ -24,7 +24,7 @@ import Modal from '../../../components/modalTwo/Modal';
 import ModalContent from '../../../components/modalTwo/ModalContent';
 import ModalFooter from '../../../components/modalTwo/ModalFooter';
 import ModalHeader from '../../../components/modalTwo/ModalHeader';
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import PasswordInputTwo from '../../../components/v2/input/PasswordInput';
 import useFormErrors from '../../../components/v2/useFormErrors';
 

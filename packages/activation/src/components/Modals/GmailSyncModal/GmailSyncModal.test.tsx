@@ -1,10 +1,16 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { MAIL_APP_NAME } from '@proton/shared/lib/constants';
+import { mockTracker } from '@proton/telemetry-tracker/testing';
 
-import { GmailSyncModal } from '../../../../index';
-import { EASY_SWITCH_SOURCES } from '../../../interface';
+import { EASY_SWITCH_SOURCES, TIME_PERIOD } from '../../../interface';
 import { easySwitchRender } from '../../../tests/render';
+import GmailSyncModal from './GmailSyncModal';
+
+jest.mock('@proton/unleash/useFlag', () => ({
+    __esModule: true,
+    useFlag: jest.fn(() => true),
+}));
 
 jest.mock('../../../logic/StoreProvider', () => ({
     __esModule: true,
@@ -41,14 +47,85 @@ describe('GmailSyncModal', () => {
     });
 
     it('should show the add byoe modal', () => {
-        easySwitchRender(<GmailSyncModal open source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS} hasAccessToBYOE />);
+        easySwitchRender(
+            <GmailSyncModal
+                open
+                source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS}
+                onBYOECallback={() => {}}
+                hasAccessToBYOE
+            />
+        );
 
         screen.getByText(`Bring your Gmail into ${MAIL_APP_NAME}`);
     });
 
+    it('should send creation_started when the BYOE modal is shown, with the source and whether it converts a forwarding', () => {
+        const { reports } = mockTracker();
+
+        easySwitchRender(
+            <GmailSyncModal
+                open
+                source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS}
+                onBYOECallback={() => {}}
+                hasAccessToBYOE
+                expectedEmailAddress="me@gmail.com"
+            />
+        );
+
+        expect(reports).toHaveLength(1);
+        expect(reports[0]).toMatchObject({
+            measurementGroup: 'any.web.byoe_creation_funnel',
+            event: 'creation_started',
+            dimensions: { source: 'account-web-settings', provider: 'google', isConversion: 'true' },
+        });
+    });
+
+    it('should not send creation_started for the forwarding modal', () => {
+        const { reports } = mockTracker();
+
+        easySwitchRender(
+            <GmailSyncModal
+                open
+                source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS}
+                onBYOECallback={() => {}}
+                hasAccessToBYOE={false}
+            />
+        );
+
+        expect(reports).toHaveLength(0);
+    });
+
+    it('should send google_sign_in_clicked with the import choices when pressing connect', async () => {
+        const { reports } = mockTracker();
+
+        easySwitchRender(
+            <GmailSyncModal
+                open
+                source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS}
+                onBYOECallback={() => {}}
+                hasAccessToBYOE
+            />
+        );
+        fireEvent.click(screen.getByText('Connect your email'));
+
+        await waitFor(() => expect(reports.map((report) => report.event)).toContain('google_sign_in_clicked'));
+        const click = reports.find((report) => report.event === 'google_sign_in_clicked');
+        expect(click?.dimensions).toEqual({
+            provider: 'google',
+            hasImportEmails: 'true',
+            importPeriodSelected: 'big_bang',
+        });
+        expect(click?.values).toHaveProperty('durationMs');
+    });
+
     it('should show the forwarding modal', () => {
         easySwitchRender(
-            <GmailSyncModal open source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS} hasAccessToBYOE={false} />
+            <GmailSyncModal
+                open
+                source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS}
+                onBYOECallback={() => {}}
+                hasAccessToBYOE={false}
+            />
         );
 
         screen.getByText('Automatically forward');
@@ -72,7 +149,12 @@ describe('GmailSyncModal', () => {
 
         await waitFor(() => {
             expect(mockSyncCallback).not.toHaveBeenCalled();
-            expect(mockBYOEWithImportCallback).toHaveBeenCalledWith(false, true, undefined);
+            expect(mockBYOEWithImportCallback).toHaveBeenCalledWith({
+                hasError: false,
+                importEmails: true,
+                importPeriod: TIME_PERIOD.BIG_BANG,
+                token: undefined,
+            });
         });
     });
 
@@ -96,7 +178,37 @@ describe('GmailSyncModal', () => {
 
         await waitFor(() => {
             expect(mockSyncCallback).not.toHaveBeenCalled();
-            expect(mockBYOEWithImportCallback).toHaveBeenCalledWith(false, false, undefined);
+            expect(mockBYOEWithImportCallback).toHaveBeenCalledWith({
+                hasError: false,
+                importEmails: false,
+                importPeriod: undefined,
+                token: undefined,
+            });
+        });
+    });
+    it('should call onBYOECallback with the selected import period', async () => {
+        const mockBYOEWithImportCallback = jest.fn();
+
+        easySwitchRender(
+            <GmailSyncModal
+                open
+                source={EASY_SWITCH_SOURCES.ACCOUNT_WEB_SETTINGS}
+                hasAccessToBYOE
+                onBYOECallback={mockBYOEWithImportCallback}
+            />
+        );
+
+        fireEvent.click(screen.getByText('Import all messages'));
+        fireEvent.click(screen.getByText('Last 3 months only'));
+        fireEvent.click(screen.getByText('Connect your email'));
+
+        await waitFor(() => {
+            expect(mockBYOEWithImportCallback).toHaveBeenCalledWith({
+                hasError: false,
+                importEmails: true,
+                importPeriod: TIME_PERIOD.LAST_3_MONTHS,
+                token: undefined,
+            });
         });
     });
 });

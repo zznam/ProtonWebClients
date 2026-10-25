@@ -14,18 +14,22 @@ import type {
 } from 'proton-account/src/app/content/router-params';
 import { c } from 'ttag';
 
+import { useAddresses } from '@proton/account/addresses/hooks';
+import { useAllSubscriptions } from '@proton/account/allSubscriptions/hooks';
+import { useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import { useGroups } from '@proton/account/groups/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { useIsDataRecoveryAvailable } from '@proton/account/recovery/dataRecovery';
 import { useIsSessionRecoveryAvailable } from '@proton/account/recovery/sessionRecoveryHooks';
 import { useReferralInfo } from '@proton/account/referralInfo/hooks';
 import { SafetyReviewRoute } from '@proton/account/safetyReview/components/SafetyReviewRoute';
+import SignInRestrictionSection from '@proton/account/signInRestriction/SignInRestrictionSection';
 import AuthDevicesSettings from '@proton/account/sso/AuthDevicesSettings';
 import MembersAuthDevicesTopBanner from '@proton/account/sso/MembersAuthDevicesTopBanner';
 import { useSubscription } from '@proton/account/subscription/hooks';
 import { useUser } from '@proton/account/user/hooks';
 import { EMPTY_ORG_PERMISSIONS } from '@proton/account/userPermissions';
-import { useUserPermissions } from '@proton/account/userPermissions/hooks';
+import { useIsOrganizationOwner, useUserPermissions } from '@proton/account/userPermissions/hooks';
 import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { ThirdPartySection } from '@proton/calendar-video-conferencing/thirdParty/ThirdPartySection';
 import TopNavbarUpsell from '@proton/components/components/topnavbar/TopNavbarUpsell';
@@ -53,7 +57,6 @@ import PlansSection from '@proton/components/containers/payments/PlansSection';
 import SubscriptionsSection from '@proton/components/containers/payments/SubscriptionsSection';
 import PaymentMethodsSection from '@proton/components/containers/payments/methods/PaymentMethodsSection';
 import DashboardTelemetry from '@proton/components/containers/payments/subscription/DashboardTelemetry';
-import DowngradeSubscriptionSection from '@proton/components/containers/payments/subscription/DowngradeSubscriptionSection';
 import SubscriptionModalProvider, {
     UpsellModalTelemetryProvider,
 } from '@proton/components/containers/payments/subscription/SubscriptionModalProvider';
@@ -62,7 +65,7 @@ import YourPlanSection from '@proton/components/containers/payments/subscription
 import DashboardComparePlansCTA from '@proton/components/containers/payments/subscription/YourPlanSectionV2/DashboardComparePlansCTA';
 import YourPlanSectionV2 from '@proton/components/containers/payments/subscription/YourPlanSectionV2/YourPlanSectionV2';
 import { YourPlanUpsellsSectionV2 } from '@proton/components/containers/payments/subscription/YourPlanSectionV2/YourPlanUpsellsSectionV2';
-import { CancelSubscriptionSection } from '@proton/components/containers/payments/subscription/cancelSubscription';
+import { CancelSubscriptionSection } from '@proton/components/containers/payments/subscription/cancelSubscription/CancelSubscriptionSection';
 import CancelSubscriptionViaSupportSection from '@proton/components/containers/payments/subscription/cancelSubscriptionViaSupport/CancelSubscriptionViaSupportSection';
 import { CancellationReminderSection } from '@proton/components/containers/payments/subscription/cancellationFlow/CancellationReminderSection';
 import { CANCEL_ROUTE } from '@proton/components/containers/payments/subscription/cancellationFlow/helper';
@@ -87,7 +90,6 @@ import { useIsGroupOwner } from '@proton/components/hooks/useIsGroupOwner';
 import useRecoveryNotification from '@proton/components/hooks/useRecoveryNotification';
 import useShowVPNDashboard from '@proton/components/hooks/useShowVPNDashboard';
 import useToggle from '@proton/hooks/useToggle';
-import { useEntitlementChecks } from '@proton/payments-ui/entitlements/hooks';
 import { PaymentsContextProvider } from '@proton/payments-ui/ui/context/PaymentContext';
 import { AutomaticSubscriptionModal } from '@proton/payments-ui/ui/subscriptions/AutomaticSubscriptionModal';
 import { APPS, SECURITY_CHECKUP_PATHS, VPN_TV_PATHS } from '@proton/shared/lib/constants';
@@ -97,7 +99,7 @@ import { locales } from '@proton/shared/lib/i18n/locales';
 import { useFlag } from '@proton/unleash/useFlag';
 import { GetStartedOnboarding } from '@proton/vpn/components/Onboarding';
 import { VPNDownloadAndInfoSection } from '@proton/vpn/components/VPNDownloadSection';
-import { TVContainer } from '@proton/vpn/components/tv';
+import { TVContainer } from '@proton/vpn/components/tv/containers/TVContainer';
 import { NavigationProvider, useB2BAdminNavigation } from '@proton/vpn/contexts/navigation';
 
 import { DownloadsRoute } from '../routes/downloads';
@@ -118,10 +120,13 @@ const SettingsSearchArea = () => {
 
 const MainContainer: FunctionComponent = () => {
     const [user] = useUser();
+    const [addresses] = useAddresses();
     const [userSettings] = useUserSettings();
     const [subscription, loadingSubscription] = useSubscription();
+    const [allSubscriptions = [], loadingAllSubscriptions] = useAllSubscriptions();
     const [organization, loadingOrganization] = useOrganization();
     const [{ permissions }] = useUserPermissions();
+    const [isOrganizationOwner] = useIsOrganizationOwner();
     const { state: expanded, toggle: onToggleExpand, set: setExpand } = useToggle();
     const { viewportWidth } = useActiveBreakpoint();
     const location = useLocation();
@@ -129,8 +134,8 @@ const MainContainer: FunctionComponent = () => {
     const isZoomIntegrationEnabled = !isZoomIntegrationDisabled;
     const isProtonMeetIntegrationEnabled = useFlag('NewScheduleOption');
     const isSsoForPbsEnabled = useFlag('SsoForPbs');
+    const showSignInRestrictionToggle = useFlag('ShowSignInRestrictionToggle');
     const isRetentionPoliciesEnabled = useFlag('DataRetentionPolicy');
-    const isUserGroupsNoCustomDomainEnabled = useFlag('UserGroupsNoCustomDomain');
     const isAlwaysOnVpnEnabled = useFlag('B2BAlwaysOnEnabled');
 
     const [groups, loadingGroups] = useGroups();
@@ -141,7 +146,7 @@ const MainContainer: FunctionComponent = () => {
     const [isSessionRecoveryAvailable, loadingIsSessionRecoveryAvailable] = useIsSessionRecoveryAvailable();
     const recoveryNotification = useRecoveryNotification(false, false);
     const [isGroupOwner, loadingIsGroupOwner] = useIsGroupOwner();
-    const [entitlements, loadingEntitlements] = useEntitlementChecks();
+    const [entitlements, loadingEntitlements] = useEntitlementChecksForOrgAndUser();
 
     const { isUserEligible: isReferralProgramEnabled } = useReferralUserEligible();
 
@@ -153,6 +158,7 @@ const MainContainer: FunctionComponent = () => {
         organization,
         isB2BDrive: false,
         isGroupOwner,
+        isOrganizationOwner,
         permissions: permissions ?? EMPTY_ORG_PERMISSIONS,
         memberships: [],
     };
@@ -171,11 +177,10 @@ const MainContainer: FunctionComponent = () => {
 
     const flags: Flags = {
         canDisplayNonPrivateEmailPhone: false,
-        isAuthenticatorAvailable: false,
         isCategoryViewEnabled: false,
+        isLumoApiEnabled: false,
         isCryptoPostQuantumOptInEnabled: false,
         isScribeEnabled: false,
-        isUserGroupsNoCustomDomainEnabled,
         isZoomIntegrationEnabled,
         isProtonMeetIntegrationEnabled,
         isSsoForPbsEnabled,
@@ -183,10 +188,12 @@ const MainContainer: FunctionComponent = () => {
         isAlwaysOnVpnEnabled,
         isReferralProgramEnabled,
         isDriveEasySwitchNewUIEnabled: false,
+        showSignInRestrictionToggle,
     };
 
     const vpnRoutes = getRoutes({
         user,
+        addresses,
         subscription,
         showVPNDashboard,
         showVPNDashboardVariant: showVPNDashboardVariant.name,
@@ -201,6 +208,7 @@ const MainContainer: FunctionComponent = () => {
         app: APPS.PROTONVPN_SETTINGS,
         user,
         subscription,
+        allSubscriptions,
         entitlements,
         flags,
         ...organizationSettingsRouterParams,
@@ -251,6 +259,7 @@ const MainContainer: FunctionComponent = () => {
     const redirect = (() => {
         if (
             loadingSubscription ||
+            loadingAllSubscriptions ||
             loadingOrganization ||
             loadingGroups ||
             loadingEntitlements ||
@@ -348,7 +357,6 @@ const MainContainer: FunctionComponent = () => {
                                                 <GiftCodeSection />
                                                 <InvoicesSection app={app} />
                                                 <CancelSubscriptionSection app={app} />
-                                                <DowngradeSubscriptionSection app={app} />
                                                 <CancelSubscriptionViaSupportSection />
                                             </PrivateMainSettingsArea>
                                         </UpsellModalTelemetryProvider>
@@ -368,7 +376,6 @@ const MainContainer: FunctionComponent = () => {
                                             <GiftCodeSection />
                                             <InvoicesSection app={app} />
                                             <CancelSubscriptionSection app={app} />
-                                            <DowngradeSubscriptionSection app={app} />
                                             <CancelSubscriptionViaSupportSection />
                                         </PrivateMainSettingsArea>
                                     </Route>
@@ -417,6 +424,7 @@ const MainContainer: FunctionComponent = () => {
                                     >
                                         <SentinelSection app={app} />
                                         <CredentialLeakSection />
+                                        <SignInRestrictionSection />
                                         <AuthDevicesSettings />
                                         <SessionsSection />
                                         <LogsSection />

@@ -1,7 +1,7 @@
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { FileIcon } from '@proton/components';
+import { getFileIcon } from '@proton/file-icons/getFileIcon';
 
 import type { ContextFilter } from '../../../llm';
 import { useLumoSelector } from '../../../redux/hooks';
@@ -100,8 +100,8 @@ export const ReferenceFilesButton = ({ messageChain, onClick, message }: FilesBu
         .slice(0, 3);
 
     const fileCount = relevantFiles.length;
-    const label =
-        fileCount === 1 ? c('collider_2025: Info').t`1 file` : `${fileCount} ${c('collider_2025: Info').t`files`}`;
+    // translator: File-count label. ${fileCount} is the number of files attached to a chat message.
+    const label = c('collider_2025: Info').ngettext(msgid`${fileCount} file`, `${fileCount} files`, fileCount);
 
     const handleClick = () => {
         onClick(message); // Pass the specific message when clicked
@@ -114,15 +114,19 @@ export const ReferenceFilesButton = ({ messageChain, onClick, message }: FilesBu
             onClick={handleClick}
         >
             <div className="flex flex-row flex-nowrap">
-                {fileTypes.map((mimeType, index) => (
-                    <div
-                        key={`${mimeType}-${index}`}
-                        className="source-favicon rounded-full bg-norm border border-weak flex"
-                        style={{ marginLeft: index > 0 ? '-4px' : '0' }}
-                    >
-                        <FileIcon mimeType={mimeType} size={4} className="rounded-full" />
-                    </div>
-                ))}
+                {fileTypes.map((mimeType, index) => {
+                    const FileTypeIcon = getFileIcon(mimeType);
+
+                    return (
+                        <div
+                            key={`${mimeType}-${index}`}
+                            className="source-favicon rounded-full bg-norm border border-weak flex"
+                            style={{ marginLeft: index > 0 ? '-4px' : '0' }}
+                        >
+                            <FileTypeIcon size={4} className="shrink-0 rounded-full" />
+                        </div>
+                    );
+                })}
             </div>
             <span>{label}</span>
         </Button>

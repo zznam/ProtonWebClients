@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 
 import { featureTourActions } from '@proton/account/featuresTour';
 import * as featureTourActionsModule from '@proton/account/featuresTour/actions';
-import { getModelState } from '@proton/account/tests';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import { getModelState } from '@proton/account/testing/getModelState';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import * as useFlagModule from '@proton/unleash/useFlag';
 
 import { renderWithProviders } from '../../testing/renderWithProviders';

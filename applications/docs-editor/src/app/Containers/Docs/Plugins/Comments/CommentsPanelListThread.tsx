@@ -1,15 +1,12 @@
-import ToolbarButton from '@proton/components/components/toolbar/ToolbarButton'
 import type { MouseEventHandler } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { clsx } from 'clsx'
 import { CommentsPanelListComment } from './CommentsPanelListComment'
 import { CommentsComposer } from './CommentsComposer'
-import type { CommentInterface, CommentThreadInterface } from '@proton/docs-shared'
-import { CommentThreadState, CommentThreadType, CommentType } from '@proton/docs-shared'
-import { Icon } from '../../Components/Icon'
-import * as Icons from '../../Components/icons'
-import { c, msgid } from 'ttag'
-import { useDocsDependencies } from '../../DocsDependenciesProvider'
+import { CommentSendButton } from './CommentSendButton'
+import type { DocsComment, DocsCommentThread } from '../../contract/DocsCommentThread'
+import { CommentThreadStates, CommentThreadTypes, CommentTypes } from '../../contract/DocsCommentThread'
+import { useDocsDependencies, useDocsMessages } from '../../DocsDependenciesProvider'
 import { useCommentsContext } from './CommentsContext'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { $getNodeByKey, $getSelection, $isRangeSelection, COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical'
@@ -18,8 +15,9 @@ export const TYPING_STATUS_CHANGE_EVENT_COMMAND = createCommand<{
   threadId: string
 }>('TYPING_STATUS_CHANGE_EVENT_COMMAND')
 
-export function CommentsPanelListThread({ thread, className }: { thread: CommentThreadInterface; className?: string }) {
+export function CommentsPanelListThread({ thread, className }: { thread: DocsCommentThread; className?: string }) {
   const { reportError } = useDocsDependencies()
+  const messages = useDocsMessages().comments
   const [editor] = useLexicalComposerContext()
   const {
     getMarkNodes,
@@ -42,7 +40,7 @@ export function CommentsPanelListThread({ thread, className }: { thread: Comment
     return getMarkNodes(markID) ?? []
   }, [getMarkNodes, markID])
 
-  const isSuggestionThread = thread.type === CommentThreadType.Suggestion
+  const isSuggestionThread = thread.type === CommentThreadTypes.Suggestion
 
   const [element, setElement] = useState<HTMLLIElement | null>(null)
   const [isFocusWithin, setIsFocusWithin] = useState(false)
@@ -189,28 +187,24 @@ export function CommentsPanelListThread({ thread, className }: { thread: Comment
     }
   }, [editor, isActive, isHovering, markNodes])
 
-  const isResolved = thread.state === CommentThreadState.Resolved
+  const isResolved = thread.state === CommentThreadStates.Resolved
 
   const firstTyper = typers[0]
   const allTypersExceptLast = typers.slice(0, -1).join(', ')
   const lastTyper = typers[typers.length - 1]
-  // translator: list of names (eg: "Tom, John and Henry")
-  const usersTranslation = typers.length === 1 ? firstTyper : c('Info').t`${allTypersExceptLast} and ${lastTyper}`
+  const typerNames = typers.length === 1 ? firstTyper : messages.typerNames(allTypersExceptLast, lastTyper)
 
   const isSuggestionClosed =
-    thread.state === CommentThreadState.Accepted || thread.state === CommentThreadState.Rejected
+    thread.state === CommentThreadStates.Accepted || thread.state === CommentThreadStates.Rejected
 
   const canShowReplyBox = canComment && !thread.isPlaceholder && !isDeleting && !isResolved && !isSuggestionClosed
 
-  const [suggestionSummaryComment, regularComments] = useMemo((): [
-    CommentInterface | undefined,
-    CommentInterface[],
-  ] => {
-    const regularComments: CommentInterface[] = []
-    let suggestionSummaryComment: CommentInterface | undefined
+  const [suggestionSummaryComment, regularComments] = useMemo((): [DocsComment | undefined, DocsComment[]] => {
+    const regularComments: DocsComment[] = []
+    let suggestionSummaryComment: DocsComment | undefined
 
     for (const comment of thread.comments) {
-      if (comment.type === CommentType.Suggestion) {
+      if (comment.type === CommentTypes.Suggestion) {
         suggestionSummaryComment = comment
       } else {
         regularComments.push(comment)
@@ -230,8 +224,8 @@ export function CommentsPanelListThread({ thread, className }: { thread: Comment
       onClick={handleClickThread}
       data-active={isActive ? true : undefined}
       className={clsx(
-        'group/thread border-weak bg-norm mb-3.5 list-none overflow-hidden rounded-lg border transition-transform duration-[25ms] last:mb-0 focus:outline-none',
-        isActive || isHovering ? 'shadow-raised relative' : '',
+        'group/thread mb-3.5 list-none overflow-hidden rounded-lg border border-[--border-weak] bg-[--background-norm] transition-transform duration-[25ms] last:mb-0 focus:outline-none',
+        isActive || isHovering ? 'relative shadow-[shadow:--shadow-raised]' : '',
         !isActive && 'hover:bg-[--optional-background-lowered]',
         thread.isPlaceholder || isDeleting ? 'pointer-events-none opacity-50' : '',
         className,
@@ -240,7 +234,7 @@ export function CommentsPanelListThread({ thread, className }: { thread: Comment
     >
       {quote && (
         <blockquote
-          className="color-weak mx-3 mb-1 mt-2 line-clamp-1 border-l border-[--signal-warning] px-2.5 py-px text-xs font-medium leading-none before:content-none after:content-none"
+          className="mx-3 mb-1 mt-2 line-clamp-1 border-l border-[--signal-warning] px-2.5 py-px text-xs font-medium leading-none text-[--text-weak] before:content-none after:content-none"
           data-testid="comment-thread-name"
         >
           {quote}
@@ -277,8 +271,8 @@ export function CommentsPanelListThread({ thread, className }: { thread: Comment
           )}
         >
           <CommentsComposer
-            className="border-weak border ring-[--primary] focus-within:border-[--primary] focus-within:ring focus-within:ring-[--primary-minor-1]"
-            placeholder={c('Placeholder').t`Reply...`}
+            className="border border-[--border-weak] ring-[--primary] focus-within:border-[--primary] focus-within:ring focus-within:ring-[--primary-minor-1]"
+            placeholder={messages.replyPlaceholder}
             data-testid="reply-in-thread-input"
             onSubmit={async (content) => {
               const comment = await createComment(content, thread.id)
@@ -299,10 +293,8 @@ export function CommentsPanelListThread({ thread, className }: { thread: Comment
                 return null
               }
               return (
-                <ToolbarButton
-                  className="bg-primary rounded-full p-1"
-                  title={c('Action').t`Reply`}
-                  icon={<Icon data={Icons.arrowUp} size={3.5} />}
+                <CommentSendButton
+                  label={messages.reply}
                   disabled={!canSubmit}
                   onClick={submitComment}
                   data-testid="reply-in-send-button"
@@ -321,17 +313,13 @@ export function CommentsPanelListThread({ thread, className }: { thread: Comment
             }}
             data-testid="reopen-thread-button"
           >
-            {c('Action').t`Re-open thread`}
+            {messages.reopenThread}
           </button>
         </div>
       )}
       {typers.length > 0 && (
         <div className="px-3.5 py-1.5 text-xs text-[--text-weak]" data-testid="info-active-typing">
-          {c('Info').ngettext(
-            msgid`${usersTranslation} is typing...`,
-            `${usersTranslation} are typing...`,
-            typers.length,
-          )}
+          {messages.typing(typerNames, typers.length)}
         </div>
       )}
     </li>

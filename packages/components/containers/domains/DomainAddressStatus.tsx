@@ -1,9 +1,9 @@
 import { c } from 'ttag';
 
 import { ADDRESS_RECEIVE, ADDRESS_STATUS } from '@proton/shared/lib/constants';
-import type { DomainAddress } from '@proton/shared/lib/interfaces';
+import type { DomainAddress } from '@proton/shared/lib/interfaces/Address';
 
-import Badge from '../../components/badge/Badge';
+import { Badge } from '../../components/badge/Badge';
 
 interface Props {
     address: DomainAddress;

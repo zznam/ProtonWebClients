@@ -20,6 +20,7 @@
         "./calendarBootstrap": "./calendarBootstrap/index.ts",
         "./calendarBootstrap/hooks": "./calendarBootstrap/hooks.ts",
         "./calendarBootstrap/keys": "./calendarBootstrap/keys.ts",
+        "./calendarEvent/useGetCalendarEventRaw": "./calendarEvent/useGetCalendarEventRaw.ts",
         "./calendarEventLoop": "./calendarEventLoop/index.ts",
         "./calendarEventLoop/interface": "./calendarEventLoop/interface.ts",
         "./calendarEventLoop/listeners": "./calendarEventLoop/listeners.ts",
@@ -35,13 +36,14 @@
         "./holidaysDirectory": "./holidaysDirectory/index.ts",
         "./holidaysDirectory/hooks": "./holidaysDirectory/hooks.ts",
         "./holidaysDirectory/listener": "./holidaysDirectory/listener.ts",
+        "./telemetry/events": "./telemetry/events.ts",
         "./testing/builders": "./testing/builders.ts",
         "./testing/handlers": "./testing/handlers.ts",
         "./utils": "./utils.ts"
     },
     "scripts": {
-        "check-types": "tsc --checkers 1",
-        "lint": "eslint --quiet",
+        "check:types": "tsc --checkers 1",
+        "lint": "oxlint --quiet",
         "test": "jest",
         "test:ci": "jest --runInBand --logHeapUsage",
         "test:watch": "jest --watch"
@@ -55,25 +57,32 @@
         "@proton/redux-utilities": "workspace:^",
         "@proton/sanitize": "workspace:^",
         "@proton/shared": "workspace:^",
+        "@proton/telemetry-tracker": "workspace:^",
         "@proton/utils": "workspace:^",
-        "@protontech/crypto": "*",
-        "@reduxjs/toolkit": "^2.12.0",
-        "lodash": "^4.18.1",
-        "react": "^18.3.1"
+        "@protontech/crypto": "catalog:",
+        "@reduxjs/toolkit": "catalog:",
+        "lodash": "catalog:",
+        "react": "catalog:"
     },
     "devDependencies": {
         "@jackfranklin/test-data-bot": "^2.1.0",
         "@proton/app-context": "workspace:^",
-        "@proton/eslint-config-proton": "workspace:^",
         "@proton/jest-env": "workspace:^",
         "@proton/jest-swc-preset": "workspace:^",
+        "@proton/oxlint-config": "workspace:^",
         "@proton/unleash": "workspace:^",
-        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/jest-dom": "catalog:",
         "@testing-library/react": "^15.0.7",
-        "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.11.0",
-        "jest": "^30.5.2",
-        "msw": "2.12.14",
-        "typescript": "npm:@typescript/typescript6@^6.0.2"
+        "@types/jest": "catalog:",
+        "@types/lodash": "catalog:",
+        "@types/node": "catalog:",
+        "@types/react": "catalog:",
+        "@types/webpack-env": "catalog:",
+        "@typescript/native": "catalog:",
+        "jest": "catalog:",
+        "msw": "catalog:",
+        "oxlint": "catalog:",
+        "oxlint-tsgolint": "catalog:",
+        "typescript": "catalog:"
     }
 }

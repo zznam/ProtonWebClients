@@ -1,5 +1,8 @@
 import { signInRoute } from '../../routes/signInRoute';
 import { PasswordAccountContext } from './PasswordAccountContext';
+import { ClaimedAddressCreateScreen } from './screens/claimed-address/ClaimedAddressCreateScreen';
+import { ClaimedAddressDoneScreen } from './screens/claimed-address/ClaimedAddressDoneScreen';
+import { ClaimedAddressManagedScreen } from './screens/claimed-address/ClaimedAddressManagedScreen';
 import { NewPasswordScreen } from './screens/new-password/NewPasswordScreen';
 import { TwoFactorScreen } from './screens/two-factor/TwoFactorScreen';
 import { UnlockScreen } from './screens/unlock/UnlockScreen';
@@ -21,5 +24,8 @@ export const passwordAccountRoute = signInRoute({
         twoFactor: TwoFactorScreen,
         unlock: UnlockScreen,
         newPassword: NewPasswordScreen,
+        claimedAddressCreate: ClaimedAddressCreateScreen,
+        claimedAddressDone: ClaimedAddressDoneScreen,
+        claimedAddressManaged: ClaimedAddressManagedScreen,
     },
 });

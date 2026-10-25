@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { useApi } from '@proton/app-context/useApi';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { getSubscriptionParameters } from '@proton/shared/lib/api/calendars';
 import { getIsSubscribedCalendar, getVisualCalendars } from '@proton/shared/lib/calendar/calendar';
 import { getIsCalendarSubscriptionEventManagerUpdate } from '@proton/shared/lib/calendar/subscribe/helpers';
@@ -14,15 +14,13 @@ import {
     getIsCalendarMemberEventManagerDelete,
     getIsCalendarMemberEventManagerUpdate,
 } from '@proton/shared/lib/eventManager/calendar/helpers';
+import type { Calendar, CalendarWithOwnMembers, VisualCalendar } from '@proton/shared/lib/interfaces/calendar/Calendar';
+import type { CalendarMember } from '@proton/shared/lib/interfaces/calendar/CalendarMember';
 import type {
-    Calendar,
-    CalendarMember,
     CalendarSubscription,
     CalendarSubscriptionResponse,
-    CalendarWithOwnMembers,
     SubscribedCalendar,
-    VisualCalendar,
-} from '@proton/shared/lib/interfaces/calendar';
+} from '@proton/shared/lib/interfaces/calendar/Subscription';
 import addItem from '@proton/utils/addItem';
 import removeItem from '@proton/utils/removeIndex';
 import updateItem from '@proton/utils/updateItem';

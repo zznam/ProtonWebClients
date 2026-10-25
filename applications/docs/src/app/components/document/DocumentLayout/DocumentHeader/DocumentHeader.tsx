@@ -1,6 +1,7 @@
 import AppsDropdown from '@proton/components/containers/app/AppsDropdown'
 import Logo from '@proton/components/components/logo/Logo'
-import MimeIcon from '@proton/components/components/icon/MimeIcon'
+import { MimeProtonDoc } from '@proton/file-icons/icons/MimeProtonDoc'
+import { MimeProtonSheet } from '@proton/file-icons/icons/MimeProtonSheet'
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint'
 import { useConfig } from '@proton/app-context/useConfig'
 import UserDropdown from '@proton/components/containers/heading/UserDropdown'
@@ -18,28 +19,25 @@ import { c } from 'ttag'
 import { PopoverPill } from './PopoverPill'
 import { useDocsContext } from '../../context'
 import { HeaderPublicOptions } from '../../public/HeaderPublicOptions'
-import type {
-  EditorControllerInterface,
-  AuthenticatedDocControllerInterface,
-  DocumentState,
-  PublicDocumentState,
-  RenameControllerInterface,
-} from '@proton/docs-core'
+import type { AuthenticatedDocControllerInterface } from '@proton/docs-core/AuthenticatedDocController/AuthenticatedDocControllerInterface'
+import type { EditorControllerInterface } from '@proton/docs-core/EditorController/EditorController'
+import type { RenameControllerInterface } from '@proton/docs-core/RenameController/RenameController'
+import type { DocumentState, PublicDocumentState } from '@proton/docs-core/State/DocumentState'
 import { stripLocalBasenameFromPathname } from '@proton/shared/lib/authentication/pathnameHelper'
-import type { DocumentAction, DocumentType } from '@proton/docs-shared'
+import type { DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { DocumentAction } from '@proton/docs-shared/DocumentAction'
+import { isPrivateNodeMeta } from '@proton/docs-shared/NodeMetaHelpers'
 import { getAppHref } from '@proton/shared/lib/apps/helper'
-import { useFlag } from '@proton/unleash/useFlag'
 import clsx from '@proton/utils/clsx'
-import { useIsSheetsEditorEnabled, useDriveCompatSDK } from '~/utils/flags'
+import { useIsSheetsEnabled, useDriveCompatSDK } from '~/utils/flags'
 import { getDocsReportContextLines } from '~/utils/report-context'
 import { useSharingModal } from '@proton/drive/public/sharingModal'
 import { WorkspacePromoBanner } from '../../DocumentViewer/WorkspacePromoBanner'
 import { HeaderShareButton } from './HeaderShareButton'
-import { generateNodeUid, getDrive } from '@proton/drive'
+import { generateNodeUid, getDrive } from '@proton/drive/sdk'
 import { replaceAddress, reportChangeAddressError } from '../../useChangeAddressWhenPubliclyShared'
 import useAuthentication from '@proton/components/hooks/useAuthentication'
-import { isPrivateNodeMeta } from '@proton/drive-store'
-import { getShareId } from '@proton/docs-core/lib/DriveSDK/getShareId'
+import { getShareId } from '@proton/docs-core/DriveSDK/getShareId'
 
 function getWindowLocationExcludingDomain() {
   return stripLocalBasenameFromPathname(window.location.pathname) + window.location.search + window.location.hash
@@ -59,7 +57,7 @@ export function DocumentHeader({ actionMode, documentType }: DocsHeaderProps) {
   const [editorController, setEditorController] = useState<EditorControllerInterface | null>(null)
   const [documentState, setDocumentState] = useState<DocumentState | PublicDocumentState | null>(null)
   const [showErrorHeader, setShowErrorHeader] = useState(false)
-  const isSheetsEditorEnabled = useIsSheetsEditorEnabled()
+  const isSheetsEnabled = useIsSheetsEnabled()
 
   useEffect(() => {
     return application.userState.subscribeToEvent('BlockingInterfaceErrorDidDisplay', () => {
@@ -82,7 +80,7 @@ export function DocumentHeader({ actionMode, documentType }: DocsHeaderProps) {
     })
   }, [application])
 
-  if (documentType === 'sheet' && !isSheetsEditorEnabled) {
+  if (documentType === 'sheet' && !isSheetsEnabled) {
     return <DocsHeaderNoDocument />
   }
 
@@ -166,9 +164,8 @@ function DocsHeaderForDocument({
 }: DocsHeaderForDocumentProps) {
   const { publicContext, privateContext } = useDocsContext()
   const { APP_VERSION, CLIENT_TYPE } = useConfig()
-  const isHomepageEnabled = useFlag('DocsHomepageEnabled')
   const { getLocalID } = useAuthentication()
-  const replaceCompatWithSDK = useDriveCompatSDK()
+  const replaceDriveCompat = useDriveCompatSDK()
 
   const { showSharingModal, sharingModal } = useSharingModal()
 
@@ -187,15 +184,18 @@ function DocsHeaderForDocument({
 
       try {
         const { compat } = privateContext
-        const shareId = replaceCompatWithSDK ? await getShareId(nodeMeta) : await compat.getShareId(nodeMeta)
+        const shareId = replaceDriveCompat ? await getShareId(nodeMeta) : await compat.getShareId(nodeMeta)
         setShareId(shareId)
       } catch (error) {
-        traceError(error)
+        // SDK getShareId traces errors itself
+        if (!replaceDriveCompat) {
+          traceError(error)
+        }
       }
     }
 
     void preloadShareId()
-  }, [documentState, privateContext, replaceCompatWithSDK])
+  }, [documentState, privateContext, replaceDriveCompat])
 
   function openSharingModalReplaceAddress() {
     showSharingModal({
@@ -220,13 +220,8 @@ function DocsHeaderForDocument({
   const role = documentState.getProperty('userRole')
   const { volumeId, nodeId } = documentState.getProperty('decryptedNode')
 
-  const icon = (
-    <MimeIcon
-      name={documentType === 'sheet' ? 'proton-sheet' : 'proton-doc'}
-      size={5}
-      className="ml-[.75rem] mr-[.0625rem] shrink-0"
-    />
-  )
+  const DocumentTypeIcon = documentType === 'sheet' ? MimeProtonSheet : MimeProtonDoc
+  const icon = <DocumentTypeIcon size={5} className="ml-[.75rem] mr-[.0625rem] shrink-0" />
 
   return (
     <>
@@ -239,13 +234,9 @@ function DocsHeaderForDocument({
         data-testid="docs-header"
       >
         <div className="flex flex-1 flex-nowrap items-center head-480-749:!flex-none head-max-479:!basis-auto">
-          {isHomepageEnabled ? (
-            <a className="flex-shrink-0" href={getAppHref('/', APPS.PROTONDOCS)}>
-              {icon}
-            </a>
-          ) : (
-            icon
-          )}
+          <a className="flex-shrink-0" href={getAppHref('/', APPS.PROTONDOCS)}>
+            {icon}
+          </a>
 
           <DocumentTitleDropdown
             documentType={documentType}

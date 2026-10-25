@@ -4,6 +4,7 @@ import Markdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
+import { c } from 'ttag';
 import { visit } from 'unist-util-visit';
 
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
@@ -294,6 +295,8 @@ interface ProgressiveMarkdownProps {
     sourcesContainerRef?: React.RefObject<HTMLDivElement>;
     message: any;
     messageContentContainerRef?: React.RefObject<HTMLDivElement>;
+    /** When false, Vega code fences render as static highlighted code (untrusted previews). */
+    enableVegaCharts?: boolean;
 }
 
 /**
@@ -308,15 +311,16 @@ const MarkdownBlock: React.FC<{
     toolCallResults?: SearchItem[] | null;
     sourcesContainerRef?: React.RefObject<HTMLDivElement>;
     message: any;
+    enableVegaCharts: boolean;
 }> = React.memo(
-    ({ content, handleLinkClick, toolCallResults, sourcesContainerRef }) => {
+    ({ content, handleLinkClick, toolCallResults, sourcesContainerRef, enableVegaCharts }) => {
         const CodeBlock = useMemo(() => {
             // eslint-disable-next-line react/display-name
             return ({ node, className, children, ...props }: any) => {
                 const language = getCodeBlockLanguage(className, node);
                 const value = extractCodeBlockText(children);
 
-                if (shouldRenderAsVegaChart(language, value)) {
+                if (enableVegaCharts && shouldRenderAsVegaChart(language, value)) {
                     return (
                         <Suspense fallback={<VegaChartLoading />}>
                             <VegaLiteChart code={value} language={language || 'vega-lite'} />
@@ -350,7 +354,7 @@ const MarkdownBlock: React.FC<{
                     </code>
                 );
             };
-        }, []);
+        }, [enableVegaCharts]);
 
         // Custom components for markdown rendering
         const components = useMemo(
@@ -465,6 +469,7 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
         sourcesContainerRef,
         message,
         messageContentContainerRef,
+        enableVegaCharts = true,
     }) => {
         // Process REF tokens and convert to markdown links
         const processedContent = useMemo(() => {
@@ -520,6 +525,7 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
                                         toolCallResults={toolCallResults}
                                         sourcesContainerRef={sourcesContainerRef}
                                         message={message}
+                                        enableVegaCharts={enableVegaCharts}
                                     />
                                 </div>
                             );
@@ -534,12 +540,16 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
                                         toolCallResults={toolCallResults}
                                         sourcesContainerRef={sourcesContainerRef}
                                         message={message}
+                                        enableVegaCharts={enableVegaCharts}
                                     />
                                 ) : null}
                                 <div className="lumo-insight-card-block w-full my-2 mb-3">
                                     <div className={`${LUMO_MARKDOWN_CARD_SHELL_CLASS} lumo-insight-card p-4`}>
                                         <div className="lumo-insight-card__label">
-                                            <span>Loading card…</span>
+                                            <span>{
+                                                // translator: Status while an information card is loading.
+                                                c('collider_2025:Label').t`Loading card...`
+                                            }</span>
                                         </div>
                                     </div>
                                 </div>
@@ -559,15 +569,23 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
                                         toolCallResults={toolCallResults}
                                         sourcesContainerRef={sourcesContainerRef}
                                         message={message}
+                                        enableVegaCharts={enableVegaCharts}
                                     />
                                 ) : null}
-                                <Suspense fallback={<VegaChartLoading />}>
-                                    <VegaLiteChart
-                                        code={openVegaFence.body}
+                                {enableVegaCharts ? (
+                                    <Suspense fallback={<VegaChartLoading />}>
+                                        <VegaLiteChart
+                                            code={openVegaFence.body}
+                                            language={openVegaFence.language || 'vega-lite'}
+                                            deferRender
+                                        />
+                                    </Suspense>
+                                ) : (
+                                    <LumoMarkdownCodeBlock
                                         language={openVegaFence.language || 'vega-lite'}
-                                        deferRender
+                                        code={openVegaFence.body}
                                     />
-                                </Suspense>
+                                )}
                             </div>
                         );
                     }
@@ -577,12 +595,19 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
 
                         return (
                             <div key={wrapperKey}>
-                                <Suspense fallback={<VegaChartLoading />}>
-                                    <VegaLiteChart
-                                        code={singleFence.code}
+                                {enableVegaCharts ? (
+                                    <Suspense fallback={<VegaChartLoading />}>
+                                        <VegaLiteChart
+                                            code={singleFence.code}
+                                            language={singleFence.language || 'vega-lite'}
+                                        />
+                                    </Suspense>
+                                ) : (
+                                    <LumoMarkdownCodeBlock
                                         language={singleFence.language || 'vega-lite'}
+                                        code={singleFence.code}
                                     />
-                                </Suspense>
+                                )}
                             </div>
                         );
                     }
@@ -640,6 +665,7 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
                                                 toolCallResults={toolCallResults}
                                                 sourcesContainerRef={sourcesContainerRef}
                                                 message={message}
+                                                enableVegaCharts={enableVegaCharts}
                                             />
                                         );
                                     }
@@ -648,14 +674,21 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
                                         segment,
                                         index,
                                         keyPrefix: block.key,
-                                        renderVega: (codeSegment, codeIndex) => (
-                                            <Suspense key={`vega-${codeIndex}`} fallback={<VegaChartLoading />}>
-                                                <VegaLiteChart
-                                                    code={codeSegment.code}
+                                        renderVega: (codeSegment, codeIndex) =>
+                                            enableVegaCharts ? (
+                                                <Suspense key={`vega-${codeIndex}`} fallback={<VegaChartLoading />}>
+                                                    <VegaLiteChart
+                                                        code={codeSegment.code}
+                                                        language={codeSegment.language || 'vega-lite'}
+                                                    />
+                                                </Suspense>
+                                            ) : (
+                                                <LumoMarkdownCodeBlock
+                                                    key={`vega-${codeIndex}`}
                                                     language={codeSegment.language || 'vega-lite'}
+                                                    code={codeSegment.code}
                                                 />
-                                            </Suspense>
-                                        ),
+                                            ),
                                         renderCode: (codeSegment, codeIndex) => (
                                             <LumoMarkdownCodeBlock
                                                 key={`code-${codeIndex}`}
@@ -679,6 +712,7 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
                                 toolCallResults={toolCallResults}
                                 sourcesContainerRef={sourcesContainerRef}
                                 message={message}
+                                enableVegaCharts={enableVegaCharts}
                             />
                         </div>
                     );
@@ -690,8 +724,9 @@ const ProgressiveMarkdownRenderer: React.FC<ProgressiveMarkdownProps> = React.me
         // Only re-render if content changed or streaming state changed
         const contentEqual = prevProps.content === nextProps.content;
         const streamingEqual = prevProps.isStreaming === nextProps.isStreaming;
+        const vegaChartsEqual = (prevProps.enableVegaCharts ?? true) === (nextProps.enableVegaCharts ?? true);
 
-        return contentEqual && streamingEqual;
+        return contentEqual && streamingEqual && vegaChartsEqual;
     }
 );
 

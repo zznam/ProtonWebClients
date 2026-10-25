@@ -4,7 +4,7 @@ import { Children, Fragment, cloneElement, forwardRef, isValidElement } from 're
 import type { ButtonProps } from '@proton/atoms/Button/Button';
 import type { ButtonLikeShape, ButtonLikeSize } from '@proton/atoms/Button/ButtonLike';
 import { Vr } from '@proton/atoms/Vr/Vr';
-import type { ThemeColor } from '@proton/colors';
+import type { ThemeColor } from '@proton/colors/types';
 import clsx from '@proton/utils/clsx';
 
 export type Color = `${ThemeColor.Norm | ThemeColor.Weak}`;
@@ -80,5 +80,3 @@ export const ButtonGroup = forwardRef<HTMLDivElement, Props>(
 );
 
 ButtonGroup.displayName = 'ButtonGroup';
-
-export default ButtonGroup;

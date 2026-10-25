@@ -1,5 +1,6 @@
-import type { DocumentNodeMeta } from '@proton/drive-store'
-import type { FileToDocPendingConversion, DocumentMetaInterface } from '@proton/docs-shared'
+import type { DocumentNodeMeta } from '@proton/docs-shared/CryptoTypes'
+import type { DocumentMetaInterface } from '@proton/docs-shared/DocumentMetaInterface'
+import type { FileToDocPendingConversion } from '@proton/docs-shared/FileToDocPendingConversion'
 
 export type FileToDocConversionResult = {
   newDocMeta: DocumentMetaInterface

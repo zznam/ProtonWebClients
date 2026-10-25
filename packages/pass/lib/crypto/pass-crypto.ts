@@ -1,31 +1,30 @@
 import { CryptoProxy } from '@protontech/crypto';
 import type { Store } from 'redux';
 
-import type { DecryptedAddressKey, OrganizationKey } from '@proton/shared/lib/interfaces';
-import {
-    getDecryptedAddressKeysHelper,
-    getDecryptedOrganizationKeyHelper,
-    getDecryptedUserKeysHelper,
-} from '@proton/shared/lib/keys';
+import type { DecryptedAddressKey } from '@proton/shared/lib/interfaces/Key';
+import type { OrganizationKey } from '@proton/shared/lib/interfaces/OrganizationKey';
+import { getDecryptedAddressKeysHelper } from '@proton/shared/lib/keys/getDecryptedAddressKeys';
+import { getDecryptedOrganizationKeyHelper } from '@proton/shared/lib/keys/getDecryptedOrganizationKey';
+import { getDecryptedUserKeysHelper } from '@proton/shared/lib/keys/getDecryptedUserKeys';
 import { getDecryptedGroupAddressKey } from '@proton/shared/lib/keys/groupKeys';
 
 import { FILE_PENDING_SHARE, FILE_PUBLIC_SHARE } from '../../constants';
 import { getGroup } from '../../store/actions/creators/groups';
 import { asyncRequestDispatcherFactory } from '../../store/request/utils';
 import type { State } from '../../store/types';
+import type { ShareGetResponse, ShareKeyResponse } from '../../types/api/pass';
 import type {
-    FileIdentifier,
-    MaybeNull,
     PassCryptoManagerContext,
     PassCryptoWorker,
     SerializedCryptoContext,
     ShareContext,
-    ShareGetResponse,
-    ShareKeyResponse,
     ShareManager,
-    TypedOpenedShare,
-} from '../../types';
-import { PassEncryptionTag, ShareType } from '../../types';
+} from '../../types/crypto/pass-crypto';
+import type { TypedOpenedShare } from '../../types/crypto/pass-types';
+import { PassEncryptionTag } from '../../types/crypto/pass-types';
+import type { FileIdentifier } from '../../types/data/files';
+import { ShareType } from '../../types/data/shares';
+import type { MaybeNull } from '../../types/utils';
 import { first } from '../../utils/array/first';
 import { unwrap } from '../../utils/fp/promises';
 import { logId, logger } from '../../utils/logger';
@@ -529,7 +528,7 @@ export const createPassCrypto = (core?: PassCoreProxy, store?: Store<State>): Pa
             return processes.moveItem({ itemId, itemKeys, targetKey, targetFolderId });
         },
 
-        async createInvite({ shareId, itemId, invitedPublicKey, email, role, targetKeys }) {
+        async createInvite({ shareId, itemId, invitedPublicKey, email, role, targetKeys, hideSensitiveContent }) {
             assertHydrated(context);
 
             const manager = getShareManager(shareId);
@@ -546,12 +545,13 @@ export const createPassCrypto = (core?: PassCoreProxy, store?: Store<State>): Pa
                 ShareRoleID: role,
                 TargetType: !itemId ? ShareType.Vault : ShareType.Item,
                 ItemID: itemId,
+                HideSensitiveContent: hideSensitiveContent ?? null,
             };
         },
 
         /** New user invites does not support item sharing.
          * Passing an item share shareId will throw. */
-        async createNewUserInvite({ shareId, email, role, itemId }) {
+        async createNewUserInvite({ shareId, email, role, itemId, hideSensitiveContent }) {
             assertHydrated(context);
 
             if (!core) throw new PassCryptoError('`PassCoreProxy` not initialized');
@@ -575,6 +575,7 @@ export const createPassCrypto = (core?: PassCoreProxy, store?: Store<State>): Pa
                 Signature: signature,
                 TargetType: !itemId ? ShareType.Vault : ShareType.Item,
                 ItemID: itemId,
+                HideSensitiveContent: hideSensitiveContent ?? null,
             };
         },
 

@@ -1,21 +1,19 @@
 import { memo, useEffect } from 'react';
 
-import {
-    AppLink,
-    AppVersion,
-    AppsDropdown,
-    Sidebar,
-    SidebarList,
-    SidebarNav,
-    UserDropdown,
-    useActiveBreakpoint,
-} from '@proton/components';
+import AppLink from '@proton/components/components/link/AppLink';
+import Sidebar from '@proton/components/components/sidebar/Sidebar';
+import SidebarList from '@proton/components/components/sidebar/SidebarList';
+import SidebarNav from '@proton/components/components/sidebar/SidebarNav';
+import AppVersion from '@proton/components/components/version/AppVersion';
+import AppsDropdown from '@proton/components/containers/app/AppsDropdown';
+import UserDropdown from '@proton/components/containers/heading/UserDropdown';
+import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
 import { IcChevronDown } from '@proton/icons/icons/IcChevronDown';
 import { registerSessionRemovalListener } from '@proton/shared/lib/authentication/persistedSessionStorage';
 import { APPS, WALLET_APP_NAME } from '@proton/shared/lib/constants';
 import protonWalletLogoDark from '@proton/styles/assets/img/illustrations/proton-wallet-logo-dark.svg';
 import protonWalletLogo from '@proton/styles/assets/img/illustrations/proton-wallet-logo.svg';
-import type { IWasmApiWalletData } from '@proton/wallet/types';
+import type { IWasmApiWalletData } from '@proton/wallet/types/wasm';
 import { WalletThemeOption } from '@proton/wallet/utils/theme';
 
 import config from '../../../config';

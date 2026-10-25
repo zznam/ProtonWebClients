@@ -6,11 +6,12 @@ import userEvent from '@testing-library/user-event';
 import { createBrowserHistory } from 'history';
 
 import { calendarUrlQueryParams } from '@proton/calendar/constants';
-import { NotificationsProvider } from '@proton/components';
-import { useGetMeetingByLinkName } from '@proton/meet';
+import NotificationsProvider from '@proton/components/containers/notifications/Provider';
 import { useCreateMeeting } from '@proton/meet/hooks/useCreateMeeting';
-import type { Address } from '@proton/shared/lib/interfaces';
-import { type EventModel, VIDEO_CONFERENCE_PROVIDER } from '@proton/shared/lib/interfaces/calendar';
+import { useGetMeetingByLinkName } from '@proton/meet/hooks/useGetMeetingByLinkName';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import { VIDEO_CONFERENCE_PROVIDER } from '@proton/shared/lib/interfaces/calendar/Api';
+import type { EventModel } from '@proton/shared/lib/interfaces/calendar/Event';
 
 import {
     VideoConferenceProtonMeetIntegration,

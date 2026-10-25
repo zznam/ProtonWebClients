@@ -8,7 +8,9 @@ import { useSafeUser } from '../../contexts/SafeUserContext';
 import type { RouteParams } from '../../entrypoint/auth/RouterContainer';
 import { useQueryParam, useSkillParam } from '../../hooks';
 import { useLumoActions } from '../../hooks/useLumoActions';
+import { useLumoFlags } from '../../hooks/useLumoFlags';
 import { useLumoNavigate as useNavigate } from '../../hooks/useLumoNavigate';
+import { ArtifactCreationProvider } from '../../providers/ArtifactCreationProvider';
 import { ConversationActionsProvider } from '../../providers/ConversationActionsProvider';
 import { useConversation } from '../../providers/ConversationProvider';
 import { useIsGuest } from '../../providers/IsGuestProvider';
@@ -34,14 +36,26 @@ import MainContainer from './MainContainer';
 
 import './Conversation.scss';
 
-const GalleryView = lazy(() => import('../../features/gallery/GalleryView').then((m) => ({ default: m.GalleryView })));
+const LibraryView = lazy(() => {
+    return import('../../features/library/LibraryView').then((m) => {
+        return { default: m.LibraryView };
+    });
+});
+
+const GalleryView = lazy(() => {
+    return import('../../features/gallery/GalleryView').then((m) => {
+        return { default: m.GalleryView };
+    });
+});
 
 const ConversationPageComponentInner = () => {
     // ** Hooks **
     const user = useSafeUser(); // Get user from context (undefined for guests)
     const navigate = useNavigate();
     const dispatch = useLumoDispatch();
-    const isGalleryRoute = !!useRouteMatch({ path: '/images', exact: true });
+    const { artifactsView, imageTools } = useLumoFlags();
+    const isLibraryRoute = !!useRouteMatch({ path: '/library', exact: true }) && artifactsView;
+    const isGalleryRoute = !!useRouteMatch({ path: '/images', exact: true }) && imageTools && !artifactsView;
     const { conversationId: curConversationId } = useParams<RouteParams>();
     const { setConversationId } = useConversation();
     const isGuest = useIsGuest();
@@ -88,6 +102,7 @@ const ConversationPageComponentInner = () => {
         messageChain,
         handleSendMessage,
         handleSendArtifactAction,
+        handleSendQuestionAnswers,
         handleSaveManualArtifactEdit,
         handleEditMessage,
         handleRegenerateMessage,
@@ -207,6 +222,7 @@ const ConversationPageComponentInner = () => {
         <ConversationActionsProvider
             handleSendMessage={handleSendMessage}
             handleSendArtifactAction={handleSendArtifactAction}
+            handleSendQuestionAnswers={handleSendQuestionAnswers}
             handleSaveManualArtifactEdit={handleSaveManualArtifactEdit}
             handleAbort={handleAbort}
             handleEditMessage={handleEditMessage}
@@ -218,6 +234,14 @@ const ConversationPageComponentInner = () => {
         >
             <div className="conversation-page-component relative flex-1 min-h-0 flex flex-column *:min-size-auto flex-nowrap reset4print overflow-auto rounded-xl">
                 {/* <Header conversation={conversation} /> */}
+                {!curConversationId && isLibraryRoute && (
+                    <Suspense fallback={<ConversationSkeleton />}>
+                        <LibraryView
+                            isProcessingAttachment={isProcessingAttachment}
+                            prefillQuery={prefillQuery || undefined}
+                        />
+                    </Suspense>
+                )}
                 {!curConversationId && isGalleryRoute && (
                     <Suspense fallback={<ConversationSkeleton />}>
                         <GalleryView
@@ -226,7 +250,7 @@ const ConversationPageComponentInner = () => {
                         />
                     </Suspense>
                 )}
-                {!curConversationId && !isGalleryRoute && (
+                {!curConversationId && !isLibraryRoute && !isGalleryRoute && (
                     <MainContainer
                         isProcessingAttachment={isProcessingAttachment}
                         initialQuery={initialQuery || undefined}
@@ -252,9 +276,11 @@ const ConversationPageComponentInner = () => {
 export const ConversationPageComponent = () => {
     return (
         <WebSearchProvider>
-            <ModelTierProvider>
-                <ConversationPageComponentInner />
-            </ModelTierProvider>
+            <ArtifactCreationProvider>
+                <ModelTierProvider>
+                    <ConversationPageComponentInner />
+                </ModelTierProvider>
+            </ArtifactCreationProvider>
         </WebSearchProvider>
     );
 };

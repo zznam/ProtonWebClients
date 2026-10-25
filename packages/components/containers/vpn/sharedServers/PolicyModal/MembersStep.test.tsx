@@ -1,9 +1,13 @@
 import { render, screen } from '@testing-library/react';
 
 import { PLANS } from '@proton/payments/core/constants';
-import type { Organization } from '@proton/shared/lib/interfaces';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 
 import MembersStep from './MembersStep';
+
+jest.mock('@proton/account/entitlementCatalog/hooks', () => ({
+    useEntitlementChecksForOrgAndUser: jest.fn().mockReturnValue([{ hasGroups: true }, false]),
+}));
 
 describe('MembersStep', () => {
     const defaultProps = {

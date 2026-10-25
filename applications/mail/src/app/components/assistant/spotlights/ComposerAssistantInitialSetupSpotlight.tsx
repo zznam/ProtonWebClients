@@ -7,8 +7,8 @@ import { useUser } from '@proton/account/user/hooks';
 import Spotlight from '@proton/components/components/spotlight/Spotlight';
 import useSpotlightShow from '@proton/components/components/spotlight/useSpotlightShow';
 import useSpotlightOnFeature from '@proton/components/hooks/useSpotlightOnFeature';
-import { FeatureCode } from '@proton/features';
-import { useAssistant } from '@proton/llm/lib';
+import { FeatureCode } from '@proton/features/interface';
+import { useAssistant } from '@proton/llm/lib/hooks/useAssistant';
 
 interface Props {
     anchorRef: RefObject<HTMLElement>;

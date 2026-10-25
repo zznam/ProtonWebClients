@@ -3,19 +3,21 @@ import { c } from 'ttag';
 import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor';
 import Dropdown from '@proton/components/components/dropdown/Dropdown';
 import DropdownCaret from '@proton/components/components/dropdown/DropdownCaret';
-import { useSettingsLink } from '@proton/components/index';
+import useSettingsLink from '@proton/components/components/link/useSettingsLink';
 import useLoading from '@proton/hooks/useLoading';
 import { IcCheckmark } from '@proton/icons/icons/IcCheckmark';
 import { useIsWaitingRoomCreationEnabled } from '@proton/meet/hooks/useWaitingRoomFlags';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import { selectWaitingRoomSetting, setWaitingRoomSetting } from '@proton/meet/store/slices/settings';
 import { selectSubscriptionStatus } from '@proton/meet/store/slices/userSlice';
-import { PLANS } from '@proton/payments/core/constants';
+import { toToggleState } from '@proton/meet/telemetry/dimensions';
+import { TelemetryMeetActionsEvents, sendMeetActionsEvent } from '@proton/meet/telemetry/meetTelemetry';
 
 import { ExpandOptionsButton } from '../../atoms/ExpandOptionsButton/ExpandOptionsButton';
 import { useNewPill } from '../../atoms/NewPill/useNewPill';
 import { OptionButton } from '../../atoms/OptionButton/OptionButton';
 import { useWaitingRoomContext } from '../../contexts/WaitingRoomContext';
+import { getMeetUpgradeLink } from '../../utils/getMeetUpgradeLink';
 
 import './WaitingRoomDropdown.scss';
 
@@ -26,13 +28,16 @@ export const WaitingRoomDropdown = ({ instantMeeting }: { instantMeeting: boolea
     const [loading, withLoading] = useLoading();
     const { isPaidUser, hasSubscriptionWithoutMeet } = useMeetSelector(selectSubscriptionStatus);
     const goToSettings = useSettingsLink();
-
     const { toggleWaitingRoomPrejoin } = useWaitingRoomContext();
+
+    const upgradeLink = getMeetUpgradeLink(hasSubscriptionWithoutMeet);
 
     const handleWaitingRoomSettingToggle = async (value: boolean) => {
         if (!isPaidUser) {
             return;
         }
+
+        sendMeetActionsEvent(TelemetryMeetActionsEvents.waiting_room_toggled, { state: toToggleState(value) });
 
         if (!instantMeeting) {
             await withLoading(toggleWaitingRoomPrejoin(value));
@@ -43,11 +48,7 @@ export const WaitingRoomDropdown = ({ instantMeeting }: { instantMeeting: boolea
 
     const handleEnableWaitingRoomClick = () => {
         if (!isPaidUser) {
-            return goToSettings(
-                hasSubscriptionWithoutMeet ? '/dashboard?addon=meet' : `/dashboard?plan=${PLANS.MEET_BUSINESS}`,
-                undefined,
-                true
-            );
+            return goToSettings(upgradeLink, undefined, true);
         }
 
         return handleWaitingRoomSettingToggle(true);

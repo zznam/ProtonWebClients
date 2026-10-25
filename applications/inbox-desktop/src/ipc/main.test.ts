@@ -4,6 +4,8 @@ import { ipcLogger } from "../utils/log";
 import { getTheme } from "../utils/themes";
 import { storeAppVersion } from "../utils/appVersions";
 import { getLogs } from "../utils/log/getLogsIPC";
+import { getProfilerReports } from "../utils/profiler/reports";
+import { clearOAuthSession, startOAuthSession } from "../utils/oauthSession";
 
 jest.mock("electron", () => ({
     ipcMain: { on: jest.fn(), handle: jest.fn() },
@@ -24,6 +26,7 @@ jest.mock("../utils/themes", () => ({ getTheme: jest.fn(() => "mocked-theme") })
 jest.mock("../utils/appVersions", () => ({ storeAppVersion: jest.fn() }));
 jest.mock("../utils/log/getLogsIPC", () => ({ getLogs: jest.fn(async () => "logs") }));
 jest.mock("../utils/profiler/profiler", () => ({ profiler: { ipcMessage: jest.fn() } }));
+jest.mock("../utils/profiler/reports", () => ({ getProfilerReports: jest.fn(async () => []) }));
 jest.mock("../utils/sentryReport");
 
 jest.mock("../store/settingsStore", () => ({}));
@@ -36,9 +39,9 @@ jest.mock("../store/userSettingsStore", () => ({}));
 jest.mock("../utils/protocol/default", () => ({}));
 jest.mock("../utils/metrics", () => ({}));
 jest.mock("../utils/telemetry", () => ({}));
-jest.mock("../utils/appCache", () => ({}));
+jest.mock("../utils/electronSession/appCache", () => ({}));
 jest.mock("../utils/logout/logout", () => ({}));
-jest.mock("../utils/oauthProcess", () => ({}));
+jest.mock("../utils/oauthSession", () => ({ startOAuthSession: jest.fn(), clearOAuthSession: jest.fn() }));
 jest.mock("../utils/openExternal/openExternal", () => ({}));
 jest.mock("../utils/openExternal/manager", () => ({}));
 jest.mock("../utils/urlRedirects/manager", () => ({}));
@@ -127,9 +130,48 @@ describe("IPC sender origin validation", () => {
         expect(getLogs).not.toHaveBeenCalled();
     });
 
+    it.each(UNTRUSTED_ORIGINS)("does not serve profiler reports to %s", async (_, origin) => {
+        await expect(handlers.getAsyncData(eventFrom(origin), "getProfilerReports", 1000)).resolves.toBeNull();
+
+        expect(getProfilerReports).not.toHaveBeenCalled();
+    });
+
     it("logs the rejected channel and origin", () => {
         handlers.clientUpdate(eventFrom("https://evil.com"), { type: "storeAppVersion", payload: "1.0.0" });
 
         expect(ipcLogger.warn).toHaveBeenCalledWith("Rejected clientUpdate IPC from origin: https://evil.com");
+    });
+});
+
+describe("oauthPopupOpenedV2", () => {
+    const TRUSTED_ORIGIN = "https://mail.proton.me";
+    const SESSION_ID = "session";
+    const AUTHORIZATION_URL = "https://account.proton.me/api/oauth/google";
+    const startedMessage = {
+        type: "oauthPopupOpenedV2",
+        payload: { action: "oauthPopupStarted", sessionId: SESSION_ID, authorizationUrl: AUTHORIZATION_URL },
+    };
+
+    it("starts an OAuth session when the popup opens", () => {
+        handlers.clientUpdate(eventFrom(TRUSTED_ORIGIN), startedMessage);
+
+        expect(startOAuthSession).toHaveBeenCalledWith(SESSION_ID, AUTHORIZATION_URL);
+        expect(clearOAuthSession).not.toHaveBeenCalled();
+    });
+
+    it("clears the OAuth session when the popup finishes", () => {
+        handlers.clientUpdate(eventFrom(TRUSTED_ORIGIN), {
+            type: "oauthPopupOpenedV2",
+            payload: { action: "oauthPopupFinished", sessionId: SESSION_ID },
+        });
+
+        expect(clearOAuthSession).toHaveBeenCalledWith(SESSION_ID);
+        expect(startOAuthSession).not.toHaveBeenCalled();
+    });
+
+    it.each(UNTRUSTED_ORIGINS)("does not start an OAuth session from %s", (_, origin) => {
+        handlers.clientUpdate(eventFrom(origin), startedMessage);
+
+        expect(startOAuthSession).not.toHaveBeenCalled();
     });
 });

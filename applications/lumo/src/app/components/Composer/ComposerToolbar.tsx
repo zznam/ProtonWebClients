@@ -13,7 +13,6 @@ import { ComposerMode } from '../../types';
 import { getAcceptAttributeString } from '../../util/filetypes';
 import { sendFileUploadEvent, sendVoiceEntryEvent } from '../../util/telemetry';
 import { LumoIcon } from '../LumoIcon/LumoIcon';
-import { ArtifactCreateSpotlight } from './ArtifactCreateSpotlight';
 import AspectRatioDropdown from './AspectRatioDropdown';
 import { ModelModeDropdown } from './ModelModeDropdown';
 import { ToolMenuDropdown } from './ToolMenuDropdown';
@@ -107,8 +106,6 @@ export interface ComposerToolbarProps {
     onAspectRatioChange: (ratio: ImageAspectRatio) => void;
     isCreateImageMode: boolean;
     onCreateImageModeChange: (enabled: boolean) => void;
-    isArtifactMode: boolean;
-    onArtifactModeChange: (enabled: boolean) => void;
     canUseAgents?: boolean;
     isAgent?: boolean;
     isDictating: boolean;
@@ -118,7 +115,6 @@ export interface ComposerToolbarProps {
     onCancelDictation: () => void;
     onAcceptDictation: () => void;
     getDictationAudioLevel: () => number;
-    canDisplayArtifactSpotlight?: boolean;
 }
 
 export const ComposerToolbar = ({
@@ -131,8 +127,6 @@ export const ComposerToolbar = ({
     onAspectRatioChange,
     isCreateImageMode,
     onCreateImageModeChange,
-    isArtifactMode,
-    onArtifactModeChange,
     canUseAgents = false,
     isAgent = false,
     isDictating,
@@ -142,7 +136,6 @@ export const ComposerToolbar = ({
     onCancelDictation,
     onAcceptDictation,
     getDictationAudioLevel,
-    canDisplayArtifactSpotlight = false,
 }: ComposerToolbarProps) => {
     const [showToolsMenu, setShowToolsMenu] = useState(false);
     const {
@@ -152,18 +145,11 @@ export const ComposerToolbar = ({
         dictationV2: isDictationV2Enabled,
     } = useLumoFlags();
     const isLandingPage = composerMode === ComposerMode.NEW_CONVERSATION;
-    const { anchorRef, markSpotlightSeen, shouldShowSpotlight, showNewLabel } = useArtifactCreateSpotlight(
-        canDisplayArtifactSpotlight && isLandingPage
-    );
+    const { anchorRef, showNewLabel } = useArtifactCreateSpotlight(isLandingPage);
 
     const handleToolsButtonClick = useCallback(() => {
         setShowToolsMenu((prev) => !prev);
     }, []);
-
-    const handleCreateArtifactOptionClick = useCallback(() => {
-        markSpotlightSeen();
-        onArtifactModeChange(true);
-    }, [markSpotlightSeen, onArtifactModeChange]);
 
     const handleVoiceEntryClick = useCallback(() => {
         sendVoiceEntryEvent('start');
@@ -199,42 +185,31 @@ export const ComposerToolbar = ({
         <div className="flex flex-row flex-nowrap items-center justify-space-between w-full mt-1">
             <div className="flex flex-row flex-nowrap items-center gap-1 pl-2">
                 <UploadMenuSection {...uploadSectionProps} />
-                {(isToolsFlagEnabled || isArtifactsViewFlagEnabled) &&
-                    !isCreateImageMode &&
-                    !isArtifactMode &&
-                    !isAgent && (
-                        <>
-                            <ArtifactCreateSpotlight
-                                anchorRef={anchorRef}
-                                onClose={() => markSpotlightSeen()}
-                                show={shouldShowSpotlight && !showToolsMenu}
-                            >
-                                <Button
-                                    ref={anchorRef}
-                                    className={clsx(
-                                        'border-0 shrink-0 flex flex-row flex-nowrap gap-2 items-center py-1.5 rounded-full',
-                                        showToolsMenu && 'is-active'
-                                    )}
-                                    onClick={handleToolsButtonClick}
-                                    shape="ghost"
-                                    size="small"
-                                >
-                                    <LumoIcon name="SlidersHorizontal" />
-                                    <span className="hidden sm:block text-sm">{c('collider_2025: Button')
-                                        .t`Tools`}</span>
-                                </Button>
-                            </ArtifactCreateSpotlight>
-                            <ToolMenuDropdown
-                                isOpen={showToolsMenu}
-                                anchorRef={anchorRef}
-                                onClose={() => setShowToolsMenu(false)}
-                                onClickCreateImageOption={() => onCreateImageModeChange(true)}
-                                onClickCreateArtifactOption={handleCreateArtifactOptionClick}
-                                canUseAgents={canUseAgents}
-                                showArtifactNewLabel={showNewLabel}
-                            />
-                        </>
-                    )}
+                {(isToolsFlagEnabled || isArtifactsViewFlagEnabled) && !isCreateImageMode && !isAgent && (
+                    <>
+                        <Button
+                            ref={anchorRef}
+                            className={clsx(
+                                'border-0 shrink-0 flex flex-row flex-nowrap gap-2 items-center py-1.5 rounded-full',
+                                showToolsMenu && 'is-active'
+                            )}
+                            onClick={handleToolsButtonClick}
+                            shape="ghost"
+                            size="small"
+                        >
+                            <LumoIcon name="SlidersHorizontal" />
+                            <span className="hidden sm:block text-sm">{c('collider_2025: Button').t`Tools`}</span>
+                        </Button>
+                        <ToolMenuDropdown
+                            isOpen={showToolsMenu}
+                            anchorRef={anchorRef}
+                            onClose={() => setShowToolsMenu(false)}
+                            onClickCreateImageOption={() => onCreateImageModeChange(true)}
+                            canUseAgents={canUseAgents}
+                            showArtifactNewLabel={showNewLabel}
+                        />
+                    </>
+                )}
                 {isCreateImageMode && (
                     <Button
                         onClick={() => onCreateImageModeChange(false)}
@@ -246,20 +221,6 @@ export const ComposerToolbar = ({
                     >
                         <LumoIcon name="Palette" size={16} />
                         <span className="text-sm hidden sm:block">{c('collider_2025: Button').t`Create image`}</span>
-                        <LumoIcon name="X" width={12} height={12} className="group-hover:opacity-100" />
-                    </Button>
-                )}
-                {isArtifactsViewFlagEnabled && isArtifactMode && (
-                    <Button
-                        onClick={() => onArtifactModeChange(false)}
-                        className="border-none shrink-0 flex flex-row flex-nowrap gap-2 items-center color-primary py-1.5 rounded-full group-hover-opacity-container hover:color-primary"
-                        shape="ghost"
-                        size="small"
-                        title={c('collider_2025: Button').t`Create artifact`}
-                        aria-label={c('collider_2025: Button').t`Create artifact`}
-                    >
-                        <LumoIcon name="FileText" size={16} />
-                        <span className="text-sm hidden sm:block">{c('collider_2025: Button').t`Create artifact`}</span>
                         <LumoIcon name="X" width={12} height={12} className="group-hover:opacity-100" />
                     </Button>
                 )}

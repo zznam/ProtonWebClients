@@ -2,7 +2,6 @@ import { Router } from 'react-router-dom';
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { createMemoryHistory } from 'history';
 
 import { useCalendars } from '@proton/calendar/calendars/hooks';
@@ -17,7 +16,7 @@ import {
     TMP_UNIQUE_ID,
 } from '@proton/shared/lib/calendar/constants';
 import createCache from '@proton/shared/lib/helpers/cache';
-import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts';
+import type { ContactEmail } from '@proton/shared/lib/interfaces/contacts/Contact';
 
 import MainContainer from './MainContainer';
 import getSaveEventActions from './eventActions/getSaveEventActions';
@@ -196,12 +195,14 @@ jest.mock('@proton/features/useFeature', () => () => ({}));
 jest.mock('@proton/app-context/useNotifications', () => ({
     useNotifications: () => ({}),
 }));
-jest.mock('@proton/account/welcomeFlags/index', () => ({
+jest.mock('@proton/account/welcomeFlags', () => ({
     __esModule: true,
     useWelcomeFlags: jest.fn(() => [{ isWelcomeFlow: false }]),
 }));
 jest.mock('@proton/components/hooks/useEventManager', () => () => ({}));
-jest.mock('@proton/components/containers/eventManager/calendar/useCalendarsInfoListener', () => () => ({}));
+jest.mock('@proton/components/containers/eventManager/calendar/useCalendarsInfoListener', () => ({
+    useCalendarsInfoListener: () => ({}),
+}));
 jest.mock('@proton/components/containers/eventManager/calendar/CalendarModelEventManagerProvider', () => ({
     useCalendarModelEventManager: () => () => {
         call: jest.fn();

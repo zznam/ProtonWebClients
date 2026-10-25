@@ -3,7 +3,7 @@ import type { VERIFICATION_STATUS } from '@protontech/crypto';
 import type { PhotoTag } from '@proton/shared/lib/interfaces/drive/file';
 import type { LinkType } from '@proton/shared/lib/interfaces/drive/link';
 
-import type { DriveFileRevision } from '../_revisions';
+import type { DriveFileRevision } from '../_revisions/interface';
 
 /**
  * Link should not be used directly. It is general set of attributes
@@ -78,7 +78,7 @@ interface LinkSharingDetails {
     shareId: string;
 }
 
-export interface PhotoProperties {
+interface PhotoProperties {
     albums: {
         albumLinkId: string;
         hash: string;
@@ -89,7 +89,7 @@ export interface PhotoProperties {
     isFavorite: boolean;
 }
 
-export interface AlbumProperties {
+interface AlbumProperties {
     nodeHashKey: string;
     coverLinkId: string;
     photoCount: number;

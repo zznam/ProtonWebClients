@@ -4,8 +4,8 @@ import { useUserSettings } from '@proton/account/userSettings/hooks';
 import { Button } from '@proton/atoms/Button/Button';
 import type { ModalProps } from '@proton/components/components/modalTwo/Modal';
 import Prompt from '@proton/components/components/prompt/Prompt';
-import { useAssistant } from '@proton/llm/lib';
-import { AI_ASSISTANT_ACCESS } from '@proton/shared/lib/interfaces';
+import { useAssistant } from '@proton/llm/lib/hooks/useAssistant';
+import { AI_ASSISTANT_ACCESS } from '@proton/shared/lib/interfaces/UserSettings';
 
 import { useCleanData } from '../../hooks/useCleanData';
 

@@ -5,11 +5,11 @@ import { c } from 'ttag';
 import { Avatar } from '@proton/atoms/Avatar/Avatar';
 import { Button } from '@proton/atoms/Button/Button';
 import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcTrash } from '@proton/icons/icons/IcTrash';
 import { MEMBER_PERMISSIONS } from '@proton/shared/lib/calendar/permissions';
 import { getInitials } from '@proton/shared/lib/helpers/string';
-import { MEMBER_INVITATION_STATUS } from '@proton/shared/lib/interfaces/calendar';
+import { MEMBER_INVITATION_STATUS } from '@proton/shared/lib/interfaces/calendar/CalendarMember';
 
 import Option from '../../../components/option/Option';
 import SelectTwo from '../../../components/selectTwo/SelectTwo';
@@ -37,7 +37,7 @@ const getStatusText = (status: MEMBER_INVITATION_STATUS) => {
     return '';
 };
 
-export const MemberStatus = ({ status }: { status: MEMBER_INVITATION_STATUS }) => {
+const MemberStatus = ({ status }: { status: MEMBER_INVITATION_STATUS }) => {
     if (status === MEMBER_INVITATION_STATUS.ACCEPTED) {
         return null;
     }

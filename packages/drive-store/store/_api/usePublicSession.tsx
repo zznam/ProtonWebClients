@@ -1,15 +1,15 @@
 import { createContext, useContext, useRef, useState } from 'react';
 
 import { useApi } from '@proton/app-context/useApi';
-import { useAuthentication } from '@proton/components';
-import metrics from '@proton/metrics';
+import useAuthentication from '@proton/components/hooks/useAuthentication';
+import metrics from '@proton/metrics/metricsInstance';
 import { queryInitSRPHandshake, queryShareURLAuth } from '@proton/shared/lib/api/drive/sharing';
 import { getApiError } from '@proton/shared/lib/api/helpers/apiErrorHelper';
 import type { ResumedSessionResult } from '@proton/shared/lib/authentication/persistedSessionHelper';
 import { resumeSession } from '@proton/shared/lib/authentication/persistedSessionHelper';
 import { HTTP_ERROR_CODES } from '@proton/shared/lib/errors';
 import { getUIDHeaders, withAuthHeaders } from '@proton/shared/lib/fetch/headers';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import type { SRPHandshakeInfo } from '@proton/shared/lib/interfaces/drive/sharing';
 import { srpAuth } from '@proton/shared/lib/srp';
 import { formatUser } from '@proton/shared/lib/user/helpers';
@@ -17,7 +17,7 @@ import { formatUser } from '@proton/shared/lib/user/helpers';
 import { getLastActivePersistedUserSession } from '../../utils/lastActivePersistedUserSession';
 import { userSuccessMetrics } from '../../utils/metrics/userSuccessMetrics';
 import retryOnError from '../../utils/retryOnError';
-import { hasCustomPassword, hasGeneratedPasswordIncluded, isLegacySharedUrl } from '../_shares/shareUrl';
+import { hasCustomPassword, hasGeneratedPasswordIncluded } from '../_shares/shareUrl';
 import useDefaultShare from '../_shares/useDefaultShare';
 import useShare from '../_shares/useShare';
 import { getMetricsUserPlan } from '../_user/getMetricsUserPlan';
@@ -47,7 +47,6 @@ function usePublicSessionProvider() {
     const sessionInfo = useRef<SessionInfo>();
     const auth = useAuthentication();
     const [user, setUser] = useState<UserModel>();
-    const [userAddressEmail, setUserAddressEmail] = useState<string>();
     const silentApi = <T,>(config: any) => api<T>({ ...config, silence: true });
     const { getShareCreatorKeys } = useShare();
     const { getDefaultShare } = useDefaultShare();
@@ -72,10 +71,7 @@ function usePublicSessionProvider() {
         (api as any).UID = session.UID;
         // In case user is logged-in we can preload default share.
         // This will be used to get info for users actions (Rename, Delete, etc..)
-        const addressKeyInfo = await getAddressKeyInfo(new AbortController().signal);
-        if (addressKeyInfo) {
-            setUserAddressEmail(addressKeyInfo.address.Email);
-        }
+        await getAddressKeyInfo(new AbortController().signal);
         const user = formatUser(session.User);
         setUser(user);
         await userSuccessMetrics.setLocalUser(session.UID, getMetricsUserPlan({ user, isPublicContext: true }));
@@ -97,26 +93,22 @@ function usePublicSessionProvider() {
             try {
                 metrics.setAuthHeaders(session.UID);
                 await handleHandshakeInitSession(session);
-            } catch (e) {
-                console.warn('Cannot resume session');
-            }
+            } catch {}
         } else if (persistedSession) {
             try {
                 metrics.setAuthHeaders(persistedSession.UID);
                 // We need to silence reponse, in case the token is invalid we just want to show not logged-in page instead of have error notification
                 const resumedSession = await resumeSession({ api: silentApi, localID: persistedSession.localID });
                 await handleHandshakeInitSession(resumedSession);
-            } catch (e) {
+            } catch {
                 // TODO: Probably getLastPersistedLocalID is the source of issue
                 // Investigate why later
-                console.warn('Cannot resume session');
             }
         }
 
         return api<SRPHandshakeInfo>(queryInitSRPHandshake(token)).then((handshakeInfo) => {
             return {
                 handshakeInfo,
-                isLegacySharedUrl: isLegacySharedUrl({ flags: handshakeInfo.Flags }),
                 hasCustomPassword: hasCustomPassword({ flags: handshakeInfo.Flags }),
                 hasGeneratedPasswordIncluded: hasGeneratedPasswordIncluded({ flags: handshakeInfo.Flags }),
             };
@@ -215,7 +207,6 @@ function usePublicSessionProvider() {
 
     return {
         user,
-        userAddressEmail,
         hasSession,
         initHandshake,
         initSession,

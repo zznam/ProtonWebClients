@@ -18,25 +18,23 @@
     "type": "module",
     "exports": {
         "./all": "./all.js",
-        "./barrel": "./barrel.js",
         "./base": "./base.js",
         "./extraneousDependencies": "./extraneousDependencies.js",
         "./glob": "./globs.js",
-        "./icon": "./icon.js",
         "./package-json": "./package-json.js",
         "./react": "./react.js",
         "./restrictedImports": "./restrictedImports.js"
     },
     "dependencies": {
         "@eslint/compat": "^2.1.1",
-        "@eslint/json": "^2.1.0",
+        "@eslint/json": "^2.1.1",
+        "@proton/oxlint-config": "workspace:^",
         "@protontech/eslint-plugin-enforce-uint8array-arraybuffer": "^3.0.2",
         "@types/eslint-plugin-jsx-a11y": "^6.10.1",
-        "eslint": "^10.11.0",
+        "eslint": "catalog:",
         "eslint-import-resolver-typescript": "4.4.5",
         "eslint-plugin-compat": "^7.0.2",
         "eslint-plugin-custom-rules": "workspace:^",
-        "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-import-x": "^4.17.1",
         "eslint-plugin-jsx-a11y": "^6.10.2",
         "eslint-plugin-lodash": "^8.1.0",
@@ -45,10 +43,13 @@
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.1.1",
         "eslint-plugin-testing-library": "^7.16.2",
-        "typescript-eslint": "^8.70.0"
+        "typescript-eslint": "catalog:"
+    },
+    "devDependencies": {
+        "@eslint/core": "^1.2.1"
     },
     "peerDependencies": {
-        "prettier": "3.9.8",
+        "prettier": "3.9.10",
         "typescript": "^6.0.3"
     }
 }

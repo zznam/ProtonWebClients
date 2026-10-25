@@ -1,5 +1,8 @@
+import { useMemo } from 'react';
+
 import { c } from 'ttag';
 
+import { useEntitlementCatalog } from '@proton/account/entitlementCatalog/hooks';
 import { usePaymentMethods } from '@proton/account/paymentMethods/hooks';
 import { InlineLinkButton } from '@proton/atoms/InlineLinkButton/InlineLinkButton';
 import { IcBrandProtonVpn } from '@proton/icons/icons/IcBrandProtonVpn';
@@ -16,7 +19,7 @@ import { IcSpeechBubble } from '@proton/icons/icons/IcSpeechBubble';
 import { IcStorage } from '@proton/icons/icons/IcStorage';
 import { IcUsers } from '@proton/icons/icons/IcUsers';
 import { ADDON_PREFIXES } from '@proton/payments/core/constants';
-import type { EntitlementChecks } from '@proton/payments/core/entitlements/resolver';
+import type { EntitlementChecksForOrgAndUser } from '@proton/payments/core/entitlements/interface';
 import { hasAddonFromPlanIDs } from '@proton/payments/core/plan/addons';
 import { getIsPassB2BPlan } from '@proton/payments/core/plan/helpers';
 import { Renew } from '@proton/payments/core/subscription/constants';
@@ -43,7 +46,9 @@ import { isPaidSubscription } from '@proton/payments/core/type-guards';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS, DRIVE_SHORT_APP_NAME, FREE_VPN_CONNECTIONS, MAIL_SHORT_APP_NAME } from '@proton/shared/lib/constants';
 import humanSize from '@proton/shared/lib/helpers/humanSize';
-import type { Address, Organization, UserModel } from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { getSpace } from '@proton/shared/lib/user/storage';
 import { getFreeServers, getPlusServers } from '@proton/shared/lib/vpn/features';
 import { VPN_SERVERS } from '@proton/shared/lib/vpn/vpnServers';
@@ -83,8 +88,8 @@ import {
     getVaults,
 } from '../../../features/pass';
 import { getNetShield, getVPNConnectionsFeature } from '../../../features/vpn';
-import type { Upsell } from '../../../subscription/helpers';
 import SubscriptionPanelManageUserButton from '../../SubscriptionPanelManageUserButton';
+import type { Upsell } from '../../helpers/dashboard-upsells';
 import { getSubscriptionPanelText, upsellsShowB2BUsersRow } from '../../helpers/subscriptionPanelHelpers';
 import Panel from '../Panel';
 import { ActionButtons } from './ActionButtons';
@@ -117,11 +122,12 @@ const TrialCopy = ({ subscription, onLearnMore }: { subscription: Subscription; 
 
     return (
         <>
-            <div className="color-weak mt-1">{c('Info')
-                .jt`On ${formattedPeriodEndDate}, your free trial ends and your paid plan starts.`}</div>
-            <InlineLinkButton className="color-weak" onClick={onLearnMore}>
-                {c('Link').t`Learn more`}
-            </InlineLinkButton>
+            <div className="color-weak mt-1">
+                {c('Info').jt`On ${formattedPeriodEndDate}, your free trial ends and your paid plan starts.`}{' '}
+                <InlineLinkButton className="color-weak" onClick={onLearnMore}>
+                    {c('Link').t`Learn more`}
+                </InlineLinkButton>
+            </div>
         </>
     );
 };
@@ -130,7 +136,7 @@ interface Props {
     app: APP_NAMES;
     user: UserModel;
     subscription: MaybeFreeSubscription;
-    entitlements: EntitlementChecks;
+    entitlements: EntitlementChecksForOrgAndUser;
     organization?: Organization;
     addresses?: Address[];
     upsells: Upsell[];
@@ -139,7 +145,11 @@ interface Props {
 const SubscriptionPanel = ({ app, subscription, organization, entitlements, user, addresses, upsells }: Props) => {
     const { planTitle, planName } = getSubscriptionPlanTitle(user, subscription);
     const isPassB2bPlan = getIsPassB2BPlan(planName);
-    const trialInfo = getTrialInfoForSingleSubscription(subscription);
+    const [entitlementCatalog] = useEntitlementCatalog();
+    const trialInfo = useMemo(
+        () => getTrialInfoForSingleSubscription(entitlementCatalog, subscription),
+        [entitlementCatalog, subscription]
+    );
     const [learnMoreModalProps, setLearnMoreModal, renderLearnMoreModal] = useModalState();
     const scribeToLumo = useFlag(MailFeatureFlag.ScribeToLumo);
 
@@ -312,7 +322,7 @@ const SubscriptionPanel = ({ app, subscription, organization, entitlements, user
     };
 
     const b2bUsersItem: Item | false = !!userText &&
-        (MaxMembers > 1 || entitlements.orgIsBusiness || upsellsShowB2BUsersRow(upsells)) && {
+        (MaxMembers > 1 || entitlements.isB2B || upsellsShowB2BUsersRow(upsells)) && {
             id: 'users',
             icon: IcUsers,
             text: userText,
@@ -355,7 +365,7 @@ const SubscriptionPanel = ({ app, subscription, organization, entitlements, user
             return false;
         }
 
-        const showGetMoreButton = MaxAI < MaxMembers && entitlements.orgIsBusiness;
+        const showGetMoreButton = MaxAI < MaxMembers && entitlements.isB2B;
         const actionElement = showGetMoreButton ? <GetMoreButton /> : null;
 
         return {
@@ -465,14 +475,13 @@ const SubscriptionPanel = ({ app, subscription, organization, entitlements, user
                 ...b2bUsersItem,
                 actionElement: getMoreButtonVpnUpsell,
             },
-            entitlements.orgIsBusiness &&
-                entitlements.orgHasVpn && {
-                    id: 'servers',
-                    icon: IcServers,
-                    text: serverText,
-                    actionElement: getMoreButtonVpnUpsell,
-                    dataTestId: 'servers',
-                },
+            entitlements.isVpnB2B && {
+                id: 'servers',
+                icon: IcServers,
+                text: serverText,
+                actionElement: getMoreButtonVpnUpsell,
+                dataTestId: 'servers',
+            },
         ].filter(isTruthy);
 
         return (
@@ -538,7 +547,7 @@ const SubscriptionPanel = ({ app, subscription, organization, entitlements, user
                 text: vpnText,
             },
             getProtonPassFeature(user.hasPaidPass ? 'unlimited' : FREE_PASS_ALIASES),
-            entitlements.orgHasSentinel ? getSentinel(true) : false,
+            entitlements.hasSentinel ? getSentinel(true) : false,
             scribeItem,
             lumoItem,
             meetItem,

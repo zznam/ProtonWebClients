@@ -1,11 +1,12 @@
 import { c } from 'ttag';
 
 import { useConfig } from '@proton/app-context/useConfig';
-import { type ModalStateProps, UpsellModal } from '@proton/components';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
+import UpsellModal from '@proton/components/components/upsell/UpsellModal/UpsellModal';
 import { PLANS, PLAN_NAMES } from '@proton/payments/core/constants';
 import { getAppFromPathnameSafe } from '@proton/shared/lib/apps/slugHelper';
 import { MAIL_APP_NAME, SHARED_UPSELL_PATHS, UPSELL_COMPONENT } from '@proton/shared/lib/constants';
-import { getUpsellRefFromApp } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRefFromApp } from '@proton/shared/lib/helpers/ref';
 import forwardImg from '@proton/styles/assets/img/illustrations/new-upsells-img/easy-switch-forward.svg';
 
 import { MAX_SYNC_PAID_USER } from '../../../constants';

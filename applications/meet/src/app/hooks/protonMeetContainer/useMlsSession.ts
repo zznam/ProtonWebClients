@@ -1,10 +1,11 @@
 import { type MutableRefObject, useEffect, useRef } from 'react';
 
 import { MeetCoreErrorEnum, MlsSyncStateInfo, RejoinReasonInfo } from '@proton-meet/proton-meet-core';
+import { logger } from '@protontech/logger';
 import { c } from 'ttag';
 
 import useAuthentication from '@proton/components/hooks/useAuthentication';
-import { useMeetErrorReporting } from '@proton/meet';
+import { useMeetErrorReporting } from '@proton/meet/hooks/useMeetErrorReporting';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
 import { setMlsRetrying } from '@proton/meet/store/slices/connectionSlice';
 import { selectCaptionsAgentPresent } from '@proton/meet/store/slices/participants/agentParticipantsSlice';
@@ -26,7 +27,7 @@ import { useNotifyError } from '../useNotifyError';
 interface UseMlsSessionParams {
     getGroupKeyInfo: () => Promise<{ key: string; epoch: bigint }>;
     onNewGroupKeyInfo: (key: string, epoch: bigint) => Promise<void>;
-    updateAdminParticipant: (roomId: string, participantUid: string, participantType: Number) => Promise<void>;
+    updateAdminParticipant: (meetingLinkName: string, participantUid: string, participantType: Number) => Promise<void>;
     allowHealthCheck: () => void;
     triggerFullReconnectionRef: MutableRefObject<(reason: RejoinReasonInfo) => void>;
     currentKeyRef: MutableRefObject<string | null>;
@@ -217,8 +218,7 @@ export const useMlsSession = ({
         try {
             const sessionId = authentication.hasSession() ? authentication.getUID() : null;
             if (isMeetNewJoinFunctionsEnabled) {
-                // eslint-disable-next-line no-console
-                console.log('Joining meeting with join function v2');
+                logger.info('Joining meeting with join function v2');
                 await meetCoreClient.joinMeeting2(
                     accessToken,
                     meetingLinkName,
@@ -227,8 +227,7 @@ export const useMlsSession = ({
                     isWaitingRoom
                 );
             } else {
-                // eslint-disable-next-line no-console
-                console.log('Joining meeting with join function v1');
+                logger.info('Joining meeting with join function v1');
                 await meetCoreClient.joinMeetingWithAccessTokenWithSwitchJoinType(
                     accessToken,
                     meetingLinkName,
@@ -280,8 +279,7 @@ export const useMlsSession = ({
                 case MeetCoreErrorEnum.MaxRetriesReached:
                 case MeetCoreErrorEnum.HttpClientError:
                 default:
-                    // eslint-disable-next-line no-console
-                    console.error(error);
+                    logger.error('Failed to join the MLS session', error);
                     message = c('Error').t`Failed to join meeting. Please try again later.`;
             }
             notifyError(message);

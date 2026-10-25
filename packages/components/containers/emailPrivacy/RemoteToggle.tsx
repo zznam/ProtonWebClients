@@ -2,16 +2,16 @@ import { c } from 'ttag';
 
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
+import useToggle from '@proton/hooks/useToggle';
 import { mailSettingsActions } from '@proton/mail/store/mailSettings';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { updateHideRemoteImages } from '@proton/shared/lib/api/mailSettings';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import { SHOW_IMAGES } from '@proton/shared/lib/mail/mailSettings';
 
 import Toggle from '../../components/toggle/Toggle';
-import useToggle from '@proton/hooks/useToggle'
 
 interface Props {
     id: string;

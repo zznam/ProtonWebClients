@@ -4,9 +4,12 @@ import { c } from 'ttag';
 
 import type { WasmApiWalletAccount } from '@proton/andromeda';
 import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor';
-import { Dropdown, DropdownCaret, DropdownMenu, DropdownMenuButton } from '@proton/components';
+import Dropdown from '@proton/components/components/dropdown/Dropdown';
+import DropdownCaret from '@proton/components/components/dropdown/DropdownCaret';
+import DropdownMenu from '@proton/components/components/dropdown/DropdownMenu';
+import DropdownMenuButton from '@proton/components/components/dropdown/DropdownMenuButton';
 import clsx from '@proton/utils/clsx';
-import type { IWasmApiWalletData } from '@proton/wallet/types';
+import type { IWasmApiWalletData } from '@proton/wallet/types/wasm';
 
 import { useResponsiveContainerContext } from '../../contexts/ResponsiveContainerContext';
 import { AddressTableWrapper } from './AddressTableWrapper';

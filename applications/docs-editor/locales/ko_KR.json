@@ -122,9 +122,6 @@
       "Fit table to page width": [
         "표를 페이지 너비에 맞추기"
       ],
-      "Go to label": [
-        "라벨로 이동"
-      ],
       "Indent": [
         "들여쓰기"
       ],
@@ -136,6 +133,9 @@
       ],
       "Insert comment": [
         "주석 삽입하기"
+      ],
+      "Insert emoji": [
+        "이모티콘 삽입"
       ],
       "Insert image": [
         "이미지 삽입"
@@ -197,9 +197,6 @@
       "Refresh the page": [
         "페이지 새로 고침"
       ],
-      "Remove": [
-        "삭제"
-      ],
       "Remove link": [
         "링크 삭제"
       ],
@@ -227,9 +224,6 @@
       "Strike-through": [
         "취소선"
       ],
-      "Submit": [
-        "제출"
-      ],
       "Subscript": [
         "아래 첨자"
       ],
@@ -247,143 +241,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "애플"
-      ],
-      "azureish white": [
-        "아즈리쉬 화이트"
-      ],
       "black": [
         "검정"
-      ],
-      "blanched almond": [
-        "블랜치드 아몬드"
-      ],
-      "blue-gray": [
-        "블루 그레이"
-      ],
-      "caramel": [
-        "캐러멜"
       ],
       "carrot": [
         "캐럿"
       ],
-      "cerise": [
-        "체리"
-      ],
-      "cinnabar": [
-        "시나바"
-      ],
-      "cobalt": [
-        "코발트"
-      ],
-      "copper": [
-        "코퍼"
-      ],
-      "cyan-blue azure": [
-        "사이언 블루 애저"
-      ],
-      "dandelion": [
-        "서양 민들레"
-      ],
-      "dark cerulean": [
-        "다크 세룰리안"
-      ],
-      "dark midnight blue": [
-        "다크 미드나이트 블루"
-      ],
-      "dim gray": [
-        "딤 그레이"
-      ],
-      "enzian": [
-        "엔지안"
-      ],
-      "fern": [
-        "펀"
-      ],
-      "field drab": [
-        "필드 드라브"
-      ],
-      "forest": [
-        "포레스트"
-      ],
-      "gainsboro": [
-        "게인스보로"
-      ],
       "gray": [
         "그레이"
-      ],
-      "japanese laurel": [
-        "재패니즈 로렐"
-      ],
-      "kiwi": [
-        "키위"
-      ],
-      "lemon yellow": [
-        "레몬 옐로"
-      ],
-      "light carmine pink": [
-        "라이트 카민 핑크"
-      ],
-      "light moss green": [
-        "라이트 모스 그린"
-      ],
-      "light red": [
-        "라이트 레드"
-      ],
-      "maize": [
-        "메이즈"
-      ],
-      "mughal green": [
-        "무굴 그린"
-      ],
-      "ocean": [
-        "오션"
       ],
       "olive": [
         "올리브"
       ],
-      "outer space": [
-        "오터 스페이스"
-      ],
       "pacific": [
         "퍼시픽"
       ],
-      "palatinate blue": [
-        "팔라티네이트 블루"
-      ],
-      "pale cerulean": [
-        "페일 세룰리안"
-      ],
-      "pastel gray": [
-        "파스텔 그레이"
-      ],
-      "persian plum": [
-        "퍼시앙 플럼"
-      ],
-      "persian red": [
-        "퍼시안 레드"
-      ],
-      "philippine gray": [
-        "필리핀 그레이"
-      ],
-      "philippine silver": [
-        "필리핀 실버"
-      ],
-      "pickle": [
-        "피클"
-      ],
-      "pine": [
-        "파인"
-      ],
       "pink": [
         "핑크"
-      ],
-      "pistachio": [
-        "피스타치오"
-      ],
-      "plum": [
-        "프럼"
       ],
       "purple": [
         "퍼플"
@@ -394,29 +268,8 @@
       "reef": [
         "리프"
       ],
-      "ruddy pink": [
-        "러디 핑크"
-      ],
-      "sahara": [
-        "사하라"
-      ],
-      "satin sheen gold": [
-        "스테인 신 골드"
-      ],
       "slateblue": [
         "슬레이트 블루"
-      ],
-      "soil": [
-        "소일"
-      ],
-      "strawberry": [
-        "스트로베리"
-      ],
-      "vivid auburn": [
-        "비비드 오번"
-      ],
-      "white": [
-        "흰색"
       ]
     },
     "Confirm": {
@@ -433,9 +286,6 @@
       ],
       "Read or print final document": [
         "최종 문서를 읽거나 프린트"
-      ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "위의 드롭다운 메뉴를 이용하여 모드를 전환하고 제안을 시작하세요."
       ]
     },
     "Error": {
@@ -468,9 +318,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "이 스프레드시트는 현재 클라이언트 버전과 호환되지 않습니다. 클라이언트를 다시 로드해 보세요. 오류가 지속되면 지원팀에 문의해 주세요."
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "시트 데이터를 Lexical로 불러오기 시도했습니다."
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "Word 문서로 변환할 수 없음. 비밀번호로 보호되는 문서라면 삭제 후 다시 시도하세요."
@@ -545,9 +392,6 @@
       ],
       "Just now": [
         "방금 전"
-      ],
-      "Labels:": [
-        "라벨:"
       ],
       "Loading": [
         "로딩 중"
@@ -691,6 +535,9 @@
       ],
       "Page break": [
         "페이지 나누기"
+      ],
+      "Recent": [
+        "최근"
       ],
       "Replace": [
         "대체"
@@ -1695,9 +1542,6 @@
       "Bold": [
         "굵게"
       ],
-      "Border": [
-        "테두리"
-      ],
       "Clear formatting": [
         "서식 지우기"
       ],
@@ -1712,9 +1556,6 @@
       ],
       "Default (${ defaultFont })": [
         "기본 (${ defaultFont })"
-      ],
-      "Fill color": [
-        "채우기 색상"
       ],
       "Find": [
         "찾기"
@@ -1778,9 +1619,6 @@
       ],
       "Strikethrough": [
         "취소선"
-      ],
-      "Text color": [
-        "텍스트 색상"
       ],
       "Text wrapping": [
         "텍스트 줄 바꿈"
@@ -1880,23 +1718,8 @@
       "Cancel": [
         "취소"
       ],
-      "column": [
-        "열"
-      ],
-      "column width": [
-        "열 너비"
-      ],
-      "Default": [
-        "기본"
-      ],
       "OK": [
         "확인"
-      ],
-      "row": [
-        "행"
-      ],
-      "row height": [
-        "행 높이"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2342,9 +2165,6 @@
       ],
       "Delete thread": [
         "대화 목록 삭제"
-      ],
-      "Explore the New Suggestion Mode": [
-        "새로운 제안 모드 알아보기"
       ],
       "Language not supported": [
         "이 언어는 지원하지 않습니다"

@@ -12,9 +12,11 @@ import type { SettingsService } from '../../lib/settings/service';
 import type { SpotlightProxy } from '../../lib/spotlight/service';
 import type { SshAgentService } from '../../lib/ssh-agent/service';
 import type { ParsedUrl } from '../../lib/urls/types';
-import type { ClientEndpoint, ContextBridgeApi, Maybe, MaybeNull, TabId } from '../../types';
 import type { B2BEvent } from '../../types/data/b2b';
 import type { OnTelemetryEvent } from '../../types/data/telemetry';
+import type { ContextBridgeApi } from '../../types/desktop';
+import type { Maybe, MaybeNull } from '../../types/utils';
+import type { ClientEndpoint, TabId } from '../../types/worker/runtime';
 import type { EventDispatcher } from '../../utils/event/dispatcher';
 import type { PassThemeService } from '../Layout/Theme/ThemeService';
 
@@ -93,8 +95,6 @@ export type PassCoreContextValue = {
     isFirstLaunch?: () => boolean;
     /** Only relevant for extension */
     popup?: PopupController;
-    /** Request desktop unlock secret, only relevant for extension */
-    getDesktopUnlockSecret?: () => Promise<string>;
     /** SSH agent service, only relevant for desktop */
     sshAgent?: MaybeNull<SshAgentService>;
 };

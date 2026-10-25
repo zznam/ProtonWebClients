@@ -24,7 +24,7 @@ import { startup } from './startup';
 import { certificateVerifyProc } from './tls';
 import type { PassElectronContext } from './types';
 import logger from './utils/logger';
-import { isMac, isProdEnv, isWindows } from './utils/platform';
+import { isE2E, isMac, isProdEnv, isWindows } from './utils/platform';
 
 const ctx: PassElectronContext = { session: null, window: null, quitting: false };
 
@@ -189,10 +189,19 @@ const onActivate = (secureSession: Session) => () => {
     if (BrowserWindow.getAllWindows().length === 0) return createWindow(secureSession);
 };
 
+const REMOTE_DEBUGGING_SWITCHES = ['remote-debugging-port', 'remote-debugging-address', 'remote-debugging-pipe'];
+
+if (!isE2E() && REMOTE_DEBUGGING_SWITCHES.some((name) => app.commandLine.hasSwitch(name))) {
+    logger.error('[main] Remote debugging switch detected, exiting');
+    process.exit(1);
+}
+
 if (!app.requestSingleInstanceLock()) {
     // Hard-exit: app.quit() is async and would let the rest of this module
     // keep running — including testDeepLinkSupport(), which would fire
     // another protonpass://test and spawn yet another instance. Fork-bomb.
+    // It would also race the primary instance to bind the native-messaging
+    // socket (EADDRINUSE on Windows, socket file stolen on macOS/Linux).
     // Nothing has been initialised yet at this point so no cleanup is owed.
     process.exit(0);
 }
@@ -215,7 +224,7 @@ ctx.session = createSession();
 
 authInterceptors(app, ctx);
 
-testDeepLinkSupport();
+if (!isE2E()) testDeepLinkSupport();
 
 // Match title bar with the saved (or default) theme
 nativeTheme.themeSource = getTheme();
@@ -251,7 +260,7 @@ await createWindow(ctx.session);
 const coldLaunchDeepLink = pickDeepLinkFromArgv(process.argv);
 if (coldLaunchDeepLink) handleDeepLink(coldLaunchDeepLink, ctx);
 
-startUpdater(ctx.session);
+if (!isE2E()) startUpdater(ctx.session);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

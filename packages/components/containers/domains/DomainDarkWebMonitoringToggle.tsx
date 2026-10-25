@@ -5,11 +5,11 @@ import { c } from 'ttag';
 import { syncDomain } from '@proton/account/domains/actions';
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { disableDomainBreachAlert, enableDomainBreachAlert } from '@proton/shared/lib/api/breaches';
 import { DARK_WEB_MONITORING_NAME } from '@proton/shared/lib/constants';
-import type { Domain } from '@proton/shared/lib/interfaces';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
 
 import Toggle from '../../components/toggle/Toggle';
 

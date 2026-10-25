@@ -1,9 +1,9 @@
 import { fromUnixTime } from 'date-fns';
 import { c, msgid } from 'ttag';
 
-import { useDateCountdown } from '@proton/hooks';
+import useDateCountdown from '@proton/hooks/useDateCountdown';
 
-export interface TimeRemainingProps {
+interface TimeRemainingProps {
     /**
      * The expiry date as a unix timestamp in seconds
      */

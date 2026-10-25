@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 
 import { c, msgid } from 'ttag';
 
-import { useMemberAddresses } from '@proton/account';
 import { useAddresses } from '@proton/account/addresses/hooks';
 import { useCustomDomains } from '@proton/account/domains/hooks';
 import { useMembers } from '@proton/account/members/hooks';
+import { useMemberAddresses } from '@proton/account/members/useMemberAddresses';
 import { getDomainAddressError } from '@proton/account/members/validateAddUser';
 import { useOrganizationKey } from '@proton/account/organizationKey/hooks';
 import { useProtonDomains } from '@proton/account/protonDomains/hooks';
@@ -20,7 +20,9 @@ import { Href } from '@proton/atoms/Href/Href';
 import { ALL_MEMBERS_ID, APPS, BRAND_NAME, MAIL_APP_NAME, MEMBER_PRIVATE } from '@proton/shared/lib/constants';
 import { getAvailableAddressDomains, getIsBYOEOnlyAccount } from '@proton/shared/lib/helpers/address';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Member, Organization, UserModel } from '@proton/shared/lib/interfaces';
+import type { Member } from '@proton/shared/lib/interfaces/Member';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { getOrganizationKeyInfo, isSuperAdmin, validateOrganizationKey } from '@proton/shared/lib/organization/helper';
 
 import Alert from '../../components/alert/Alert';

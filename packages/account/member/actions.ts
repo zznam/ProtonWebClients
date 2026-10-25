@@ -1,6 +1,6 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit';
 
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import { CacheType } from '@proton/redux-utilities/interface';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { removeAddressKeyRoute, removeUserKeyRoute } from '@proton/shared/lib/api/keys';
@@ -9,14 +9,11 @@ import {
     deleteMemberUnprivatizationInfo,
     queryMemberUnprivatizationInfo,
 } from '@proton/shared/lib/api/members';
-import type {
-    Address,
-    Api,
-    InactiveKey,
-    Member,
-    MemberUnprivatizationOutput,
-    Organization,
-} from '@proton/shared/lib/interfaces';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { InactiveKey } from '@proton/shared/lib/interfaces/Key';
+import type { Member, MemberUnprivatizationOutput } from '@proton/shared/lib/interfaces/Member';
+import type { Organization } from '@proton/shared/lib/interfaces/Organization';
 import noop from '@proton/utils/noop';
 
 import { type AddressKeysState, addressKeysThunk } from '../addressKeys';

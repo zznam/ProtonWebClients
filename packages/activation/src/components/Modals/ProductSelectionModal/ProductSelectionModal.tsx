@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { c } from 'ttag';
 
@@ -7,11 +7,17 @@ import { Button } from '@proton/atoms/Button/Button';
 import { CircledNumber } from '@proton/atoms/CircledNumber/CircledNumber';
 import { InlineLinkButton } from '@proton/atoms/InlineLinkButton/InlineLinkButton';
 import { useWriteableCalendars } from '@proton/calendar/calendars/hooks';
-import { BorderedContainer, BorderedContainerItem, type ModalProps, ModalTwo, Option, Radio } from '@proton/components';
+import {
+    BorderedContainer,
+    BorderedContainerItem,
+} from '@proton/components/components/BorderedStackedGroup/BorderedContainer';
+import Radio from '@proton/components/components/input/Radio';
+import ModalTwo, { type ModalProps } from '@proton/components/components/modalTwo/Modal';
 import ModalContent from '@proton/components/components/modalTwo/ModalContent';
 import ModalFooter from '@proton/components/components/modalTwo/ModalFooter';
 import ModalHeader from '@proton/components/components/modalTwo/ModalHeader';
 import useModalState from '@proton/components/components/modalTwo/useModalState';
+import Option from '@proton/components/components/option/Option';
 import SelectTwo from '@proton/components/components/selectTwo/SelectTwo';
 import useGetOrCreateCalendarAndSettings from '@proton/components/hooks/useGetOrCreateCalendarAndSettings';
 import { APPS, BRAND_NAME, CALENDAR_APP_NAME } from '@proton/shared/lib/constants';
@@ -22,6 +28,7 @@ import isTruthy from '@proton/utils/isTruthy';
 import { BYOE_CLAIM_PROTON_ADDRESS_SOURCE, providerMap } from '../../../constants';
 import { type EASY_SWITCH_SOURCES, ImportProvider, ImportType } from '../../../interface';
 import { useDriveSdk } from '../../../logic/driveContext';
+import { trackEasySwitchCreationStarted } from '../../../telemetry/easySwitchCreationFunnel';
 import { EasySwitchProviderName } from '../../ProviderName/EasySwitchProviderName';
 import BYOEClaimProtonAddressModal from '../BYOEClaimProtonAddressModal/BYOEClaimProtonAddressModal';
 import { ProductCheckbox } from './ProductCheckbox';
@@ -60,6 +67,10 @@ export const ProductSelectionModal = ({ onClose, provider, source, onComplete, .
     const drive = useDriveSdk();
 
     const { handleSubmit, loadingConfig } = useProductSelectionSubmit();
+
+    useEffect(() => {
+        trackEasySwitchCreationStarted({ source, provider });
+    }, []);
 
     const hasCalendar = !isBYOEAccount && writeableCalendars.length > 0;
 

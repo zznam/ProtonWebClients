@@ -27,10 +27,12 @@ import type { PaymentTelemetryContext } from '@proton/payments/telemetry/helpers
 import type { PaymentStage } from '@proton/payments/telemetry/shared-checkout-telemetry';
 import { checkoutTelemetry } from '@proton/payments/telemetry/telemetry';
 import type { ProductParam } from '@proton/shared/lib/apps/product';
-import type { Api, User } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
+import type { User } from '@proton/shared/lib/interfaces/User';
 
-import type { OnMethodChangedHandler, Operations, OperationsData } from '../react-extensions';
-import { usePaymentFacade as useInnerPaymentFacade } from '../react-extensions';
+import type { OnMethodChangedHandler } from '../react-extensions/useMethods';
+import type { Operations, OperationsData } from '../react-extensions/usePaymentFacade';
+import { usePaymentFacade as useInnerPaymentFacade } from '../react-extensions/usePaymentFacade';
 import { useCbIframe } from '../ui/components/ChargebeeIframe';
 import type { ThemeCode, ThemeLike } from './helpers';
 import { getThemeCode } from './helpers';
@@ -229,7 +231,7 @@ export const usePaymentFacade = ({
         onQrPendingModalClosed: () => setApplePayAttempt((attempt) => attempt + 1),
     });
 
-    const { canUseGooglePay, googlePayModalHandles } = useGooglePayDependencies(chargebeeHandles, {
+    const { googlePayModalHandles } = useGooglePayDependencies(chargebeeHandles, {
         onPaymentFailure: () => reportPaymentEvent('payment_declined', PAYMENT_METHOD_TYPES.GOOGLE_PAY),
         onVerificationCancelled: () =>
             reportPaymentEvent('verification_rejected_by_user', PAYMENT_METHOD_TYPES.GOOGLE_PAY),
@@ -268,7 +270,6 @@ export const usePaymentFacade = ({
             planIDs,
             isTrial,
             canUseApplePay,
-            canUseGooglePay,
             paymentMethodFlags,
             telemetryContext,
             onDeclined: ({ selectedMethodType, selectedMethodValue }) =>

@@ -122,9 +122,6 @@
       "Fit table to page width": [
         "使表格适合页面宽度"
       ],
-      "Go to label": [
-        "转至标签"
-      ],
       "Indent": [
         "缩进"
       ],
@@ -136,6 +133,9 @@
       ],
       "Insert comment": [
         "插入评论"
+      ],
+      "Insert emoji": [
+        "插入表情"
       ],
       "Insert image": [
         "插入图像"
@@ -197,9 +197,6 @@
       "Refresh the page": [
         "刷新页面"
       ],
-      "Remove": [
-        "移除"
-      ],
       "Remove link": [
         "移除链接"
       ],
@@ -227,9 +224,6 @@
       "Strike-through": [
         "删除线"
       ],
-      "Submit": [
-        "提交"
-      ],
       "Subscript": [
         "下标"
       ],
@@ -247,143 +241,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "苹果红"
-      ],
-      "azureish white": [
-        "天蓝白"
-      ],
       "black": [
         "黑色"
-      ],
-      "blanched almond": [
-        "杏仁黄"
-      ],
-      "blue-gray": [
-        "蓝灰色"
-      ],
-      "caramel": [
-        "焦糖色"
       ],
       "carrot": [
         "胡萝卜橙"
       ],
-      "cerise": [
-        "水红色"
-      ],
-      "cinnabar": [
-        "朱红色"
-      ],
-      "cobalt": [
-        "钴蓝色"
-      ],
-      "copper": [
-        "紫铜色"
-      ],
-      "cyan-blue azure": [
-        "青蓝色"
-      ],
-      "dandelion": [
-        "蒲公英白"
-      ],
-      "dark cerulean": [
-        "藏蓝色"
-      ],
-      "dark midnight blue": [
-        "午夜蓝"
-      ],
-      "dim gray": [
-        "暗灰色"
-      ],
-      "enzian": [
-        "龙胆蓝"
-      ],
-      "fern": [
-        "丝袍绿"
-      ],
-      "field drab": [
-        "田野褐"
-      ],
-      "forest": [
-        "森林绿"
-      ],
-      "gainsboro": [
-        "淡灰色"
-      ],
       "gray": [
         "灰色"
-      ],
-      "japanese laurel": [
-        "日本月桂绿"
-      ],
-      "kiwi": [
-        "猕猴桃绿"
-      ],
-      "lemon yellow": [
-        "柠檬黄"
-      ],
-      "light carmine pink": [
-        "淡胭脂粉"
-      ],
-      "light moss green": [
-        "青苔绿"
-      ],
-      "light red": [
-        "浅红色"
-      ],
-      "maize": [
-        "玉米黄"
-      ],
-      "mughal green": [
-        "莫卧儿绿"
-      ],
-      "ocean": [
-        "海蓝色"
       ],
       "olive": [
         "橄榄绿"
       ],
-      "outer space": [
-        "星空黑"
-      ],
       "pacific": [
         "太平洋蓝"
       ],
-      "palatinate blue": [
-        "普法尔茨蓝"
-      ],
-      "pale cerulean": [
-        "淡青色"
-      ],
-      "pastel gray": [
-        "淡灰色"
-      ],
-      "persian plum": [
-        "波斯绛紫色"
-      ],
-      "persian red": [
-        "波斯红"
-      ],
-      "philippine gray": [
-        "菲律宾灰"
-      ],
-      "philippine silver": [
-        "菲律宾银"
-      ],
-      "pickle": [
-        "橄榄黄"
-      ],
-      "pine": [
-        "松林绿"
-      ],
       "pink": [
         "粉色"
-      ],
-      "pistachio": [
-        "开心果绿"
-      ],
-      "plum": [
-        "绛紫色"
       ],
       "purple": [
         "紫色"
@@ -394,29 +268,8 @@
       "reef": [
         "珊瑚绿"
       ],
-      "ruddy pink": [
-        "红粉色"
-      ],
-      "sahara": [
-        "撒哈拉棕"
-      ],
-      "satin sheen gold": [
-        "缎光金"
-      ],
       "slateblue": [
         "板岩蓝"
-      ],
-      "soil": [
-        "土地灰"
-      ],
-      "strawberry": [
-        "草莓红"
-      ],
-      "vivid auburn": [
-        "红褐色"
-      ],
-      "white": [
-        "白色"
       ]
     },
     "Confirm": {
@@ -433,9 +286,6 @@
       ],
       "Read or print final document": [
         "阅读或打印终版文档"
-      ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "使用上面的下拉菜单进行切换并开始提出建议。"
       ]
     },
     "Error": {
@@ -444,6 +294,9 @@
       ],
       "Failed to export document.": [
         "文档导出失败。"
+      ],
+      "Failed to import document due to unsupported file format.": [
+        "由于文件格式不受支持，导入文档失败。"
       ],
       "Failed to import HTML due to unknown error.": [
         "由于未知错误，无法导入 HTML。"
@@ -468,9 +321,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "此电子表格与当前客户端版本不兼容，请尝试重新加载客户端。如果问题仍然存在，请联系技术支持。"
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "尝试将表格数据导入到 Lexical"
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "无法转换 Word 文档。它是否受密码保护？如果受密码保护，请删除密码并重试。"
@@ -546,11 +396,11 @@
       "Just now": [
         "刚刚"
       ],
-      "Labels:": [
-        "标签："
-      ],
       "Loading": [
         "加载中"
+      ],
+      "Loading spreadsheet content...": [
+        "正在加载电子表格内容..."
       ],
       "NEW": [
         "新"
@@ -688,6 +538,9 @@
       ],
       "Page break": [
         "分页"
+      ],
+      "Recent": [
+        "最近"
       ],
       "Replace": [
         "替换"
@@ -1360,6 +1213,9 @@
       "New spreadsheet": [
         "新建电子表格"
       ],
+      "Open Proton Drive": [
+        "打开 Proton Drive"
+      ],
       "OpenDocument Spreadsheet (.ods) (Beta)": [
         "OpenDocument 电子表格 (.ods) （测试版）"
       ],
@@ -1686,11 +1542,26 @@
       ]
     },
     "sheets_2025:Spreadsheet editor toolbar": {
+      "Apply border": [
+        "应用边框"
+      ],
+      "Apply fill color": [
+        "应用填充颜色"
+      ],
+      "Apply text color": [
+        "应用文本颜色"
+      ],
       "Bold": [
         "加粗"
       ],
-      "Border": [
-        "边框"
+      "Choose border": [
+        "选择边框"
+      ],
+      "Choose fill color": [
+        "选择填充颜色"
+      ],
+      "Choose text color": [
+        "选择文本颜色"
       ],
       "Clear formatting": [
         "清除格式"
@@ -1706,9 +1577,6 @@
       ],
       "Default (${ defaultFont })": [
         "默认 (${ defaultFont })"
-      ],
-      "Fill color": [
-        "填充颜色"
       ],
       "Find": [
         "查找"
@@ -1772,9 +1640,6 @@
       ],
       "Strikethrough": [
         "删除线"
-      ],
-      "Text color": [
-        "文本颜色"
       ],
       "Text wrapping": [
         "文本换行"
@@ -1874,23 +1739,8 @@
       "Cancel": [
         "取消"
       ],
-      "column": [
-        "列"
-      ],
-      "column width": [
-        "列宽"
-      ],
-      "Default": [
-        "默认"
-      ],
       "OK": [
         "确定"
-      ],
-      "row": [
-        "行"
-      ],
-      "row height": [
-        "行高"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2336,9 +2186,6 @@
       ],
       "Delete thread": [
         "删除主题"
-      ],
-      "Explore the New Suggestion Mode": [
-        "探索新的建议模式"
       ],
       "Language not supported": [
         "不支持的语言"

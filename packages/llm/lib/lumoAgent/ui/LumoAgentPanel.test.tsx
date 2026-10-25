@@ -35,6 +35,8 @@ const baseProps: ComponentProps<typeof LumoAgentPanel> = {
     items: [],
     isBusy: false,
     cardRenderers: { move_items: { icon: IcPencil, sentence: () => 'Move 1 email to Archive' } },
+    draft: '',
+    onDraftChange: jest.fn(),
     onSend: jest.fn(),
     onStop: jest.fn(),
     onConfirm: jest.fn(),
@@ -99,10 +101,25 @@ describe('LumoAgentPanel', () => {
         expect(idleMark(container)).not.toBeNull();
     });
 
+    it('leaves the prompt out for a host that renders its own', () => {
+        const { container, rerender } = renderPanel({});
+        expect(container.querySelector('[data-lumo-prompt]')).not.toBeNull();
+
+        rerender(panelWith({ showPromptInput: false }));
+        expect(container.querySelector('[data-lumo-prompt]')).toBeNull();
+    });
+
     it('shows the activity indicator while the chain is running', () => {
         const { container } = renderPanel({ items: [userTurn], isBusy: true });
 
         expect(thinkingIndicator()).not.toBeNull();
+        expect(idleMark(container)).toBeNull();
+    });
+
+    it('leaves the activity indicator out for a host that shows its own', () => {
+        const { container } = renderPanel({ items: [userTurn], isBusy: true, showThinking: false });
+
+        expect(thinkingIndicator()).toBeNull();
         expect(idleMark(container)).toBeNull();
     });
 
@@ -230,9 +247,10 @@ describe('LumoAgentPanel', () => {
         });
 
         it('snaps back to the newest turn when the user sends a message', () => {
-            const { rerender } = detach(renderPanel({ items: [userTurn, streamingReply('Look')] }));
+            const { rerender } = detach(
+                renderPanel({ items: [userTurn, streamingReply('Look')], draft: 'and the receipts' })
+            );
 
-            fireEvent.change(screen.getByRole('textbox'), { target: { value: 'and the receipts' } });
             fireEvent.click(screen.getByRole('button', { name: 'Send' }));
             rerender(nextToken());
 

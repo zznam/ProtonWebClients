@@ -568,6 +568,12 @@
       "Show advanced options": [
         "Prikaži napredne možnosti"
       ],
+      "Show less": [
+        "Pokaži manj"
+      ],
+      "Show more": [
+        "Prikaži več"
+      ],
       "Sign back in": [
         "Ponovno se prijavite"
       ],
@@ -656,9 +662,17 @@
         "Da"
       ]
     },
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "Še ${ hiddenResultsCount } zadetek, ki ni prikazan",
+        "Še ${ hiddenResultsCount } zadetka, ki nista prikazana",
+        "Še ${ hiddenResultsCount } zadetki, ki niso prikazani",
+        "Še ${ hiddenResultsCount } zadetkov, ki niso prikazani"
+      ]
+    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } Namizna aplikacija"
+      "${ appName } Desktop application": [
+        "${ appName } Namizna aplikacija"
       ]
     },
     "Button": {
@@ -821,6 +835,9 @@
       "Editing item failed": [
         "Urejanje predmeta ni uspelo"
       ],
+      "Email is not valid": [
+        "E-pošta ni veljavna"
+      ],
       "Empty CSV file": [
         "Prazna datoteka CSV"
       ],
@@ -829,6 +846,9 @@
       ],
       "Encrypted JSON not supported": [
         "Šifrirani JSON ni podprt"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Vnesite svoje uporabniško ime brez domene (@primer.com)"
       ],
       "Error reporting problem": [
         "Napaka pri prijavi težave"
@@ -920,6 +940,9 @@
       "Incorrect backup password. Please try again.": [
         "Nepravilno varnostno geslo. Poskusite znova."
       ],
+      "Incorrect password. Please try again.": [
+        "Napačno geslo. Prosimo, poskusite ponovno."
+      ],
       "Incorrect second password. Please try again.": [
         "Nepravilno drugo geslo. Poskusite znova."
       ],
@@ -959,8 +982,14 @@
       "Network error": [
         "Omrežna napaka"
       ],
+      "Not a valid number": [
+        "Ni veljavna številka"
+      ],
       "Passphrase is incorrect": [
         "Geslo ni pravilno"
+      ],
+      "Passwords do not match": [
+        "Gesli se ne ujemata"
       ],
       "PIN codes do not match": [
         "Kodi PIN se ne ujemata"
@@ -1010,14 +1039,29 @@
       "The ${ PASS_APP_NAME } desktop app is not responding, is it running?": [
         "Namizna aplikacija ${ PASS_APP_NAME } se ne odziva, ali je zagnana?"
       ],
+      "The email addresses do not match": [
+        "E-poštna naslova se ne ujemata"
+      ],
       "The URL is in the list": [
         "URL je na seznamu"
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "To polje presega število dovoljenih znakov - ${ maximumLength }."
+      ],
+      "This field is required": [
+        "To polje je obvezno"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "To polje zahteva vsaj ${ minimumLength } znakov."
       ],
       "Too many failed attempts. Please sign in again.": [
         "Preveč neuspešnih poskusov. Prosimo, prijavite se znova."
       ],
       "Trashing item failed": [
         "Premeščanje predmeta v smetnjak ni uspelo"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Poskusite uporabiti samo črke, števke in _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Za ta predmet ni mogoče ustvariti kode OTP"
@@ -1052,6 +1096,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Posodabljanje trezorja »${ payload.content.name }« ni uspelo"
       ],
+      "Username must begin with a letter or digit": [
+        "Uporabniško ime se mora začeti s črko ali številko"
+      ],
+      "Username must end with a letter or digit": [
+        "Uporabniško ime se mora končati s črko ali številko"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Ustvarjanje trezorja »${ payload.content.name }« ni uspelo"
       ],
@@ -1069,6 +1119,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Napačna koda PIN. Poskusi ponovno."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Napačna obnovitvena fraza. Poskusite znova ali uporabite drug način obnovitve."
       ],
       "Wrong second password": [
         "Napačno drugo geslo"
@@ -1157,6 +1210,17 @@
       ],
       "Username": [
         "Uporabniško ime"
+      ]
+    },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Najden ${ itemsCount } predlog, za krmarjenje uporabite tipkovnico.",
+        "Najdena ${ itemsCount } predloga, za krmarjenje uporabite tipkovnico.",
+        "Najdeni ${ itemsCount } predlogi, za krmarjenje uporabite tipkovnico.",
+        "Najdenih ${ itemsCount } predlogov, za krmarjenje uporabite tipkovnico."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "S smernimi tipkama gor in dol si oglejte in izberite predloge. Za potrditev izbire pritisnite Enter, za preklic in zapiranje polja s predlogi pritisnite Esc."
       ]
     },
     "Info": {
@@ -1325,9 +1389,6 @@
       "Can view this item.": [
         "Lahko si ogleda ta predmet."
       ],
-      "Change your password": [
-        "Spremenite vaše geslo"
-      ],
       "Choose a saved passkey to sign-in to ${ domain }": [
         "Za prijavo v ${ domain } izberite shranjen identifikacijski ključ"
       ],
@@ -1379,9 +1440,6 @@
       "Editor": [
         "Urejevalnik"
       ],
-      "email": [
-        "e-pošta"
-      ],
       "Email address successfully deleted from monitoring": [
         "E-poštni naslov uspešno izbrisan iz nadzora."
       ],
@@ -1420,9 +1478,6 @@
       ],
       "Fill in the CSV with your data": [
         "Izpolnite CSV s svojimi podatki"
-      ],
-      "finance": [
-        "finance"
       ],
       "For security reason, your access needs to be confirmed": [
         "Iz varnostnih razlogov mora biti vaš dostop potrjen"
@@ -1477,6 +1532,9 @@
       ],
       "invites you to access items in": [
         "vas vabi k dostopu do predmetov v"
+      ],
+      "iOS and Android Apps": [
+        "Aplikacije za iOS in Android"
       ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Videti je, da ste že prijavljeni v ${ PASS_APP_NAME }. Če se poskušate prijaviti z drugim računom, se najprej odjavite iz razširitve."
@@ -1550,9 +1608,6 @@
       "Medium Priority": [
         "Srednja pomembnost"
       ],
-      "Monitor accounts": [
-        "Nadzor računov"
-      ],
       "Monitoring settings successfully updated": [
         "Nastavitve nadzora so bile posodobljene."
       ],
@@ -1592,6 +1647,9 @@
       "None": [
         "Brez"
       ],
+      "Not recommended": [
+        "Ni priporočljivo"
+      ],
       "Offline mode": [
         "Način brez povezave"
       ],
@@ -1612,9 +1670,6 @@
       ],
       "Passkey sign-in": [
         "Prijava z identifikacijskim ključem"
-      ],
-      "password": [
-        "geslo"
       ],
       "Passwords older than ${ MAX_PASSWORD_HISTORY_RETENTION_WEEKS } week are automatically deleted from history.": [
         "Gesla, starejša od ${ MAX_PASSWORD_HISTORY_RETENTION_WEEKS } tedna, se samodejno izbrišejo iz zgodovine.",
@@ -1846,9 +1901,6 @@
       ],
       "User's access removed": [
         "Uporabnikov dostop odstranjen"
-      ],
-      "username": [
-        "uporabniško ime"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Trezor \"${ payload.content.name }\" je izbrisan"
@@ -3322,6 +3374,9 @@
       "Excluded items": [
         "Izključeni predmeti"
       ],
+      "Export": [
+        "Izvoz"
+      ],
       "Fill & copy password": [
         "Izpolni in kopiraj geslo"
       ],
@@ -3330,6 +3385,9 @@
       ],
       "Folder options": [
         "Možnosti mape"
+      ],
+      "Get mobile and desktop apps": [
+        "Prenesite mobilne in namizne aplikacije"
       ],
       "Get Started": [
         "Začnite"
@@ -3354,6 +3412,9 @@
       ],
       "Import - ${ date }": [
         "Uvoz - ${ date }"
+      ],
+      "Import failed": [
+        "Uvoz ni uspel"
       ],
       "Import to vault(s)": [
         "Uvozi v trezor(je)"
@@ -3637,8 +3698,20 @@
       "OTP secret or URI is invalid": [
         "Skrivnost OTP ali URI ni veljaven"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Geslo mora vsebovati vsaj ${ MIN_PASSWORD_LENGTH } znak",
+        "Geslo mora vsebovati vsaj ${ MIN_PASSWORD_LENGTH } znakov",
+        "Geslo mora vsebovati vsaj ${ MIN_PASSWORD_LENGTH } znakov",
+        "Geslo mora vsebovati vsaj ${ MIN_PASSWORD_LENGTH } znakov"
+      ],
       "Section name cannot be empty": [
         "Ime razdelka ne sme biti prazno"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Poskusite s krajšim uporabniškim imenom (največ ${ n } znak)",
+        "Poskusite s krajšim uporabniškim imenom (največ ${ n } znaka)",
+        "Poskusite s krajšim uporabniškim imenom (največ ${ n } znaki)",
+        "Poskusite s krajšim uporabniškim imenom (največ ${ n } znakov)"
       ],
       "URL already exists": [
         "URL že obstaja"
@@ -3751,9 +3824,6 @@
       ],
       "Move to trash": [
         "Premakni v smetnjak"
-      ],
-      "Name is required": [
-        "Zahtevano je ime"
       ],
       "No items": [
         "Ni predmetov"

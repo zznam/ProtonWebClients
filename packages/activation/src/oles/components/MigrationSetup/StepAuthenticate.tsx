@@ -14,7 +14,7 @@ import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { BRAND_NAME } from '@proton/shared/lib/constants';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
 
-import { createToken } from '../../../api';
+import { createToken } from '../../../api/api';
 import useOAuthPopup from '../../../hooks/useOAuthPopup';
 import { EASY_SWITCH_FEATURES, EASY_SWITCH_SOURCES } from '../../../interface';
 import { type OAuthToken, deleteOAuthTokenThunk, oauthTokenActions } from '../../../logic/oauthToken';
@@ -126,7 +126,7 @@ const StepAuthenticate: FC<StepComponentProps> = ({ model: { provider }, onNext 
             {tokens && !tokens.length && (
                 <Button color="norm" onClick={handleAddToken} className="flex items-center text-semibold p-2 pr-6">
                     <img src={provider.iconSrc} alt="" width={40} height={40} className="mr-4 bg-weak p-2 rounded" />
-                    {c('Action').t`Sign in to ${providerName}`}
+                    {c('Easy switch').t`Sign in to ${providerName}`}
                 </Button>
             )}
             {!tokens && <CircleLoader />}

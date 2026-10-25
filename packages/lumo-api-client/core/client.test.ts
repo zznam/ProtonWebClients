@@ -1,6 +1,7 @@
-import type { Api } from '@proton/shared/lib/interfaces';
+import type { Api } from '@proton/shared/lib/interfaces/Api';
 
 import type { ChatCompletionsRequest } from '../types-api';
+import { LumoClientType } from '../types-api';
 import { LumoApiClient, MAX_CLIENT_TOOL_ROUNDS } from './client';
 import type { ClientToolExecutor, ClientToolResult } from './client-tools';
 import { encryptTurns } from './encryption';
@@ -89,10 +90,46 @@ const callsToolsFor = (toolRounds: number, narration = '') => {
 
 const newClient = () => new LumoApiClient({ enableU2LEncryption: false, enableSmoothing: false });
 
+const callWithSearchTool = (turns: Turn[] = userTurns) => {
+    return newClient().callAssistant(api, turns, { clientToolExecutor: executor, clientTools: [searchTool] });
+};
+
 beforeEach(() => {
     mockedCallChatEndpoint.mockReset();
     mockedCreateEncryption.mockResolvedValue(null);
     mockedEncryptTurns.mockImplementation(async (turns) => turns as EncryptedTurn[]);
+});
+
+describe('callAssistant client type', () => {
+    it('identifies the caller on every request it sends, tool rounds, title and suggestions included', async () => {
+        let messageRounds = 0;
+        mockedCallChatEndpoint.mockImplementation(async (_api, payload) => {
+            const isMessage = (payload as ChatCompletionsRequest).lumo?.target === 'message';
+            return isMessage && messageRounds++ === 0 ? toolCallResponse('search') : proseResponse('Here it is.');
+        });
+        const recordRequestCallback = jest.fn();
+
+        await newClient().callAssistant(api, userTurns, {
+            clientToolExecutor: executor,
+            clientTools: [searchTool],
+            generateTitle: true,
+            enableSuggestedQuestions: true,
+            recordRequestCallback,
+            clientType: LumoClientType.LumoMail,
+        });
+
+        expect(sentRequests().map((request) => request.lumo?.target)).toEqual(
+            expect.arrayContaining(['title', 'suggested_questions', 'message'])
+        );
+        expect(sentRequests()).toHaveLength(4);
+        expect(sentRequests().map((request) => request.lumo?.client_type)).toEqual(
+            Array(4).fill(LumoClientType.LumoMail)
+        );
+        expect(recordRequestCallback.mock.calls.map(([request]) => request.lumo?.client_type)).toEqual([
+            LumoClientType.LumoMail,
+            LumoClientType.LumoMail,
+        ]);
+    });
 });
 
 describe('callAssistant client tool rounds', () => {
@@ -142,6 +179,38 @@ describe('callAssistant client tool rounds', () => {
 
         expect(turns.filter((turn) => turn.content === 'Looking now.')).toHaveLength(3);
         expect(turns[turns.length - 1]).toEqual({ role: Role.Assistant, content: '' });
+    });
+
+    it('returns only the turns it produced, ending with the closing answer', async () => {
+        callsToolsFor(1, 'Looking now.');
+
+        const { producedTurns } = await callWithSearchTool();
+
+        expect(producedTurns).toEqual([
+            { role: Role.Assistant, content: 'Looking now.' },
+            { role: Role.ToolCall, content: JSON.stringify({ id: 'call_search', name: 'search', arguments: {} }) },
+            { role: Role.ToolResult, content: 'ran search' },
+            { role: Role.Assistant, content: 'Here it is.' },
+        ]);
+    });
+
+    it('leaves the blank assistant turn a resumed chain was sent with out of what it produced', async () => {
+        callsToolsFor(1);
+        const resumedTurns = [...userTurns, { role: Role.Assistant, content: '' }];
+
+        const { producedTurns } = await callWithSearchTool(resumedTurns);
+
+        expect(producedTurns.map((turn) => turn.role)).toEqual([Role.ToolCall, Role.ToolResult, Role.Assistant]);
+        expect(producedTurns.at(-1)).toEqual({ role: Role.Assistant, content: 'Here it is.' });
+    });
+
+    it('produces no closing answer and no padding when the round ceiling stops it', async () => {
+        callsToolsFor(Infinity);
+
+        const { producedTurns } = await callWithSearchTool();
+
+        expect(producedTurns).toHaveLength(MAX_CLIENT_TOOL_ROUNDS * 2);
+        expect(producedTurns.at(-1)).toEqual({ role: Role.ToolResult, content: 'ran search' });
     });
 
     it('sends a single request when there is no executor to run the calls', async () => {

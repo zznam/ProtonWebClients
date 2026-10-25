@@ -2,10 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { c } from 'ttag';
 
-import type { NodeEntity } from '@proton/drive';
-import { AbortError, MemberRole, ProtonDriveError } from '@proton/drive';
 import { getNodeEffectiveRole } from '@proton/drive/modules/nodes';
+import { RECENTLY_ACCESSED_PREVIEW_DELAY_MS, recentlyAccessed } from '@proton/drive/modules/recentlyAccessed';
 import { loadThumbnail, useThumbnail } from '@proton/drive/modules/thumbnails';
+import type { NodeEntity } from '@proton/drive/sdk';
+import { AbortError, MemberRole, ProtonDriveError } from '@proton/drive/sdk';
 import useLoading from '@proton/hooks/useLoading';
 
 import { ContentPreviewMethod, downloadContent, getContentPreviewMethod } from './content';
@@ -81,6 +82,15 @@ export function usePreviewState({
                 })
         );
     }, [drive, nodeUid, withIsLoading]);
+
+    // Only count the node as accessed once the user stayed on its preview for a while.
+    useEffect(() => {
+        if (!node) {
+            return;
+        }
+        const timeout = setTimeout(() => recentlyAccessed.report(drive, [nodeUid]), RECENTLY_ACCESSED_PREVIEW_DELAY_MS);
+        return () => clearTimeout(timeout);
+    }, [drive, node, nodeUid]);
 
     useEffect(() => {
         if (!activeRevisionUid || previewMethod === ContentPreviewMethod.Streaming) {

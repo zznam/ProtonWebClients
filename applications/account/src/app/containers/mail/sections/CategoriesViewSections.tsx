@@ -10,12 +10,8 @@ import { useCategoriesTelemetry } from '@proton/mail/features/categoriesView/use
 import { updateLabel } from '@proton/mail/store/labels/actions';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
-import { invokeInboxDesktopIPC } from '@proton/shared/lib/desktop/ipcHelpers';
-import { isElectronApp } from '@proton/shared/lib/helpers/desktop';
-import type { Label } from '@proton/shared/lib/interfaces';
-import { useFlag } from '@proton/unleash/useFlag';
+import type { Label } from '@proton/shared/lib/interfaces/Label';
 import clsx from '@proton/utils/clsx';
-import noop from '@proton/utils/noop';
 
 import { CategoriesUnreadCountToggle } from './CategoriesUnreadCountToggle';
 import { isLastEnabledCategory } from './CategoriesViewSections.helper';
@@ -30,9 +26,6 @@ export const CategoriesViewSections = () => {
 
     const dispatch = useDispatch();
     const [modal, setModal, renderModal] = useModalState();
-
-    const showBadgeSettings = useFlag('MailRecordLastUnseenIncomingMessageEventID');
-    const isReloadDisabled = useFlag('InboxDesktopCategoryViewSettingsToggleReloadDisabled');
 
     const [mailSettings] = useMailSettings();
     const { categoriesStore, activeCategoriesTabs: activeTabs } = useCategoriesData();
@@ -72,11 +65,6 @@ export const CategoriesViewSections = () => {
 
         await updateCategory({ ...cat, Display: cat.Display ? 0 : 1 });
         sendReportToggleCategory(cat.ID, !cat.Display);
-
-        // INDA-703: remove the current implementation once 1.14.0 is released
-        if (isElectronApp && !isReloadDisabled) {
-            void invokeInboxDesktopIPC({ type: 'userLogin' }).catch(noop);
-        }
     };
 
     const handleChangeNotify = async (categoryID: string) => {
@@ -93,7 +81,7 @@ export const CategoriesViewSections = () => {
         <>
             <div className="categories-section">
                 <CategoryViewToggle />
-                {showBadgeSettings && mailSettings.MailCategoryView && <CategoriesUnreadCountToggle />}
+                {mailSettings.MailCategoryView && <CategoriesUnreadCountToggle />}
                 <div
                     className={clsx(
                         'border border-weak rounded-xl',

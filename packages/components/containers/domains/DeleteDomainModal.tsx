@@ -3,9 +3,9 @@ import { c } from 'ttag';
 import { deleteDomain } from '@proton/account/domains/actions';
 import { useNotifications } from '@proton/app-context/useNotifications';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
-import type { Domain } from '@proton/shared/lib/interfaces';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
 
 import type { PromptProps } from '../../components/prompt/Prompt';
 import Prompt from '../../components/prompt/Prompt';

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import type { ContactFormatted, ContactMergeModel } from '@proton/shared/lib/interfaces/contacts';
+import type { ContactFormatted, ContactMergeModel } from '@proton/shared/lib/interfaces/contacts/Contact';
 
 import type { ModalProps } from '../../../components/modalTwo/Modal';
 import ModalTwo from '../../../components/modalTwo/Modal';
@@ -14,7 +14,7 @@ export interface ContactMergeProps {
     onMerged: () => void;
 }
 
-export interface ContactMergeModalProps {
+interface ContactMergeModalProps {
     onMergeDetails: (contactID: string) => void;
     onMergePreview: (props: ContactMergePreviewModalProps) => void;
 }

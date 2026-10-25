@@ -12,6 +12,7 @@ export enum EntitlementName {
     /** Indicates whether this is a business. */
     Business = 'business',
     CatchAll = 'catch-all',
+    CustomDomainAddresses = 'custom-domain-addresses',
     /**
      * @deprecated Archived in Chargebee and scheduled for removal.
      */
@@ -104,6 +105,7 @@ export enum EntitlementName {
     /** Grants access to paid (Tier 2) VPN servers. */
     PaidVpnServers = 'paid-vpn-servers',
     PassAliasManagement = 'pass-alias-management',
+    /** This entitlement check does NOT cover all Pass B2B plans.It only says that user has a plan that has entitlements on the level of at least passbiz2024. Thus passpro2024 does NOT include pass-business entitlement. */
     PassBusiness = 'pass-business',
     PassCli = 'pass-cli',
     /** Plan includes the Pass-specific features that Pass Essentials would grant */
@@ -112,6 +114,8 @@ export enum EntitlementName {
     PassFolders = 'pass-folders',
     /** Indicates whether the plan supports private members. */
     PrivateMembers = 'private-members',
+    /** Add-on that gives a separate product, such as Lumo, Scribe or Meet */
+    ProductAddon = 'product-addon',
     /** Allows users to collaborate with anyone on documents. */
     PublicCollaboration = 'public-collaboration',
     /** Plans available for the referrer in the referral program. */
@@ -119,9 +123,9 @@ export enum EntitlementName {
     Sentinel = 'sentinel',
     /** Determines whether SSO is supported. */
     Sso = 'sso',
-    /** Determines whether keyless SSO is supported. */
-    SsoKeyless = 'sso-keyless',
+    /** Determines whether keys for SSO are required */
     SsoKeys = 'sso-keys',
+    UltraVpnServers = 'ultra-vpn-servers',
     /** Enables location filtering for VPN (also known as shared servers). */
     VpnLocationFilter = 'vpn-location-filter',
 }

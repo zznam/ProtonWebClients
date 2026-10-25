@@ -1,7 +1,10 @@
 import { buildUser } from '@proton/account/testing/buildUser';
 import { getOrganizationState } from '@proton/account/testing/redux-state';
-import type { Address, OrganizationExtended, PendingInvitation, UserModel } from '@proton/shared/lib/interfaces';
-import type { CalendarWithOwnMembers } from '@proton/shared/lib/interfaces/calendar';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import type { OrganizationExtended } from '@proton/shared/lib/interfaces/Organization';
+import type { PendingInvitation } from '@proton/shared/lib/interfaces/PendingInvitation';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
+import type { CalendarWithOwnMembers } from '@proton/shared/lib/interfaces/calendar/Calendar';
 
 import type { Entitlements } from '../core/entitlements/interface';
 import type { Plan } from '../core/plan/interface';
@@ -9,7 +12,7 @@ import { FREE_PLAN } from '../core/subscription/freePlans';
 import type { Subscription } from '../core/subscription/interface';
 import { getLongTestPlans } from './data-plans';
 import { makeEntitlements } from './makeEntitlements';
-import { getSubscriptionState } from './redux-state';
+import { getEntitlementsState, getSubscriptionState } from './redux-state';
 
 export interface TestPreloadedStateOverrides {
     user?: Partial<UserModel>;
@@ -57,11 +60,7 @@ export const buildPreloadedState = (overrides: TestPreloadedStateOverrides = {})
             error: undefined,
             meta: { fetchedAt: Date.now(), fetchedEphemeral: true as const },
         },
-        entitlements: {
-            value: entitlements ?? makeEntitlements(),
-            error: undefined,
-            meta: { fetchedAt: Date.now(), fetchedEphemeral: true as const },
-        },
+        entitlements: getEntitlementsState(entitlements ?? makeEntitlements()),
         plans: {
             value: { plans, freePlan: FREE_PLAN },
             error: undefined,

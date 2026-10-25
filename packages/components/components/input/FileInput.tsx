@@ -3,11 +3,11 @@ import { forwardRef, useRef } from 'react';
 
 import type { ButtonLikeShape } from '@proton/atoms/Button/ButtonLike';
 import { ButtonLike } from '@proton/atoms/Button/ButtonLike';
-import type { ThemeColorUnion } from '@proton/colors';
-import { useCombinedRefs } from '@proton/hooks';
+import type { ThemeColorUnion } from '@proton/colors/types';
+import useCombinedRefs from '@proton/hooks/useCombinedRefs';
 import clsx from '@proton/utils/clsx';
 
-export interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     children: ReactNode;
     id?: string;
     className?: string;
@@ -15,11 +15,12 @@ export interface Props extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputEl
     disabled?: boolean;
     shape?: ButtonLikeShape;
     color?: ThemeColorUnion;
+    pill?: boolean;
     loading?: boolean;
 }
 
 const FileInput = (
-    { children, id = 'fileInput', className, onChange, disabled, shape, color, loading, ...rest }: Props,
+    { children, id = 'fileInput', className, onChange, disabled, shape, color, pill, loading, ...rest }: Props,
     ref: Ref<HTMLInputElement>
 ) => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +34,7 @@ const FileInput = (
             disabled={disabled}
             shape={shape}
             color={color}
+            pill={pill}
             loading={loading}
         >
             <input

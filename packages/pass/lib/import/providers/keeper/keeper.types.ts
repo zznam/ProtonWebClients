@@ -1,4 +1,4 @@
-import type { MaybeArray } from '../../../../types';
+import type { MaybeArray } from '../../../../types/utils';
 
 export type KeeperCustomFieldValue = MaybeArray<string | Record<string, string>>;
 
@@ -23,8 +23,9 @@ export type KeeperPhoneField = {
     region?: string;
 };
 
-type KeeperFolder = {
+export type KeeperFolder = {
     folder?: string;
+    shared_folder?: string;
 };
 
 type KeeperItemType =

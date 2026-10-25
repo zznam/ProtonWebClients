@@ -1,7 +1,7 @@
 import { type MutableRefObject, useEffect, useRef } from 'react';
 
 import { useRoomContext } from '@livekit/components-react';
-import type { RejoinReasonInfo } from '@proton-meet/proton-meet-core';
+import { RejoinReasonInfo } from '@proton-meet/proton-meet-core';
 
 import { useMeetDispatch } from '@proton/meet/store/hooks';
 import {
@@ -11,7 +11,7 @@ import {
     setPrejoinParticipantCount,
     setReconnectionFailed,
 } from '@proton/meet/store/slices/connectionSlice';
-import { addKeyRotationLog } from '@proton/meet/store/slices/meetingInfo';
+import { addKeyRotationLog } from '@proton/meet/store/slices/currentMeeting';
 import { resetParticipantMaps } from '@proton/meet/store/slices/participants/participantsSlice';
 import { encryptDisplayNameWithKey } from '@proton/meet/utils/cryptoUtils';
 import { sanitizeMessage } from '@proton/sanitize/purify';
@@ -22,6 +22,7 @@ import { useMeetCoreClient } from '../../contexts/MeetCoreClientContext';
 import type { InitializeDevices } from '../../types';
 import type { ProtonMeetKeyProvider } from '../../utils/ProtonMeetKeyProvider';
 import type { KeyRotationScheduler } from '../../utils/SeamlessKeyRotationScheduler';
+import { leaveMeetingOrRestart } from '../../wasm/meetCoreStallRecovery';
 import { useMeetingAuthentication } from '../srp/useMeetingAuthentication';
 import type { UseKeyManagementResult } from '../useKeyManagement';
 import type { UseLiveKitConnectionResult } from '../useLiveKitConnection';
@@ -34,7 +35,7 @@ export interface MeetingAccessDetails {
 }
 
 interface ConnectWithMlsParams {
-    meetingToken: string;
+    meetingLinkName: string;
     meetingPassword: string;
     displayName: string;
     timeoutMs: number;
@@ -52,6 +53,7 @@ export interface ConnectWithMlsResult {
     connectionInfo: ConnectionInfo;
     tokenFetchMs: number;
     mlsSetupMs: number;
+    e2eeEnableMs: number;
     livekitConnectMs: number;
     deviceInitMs: number;
     websocketUrl: string;
@@ -74,7 +76,7 @@ interface UseMeetingConnectionParams {
     allowHealthCheck: () => void;
     disallowHealthCheck: () => void;
     initializeDevices: InitializeDevices;
-    getParticipants: (token: string) => Promise<void>;
+    getParticipants: (meetingLinkName: string) => Promise<void>;
     getQueryParticipantsCount: (meetingLinkName: string) => Promise<number | undefined>;
     reportMeetError: (msg: string, options?: unknown) => void;
     triggerFullReconnectionRef: MutableRefObject<(reason: RejoinReasonInfo) => void>;
@@ -110,6 +112,7 @@ export const useMeetingConnection = ({
 }: UseMeetingConnectionParams): UseMeetingConnectionResult => {
     const isMeetSeamlessKeyRotationEnabled = useFlag('MeetSeamlessKeyRotationEnabled');
     const isMeetClientMetricsLogEnabled = useFlag('MeetClientMetricsLog');
+    const isHandleStalledLiveKitReconnectEnabled = useFlag('MeetHandleStalledLiveKitReconnect');
 
     const dispatch = useMeetDispatch();
     const { getAccessDetails } = useMeetingAuthentication();
@@ -122,7 +125,7 @@ export const useMeetingConnection = ({
     // Shared connect sequence used by both the initial join (useJoinFlow) and reconnection.
     const connectWithMls = useStableCallback(
         async ({
-            meetingToken,
+            meetingLinkName,
             meetingPassword: password,
             displayName: displayNameArg,
             timeoutMs,
@@ -139,7 +142,7 @@ export const useMeetingConnection = ({
                     ? await encryptDisplayNameWithKey(decryptionKeyRef.current, sanitizedDisplayName)
                     : '';
 
-                return getAccessDetails({ token: meetingToken, encryptedDisplayName });
+                return getAccessDetails({ meetingLinkName, encryptedDisplayName });
             };
 
             const t0 = performance.now();
@@ -152,7 +155,7 @@ export const useMeetingConnection = ({
             let participantCountPromise: Promise<number | undefined>;
             if (queryParticipantsCount) {
                 // Fire-and-forget: populates the prejoin loader count without blocking the join
-                participantCountPromise = getQueryParticipantsCount(meetingToken);
+                participantCountPromise = getQueryParticipantsCount(meetingLinkName);
                 void participantCountPromise.then((count) => dispatch(setPrejoinParticipantCount(count ?? 0)));
             } else {
                 participantCountPromise = Promise.resolve(undefined);
@@ -160,7 +163,7 @@ export const useMeetingConnection = ({
 
             const t1 = performance.now();
             const { key: groupKey, epoch } =
-                (await handleMlsSetup(meetingToken, accessToken, password, isWaitingRoom)) || {};
+                (await handleMlsSetup(meetingLinkName, accessToken, password, isWaitingRoom)) || {};
             const mlsSetupMs = Math.round(performance.now() - t1);
 
             reportMLSRelatedError(groupKey, epoch);
@@ -185,10 +188,13 @@ export const useMeetingConnection = ({
             }
 
             let connectionInfo: ConnectionInfo;
+            let e2eeEnableMs: number;
             let livekitConnectMs: number;
             let deviceInitMs: number;
             try {
+                const e2eeStart = performance.now();
                 await room.setE2EEEnabled(true);
+                e2eeEnableMs = Math.round(performance.now() - e2eeStart);
                 // Start device init concurrently with connect so the camera track is included in the initial SDP
                 // offer rather than a post-connect renegotiation (on Safari with H264 that can fail silently).
                 const t2 = performance.now();
@@ -218,12 +224,13 @@ export const useMeetingConnection = ({
             if (resetParticipantsBeforeFetch) {
                 dispatch(resetParticipantMaps());
             }
-            await getParticipants(meetingToken);
+            await getParticipants(meetingLinkName);
 
             return {
                 connectionInfo,
                 tokenFetchMs,
                 mlsSetupMs,
+                e2eeEnableMs,
                 livekitConnectMs,
                 deviceInitMs,
                 websocketUrl,
@@ -244,7 +251,7 @@ export const useMeetingConnection = ({
         dispatch(setMlsRetrying(false));
         disallowHealthCheck();
 
-        const meetingToken = meetingLinkNameRef.current;
+        const meetingLinkName = meetingLinkNameRef.current;
 
         try {
             // Snapshot before room.disconnect() — the Disconnected handler clears this ref synchronously
@@ -265,7 +272,16 @@ export const useMeetingConnection = ({
             // handler) so it is properly awaited before joinMeetingWithAccessToken is called below.
             if (wasMlsActive) {
                 try {
-                    await meetCoreClient.leaveMeeting();
+                    // A stalled LiveKit reconnect means the network was unstable, which is when a meet-core
+                    // request can hang while holding the state lock the leave needs.
+                    if (
+                        isHandleStalledLiveKitReconnectEnabled &&
+                        reason === RejoinReasonInfo.LivekitConnectionTimeout
+                    ) {
+                        await leaveMeetingOrRestart(meetCoreClient, reportMeetError);
+                    } else {
+                        await meetCoreClient.leaveMeeting();
+                    }
                 } catch {
                     // best effort
                 }
@@ -275,7 +291,7 @@ export const useMeetingConnection = ({
             cleanupMlsState();
 
             await connectWithMls({
-                meetingToken,
+                meetingLinkName,
                 meetingPassword,
                 displayName,
                 timeoutMs: 20 * SECOND,
@@ -284,7 +300,7 @@ export const useMeetingConnection = ({
                 resetParticipantsBeforeFetch: true,
             });
 
-            meetingLinkNameRef.current = meetingToken;
+            meetingLinkNameRef.current = meetingLinkName;
             dispatch(setJoinedRoom(true));
             dispatch(setIsReconnecting(false));
             isReconnectingRef.current = false;

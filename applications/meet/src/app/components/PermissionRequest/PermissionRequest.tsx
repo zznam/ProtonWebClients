@@ -5,11 +5,7 @@ import ModalTwo from '@proton/components/components/modalTwo/Modal';
 import ModalTwoContent from '@proton/components/components/modalTwo/ModalContent';
 import ModalTwoHeader from '@proton/components/components/modalTwo/ModalHeader';
 import { useMeetDispatch, useMeetSelector } from '@proton/meet/store/hooks';
-import {
-    PermissionBlockedError,
-    requestPermission,
-    showPermissionsModal,
-} from '@proton/meet/store/slices/deviceManagementSlice';
+import { PermissionBlockedError, showPermissionsModal } from '@proton/meet/store/slices/deviceManagementSlice';
 import { selectActiveCameraId } from '@proton/meet/store/slices/deviceManagementSlice/selectors';
 import { PermissionsModalType } from '@proton/meet/store/slices/deviceManagementSlice/types';
 import {
@@ -17,9 +13,11 @@ import {
     selectPermissionPromptStatus,
     setPermissionPromptStatus,
 } from '@proton/meet/store/slices/uiStateSlice';
+import { getSelectableDevices } from '@proton/meet/utils/deviceUtils';
 import { isSafari } from '@proton/shared/lib/helpers/browser';
 
 import { useMediaManagementContext } from '../../contexts/MediaManagementProvider/MediaManagementContext';
+import { requestPermissionWithTelemetry } from '../../telemetry/permissions';
 
 import './PermissionRequest.scss';
 
@@ -35,7 +33,7 @@ export const PermissionRequest = () => {
             const permissionType = deviceType === 'video' ? 'camera' : 'microphone';
             const cameraDeviceId = isSafari() ? activeCameraId : undefined;
             const permission = await dispatch(
-                requestPermission(permissionType, permissionType === 'camera' ? cameraDeviceId : undefined)
+                requestPermissionWithTelemetry(permissionType, permissionType === 'camera' ? cameraDeviceId : undefined)
             );
 
             if (permission !== 'granted') {
@@ -44,9 +42,7 @@ export const PermissionRequest = () => {
 
             const devices = await navigator.mediaDevices.enumerateDevices();
 
-            const firstDevice = devices.find(
-                (device) => device.kind === (deviceType === 'video' ? 'videoinput' : 'audioinput')
-            );
+            const [firstDevice] = getSelectableDevices(devices, deviceType === 'video' ? 'videoinput' : 'audioinput');
 
             if (firstDevice) {
                 if (deviceType === 'audio') {

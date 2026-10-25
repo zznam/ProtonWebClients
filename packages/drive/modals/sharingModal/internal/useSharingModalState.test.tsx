@@ -18,7 +18,7 @@ import useLoading from '@proton/hooks/useLoading';
 import { getAppHref } from '@proton/shared/lib/apps/helper';
 import { APPS } from '@proton/shared/lib/constants';
 import { textToClipboard } from '@proton/shared/lib/helpers/browser';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import { handleSdkError } from '../../../legacy/errorHandling';
 import { getBusDriver } from '../../../modules/busDriver';
@@ -110,7 +110,6 @@ const mockedResultOk = jest.mocked(resultOk);
 const mockedResultError = jest.mocked(resultError);
 
 jest.mock('@proton/account/user/hooks');
-jest.mock('@proton/components');
 jest.mock('@proton/app-context/useNotifications');
 jest.mock('@proton/hooks/useLoading');
 jest.mock('@proton/shared/lib/apps/helper');

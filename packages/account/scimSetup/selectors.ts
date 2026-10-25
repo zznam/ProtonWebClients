@@ -1,9 +1,10 @@
 import { createSelector } from '@reduxjs/toolkit';
 
 import { EntitlementName } from '@proton/payments/core/entitlements/entitlement-names';
-import { getOrgEntitlementQuantity } from '@proton/payments/core/entitlements/helpers';
-import { type EnhancedMember, GROUP_MEMBER_STATE } from '@proton/shared/lib/interfaces';
+import { getTotalEntitlementQuantity } from '@proton/payments/core/entitlements/helpers';
+import { GROUP_MEMBER_STATE } from '@proton/shared/lib/interfaces/GroupMember';
 import type { GroupMember } from '@proton/shared/lib/interfaces/GroupMember';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
 import { getIsMemberSetup } from '@proton/shared/lib/keys/memberHelper';
 
 import { selectEntitlements } from '../entitlements';
@@ -59,6 +60,18 @@ export const selectPendingScimMembersByGroup = createSelector(
 );
 
 /**
+ * Members who still hold the organization key although no assigned role grants access to it, e.g.
+ * after a SCIM sync removed them from their last admin group. Only known once member roles are loaded.
+ * Excludes the current user, as the API never demotes the admin who approves the clean-up, and members
+ * whose demotion is already scheduled, as nothing is left to approve for them.
+ */
+export const selectMembersRequiringOrgKeyDemotion = createSelector(selectMembers, (membersState) =>
+    (membersState.value ?? []).filter(
+        (member) => member.requiresOrgKeyDemotion && !member.hasScheduledOrgKeyDemotion && !member.Self
+    )
+);
+
+/**
  * Groups that need finalizing during SCIM setup: newly synced groups still missing keys, plus
  * existing SCIM groups that have keys but gained pending-keys members.
  */
@@ -74,7 +87,7 @@ export const selectPendingScimGroups = createSelector(
         }
 
         // Same for orgs whose plan doesn't grant the groups entitlement, and while entitlements load.
-        if (!entitlementsState.value || !getOrgEntitlementQuantity(entitlementsState.value, EntitlementName.Groups)) {
+        if (!entitlementsState.value || !getTotalEntitlementQuantity(entitlementsState.value, EntitlementName.Groups)) {
             return [];
         }
 

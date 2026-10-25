@@ -10,15 +10,17 @@ import { format, getUnixTime, set } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import loudRejection from 'loud-rejection';
 
-import { getModelState } from '@proton/account/tests';
-import { mockPlansApi } from '@proton/components/hooks/helpers/tests';
-import { FeatureCode } from '@proton/features';
+import { getModelState } from '@proton/account/testing/getModelState';
+import { mockPlansApi } from '@proton/components/hooks/helpers/tests/usePlans';
+import { FeatureCode } from '@proton/features/interface';
 import { getFeatureFlagsState } from '@proton/features/testing/features';
 import type { MessageStateWithData } from '@proton/mail/store/messages/messagesTypes';
 import type { MIME_TYPES } from '@proton/shared/lib/constants';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
 import { addDays, addMinutes } from '@proton/shared/lib/date-fns-utc';
-import type { MailSettings, Recipient, UserModel } from '@proton/shared/lib/interfaces';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 import { VIEW_MODE } from '@proton/shared/lib/mail/mailSettings';
 
 import { getMinScheduleTime } from '../../../helpers/schedule';
@@ -336,7 +338,7 @@ describe('Composer scheduled messages', () => {
         const message = setupMessage('Subject', [user as Recipient]);
         setupTest();
 
-        await helper(message, getPreloadState({ hasPaidMail: true, scheduledTotalCount: 100 }));
+        await helper(message, getPreloadState({ hasPaidMail: true, scheduledTotalCount: 1000 }));
 
         const sendActions = screen.getByTestId('composer:send-actions');
         const dropdownButton = getByTestIdDefault(sendActions, 'composer:scheduled-send:open-dropdown');

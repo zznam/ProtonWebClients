@@ -38,6 +38,9 @@
       "Get verification code": [
         "Obtenir codi de verificació"
       ],
+      "More info": [
+        "Més informació"
+      ],
       "More info: ${ safeTitle }": [
         "Més informació: ${ safeTitle }"
       ],
@@ -90,7 +93,7 @@
     },
     "Cancellation upsell": {
       "Cloud storage and sharing for large files": [
-        "Emmagatzematge al núvol i compartició dels vostres fitxers"
+        "Emmagatzematge al núvol i compartició de fitxers grans"
       ]
     },
     "Country name": {
@@ -926,12 +929,12 @@
         "S'ha produït un error."
       ],
       "We couldn't load this page. Please refresh the page or check your internet connection.": [
-        "No hem pogut carregar aquesta pàgina. Refresqueu la pàgina o comproveu la vostra connexió a Internet."
+        "No hem pogut carregar aquesta pàgina. Refresqueu la pàgina o comproveu la connexió a Internet."
       ]
     },
     "fido2: Error": {
       "Something went wrong authenticating with your security key. Please try again.": [
-        "Alguna cosa ha anat malament en autenticar-se amb la vostra clau de seguretat. Torneu-ho a provar."
+        "Alguna cosa ha anat malament en autenticar-vos amb la clau de seguretat. Torneu-ho a provar."
       ]
     },
     "fido2: Info": {
@@ -1284,7 +1287,7 @@
         "Protecció avançada del compte"
       ],
       "All ${ BRAND_NAME } products and features": [
-        "Tots els productes i funcions de ${ BRAND_NAME }"
+        "Tots els productes i les característiques de ${ BRAND_NAME }"
       ],
       "All basic ${ BRAND_NAME } services (${ MAIL_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME })": [
         "Tots els serveis bàsics de ${ BRAND_NAME } (${ MAIL_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME })"
@@ -1341,7 +1344,7 @@
         "Xifratge d'extrem a extrem"
       ],
       "Generate emails with a prompt": [
-        "Genera correus electrònics amb una indicació"
+        "Generació de correus electrònics amb una indicació"
       ],
       "HTML signatures": [
         "Signatures HTML"
@@ -1350,25 +1353,25 @@
         "Editor de documents en línia"
       ],
       "Password health": [
-        "Estat de la contrasenya"
+        "Salut de les contrasenyes"
       ],
       "Password-protected Emails": [
         "Correus protegits amb contrasenya"
       ],
       "Private photo backup": [
-        "Còpia de seguretat de fotos privada"
+        "Còpia de seguretat privada de les fotos"
       ],
       "Proofread and refine your emails": [
         "Corregiu i refineu els vostres correus electrònics"
       ],
       "Quickly craft replies": [
-        "Crea respostes ràpidament"
+        "Creeu respostes ràpidament"
       ],
       "Recover previous file versions": [
         "Recupereu versions anteriors dels fitxers"
       ],
       "Save time emailing": [
-        "Estalvieu temps en l'enviament dels vostres correus electrònics"
+        "Estalvieu temps en l'enviament de correus electrònics"
       ],
       "Schedule and snooze emails for any time": [
         "Programeu i ajorneu correus electrònics per a qualsevol moment."
@@ -1386,10 +1389,10 @@
         "Tramesa SMTP"
       ],
       "Support for up to 2 users": [
-        "Suport per a 2 usuaris"
+        "Suport per a fins a 2 usuaris"
       ],
       "Sync and backup all your files across devices": [
-        "Sincronitzeu i feu una còpia de seguretat de tots els fitxers entre dispositius."
+        "Sincronitzeu i feu una còpia de seguretat de tots els fitxers en tots els dispositius."
       ],
       "Unlimited filters": [
         "Filtres il·limitats"
@@ -1423,7 +1426,7 @@
     },
     "new_plans: tooltip": {
       "${ DRIVE_APP_NAME }: Secure your files with encrypted cloud storage. Includes automatic sync, encrypted file sharing, and more.": [
-        "${ DRIVE_APP_NAME }: Protegiu els vostres fitxers amb emmagatzematge xifrat al núvol. Inclou, entre d'altres, sincronització automàtica i compartició de fitxers xifrats."
+        "${ DRIVE_APP_NAME }: Protegiu els fitxers amb l'emmagatzematge xifrat al núvol. Inclou, entre d'altres, sincronització automàtica i compartició de fitxers xifrats."
       ],
       "${ MAIL_APP_NAME }: Secure your emails with end-to-end encryption. Includes support for custom email domains, 15 email addresses, unlimited hide-my-email aliases, and more.": [
         "${ MAIL_APP_NAME }: Protegiu els vostres correus electrònics amb xifratge d’extrem a extrem. Inclou suport per a dominis de correu electrònic personalitzats, 15 adreces de correu electrònic, nombre il·limitat d'àlies hide-my-email, etc."
@@ -1456,7 +1459,7 @@
         "Creeu fins a ${ n } adreces de correu electrònic o àlies que podeu assignar als membres de la família. Utilitzeu-los per a les identitats en línia, p. ex., JoanCompres@${ domain } per als comptes de compres."
       ],
       "Email everyone in a group with a single email address": [
-        "Envieu un correu electrònic a tothom en un grup amb una única adreça de correu."
+        "Envieu un correu electrònic a tothom en un grup amb una única adreça de correu electrònic."
       ],
       "Ensures you receive all emails sent to your domain, even if the email address doesn't exist, no longer exists, or has a typo": [
         "Assegura que rebeu tots els correus electrònics enviats al vostre domini, fins i tot si l'adreça de correu electrònic no existeix, ha deixat d'existir o té un error ortogràfic"
@@ -1514,14 +1517,8 @@
       ]
     },
     "new_plans: Upsell attribute": {
-      "Add more personalization with 15 email addresses and support for 3 custom email domains": [
-        "Afegiu més personalització amb 15 adreces de correu electrònic i suport per a 3 dominis de correu electrònic personalitzats"
-      ],
       "Boost your storage space to ${ bundleStorage } per user": [
         "Augmenteu l'espai d'emmagatzematge a ${ bundleStorage } per usuari."
-      ],
-      "Boost your storage space to ${ bundleStorage } total": [
-        "Augmenteu l'espai d'emmagatzematge a ${ bundleStorage } en total"
       ],
       "Support for ${ n } custom email domain": [
         "Suport per a ${ n } domini de correu electrònic personalitzat",
@@ -1531,11 +1528,6 @@
     "Placeholder": {
       "Password": [
         "Contrasenya"
-      ]
-    },
-    "Plan description": {
-      "All premium features from ${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME }, ${ DRIVE_SHORT_APP_NAME }, and ${ CALENDAR_SHORT_APP_NAME }": [
-        "Totes les característiques prèmium de ${ BRAND_NAME } ${ MAIL_SHORT_APP_NAME }, ${ PASS_SHORT_APP_NAME }, ${ VPN_SHORT_APP_NAME }, ${ DRIVE_SHORT_APP_NAME } i ${ CALENDAR_SHORT_APP_NAME }"
       ]
     },
     "saml: Error": {

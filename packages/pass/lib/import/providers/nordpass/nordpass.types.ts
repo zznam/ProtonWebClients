@@ -1,10 +1,11 @@
-import type { Maybe } from '../../../../types';
+import type { Maybe } from '../../../../types/utils';
 
 export enum NordPassType {
     LOGIN = 'password',
     CREDIT_CARD = 'credit_card',
     IDENTITY = 'identity',
     NOTE = 'note',
+    FOLDER = 'folder',
 }
 
 export type NordPassItem = {

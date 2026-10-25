@@ -3,7 +3,8 @@ import {
     getOrganizationSettings as getOrganizationSettingsConfig,
 } from '../api/organization';
 import { INVOICE_EMAIL_STATE } from '../constants';
-import type { Api, Organization, OrganizationExtended, OrganizationSettings } from '../interfaces';
+import type { Api } from '../interfaces/Api';
+import type { Organization, OrganizationSettings } from '../interfaces/Organization';
 
 export const getOrganization = ({ api }: { api: Api }) => {
     return api<{
@@ -20,6 +21,7 @@ export const getDefaultOrganizationSettings = (): OrganizationSettings => {
         MailCategoryViewEnabled: false,
         SSOBackupPasswordDisabled: false,
         PasswordReminderEnforced: false,
+        LumoApiEnabled: false,
         AllowedProducts: ['All'],
         InvoiceEmail: null,
         InvoiceEmailState: INVOICE_EMAIL_STATE.DISABLED,
@@ -42,22 +44,4 @@ export const getOrganizationSettings = ({ api }: { api: Api }): Promise<Organiza
         .catch(() => {
             return defaultSettings;
         });
-};
-
-export const getOrganizationExtended = async ({
-    api,
-    defaultSettings,
-}: {
-    api: Api;
-    defaultSettings?: boolean; // Avoid fetching organization settings in case this is true (most likely it is missing required scopes)
-}): Promise<OrganizationExtended> => {
-    const [Organization, OrganizationSettings] = await Promise.all([
-        getOrganization({ api }),
-        defaultSettings ? getDefaultOrganizationSettings() : getOrganizationSettings({ api }),
-    ]);
-
-    return {
-        ...Organization,
-        Settings: OrganizationSettings,
-    };
 };

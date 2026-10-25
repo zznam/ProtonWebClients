@@ -1,79 +1,44 @@
-import { usePopper } from '@proton/atoms/Popper/usePopper'
-import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor'
-import type { CommentThreadInterface } from '@proton/docs-shared'
+import * as Ariakit from '@ariakit/react'
+import type { DocsCommentThread } from '../../contract/DocsCommentThread'
 import { CommentsPanelListThread } from './CommentsPanelListThread'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCommentsContext } from './CommentsContext'
 import debounce from 'lodash/debounce'
+import { DropdownPopover } from '../../Components/Dropdown'
 import { Icon } from '../../Components/Icon'
 import * as Icons from '../../Components/icons'
-import { c } from 'ttag'
-import useCombinedRefs from '@proton/hooks/useCombinedRefs'
+import { useDocsMessages } from '../../DocsDependenciesProvider'
 import type { PositionedItem } from './Positioner'
 import { Positioner } from './Positioner'
 import { CommentInputBox } from './CommentInputBox'
 import type { RangeSelection } from 'lexical'
 import { $getNodeByKey, type LexicalNode } from 'lexical'
 import { getRangeSelectionRect } from '../../Utils/getSelectionRect'
-import { useRightPanelContext, useViewportWidth } from '../../../DocsLayout'
-import { getContextualCommentsWidth, getDocsLayoutScrollContainer } from '../../../docsLayoutUtils'
+import { useRightPanelContext, useViewportWidth } from '../../Layout/DocsLayout'
+import { getContextualCommentsWidth, getDocsLayoutScrollContainer } from '../../Layout/docsLayoutUtils'
 
 const COMMENT_INPUT_ID = 'comment-input'
 const COMMENTS_WIDTH = 'max(20.5vw, 300px)'
 
-function ThreadPopoverButton({ thread }: { thread: CommentThreadInterface }) {
-  const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>()
-  const popoverRef = useRef<HTMLDivElement | null>(null)
-  const { floating, position } = usePopper({
-    isOpen,
-    originalPlacement: 'left-start',
-    availablePlacements: ['left', 'left-start', 'left-end'],
-    reference: {
-      mode: 'element',
-      value: anchorRef.current,
-    },
-  })
+export type ThreadPopoverButtonProps = { thread: DocsCommentThread }
 
-  const combinedRef = useCombinedRefs<HTMLDivElement>(popoverRef, floating)
-
-  useEffect(() => {
-    const handleClickOutside = ({ target }: MouseEvent) => {
-      const targetNode = target as HTMLElement
-      if (popoverRef.current?.contains(targetNode) || anchorRef.current?.contains(targetNode)) {
-        return
-      }
-      close()
-    }
-
-    document.addEventListener('click', handleClickOutside)
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [anchorRef, close])
-
+export function ThreadPopoverButton({ thread }: ThreadPopoverButtonProps) {
+  const messages = useDocsMessages().comments
   return (
-    <>
-      <button className="bg-norm border-weak rounded border p-2" ref={anchorRef} onClick={toggle}>
-        <div className="sr-only">{c('Action').t`Show thread`}</div>
+    <Ariakit.PopoverProvider placement="left-start">
+      <Ariakit.PopoverDisclosure className="rounded border border-[--border-weak] bg-[--background-norm] p-2">
+        <div className="sr-only">{messages.showThread}</div>
         <Icon data={Icons.speechBubbleDots} viewBox="0 0 33 33" className="min-h-4 min-w-4" />
-      </button>
-      {isOpen && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            transform: `translate3d(${position.left}px, ${position.top}px, 0)`,
-            width: COMMENTS_WIDTH,
-          }}
-          ref={combinedRef}
-        >
-          <CommentsPanelListThread thread={thread} />
-        </div>
-      )}
-    </>
+      </Ariakit.PopoverDisclosure>
+      <DropdownPopover
+        aria-label={messages.threadPopoverLabel}
+        style={{ width: COMMENTS_WIDTH }}
+        render={<Ariakit.Popover portal unmountOnHide gutter={10} flip="left-end left" />}
+      >
+        <CommentsPanelListThread thread={thread} className="!border-0 !shadow-none" />
+      </DropdownPopover>
+    </Ariakit.PopoverProvider>
   )
 }
 
@@ -81,7 +46,7 @@ function ThreadComponent({
   thread,
   showContextualPanels,
 }: {
-  thread: CommentThreadInterface
+  thread: DocsCommentThread
   showContextualPanels: boolean
 }) {
   if (showContextualPanels) {
@@ -93,7 +58,7 @@ function ThreadComponent({
   return <ThreadPopoverButton thread={thread} />
 }
 
-export function ContextualComments({ activeThreads }: { activeThreads: CommentThreadInterface[] }) {
+export function ContextualComments({ activeThreads }: { activeThreads: DocsCommentThread[] }) {
   const [editor] = useLexicalComposerContext()
   const { setWidth: setRightPanelWidth } = useRightPanelContext()
   const viewportWidth = useViewportWidth()
@@ -129,7 +94,7 @@ export function ContextualComments({ activeThreads }: { activeThreads: CommentTh
 
   const getThreadPositions = useCallback(() => {
     editor.read(() => {
-      const getFirstAssociatedMarkNodeForThread = (thread: CommentThreadInterface) => {
+      const getFirstAssociatedMarkNodeForThread = (thread: DocsCommentThread) => {
         const markID = thread.markID
         const markNodeKeys = markNodeMap.get(markID)
         if (markNodeKeys === undefined) {
@@ -152,12 +117,11 @@ export function ContextualComments({ activeThreads }: { activeThreads: CommentTh
         return markRect
       }
 
-      const items: ({ node: LexicalNode | null } & (
-        { thread: CommentThreadInterface } | { selection: RangeSelection }
-      ))[] = activeThreads.map((thread) => ({
-        thread,
-        node: getFirstAssociatedMarkNodeForThread(thread),
-      }))
+      const items: ({ node: LexicalNode | null } & ({ thread: DocsCommentThread } | { selection: RangeSelection }))[] =
+        activeThreads.map((thread) => ({
+          thread,
+          node: getFirstAssociatedMarkNodeForThread(thread),
+        }))
 
       if (shouldShowCommentInputBoxAsContextual) {
         items.push({

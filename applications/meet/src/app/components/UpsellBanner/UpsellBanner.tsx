@@ -3,16 +3,18 @@ import { useState } from 'react';
 import { c } from 'ttag';
 
 import { Button } from '@proton/atoms/Button/Button';
-import { SettingsLink } from '@proton/components/index';
+import SettingsLink from '@proton/components/components/link/SettingsLink';
 import { IcCross } from '@proton/icons/icons/IcCross';
 import { IcUpgrade } from '@proton/icons/icons/IcUpgrade';
 import { useMeetSelector } from '@proton/meet/store/hooks';
 import { selectSubscriptionStatus } from '@proton/meet/store/slices/userSlice';
-import { PLANS } from '@proton/payments/core/constants';
+import { TelemetryMeetDashboardEvents, sendMeetDashboardEvent } from '@proton/meet/telemetry/meetTelemetry';
 import { isElectronApp } from '@proton/shared/lib/helpers/desktop';
 import { useFlag } from '@proton/unleash/useFlag';
 
+import { useSendOnce } from '../../telemetry/useSendOnce';
 import { canShowBanner } from '../../utils/canShowBanner';
+import { getMeetUpgradeLink } from '../../utils/getMeetUpgradeLink';
 
 import './UpsellColor.scss';
 
@@ -24,6 +26,10 @@ export const UpsellBanner = () => {
     const { hasSubscriptionWithoutMeet, canUpsell, isLoading } = useMeetSelector(selectSubscriptionStatus);
 
     const [visible, setVisible] = useState(() => canShowBanner(STORAGE_KEY));
+
+    const isShown = visible && meetUpsellEnabled && !isLoading && canUpsell && !isElectronApp;
+    useSendOnce(() => sendMeetDashboardEvent(TelemetryMeetDashboardEvents.upsell_banner_shown), isShown);
+    const upgradeLink = getMeetUpgradeLink(hasSubscriptionWithoutMeet);
 
     const dismiss = () => {
         const expiresAt = Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000;
@@ -59,14 +65,11 @@ export const UpsellBanner = () => {
                         c('Info').jt`Unlock ${unlimitedMeeting} and premium features`
                     }
                 </div>
-                <SettingsLink
-                    path={
-                        hasSubscriptionWithoutMeet ? `/dashboard?addon=meet` : `/dashboard?plan=${PLANS.MEET_BUSINESS}`
-                    }
-                    className="shrink-0"
-                >
-                    <Button className="upsell-banner-button action-button-new rounded-full">{c('Action')
-                        .t`Upgrade`}</Button>
+                <SettingsLink path={upgradeLink} className="shrink-0">
+                    <Button
+                        className="upsell-banner-button action-button-new rounded-full"
+                        onClick={() => sendMeetDashboardEvent(TelemetryMeetDashboardEvents.upsell_banner_clicked)}
+                    >{c('Action').t`Upgrade`}</Button>
                 </SettingsLink>
             </div>
 

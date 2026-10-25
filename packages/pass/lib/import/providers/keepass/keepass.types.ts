@@ -1,4 +1,5 @@
-import type { DeobfuscatedItemExtraField, Maybe, MaybeArray } from '../../../../types';
+import type { DeobfuscatedItemExtraField } from '../../../../types/data/items';
+import type { Maybe, MaybeArray } from '../../../../types/utils';
 
 export type KeePassEntryValue = { _ProtectInMemory: string; __text: string } | string;
 
@@ -21,6 +22,7 @@ export type KeePassEntry = {
 };
 
 export type KeePassGroup = {
+    UUID: string;
     Name: string;
     Entry?: MaybeArray<KeePassEntry>;
     Group?: MaybeArray<KeePassGroup>;
@@ -28,6 +30,9 @@ export type KeePassGroup = {
 
 export type KeePassFile = {
     KeePassFile: {
+        Meta?: {
+            RecycleBinUUID?: string;
+        };
         Root: {
             Group?: MaybeArray<KeePassGroup>;
         };

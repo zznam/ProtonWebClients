@@ -1,19 +1,20 @@
-import type { DocumentUpdate, SquashCommit } from '@proton/docs-proto'
-import {
-  CommitVersion,
-  CreateDocumentUpdate,
-  DocumentUpdateVersion,
-  SquashLock,
-  CreateCommit,
-  CreateSquashCommit,
-} from '@proton/docs-proto'
+import type { DocumentUpdate } from '@proton/docs-proto/Generated/DocumentUpdate'
+import type { SquashCommit } from '@proton/docs-proto/Generated/Squash'
+import { CreateCommit } from '@proton/docs-proto/Factory/CreateCommit'
+import { CreateDocumentUpdate } from '@proton/docs-proto/Factory/CreateDocumentUpdate'
+import { CreateSquashCommit } from '@proton/docs-proto/Factory/CreateSquashCommit'
+import { SquashLock } from '@proton/docs-proto/Generated/Squash'
+import { CommitVersion, DocumentUpdateVersion } from '@proton/docs-proto/Version'
 import type { UseCaseInterface } from '../Domain/UseCase/UseCaseInterface'
-import { Result, GenerateUUID } from '@proton/docs-shared'
-import type { InternalEventBusInterface, NodeMeta, DocumentKeys, DocumentType } from '@proton/docs-shared'
+import { GenerateUUID } from '@proton/docs-shared/GenerateUuid'
+import { Result } from '@proton/docs-shared/Result'
+import type { NodeMeta, DocumentType } from '@proton/docs-shared/BasicTypes'
+import type { DocumentKeys } from '@proton/docs-shared/CryptoTypes'
+import type { InternalEventBusInterface } from '@proton/docs-shared/Events/InternalEventBusInterface'
 import type { DocsApi } from '../Api/DocsApi'
 import type { EncryptMessage } from './EncryptMessage'
 import type { DecryptCommit } from './DecryptCommit'
-import metrics from '@proton/metrics'
+import metrics from '@proton/metrics/metricsInstance'
 import type { UpdatePair, SquashAlgorithm, SquashResult } from './SquashAlgorithm'
 import { SQUASH_FACTOR, GetCommitDULimit } from '../Types/SquashingConstants'
 import type { VerifyCommit } from './VerifyCommit'

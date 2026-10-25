@@ -1,14 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import { logger } from '@protontech/logger';
+
 import { useModalStateObject } from '@proton/components/components/modalTwo/useModalState';
 import ErrorBoundary from '@proton/components/containers/app/ErrorBoundary';
 import StandardErrorPage from '@proton/components/containers/app/StandardErrorPage';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
-import { FeatureCode, useFeature } from '@proton/features';
-import { logger } from '@proton/logger';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
-import { domIsBusy } from '@proton/shared/lib/busy';
+import { domIsBusy } from '@proton/shared/lib/busy/busy';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
 import { CUSTOM_VIEWS, CUSTOM_VIEWS_LABELS, type MARK_AS_STATUS } from '@proton/shared/lib/mail/constants';
 

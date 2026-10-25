@@ -1,6 +1,7 @@
 import { c } from 'ttag';
 
-import { DropdownMenuButton, MimeIcon } from '@proton/components';
+import DropdownMenuButton from '@proton/components/components/dropdown/DropdownMenuButton';
+import { MimeProtonSheet } from '@proton/file-icons/icons/MimeProtonSheet';
 
 interface Props {
     onClick: () => void;
@@ -14,7 +15,7 @@ export const CreateSheetButton = ({ onClick }: Props) => {
             data-testid="dropdown-create-sheet"
         >
             <span className="flex items-center">
-                <MimeIcon name="proton-sheet" className="mr-2" />
+                <MimeProtonSheet className="mr-2" />
                 <span className="mr-2">{
                     // translator: Action button in sidebar dropdown to create a new Proton Sheet
                     c('sheets_2025:Action').t`New spreadsheet`

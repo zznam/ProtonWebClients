@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Priority } from '../../../remote/scheduler';
 import type { GetConversationRemote, IdMapEntry, RemoteConversation } from '../../../remote/types';
 import type {
+    ArtifactAssetPointer,
     Conversation,
     ConversationId,
     EditConversation,
@@ -33,9 +34,28 @@ export type SetConversationAgentAction = {
     agentId: string | undefined;
 };
 
+export type SetConversationArtifactCreationAction = {
+    id: ConversationId;
+    // Once set, a conversation keeps its own choice; there is no "back to the global default".
+    artifactCreation: boolean;
+};
+
 export const addConversation = createAction<Conversation>('lumo/conversation/add');
 export const changeConversationTitle = createAction<EditConversation>('lumo/conversation/changeTitle');
 export const setConversationAgent = createAction<SetConversationAgentAction>('lumo/conversation/setAgent');
+export const setConversationArtifactCreation = createAction<SetConversationArtifactCreationAction>(
+    'lumo/conversation/setArtifactCreation'
+);
+
+export type SetConversationArtifactAssetAction = {
+    id: ConversationId;
+    artifactId: string;
+    pointer: ArtifactAssetPointer;
+};
+
+export const setConversationArtifactAsset = createAction<SetConversationArtifactAssetAction>(
+    'lumo/conversation/setArtifactAsset'
+);
 export const toggleConversationStarred = createAction<ConversationId>('lumo/conversation/toggleStarred');
 export const deleteConversation = createAction<ConversationId>('lumo/conversation/delete');
 export const deleteAllConversations = createAction('lumo/conversation/deleteAll');
@@ -99,6 +119,26 @@ const conversationsReducer = createReducer<ConversationMap>(EMPTY_CONVERSATION_M
                 conversation.agentId = agentId;
             }
         })
+        .addCase(setConversationArtifactCreation, (state, action) => {
+            console.log('Action triggered: setConversationArtifactCreation', action.payload);
+            const { id, artifactCreation } = action.payload;
+            const conversation = state[id];
+            if (conversation) {
+                conversation.artifactCreation = artifactCreation;
+            }
+        })
+        .addCase(setConversationArtifactAsset, (state, action) => {
+            console.log('Action triggered: setConversationArtifactAsset', action.payload);
+            const { id, artifactId, pointer } = action.payload;
+            const conversation = state[id];
+            if (!conversation) {
+                return;
+            }
+            conversation.artifactAssets = {
+                ...conversation.artifactAssets,
+                [artifactId]: pointer,
+            };
+        })
         .addCase(toggleConversationStarred, (state, action) => {
             console.log('Action triggered: toggleConversationStarred', action.payload);
             const id: ConversationId = action.payload;
@@ -118,6 +158,7 @@ const conversationsReducer = createReducer<ConversationMap>(EMPTY_CONVERSATION_M
             console.log('Action triggered: updateConversationStatus', action.payload);
             const payload = action.payload;
             const conversation = state[payload.id];
+            if (!conversation) return;
             conversation.status = payload.status;
         })
         .addCase(pushConversationRequest, (state, action) => {

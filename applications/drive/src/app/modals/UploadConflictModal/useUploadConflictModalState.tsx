@@ -1,6 +1,6 @@
-import type { ModalStateProps } from '@proton/components';
-import type { NodeType } from '@proton/drive';
+import type { ModalStateProps } from '@proton/components/components/modalTwo/useModalState';
 import { UploadConflictStrategy, type UploadConflictType } from '@proton/drive/modules/upload';
+import type { NodeType } from '@proton/drive/sdk';
 
 import type { UploadConflictModalViewProps } from './UploadConflictModalView';
 

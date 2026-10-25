@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 import { c } from 'ttag';
 
+import { useAllSubscriptions } from '@proton/account/allSubscriptions/hooks';
 import { useCustomDomains } from '@proton/account/domains/hooks';
+import { useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
 import { useSamlSSO } from '@proton/account/samlSSO/hooks';
 import { useUser } from '@proton/account/user/hooks';
@@ -13,10 +15,11 @@ import { Tooltip } from '@proton/atoms/Tooltip/Tooltip';
 import { IcCrossBig } from '@proton/icons/icons/IcCrossBig';
 import { IcGlobe } from '@proton/icons/icons/IcGlobe';
 import { IcPlus } from '@proton/icons/icons/IcPlus';
-import { planSupportsSSO } from '@proton/payments/core/plan/helpers';
+import { getIsSsoAvailable } from '@proton/payments/core/plan/helpers';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
-import type { Domain, SSO } from '@proton/shared/lib/interfaces';
-import { IDP_TYPE } from '@proton/shared/lib/interfaces';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
+import type { SSO } from '@proton/shared/lib/interfaces/SSO';
+import { IDP_TYPE } from '@proton/shared/lib/interfaces/SSO';
 import securityUpsellSvg from '@proton/styles/assets/img/illustrations/security-upsell.svg';
 import { useFlag } from '@proton/unleash/useFlag';
 import clsx from '@proton/utils/clsx';
@@ -27,7 +30,7 @@ import type { ModalStateProps } from '../../../components/modalTwo/useModalState
 import useModalState from '../../../components/modalTwo/useModalState';
 import Option from '../../../components/option/Option';
 import SelectTwo from '../../../components/selectTwo/SelectTwo';
-import InputFieldTwo from '../../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../../components/v2/field/InputField';
 import SettingsLayout from '../../account/SettingsLayout';
 import SettingsLayoutLeft from '../../account/SettingsLayoutLeft';
 import SettingsLayoutRight from '../../account/SettingsLayoutRight';
@@ -297,6 +300,8 @@ const SsoPage = ({ app }: { app: APP_NAMES }) => {
     const [openSubscriptionModal, loadingSubscriptionModal] = useSubscriptionModal();
     const [{ permissions }] = useUserPermissions();
     const isSsoForPbsEnabled = useFlag('SsoForPbs');
+    const [allSubscriptions] = useAllSubscriptions();
+    const [entitlements, loadingEntitlements] = useEntitlementChecksForOrgAndUser();
     const isDisableSsoBackupPasswordEnabled = useFlag('DisableSsoBackupPassword');
 
     const [setupSSODomainModalProps, setSetupSSODomainModalOpen, renderSetupSSODomainModal] = useModalState();
@@ -308,7 +313,7 @@ const SsoPage = ({ app }: { app: APP_NAMES }) => {
     const [preferredDomainID, setPreferredDomainID] = useState<Domain['ID'] | undefined>(undefined);
     const [selectedIDPType, setSelectedIDPType] = useState<IDP_TYPE | null>(null);
 
-    if (!customDomains || !samlSSO || !organization) {
+    if (!customDomains || !samlSSO || !organization || !allSubscriptions || loadingEntitlements) {
         return <Loader />;
     }
 
@@ -316,7 +321,7 @@ const SsoPage = ({ app }: { app: APP_NAMES }) => {
 
     const ssoAppInfo = getSsoAppInfo(app, organization.PlanName);
 
-    if (!planSupportsSSO(organization.PlanName, isSsoForPbsEnabled)) {
+    if (!getIsSsoAvailable({ hasSso: entitlements.hasSso, subscriptions: allSubscriptions, isSsoForPbsEnabled })) {
         return (
             <SettingsSectionWide>
                 <PromotionBanner

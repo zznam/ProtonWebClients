@@ -11,7 +11,7 @@ import { useUser } from '@proton/account/user/hooks';
 import { useApi } from '@proton/app-context/useApi';
 import { useConfig } from '@proton/app-context/useConfig';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { IcArrowRight } from '@proton/icons/icons/IcArrowRight';
 import { useAutomaticCurrency } from '@proton/payments-ui/client-extensions/useAutomaticCurrency';
 import { usePaymentsApi } from '@proton/payments-ui/react-extensions/usePaymentsApi';
@@ -29,7 +29,7 @@ import { getAppHref } from '@proton/shared/lib/apps/helper';
 import type { APP_NAMES } from '@proton/shared/lib/constants';
 import { APPS } from '@proton/shared/lib/constants';
 import { isElectronApp } from '@proton/shared/lib/helpers/desktop';
-import { Audience } from '@proton/shared/lib/interfaces';
+import { Audience } from '@proton/shared/lib/interfaces/Subscription';
 
 import Loader from '../../components/loader/Loader';
 import useLoad from '../../hooks/useLoad';
@@ -39,7 +39,7 @@ import { usePlansSectionTelemetry } from './plansSectionTelemetry';
 import PlanSelection from './subscription/PlanSelection';
 import { UpsellModalTelemetryProvider, useSubscriptionModal } from './subscription/SubscriptionModalProvider';
 import { SUBSCRIPTION_STEPS } from './subscription/constants';
-import { getDefaultSelectedProductPlans } from './subscription/helpers';
+import { getDefaultSelectedProductPlans } from './subscription/helpers/payment';
 
 const getSearchParams = (search: string) => {
     const params = new URLSearchParams(search);

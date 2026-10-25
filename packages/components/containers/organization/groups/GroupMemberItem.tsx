@@ -1,11 +1,17 @@
 import { c } from 'ttag';
 
 import { isOrgKeyRequired } from '@proton/account/organizationRoles/helpers';
-import { selectIsKeylessSsoOrganizationPlan } from '@proton/account/scimSetup';
+import { selectIsKeylessSsoOrganizationPlan } from '@proton/account/scimSetup/selectors';
 import { useSelector } from '@proton/redux-shared-store/sharedProvider';
 import { hasBit } from '@proton/shared/lib/helpers/bitset';
-import type { EnhancedMember, Group, GroupMember } from '@proton/shared/lib/interfaces';
-import { GROUP_MEMBER_PERMISSIONS, GROUP_MEMBER_STATE, GROUP_MEMBER_TYPE } from '@proton/shared/lib/interfaces';
+import type { Group } from '@proton/shared/lib/interfaces/Group';
+import type { GroupMember } from '@proton/shared/lib/interfaces/GroupMember';
+import {
+    GROUP_MEMBER_PERMISSIONS,
+    GROUP_MEMBER_STATE,
+    GROUP_MEMBER_TYPE,
+} from '@proton/shared/lib/interfaces/GroupMember';
+import type { EnhancedMember } from '@proton/shared/lib/interfaces/Member';
 import { getIsMemberSetup } from '@proton/shared/lib/keys/memberHelper';
 import { useFlag } from '@proton/unleash/useFlag';
 

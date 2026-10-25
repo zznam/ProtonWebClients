@@ -4,10 +4,10 @@ import { Href } from '@proton/atoms/Href/Href';
 import { MAIL_APP_NAME } from '@proton/shared/lib/constants';
 import { requiredValidator } from '@proton/shared/lib/helpers/formValidators';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { Domain } from '@proton/shared/lib/interfaces';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
 
 import Alert from '../../components/alert/Alert';
-import InputFieldTwo from '../../components/v2/field/InputField';
+import { InputField as InputFieldTwo } from '../../components/v2/field/InputField';
 
 interface Props {
     domain: Domain | undefined;

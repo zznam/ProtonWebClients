@@ -10,7 +10,7 @@ import type { KtState } from '@proton/account/kt';
 import type { OrganizationKeyState } from '@proton/account/organizationKey';
 import { getPublicKeysForInboxThunk } from '@proton/account/publicKeys/publicKeysForInbox';
 import type { UserKeysState } from '@proton/account/userKeys';
-import type { ProtonThunkArguments } from '@proton/redux-shared-store-types';
+import type { ProtonThunkArguments } from '@proton/redux-shared-store-types/interface';
 import {
     type SetupForwardingParameters,
     deleteForwarding as deleteForwardingConfig,
@@ -23,9 +23,11 @@ import {
 } from '@proton/shared/lib/api/forwardings';
 import { getSilentApi } from '@proton/shared/lib/api/helpers/customConfig';
 import { getAddressFlagsData } from '@proton/shared/lib/helpers/address';
-import { type Address, ForwardingType, type OutgoingAddressForwarding } from '@proton/shared/lib/interfaces';
-import { getActiveAddressKeys, getPrimaryActiveAddressKeyForEncryption } from '@proton/shared/lib/keys';
+import type { Address } from '@proton/shared/lib/interfaces/Address';
+import { ForwardingType, type OutgoingAddressForwarding } from '@proton/shared/lib/interfaces/AddressForwarding';
 import { getInternalParametersPrivate } from '@proton/shared/lib/keys/forward/forward';
+import { getActiveAddressKeys } from '@proton/shared/lib/keys/getActiveKeys';
+import { getPrimaryActiveAddressKeyForEncryption } from '@proton/shared/lib/keys/getPrimaryKey';
 
 import { getOutgoingAddressForwarding, outgoingAddressForwardingsActions } from './outgoing';
 

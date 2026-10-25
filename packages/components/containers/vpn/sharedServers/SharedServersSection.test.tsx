@@ -1,18 +1,18 @@
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { getModelState } from '@proton/account/testing/getModelState';
 import { getOrganizationState } from '@proton/account/testing/redux-state';
-import { getModelState } from '@proton/account/tests';
 import { getOrgPermissions } from '@proton/account/userPermissions';
 import { buildSubscription } from '@proton/payments/testing/buildSubscription';
 import { getSubscriptionState } from '@proton/payments/testing/redux-state';
-import type { UserModel } from '@proton/shared/lib/interfaces';
+import type { UserModel } from '@proton/shared/lib/interfaces/User';
 
 import { renderWithProviders } from '../../contacts/tests/render';
 import { organization } from '../../payments/subscription/__mocks__/data';
 import SharedServersSection from './SharedServersSection';
 import { SharedServersBuilder } from './SharedServersSection.test.builder';
-import useSharedServersHook from './useSharedServers';
+import { useSharedServers as useSharedServersHook } from './useSharedServers';
 
 jest.mock('@proton/app-context/useNotifications', () => ({
     useNotifications: jest.fn().mockReturnValue({ createNotification: jest.fn() }),
@@ -28,6 +28,11 @@ describe('SharedServersSection', () => {
         subscription: getSubscriptionState(vpnSubscription),
         user: getModelState({ ...({ ID: 'user-123' } as UserModel) }),
         organization: getOrganizationState(organization),
+        entitlements: getModelState({
+            UserEntitlements: [],
+            OrganizationEntitlements: [],
+            MemberEntitlements: [],
+        }),
         userPermissions: getModelState({
             Roles: [],
             Permissions: ['account.shared_server.update' as const],

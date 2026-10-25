@@ -6,11 +6,11 @@ import { c, msgid } from 'ttag';
 import { syncDomain } from '@proton/account/domains/actions';
 import { useCustomDomains } from '@proton/account/domains/hooks';
 import { useDomainsAddresses } from '@proton/account/domainsAddresses/hooks';
+import { useEntitlementChecksForOrgAndUser } from '@proton/account/entitlementCatalog/hooks';
 import { useOrganization } from '@proton/account/organization/hooks';
-import { useUser } from '@proton/account/user/hooks';
 import { useUserPermissions } from '@proton/account/userPermissions/hooks';
 import { Button } from '@proton/atoms/Button/Button';
-import { useLoading } from '@proton/hooks';
+import useLoading from '@proton/hooks/useLoading';
 import { PLANS, PLAN_NAMES } from '@proton/payments/core/constants';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import {
@@ -21,9 +21,10 @@ import {
     ORGANIZATION_STATE,
     UPSELL_COMPONENT,
 } from '@proton/shared/lib/constants';
-import { getUpsellRef } from '@proton/shared/lib/helpers/upsell';
+import { getUpsellRef } from '@proton/shared/lib/helpers/ref';
 import { getDomainsSupportURL } from '@proton/shared/lib/helpers/url';
-import type { Domain, DomainAddress } from '@proton/shared/lib/interfaces';
+import type { DomainAddress } from '@proton/shared/lib/interfaces/Address';
+import type { Domain } from '@proton/shared/lib/interfaces/Domain';
 import { useFlag } from '@proton/unleash/useFlag';
 import isTruthy from '@proton/utils/isTruthy';
 
@@ -264,10 +265,10 @@ const DomainsSectionUpgrade = () => {
 
 const DomainsSection = ({ onceRef }: { onceRef: MutableRefObject<boolean> }) => {
     const [customDomains] = useCustomDomains();
-    const [user] = useUser();
+    const [entitlements, loadingEntitlements] = useEntitlementChecksForOrgAndUser();
     const [{ permissions }] = useUserPermissions();
 
-    if (permissions === null) {
+    if (permissions === null || loadingEntitlements) {
         return (
             <SettingsSectionWide>
                 <Loader />
@@ -275,7 +276,7 @@ const DomainsSection = ({ onceRef }: { onceRef: MutableRefObject<boolean> }) => 
         );
     }
 
-    const hasPermission = !!permissions?.['account.domain.read'] && (user.hasPaidMail || user.hasPaidMeet);
+    const hasPermission = !!permissions?.['account.domain.read'] && entitlements.hasCustomDomainAddresses;
 
     return hasPermission || (!hasPermission && customDomains?.length) ? (
         <DomainsSectionInternal onceRef={onceRef} />

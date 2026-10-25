@@ -8,8 +8,8 @@ import { Button } from '@proton/atoms/Button/Button';
 import { useContact } from '@proton/mail/store/contacts/contactHooks';
 import { APPS } from '@proton/shared/lib/constants';
 import { getKeyUsedForContact } from '@proton/shared/lib/contacts/keyVerifications';
-import type { Key } from '@proton/shared/lib/interfaces';
-import type { Contact } from '@proton/shared/lib/interfaces/contacts';
+import type { Key } from '@proton/shared/lib/interfaces/Key';
+import type { Contact } from '@proton/shared/lib/interfaces/contacts/Contact';
 
 import Alert from '../../../components/alert/Alert';
 import Copy from '../../../components/button/Copy';
@@ -21,11 +21,11 @@ import ModalTwoFooter from '../../../components/modalTwo/ModalFooter';
 import ModalTwoHeader from '../../../components/modalTwo/ModalHeader';
 import type { ContactClearDataConfirmProps } from './ContactClearDataConfirmModal';
 
-export interface ContactDecryptionErrorProps {
+interface ContactDecryptionErrorProps {
     contactID: string;
 }
 
-export interface ContactDecryptionErrorModalProps {
+interface ContactDecryptionErrorModalProps {
     onClearDataConfirm: (props: ContactClearDataConfirmProps) => void;
 }
 

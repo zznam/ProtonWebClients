@@ -3,7 +3,6 @@ import { Suspense, forwardRef, lazy, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import DrawerApp from '@proton/components/components/drawer/DrawerApp';
-import useLumoInMail from '@proton/components/components/drawer/views/lumoAgent/useLumoInMail';
 import FeatureTour from '@proton/components/components/featureTour/FeatureTour';
 import SmartBanner from '@proton/components/components/smartBanner/SmartBanner';
 import PrivateAppContainer from '@proton/components/containers/app/PrivateAppContainer';
@@ -12,11 +11,12 @@ import { MESSAGE_ACTIONS } from '@proton/mail-renderer/constants';
 import PassAliasesContainer from '@proton/pass/components/Drawer/PassAliases/PassAliasesContainer';
 import { APPS } from '@proton/shared/lib/constants';
 import { isElectronMail } from '@proton/shared/lib/helpers/desktop';
-import type { Recipient } from '@proton/shared/lib/interfaces';
+import type { Recipient } from '@proton/shared/lib/interfaces/Address';
 
 import { ADVANCED_SEARCH_OVERLAY_CLOSE_EVENT } from '../../constants';
 import { useOnCompose, useOnMailTo } from '../../containers/ComposeProvider';
 import { ComposeTypes } from '../../hooks/composer/useCompose';
+import { LumoFloatingPanelProvider } from '../../lumo/floating/LumoFloatingPanelProvider';
 import LumoMailProvider from '../../lumo/provider/LumoMailProvider';
 import { selectHasFocusedComposer } from '../../store/composers/composerSelectors';
 import { useMailDispatch, useMailSelector } from '../../store/hooks';
@@ -39,7 +39,6 @@ const PrivateLayout = ({ children }: Props, ref: Ref<HTMLDivElement>) => {
     const onMailTo = useOnMailTo();
     const isSidebarExpanded = useMailSelector(selectLayoutIsExpanded);
     const hasComposerInFocus = useMailSelector(selectHasFocusedComposer);
-    const isLumoInMailEnabled = useLumoInMail();
 
     const handleContactsCompose = async (emails: Recipient[], attachments: File[]) => {
         await onCompose({
@@ -93,8 +92,13 @@ const PrivateLayout = ({ children }: Props, ref: Ref<HTMLDivElement>) => {
         </PrivateAppContainer>
     );
 
-    // Mounted above the drawer so the Lumo conversation survives drawer tab switches and open/close.
-    return isLumoInMailEnabled ? <LumoMailProvider>{content}</LumoMailProvider> : content;
+    // Mounted above the drawer so the Lumo conversation survives drawer tab switches, open/close and detach.
+    // Always rendered, so the off-switch never remounts the layout; each provider gates its own Lumo setup.
+    return (
+        <LumoFloatingPanelProvider>
+            <LumoMailProvider>{content}</LumoMailProvider>
+        </LumoFloatingPanelProvider>
+    );
 };
 
 export default forwardRef(PrivateLayout);

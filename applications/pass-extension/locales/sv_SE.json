@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } för Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } för iOS"
-      ],
       "Accept": [
         "Acceptera"
       ],
@@ -232,6 +226,9 @@
       "Create a ${ BRAND_NAME } account": [
         "Skapa ett ${ BRAND_NAME }-konto"
       ],
+      "Create a login": [
+        "Skapa en inloggning"
+      ],
       "Create a new vault": [
         "Skapa ett nytt valv"
       ],
@@ -333,6 +330,15 @@
       ],
       "Do not suggest on this website": [
         "Föreslå inte på denna webbplats"
+      ],
+      "Download for Linux": [
+        "Ladda ner för Linux"
+      ],
+      "Download for macOS": [
+        "Ladda ner för macOS"
+      ],
+      "Download for Windows": [
+        "Ladda ner för Windows"
       ],
       "Download this CSV template": [
         "Ladda ner denna CSV-mall"
@@ -486,6 +492,9 @@
       ],
       "Maximum views": [
         "Maximalt antal visningar"
+      ],
+      "More details about how to export": [
+        "Mer detaljer om hur man exporterar"
       ],
       "More info": [
         "Mer info"
@@ -694,6 +703,12 @@
       "Show Less": [
         "Visa mindre"
       ],
+      "Show less": [
+        "Visa mindre"
+      ],
+      "Show more": [
+        "Visa mer"
+      ],
       "Sign back in": [
         "Logga in igen"
       ],
@@ -702,6 +717,9 @@
       ],
       "Sign out": [
         "Logga ut"
+      ],
+      "Skip for now": [
+        "Hoppa över just nu"
       ],
       "Start from scratch": [
         "Börja från början"
@@ -837,9 +855,15 @@
         "Valv"
       ]
     },
+    "Autocomplete": {
+      "${ hiddenResultsCount } more result not shown": [
+        "${ hiddenResultsCount } fler resultat visas inte",
+        "${ hiddenResultsCount } fler resultat visas inte"
+      ]
+    },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "Applikation för stationär dator ${ MAIL_APP_NAME }"
+      "${ appName } Desktop application": [
+        "Applikation för stationär dator ${ appName }"
       ]
     },
     "Button": {
@@ -1102,6 +1126,9 @@
       "Editing item failed": [
         "Misslyckades att redigera objekt"
       ],
+      "Email is not valid": [
+        "E-post är inte giltig"
+      ],
       "Empty CSV file": [
         "Tom CSV-fil"
       ],
@@ -1113,6 +1140,9 @@
       ],
       "Encrypted JSON not supported": [
         "Krypterad JSON stöds inte"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Ange ditt användarnamn utan domänen (@example.com)"
       ],
       "Error reporting problem": [
         "Gick inte rapportera problem"
@@ -1301,6 +1331,9 @@
       "Incorrect backup password. Please try again.": [
         "Felaktigt reservlösenord. Försök igen."
       ],
+      "Incorrect password. Please try again.": [
+        "Felaktigt lösenord. Försök igen."
+      ],
       "Incorrect second password. Please try again.": [
         "Felaktigt andra lösenord. Försök igen."
       ],
@@ -1343,8 +1376,14 @@
       "Network error": [
         "Nätverksfel"
       ],
+      "Not a valid number": [
+        "Inte ett giltigt nummer"
+      ],
       "Passphrase is incorrect": [
         "Lösenfras är fel"
+      ],
+      "Passwords do not match": [
+        "Lösenorden matchar inte"
       ],
       "Permission denied for ${ domainsJSX } website access.": [
         "Behörighet nekad för ${ domainsJSX } webbplatsåtkomst."
@@ -1418,6 +1457,9 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "Skrivbordsappen ${ PASS_APP_NAME } bör vara inloggad."
       ],
+      "The email addresses do not match": [
+        "E-postadresserna matchar inte"
+      ],
       "The URL is in the list": [
         "URL:en finns i listan"
       ],
@@ -1426,6 +1468,15 @@
       ],
       "This domain is already managed by your organization": [
         "Denna domän är redan hanterad av din organisation"
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Detta fält överskrider det maximala antalet ${ maximumLength } tecken."
+      ],
+      "This field is required": [
+        "Detta fält är obligatoriskt"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Detta fält kräver minst ${ minimumLength } tecken."
       ],
       "This invite is no longer available": [
         "Denna inbjudan är inte längre tillgänglig"
@@ -1438,6 +1489,9 @@
       ],
       "Trashing item failed": [
         "Borttagning av objekt misslyckades"
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Prova använda endast bokstäver, siffror och _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Kan inte generera en OTP-kod för detta objekt"
@@ -1475,6 +1529,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Misslyckades att uppdatera valv ”${ payload.content.name }”"
       ],
+      "Username must begin with a letter or digit": [
+        "Användarnamn måste börja med en bokstav eller siffra"
+      ],
+      "Username must end with a letter or digit": [
+        "Användarnamn måste sluta med en bokstav eller siffra"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Misslyckades att skapa valv ”${ payload.content.name }”"
       ],
@@ -1498,6 +1558,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Fel PIN-kod. Försök igen."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Fel återställningsfras. Försök igen eller använd en annan återställningsmetod."
       ],
       "Wrong second password": [
         "Felaktigt andralösenord"
@@ -1588,6 +1651,134 @@
         "Användarnamn"
       ]
     },
+    "Hint": {
+      "Found ${ itemsCount } suggestion, use keyboard to navigate.": [
+        "Hittade ${ itemsCount } förslag, använd tangentbord för att navigera.",
+        "Hittade ${ itemsCount } förslag, använd tangentbord för att navigera."
+      ],
+      "Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.": [
+        "Använd upp och ner tangenterna för att komma åt och bläddra genom förslag efter inmatning. Tryck på Enter för att bekräfta ditt val, eller Esc för att stänga förslagsrutan."
+      ]
+    },
+    "Import Tutorial": {
+      "Account & Data": [
+        "Konto och data"
+      ],
+      "Advanced Options": [
+        "Avancerade alternativ"
+      ],
+      "Autofill and passwords": [
+        "Automatisk ifyllnad och lösenord"
+      ],
+      "Continue export": [
+        "Fortsätt export"
+      ],
+      "Download file": [
+        "Ladda ner fil"
+      ],
+      "Export": [
+        "Exportera"
+      ],
+      "Export All Passwords to File": [
+        "Exportera alla lösenord till fil"
+      ],
+      "Export Data": [
+        "Exportera data"
+      ],
+      "Export data": [
+        "Exportera data"
+      ],
+      "Export items": [
+        "Exportera objekt"
+      ],
+      "Export passwords": [
+        "Exportera lösenord"
+      ],
+      "Export to CSV": [
+        "Exportera till CSV"
+      ],
+      "File": [
+        "Fil"
+      ],
+      "Go to ${ exportPasswords } and select ${ downloadFile }.": [
+        "Gå till ${ exportPasswords } och välj ${ downloadFile }."
+      ],
+      "Go to ${ passwords }.": [
+        "Gå till ${ passwords }."
+      ],
+      "Go to ☰ → ⚙ ${ settings } → Click ${ downloadFile }.": [
+        "Gå till ☰ → ⚙ ${ settings } → Klicka ${ downloadFile }."
+      ],
+      "Identify your password manager.": [
+        "Identifiera din lösenordshanterare."
+      ],
+      "Manage your vault": [
+        "Hantera ditt valv"
+      ],
+      "More actions": [
+        "Fler åtgärder"
+      ],
+      "Open ${ name } and go to ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel }.": [
+        "Öppna ${ name } och gå till ${ advancedOptions } → ${ manageYourVault } → ${ exportLabel }."
+      ],
+      "Open ${ name } and go to ${ menu } → ${ option }.": [
+        "Öppna ${ name } och gå till ${ menu } → ${ option }."
+      ],
+      "Open ${ name } and go to ⋮ → ${ passwordsAndAutofill } → ${ googlePasswordManager }.": [
+        "Öppna ${ name } och gå till⋮ → ${ passwordsAndAutofill } → ${ googlePasswordManager }."
+      ],
+      "Open ${ name } and go to ☰ → ${ settings } → ${ autoFill }.": [
+        "Öppna ${ name } och gå till ☰ → ${ settings } → ${ autoFill }."
+      ],
+      "Open ${ name } and select ${ menu } → ${ option }.": [
+        "Öppna ${ name } och välj ${ menu } → ${ option }."
+      ],
+      "Open ${ name } and select ${ settings }.": [
+        "Öppna ${ name } och välj ${ settings }."
+      ],
+      "Open ${ name } and select ⋯.": [
+        "Öppna ${ name } och välj ⋯."
+      ],
+      "Open ${ name } and select ☰ → ${ passwords }.": [
+        "Öppna ${ name } och välj ☰ → ${ passwords }."
+      ],
+      "Passwords": [
+        "Lösenord"
+      ],
+      "Passwords and Autofill": [
+        "Lösenord och automatisk ifyllning"
+      ],
+      "Passwords and autofill": [
+        "Lösenord och automatisk ifyllning"
+      ],
+      "Select ${ exportLabel } → ${ chooseJson } → ${ exportAgain }.": [
+        "Välj ${ exportLabel } → ${ chooseJson } → ${ exportAgain }."
+      ],
+      "Select ${ menu } → ${ option }.": [
+        "Välj ${ menu } → ${ option }."
+      ],
+      "Select ${ option }.": [
+        "Välj ${ option }."
+      ],
+      "Select ⋯ → ${ exportPasswords }.": [
+        "Välj ⋯ → ${ exportPasswords }."
+      ],
+      "Settings": [
+        "Inställningar"
+      ],
+      "Submit": [
+        "Skicka"
+      ],
+      "Vault": [
+        "Valv"
+      ],
+      "Vault options": [
+        "Valvalternativ"
+      ],
+      "your username": [
+        "ditt användarnamn"
+      ]
+    },
     "Info": {
       "\"${ payload.itemName }\" item was dismissed": [
         "Objekt ”${ payload.itemName }” avfärdades"
@@ -1614,6 +1805,9 @@
       "${ forwardedEmailsCount } forwarded": [
         "${ forwardedEmailsCount } vidarebefordrat",
         "${ forwardedEmailsCount } vidarebefordrade"
+      ],
+      "${ imported } of ${ total } (${ percentage }%)": [
+        "${ imported } av ${ total } (${ percentage } %)"
       ],
       "${ inviterEmail } wants to share an item with a group you administer.": [
         "${ inviterEmail } vill dela ett objekt med en grupp du administrerar."
@@ -1889,9 +2083,6 @@
       "Can view this item.": [
         "Kan visa detta objekt."
       ],
-      "Change your password": [
-        "Ändra ditt lösenord"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Kontrollerar ${ compromised.progress.completed } av ${ compromised.progress.total } lösenord"
       ],
@@ -1979,6 +2170,9 @@
       "Domain: ${ domainPath } or @": [
         "Domän: ${ domainPath } eller @"
       ],
+      "Don’t close this tab": [
+        "Stäng inte denna flik"
+      ],
       "Download pass-cli from ${ passCliLink }.": [
         "Ladda ner pass-cli från ${ passCliLink }."
       ],
@@ -1993,9 +2187,6 @@
       ],
       "Editor": [
         "Redigerare"
-      ],
-      "email": [
-        "e-post"
       ],
       "Email address successfully deleted from monitoring": [
         "E-postadress borttagen från övervakning"
@@ -2093,9 +2284,6 @@
       "Fill in the CSV with your data": [
         "Fyll i CSV med dina data"
       ],
-      "finance": [
-        "finans"
-      ],
       "Folder deleted": [
         "Mapp borttagen"
       ],
@@ -2172,6 +2360,9 @@
       ],
       "invites you to access items in": [
         "bjöd in dig för att komma åt objekt i detta valv"
+      ],
+      "iOS and Android Apps": [
+        "Appar för iOS och Android"
       ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Det verkar som att du redan är inloggad på ${ PASS_APP_NAME }. Om du försöker logga in med ett annat konto, logga ut från tillägget först."
@@ -2255,9 +2446,6 @@
       "Medium Priority": [
         "Medium prioritet"
       ],
-      "Monitor accounts": [
-        "Övervaka konton"
-      ],
       "Monitoring settings successfully updated": [
         "Övervakningsinställningar uppdaterades"
       ],
@@ -2275,7 +2463,8 @@
         "Flyttar alla objekt från “${ payload.content.name }“"
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Att flytta ett objekt till ett annat valv kommer att radera dess säkra länkar."
+        "Att flytta ett objekt till annat valv kommer radera dess säkra länkar.",
+        "Att flytta objekt till annat valv kommer radera deras säkra länkar."
       ],
       "Moving items": [
         "Flyttar objekt"
@@ -2372,9 +2561,6 @@
       ],
       "Passkey sign-in": [
         "Passkey-inloggning"
-      ],
-      "password": [
-        "lösenord"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Lösenordslås har registrerats. Använd den för att låsa upp ${ PASS_APP_NAME }"
@@ -2604,6 +2790,9 @@
       ],
       "Save passkey": [
         "Spara passkey"
+      ],
+      "Scan to download": [
+        "Skanna för att ladda ner"
       ],
       "Secure links": [
         "Säkra länkar"
@@ -2864,9 +3053,6 @@
       "User's access successfully updated": [
         "Användarens åtkomst uppdaterad"
       ],
-      "username": [
-        "användarnamn"
-      ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Valv “${ payload.content.name }“ borttaget"
       ],
@@ -3080,6 +3266,9 @@
       "${ hours } hour": [
         "${ hours } timme",
         "${ hours } timmar"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } tecken"
       ],
       "${ minutes } minute": [
         "${ minutes } minut",
@@ -3693,6 +3882,9 @@
       "LinkedIn account": [
         "LinkedIn-konto"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Inloggning"
       ],
@@ -3701,6 +3893,9 @@
       ],
       "Logins": [
         "Inloggningar"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Brevlådor"
@@ -4017,6 +4212,9 @@
       "Server": [
         "Server"
       ],
+      "Service": [
+        "Tjänst"
+      ],
       "Settings": [
         "Inställningar"
       ],
@@ -4235,6 +4433,9 @@
       ],
       "WiFi network": [
         "WiFi-nätverk"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Arbetsdetaljer"
@@ -4528,6 +4729,9 @@
       ],
       "E.g., ": [
         "T.ex., "
+      ],
+      "E.g.: Google": [
+        "T.ex.: Google"
       ],
       "Email address": [
         "E-postadress"
@@ -4826,6 +5030,9 @@
       "Add mailbox": [
         "Lägg till brevlåda"
       ],
+      "Add one account": [
+        "Lägg till ett konto"
+      ],
       "Adjust autofill behaviors to change where logins are suggested.": [
         "Justera beteenden för autofyll för att ändra var inloggningar föreslås."
       ],
@@ -4861,6 +5068,9 @@
       ],
       "Browser permission required": [
         "Webbläsarbehörighet krävs"
+      ],
+      "Browsers": [
+        "Webbläsare"
       ],
       "Cancel changing your email?": [
         "Avbryt ändring av din e-post?"
@@ -4909,6 +5119,9 @@
       ],
       "Create subfolder in \"${ folderName }\"": [
         "Skapa undermapp i ”${ folderName }”"
+      ],
+      "Create your first login": [
+        "Skapa din första inloggning"
       ],
       "Created": [
         "Skapad"
@@ -5007,14 +5220,32 @@
       "Excluded items": [
         "Exkluderade objekt"
       ],
+      "Export": [
+        "Exportera"
+      ],
+      "Export from ${ provider.title }": [
+        "Exportera från ${ provider.title }"
+      ],
       "Fill & copy password": [
         "Fyll och kopiera lösenord"
+      ],
+      "Fill in your details": [
+        "Fyll i dina detaljer"
       ],
       "Fill password": [
         "Fyll lösenord"
       ],
+      "First login created": [
+        "Första inloggning skapad"
+      ],
       "Folder options": [
         "Mappalternativ"
+      ],
+      "Get mobile and desktop apps": [
+        "Skaffa appar för mobil och stationär dator"
+      ],
+      "Get mobile apps": [
+        "Skaffa mobilappar"
       ],
       "Get Started": [
         "Kom igång"
@@ -5043,8 +5274,17 @@
       "Import - ${ date }": [
         "Importera – ${ date }"
       ],
+      "Import failed": [
+        "Import misslyckades"
+      ],
+      "Import successful": [
+        "Import lyckades"
+      ],
       "Import to vault(s)": [
         "Importera till valv"
+      ],
+      "Imported from:": [
+        "Importerad från:"
       ],
       "Importing your data": [
         "Importerar din data"
@@ -5174,6 +5414,9 @@
       "Password Health": [
         "Lösenordshälsa"
       ],
+      "Password managers": [
+        "Lösenordshanterare"
+      ],
       "Pause monitoring?": [
         "Pausa övervakning?"
       ],
@@ -5248,6 +5491,9 @@
       "Select the default domain for aliases": [
         "Välj standarddomänen för alias"
       ],
+      "Select your password manager": [
+        "Välj din lösenordshanterare"
+      ],
       "Set access level": [
         "Ställ in åtkomstnivå"
       ],
@@ -5319,6 +5565,12 @@
       ],
       "Upgrade to check for compromised passwords": [
         "Uppgradera för att kontrollera efter komprometterade lösenord"
+      ],
+      "Upload": [
+        "Ladda upp"
+      ],
+      "Upload your data": [
+        "Ladda upp dina data"
       ],
       "URL matching": [
         "URL-matchning"
@@ -5416,8 +5668,16 @@
       "OTP secret or URI is invalid": [
         "OTP-hemlighet eller URI är ogiltig"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Lösenord måste innehålla minst ${ MIN_PASSWORD_LENGTH } tecken",
+        "Lösenord måste innehålla minst ${ MIN_PASSWORD_LENGTH } tecken"
+      ],
       "Section name cannot be empty": [
         "Namn på sektion kan inte vara tom"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Prova ett kortare användarnamn (max ${ n } antal tecken)",
+        "Prova ett kortare användarnamn (max ${ n } antal tecken)"
       ],
       "URL already exists": [
         "URL finns redan"
@@ -5579,9 +5839,6 @@
       ],
       "Move to trash": [
         "Flytta till papperskorg"
-      ],
-      "Name is required": [
-        "Namn är obligatoriskt"
       ],
       "No items": [
         "Inga objekt"

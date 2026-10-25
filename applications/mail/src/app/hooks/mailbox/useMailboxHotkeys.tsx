@@ -3,12 +3,12 @@ import { useHistory } from 'react-router-dom';
 
 import type { Location } from 'history';
 
-import type { HotkeyTuple } from '@proton/components/hooks/useHotkeys';
-import { useHotkeys } from '@proton/components/hooks/useHotkeys';
+import type { HotkeyTuple } from '@proton/hooks/useHotkeys';
+import { useHotkeys } from '@proton/hooks/useHotkeys';
 import { labelIncludes } from '@proton/mail/helpers/location';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { MAILBOX_LABEL_IDS } from '@proton/shared/lib/constants';
-import { KeyboardKey } from '@proton/shared/lib/interfaces';
+import { KeyboardKey } from '@proton/shared/lib/interfaces/Hotkeys';
 import { MARK_AS_STATUS } from '@proton/shared/lib/mail/constants';
 import { VIEW_LAYOUT } from '@proton/shared/lib/mail/mailSettings';
 import type { Filter } from '@proton/shared/lib/mail/search';

@@ -1,9 +1,10 @@
-import { startAccountSessionsListener, startPersistListener } from '@proton/account';
+import { startAccountSessionsListener } from '@proton/account/accountSessions/listener';
 import { bootstrapEvent } from '@proton/account/bootstrap/action';
+import { startPersistListener } from '@proton/account/persist/listener';
 import { startCalendarEventListener } from '@proton/calendar/calendars/listener';
 import { startHolidaysDirectoryListener } from '@proton/calendar/holidaysDirectory/listener';
 import { startOffersDeliveryListener } from '@proton/offers-delivery/store/listener';
-import { calendarSettingsHeartbeatListener } from '@proton/redux-shared-store/calendarSettingsHeartbeatListener';
+import { calendarSettingsHeartbeatListener } from '@proton/redux-shared-store/settingsHeartbeat/calendarSettingsHeartbeatListener';
 import { startSharedListening } from '@proton/redux-shared-store/sharedListeners';
 
 import { startListeningBusySlots } from './busySlots/busySlotsListeners';

@@ -25,12 +25,6 @@
       ]
     },
     "Action": {
-      "${ PASS_SHORT_APP_NAME } for Android": [
-        "${ PASS_SHORT_APP_NAME } pre Android"
-      ],
-      "${ PASS_SHORT_APP_NAME } for iOS": [
-        "${ PASS_SHORT_APP_NAME } pre iOS"
-      ],
       "Accept": [
         "Prijať"
       ],
@@ -346,6 +340,15 @@
       "Done": [
         "Hotovo"
       ],
+      "Download for Linux": [
+        "Stiahnuť pre Linux"
+      ],
+      "Download for macOS": [
+        "Stiahnuť pre macOS"
+      ],
+      "Download for Windows": [
+        "Stiahnuť pre Windows"
+      ],
       "Download this CSV template": [
         "Stiahnuť si túto CSV šablónu"
       ],
@@ -556,6 +559,9 @@
       "Open navigation": [
         "Otvoriť menu"
       ],
+      "Open platform selection dropdown": [
+        "Rozbaľovacie menu na výber otvorenej platformy"
+      ],
       "Organize vaults": [
         "Usporiadať trezory"
       ],
@@ -717,6 +723,12 @@
       ],
       "Show Less": [
         "Zobraziť menej"
+      ],
+      "Show less": [
+        "Zobraziť menej"
+      ],
+      "Show more": [
+        "Zobraziť viac"
       ],
       "Sign in with ${ BRAND_NAME }": [
         "Prihlásiť sa pomocou ${ BRAND_NAME }"
@@ -883,8 +895,8 @@
       ]
     },
     "Browser": {
-      "${ MAIL_APP_NAME } Desktop application": [
-        "${ MAIL_APP_NAME } desktopová aplikácia"
+      "${ appName } Desktop application": [
+        "Desktopová aplikácia ${ appName }"
       ]
     },
     "Button": {
@@ -1060,6 +1072,9 @@
       "Authentication failed. Confirm your second password in order to proceed with the export": [
         "Overenie zlyhalo. Potvrďte svoje druhé heslo, ak chcete pokračovať v exporte"
       ],
+      "Biometric authentication cancelled.": [
+        "Biometrické overenie zrušené."
+      ],
       "Biometric authentication failed.": [
         "Biometrické overenie zlyhalo."
       ],
@@ -1144,6 +1159,9 @@
       "Editing item failed": [
         "Upravenie položky zlyhalo"
       ],
+      "Email is not valid": [
+        "Emailová adresa nie je platná"
+      ],
       "Empty CSV file": [
         "Prázdny CSV súbor"
       ],
@@ -1155,6 +1173,9 @@
       ],
       "Encrypted JSON not supported": [
         "Šifrovaný JSON nie je podporovaný"
+      ],
+      "Enter your username without the domain (@example.com)": [
+        "Zadajte používateľské meno bez domény (@príklad.com)"
       ],
       "Error reporting problem": [
         "Chyba pri nahlasovaní problému"
@@ -1348,6 +1369,9 @@
       "Incorrect backup password. Please try again.": [
         "Nesprávne záložné heslo. Skúste to znova, prosím."
       ],
+      "Incorrect password. Please try again.": [
+        "Nesprávne heslo. Skúste to prosím, znovu."
+      ],
       "Incorrect second password. Please try again.": [
         "Nesprávne druhé heslo. Skúste to znova, prosím."
       ],
@@ -1381,8 +1405,14 @@
       "Network error": [
         "Chyba siete"
       ],
+      "Not a valid number": [
+        "Neplatné číslo"
+      ],
       "Passphrase is incorrect": [
         "Prístupová fráza je nesprávna"
+      ],
+      "Passwords do not match": [
+        "Heslá sa nezhodujú"
       ],
       "PIN codes do not match": [
         "PIN kódy sa nezhodujú"
@@ -1447,11 +1477,23 @@
       "The ${ PASS_APP_NAME } desktop app should be logged in.": [
         "V desktopovej aplikácii ${ PASS_APP_NAME } by ste mali byť prihlásení."
       ],
+      "The email addresses do not match": [
+        "Emailové adresy sa nezhodujú"
+      ],
       "The session has expired. Please sign in again.": [
         "Platnosť relácie vypršala. Prihláste sa znovu, prosím."
       ],
       "There was an error while removing the secure link. Please try again in a few minutes.": [
         "Pri odstraňovaní bezpečného odkazu došlo k chybe. Skúste to o niekoľko minút znova, prosím."
+      ],
+      "This field exceeds the maximum of ${ maximumLength } characters.": [
+        "Toto pole presahuje maximálny počet znakov ${ maximumLength }."
+      ],
+      "This field is required": [
+        "Povinné pole"
+      ],
+      "This field requires a minimum of ${ minimumLength } characters.": [
+        "Toto pole musí obsahovať minimálne ${ minimumLength } znakov."
       ],
       "This invite is no longer available": [
         "Táto pozvánka už nie je k dispozícii"
@@ -1464,6 +1506,9 @@
       ],
       "Try reaching out to the link owner.": [
         "Skúste kontaktovať vlastníka odkazu."
+      ],
+      "Try using only letters, numerals, and _.-": [
+        "Skúste používať iba písmená, číslice a _.-"
       ],
       "Unable to generate an OTP code for this item": [
         "Pre túto položku nie je možné vygenerovať OTP kód"
@@ -1498,6 +1543,12 @@
       "Updating vault \"${ payload.content.name }\" failed": [
         "Aktualizácia trezoru \"${ payload.content.name }\" zlyhala"
       ],
+      "Username must begin with a letter or digit": [
+        "Používateľské meno musí začínať písmenom alebo číslom"
+      ],
+      "Username must end with a letter or digit": [
+        "Používateľské meno musí končiť písmenom alebo číslom"
+      ],
       "Vault \"${ payload.content.name }\" creation failed": [
         "Vytvorenie trezoru \"${ payload.content.name }\" zlyhalo"
       ],
@@ -1521,6 +1572,9 @@
       ],
       "Wrong PIN code. Try again.": [
         "Nesprávny PIN. Skúste to znova."
+      ],
+      "Wrong recovery phrase. Try again or use another recovery method.": [
+        "Zlá obnovovacia fráza. Skúste to znovu, alebo použite inú metódu obnovenia."
       ],
       "Wrong second password": [
         "Nesprávne druhé heslo"
@@ -1928,9 +1982,6 @@
       "Can view this item.": [
         "Môže zobraziť túto položku."
       ],
-      "Change your password": [
-        "Zmeňte si heslo"
-      ],
       "Checking ${ compromised.progress.completed } of ${ compromised.progress.total } passwords": [
         "Kontrola ${ compromised.progress.completed } z ${ compromised.progress.total } hesiel"
       ],
@@ -2017,9 +2068,6 @@
       ],
       "Editor": [
         "Editor"
-      ],
-      "email": [
-        "email"
       ],
       "Email address successfully deleted from monitoring": [
         "Emailová adresa bola z monitorovania úspešne odstránená"
@@ -2113,9 +2161,6 @@
       ],
       "Fill in the CSV with your data": [
         "Vyplňte CSV súbor svojimi údajmi"
-      ],
-      "finance": [
-        "financie"
       ],
       "Find \"OpenSSH Authentication Agent\", right-click Properties.": [
         "Nájdite položku „OpenSSH Authentication Agent“ a kliknite na ňu pravým tlačidlom myši a vyberte možnosť „Vlastnosti“."
@@ -2222,6 +2267,9 @@
       "invites you to access items in": [
         "vás pozýva na prístup k položkám v"
       ],
+      "iOS and Android Apps": [
+        "iOS a Android aplikácie"
+      ],
       "It seems you are already logged in to ${ PASS_APP_NAME }. If you're trying to login with a different account, please logout from the extension first.": [
         "Zdá sa, že účet ${ PASS_APP_NAME } už je prihlásený. Ak sa pokúšate prihlásiť pomocou iného účtu, najskôr sa odhláste z rozšírenia, prosím."
       ],
@@ -2309,9 +2357,6 @@
       "Medium Priority": [
         "Stredná priorita"
       ],
-      "Monitor accounts": [
-        "Monitorujte účty"
-      ],
       "Monitoring settings successfully updated": [
         "Nastavenia monitorovania boli úspešne aktualizované"
       ],
@@ -2331,10 +2376,7 @@
         "Presúvanie všetkých položiek z \"${ payload.content.name }\""
       ],
       "Moving an item to another vault will erase its secure links.": [
-        "Presunutím položky do iného trezora sa vymažú jej bezpečné odkazy.",
-        "Presunutím položiek do iného trezora sa vymažú ich bezpečné odkazy.",
-        "Presunutím položiek do iného trezora sa vymažú ich bezpečné odkazy.",
-        "Presunutím položiek do iného trezora sa vymažú ich bezpečné odkazy."
+        "Presunutím položky do iného trezora sa vymažú jej bezpečné odkazy."
       ],
       "Moving items": [
         "Presúvanie položiek"
@@ -2428,9 +2470,6 @@
       ],
       "Pass Plus trial": [
         "Skúšobná verzia Pass Plus"
-      ],
-      "password": [
-        "heslo"
       ],
       "Password lock successfully registered. Use it to unlock ${ PASS_APP_NAME }": [
         "Heslo na uzamknutie bolo úspešne zaregistrované. Použite ho na odomknutie ${ PASS_APP_NAME }"
@@ -2639,6 +2678,12 @@
       "Restoring trashed items...": [
         "Obnovovanie položiek z koša..."
       ],
+      "Scan to download": [
+        "Naskenovaním stiahnite"
+      ],
+      "Scan to download ${ PASS_APP_NAME } for iOS and Android": [
+        "Naskenujte a stiahnite si aplikáciu ${ PASS_APP_NAME } pre iOS a Android"
+      ],
       "Secure links": [
         "Bezpečné odkazy"
       ],
@@ -2843,6 +2888,9 @@
       "To review your imported data, click on the ${ PASS_APP_NAME } icon in your browser toolbar.": [
         "Ak chcete skontrolovať importované údaje, kliknite na ikonu ${ PASS_APP_NAME } v nástrojovom paneli prehliadača."
       ],
+      "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission.": [
+        "Na nastavenie odomknutia pomocou biometrických údajov vyžaduje aplikácia ${ PASS_APP_NAME } nové povolenie prehliadača."
+      ],
       "To set up biometrics unlock, ${ PASS_APP_NAME } requires a new browser permission. After you accept it, the extension will reload. Please re-open this page afterwards.": [
         "Na nastavenie odomykania pomocou biometrických údajov vyžaduje ${ PASS_APP_NAME } nové povolenie prehliadača. Po ich udelení sa rozšírenie znovu načíta. Následne znovu otvorte túto stránku, prosím."
       ],
@@ -2902,9 +2950,6 @@
       ],
       "User's access successfully updated": [
         "Prístup používateľa bol úspešne aktualizovaný"
-      ],
-      "username": [
-        "používateľské meno"
       ],
       "Vault \"${ payload.content.name }\" successfully deleted": [
         "Trezor \"${ payload.content.name }\" bol úspešne odstránený"
@@ -3143,6 +3188,9 @@
         "${ hours } hodiny",
         "${ hours } hodín",
         "${ hours } hodín"
+      ],
+      "${ length }/${ maxLength } characters": [
+        "${ length }/${ maxLength } znakov"
       ],
       "${ minutes } minute": [
         "${ minutes } minúta",
@@ -3795,11 +3843,17 @@
       "LinkedIn account": [
         "Účet LinkedIn"
       ],
+      "Linux": [
+        "Linux"
+      ],
       "Login": [
         "Prihlásenie"
       ],
       "Logins": [
         "Prihlásenia"
+      ],
+      "macOS": [
+        "macOS"
       ],
       "Mailboxes": [
         "Poštové schránky"
@@ -4388,6 +4442,9 @@
       ],
       "WiFi network": [
         "WiFi sieť"
+      ],
+      "Windows": [
+        "Windows"
       ],
       "Work details": [
         "Podrobnosti o pracovnej činnosti"
@@ -5200,6 +5257,12 @@
       "Folder options": [
         "Možnosti priečinka"
       ],
+      "Get mobile and desktop apps": [
+        "Získať mobilné a desktopové aplikácie"
+      ],
+      "Get mobile apps": [
+        "Získať mobilné aplikácie"
+      ],
       "Get Started": [
         "Začíname"
       ],
@@ -5609,8 +5672,20 @@
       "OTP secret or URI is invalid": [
         "Neplatný OTP tajný kľúč alebo URI"
       ],
+      "Password must contain at least ${ MIN_PASSWORD_LENGTH } character": [
+        "Heslo musí obsahovať aspoň ${ MIN_PASSWORD_LENGTH } znak",
+        "Heslo musí obsahovať aspoň ${ MIN_PASSWORD_LENGTH } znaky",
+        "Heslo musí obsahovať aspoň ${ MIN_PASSWORD_LENGTH } znakov",
+        "Heslo musí obsahovať aspoň ${ MIN_PASSWORD_LENGTH } znakov"
+      ],
       "Section name cannot be empty": [
         "Názov sekcie nemôže byť prázdny"
+      ],
+      "Try a shorter username (${ n } character max)": [
+        "Skúste kratšie používateľské meno (max. ${ n } znak)",
+        "Skúste kratšie používateľské meno (max. ${ n } znaky)",
+        "Skúste kratšie používateľské meno (max. ${ n } znakov)",
+        "Skúste kratšie používateľské meno (max. ${ n } znakov)"
       ],
       "URL already exists": [
         "URL už existuje"
@@ -5633,6 +5708,30 @@
     "Warning": {
       "${ BRAND_NAME } password is required": [
         "${ BRAND_NAME } heslo je povinné"
+      ],
+      "${ count } folder was merged into its parent folder because the maximum nesting level was reached.": [
+        "${ count } priečinok bol zlúčený so svojím nadradeným priečinkom, pretože bola dosiahnutá maximálna úroveň vnorenia.",
+        "${ count } priečinky boli zlúčené so svojimi nadradenými priečinkami, pretože bola dosiahnutá maximálna úroveň vnorenia.",
+        "${ count } priečinkov bolo zlúčených so svojimi nadradenými priečinkami, pretože bola dosiahnutá maximálna úroveň vnorenia.",
+        "${ count } priečinkov bolo zlúčených so svojimi nadradenými priečinkami, pretože bola dosiahnutá maximálna úroveň vnorenia."
+      ],
+      "${ count } folder was not imported because its parent folder reached the maximum number of subfolders. Its items were imported to the closest folder available.": [
+        "${ count } priečinok nebol naimportovaný, pretože jeho nadradená zložka dosiahla maximálny počet podzložiek. Jeho položky boli importované do najbližšej dostupnej zložky.",
+        "${ count } priečinky neboli naimportované, pretože ich nadradená zložka dosiahla maximálny počet podzložiek. Ich položky boli importované do najbližšej dostupnej zložky.",
+        "${ count } priečinkov nebolo naimportovaných, pretože ich nadradená zložka dosiahla maximálny počet podzložiek. Ich položky boli importované do najbližšej dostupnej zložky.",
+        "${ count } priečinkov nebolo naimportovaných, pretože ich nadradená zložka dosiahla maximálny počet podzložiek. Ich položky boli importované do najbližšej dostupnej zložky."
+      ],
+      "${ count } folder was not imported because this vault reached its folder limit. Its items were imported to the closest folder available.": [
+        "${ count } priečinok nebol naimportovaný, pretože tento úložný priestor dosiahol limit počtu priečinkov. Jeho položky boli importované do najbližšieho dostupného priečinka.",
+        "${ count } priečinky neboli naimportované, pretože tento úložný priestor dosiahol limit počtu priečinkov. Ich položky boli importované do najbližších dostupných priečinkov.",
+        "${ count } priečinkov nebolo naimportovaných, pretože tento úložný priestor dosiahol limit počtu priečinkov. Ich položky boli importované do najbližších dostupných priečinkov.",
+        "${ count } priečinkov nebolo naimportovaných, pretože tento úložný priestor dosiahol limit počtu priečinkov. Ich položky boli importované do najbližších dostupných priečinkov."
+      ],
+      "${ failed } folder could not be created. Its items were imported to the closest folder available.": [
+        "${ failed } priečinok sa nepodarilo vytvoriť. Jeho položky boli naimportované do najbližšieho dostupného priečinka.",
+        "${ failed } priečinky sa nepodarilo vytvoriť. Ich položky boli naimportované do najbližšieho dostupného priečinka.",
+        "${ failed } priečinkov sa nepodarilo vytvoriť. Ich položky boli naimportované do najbližšieho dostupného priečinka.",
+        "${ failed } priečinkov sa nepodarilo vytvoriť. Ich položky boli naimportované do najbližšieho dostupného priečinka."
       ],
       "${ modeLabelStong } provides powerful control, but a single error can cause autofill to match and fill data on fraudulent or phishing websites.": [
         "Funkcia ${ modeLabelStong } ponúka rozsiahle možnosti ovládania, avšak už jediná chyba môže spôsobiť, že funkcia automatického vypĺňania bude na podvodných alebo phishingových webových stránkach vyhľadávať a vypĺňať údaje."
@@ -5780,9 +5879,6 @@
       ],
       "Move to trash": [
         "Presunúť do koša"
-      ],
-      "Name is required": [
-        "Názov je povinný"
       ],
       "No items": [
         "Žiadne položky"

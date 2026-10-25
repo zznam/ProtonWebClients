@@ -66,6 +66,23 @@ export const getBYOEFailNotification = (): CreateNotificationOptions => {
     };
 };
 
+export const getBYOEDisabledNotification = (): CreateNotificationOptions => {
+    return {
+        type: 'info',
+        text: c('Info').t`Temporarily unavailable due to high demand. Please try again later.`,
+    };
+};
+
+export const getGenericLimitReached = (): CreateNotificationOptions => {
+    return {
+        type: 'error',
+        text: c('Error').t`You reached the maximum number of connected addresses`,
+    };
+};
+
+export const EASY_SWITCH_TABLE_CLASS_NAME =
+    'simple-table--border-weak simple-table--border-lines-rounded easy-switch-table';
+
 export const MAX_SYNC_FREE_USER = 1;
 export const MAX_SYNC_PAID_USER = 3;
 

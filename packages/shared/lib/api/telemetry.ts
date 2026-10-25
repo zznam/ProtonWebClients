@@ -1,4 +1,4 @@
-import type { SimpleMap } from '../interfaces';
+import type { SimpleMap } from '../interfaces/utils';
 
 // Reminder: both auth & un-auth measurement groups need to be whitelisted by the back-end. Make sure to specify it to the back-end or your measurement will be silently ignored.
 export enum TelemetryMeasurementGroups {
@@ -13,12 +13,18 @@ export enum TelemetryMeasurementGroups {
     accountUnauthLost2FA = 'account.web.unauth_lost_2fa',
     accountDashboard = 'account.web.dashboard',
     accountUpgradePage = 'account.web.upgrade_page',
+    easySwitch = 'any.web.easy_switch',
+    easySwitchCreationFunnel = 'any.web.easy_switch_creation_funnel',
     referralDiscover = 'any.web.referral_discover',
     alwaysOnUpsell = 'any.web.always_on_upsell',
     calendarIcsSurgery = 'calendar.web.ics_surgery',
+    calendarClient = 'calendar.client',
     calendarTimeZoneSelector = 'calendar.web.timezone_selector',
     calendarVideoConferencing = 'calendar.web.video_conferencing',
     meetFunnelTelemetry = 'meet.web.meet_funnel_telemetry',
+    meetActions = 'meet.web.actions',
+    meetDashboard = 'meet.web.dashboard',
+    meetPerformance = 'meet.web.performance',
     accountCancellation = 'account.web.cancellation',
     accountCancellationFeedbackFirst = 'account.web.cancellation_feedback_first',
     settingsHeartBeat = 'any.web.settings_heart_beat',
@@ -27,7 +33,7 @@ export enum TelemetryMeasurementGroups {
     calendarInvite = 'any.web.calendar_invite',
     keyTransparency = 'any.web.key_transparency',
     subscriptionModal = 'any.web.subscription_modal',
-    mailOnboarding = 'mail.web.onboarding',
+    oldMailOnboarding = 'mail.web.onboarding',
     paidUsersNudge = 'any.web.paid_users_nudge',
     mailPrivacyDropdown = 'mail.web.privacy_dropdown',
     mailSelectAll = 'mail.web.select_all',
@@ -46,6 +52,7 @@ export enum TelemetryMeasurementGroups {
     mailPagingControls = 'mail.web.paging_controls',
     mailExpandBlockquotes = 'mail.web.expand_blockquotes',
     categoriesView = 'mail.any.categories_view',
+    mailOnboarding = 'mail.any.signup_onboarding',
     passNudge = 'mail.web.pass_nudge',
     /** Shared with mobile clients: compares Encrypted Search (searchVersion 'v1') against Content Search (searchVersion 'v2') */
     contentSearch = 'mail.any.search',
@@ -71,6 +78,8 @@ export enum TelemetryMeasurementGroups {
     clientSearch = 'any.web.client_search',
     b2bOnboarding = 'any.web.b2b_onboarding',
     bringYourOwnEmail = 'any.web.bring_your_own_email',
+    mailBringYourOwnEmail = 'mail.any.bring_your_own_email',
+    byoeCreationFunnel = 'any.web.byoe_creation_funnel',
     appSwitcher = 'any.web.app_switcher',
     accountExploreApps = 'account.web.explore_apps',
     preventWasmLoading = 'any.web.prevent_wasm_loading',
@@ -85,7 +94,7 @@ export enum TelemetryMeasurementGroups {
     mailForegroundActivity = 'mail.common.foreground_activity',
 }
 
-export enum TelemetryMailOnboardingEvents {
+export enum OldTelemetryMailOnboardingEvents {
     start_onboarding_modals = 'start_onboarding_modals',
     finish_onboarding_modals = 'finish_onboarding_modals',
     select_theme = 'select_theme',
@@ -112,6 +121,32 @@ export enum TelemetryMailTrial2024UpsellModal {
     upsell = 'upsell',
 }
 
+export enum TelemetryEasySwitchEvents {
+    importReportAction = 'import_report_action',
+    byoeAddressAction = 'byoe_address_action',
+    byoeClaimableAddressModalShown = 'byoe_claimable_address_modal_shown',
+    byoeClaimableAddressModalAction = 'byoe_claimable_address_modal_action',
+    byoeAddressLinkedModalShown = 'byoe_address_linked_modal_shown',
+    byoeAddressLinkedModalAction = 'byoe_address_linked_modal_action',
+}
+
+export enum TelemetryMailOnboardingEvents {
+    stepLoad = 'step_load',
+    stepCompleted = 'step_completed',
+    stepInteracted = 'step_interacted',
+    flowFinished = 'flow_finished',
+    flowDismissed = 'flow_dismissed',
+}
+
+export enum TelemetryEasySwitchCreationFunnelEvents {
+    creationStarted = 'creation_started',
+    productsSubmitted = 'products_submitted',
+    instructionsViewed = 'instructions_viewed',
+    prepareImportViewed = 'prepare_import_viewed',
+    importerCreated = 'importer_created',
+    creationError = 'creation_error',
+}
+
 export enum TelemetryMailPagingControlsEvents {
     move_to_previous_page = 'move_to_previous_page',
     move_to_next_page = 'move_to_next_page',
@@ -135,6 +170,10 @@ export enum TelemetryCalendarEvents {
     answer_invite = 'answer_invite',
 }
 
+export enum TelemetryCalendarClientEvents {
+    legacy_signature_fallback = 'legacy_signature_fallback',
+}
+
 export enum TelemetryCalendarVideoConferencing {
     video_conference_widget = 'video_conference_widget',
     video_conference_settings_toggle = 'video_conference_settings_toggle',
@@ -148,6 +187,85 @@ export enum TelemetryMeetFunnelTelemetry {
     explore_meet_clicked = 'explore_meet_clicked',
     meeting_created = 'meeting_created',
     meet_opened = 'meet_opened',
+}
+
+export enum TelemetryMeetActionsEvents {
+    prejoin_viewed = 'prejoin_viewed',
+    display_name_entered = 'display_name_entered',
+    waiting_room_toggled = 'waiting_room_toggled',
+    waiting_room_retry_clicked = 'waiting_room_retry_clicked',
+    desktop_app_banner_shown = 'desktop_app_banner_shown',
+    desktop_app_banner_clicked = 'desktop_app_banner_clicked',
+    join_clicked = 'join_clicked',
+    mic_toggled = 'mic_toggled',
+    camera_toggled = 'camera_toggled',
+    device_selected = 'device_selected',
+    camera_rotated = 'camera_rotated',
+    mic_test_completed = 'mic_test_completed',
+    speaker_test_completed = 'speaker_test_completed',
+    permission_requested = 'permission_requested',
+    permission_blocked_modal_shown = 'permission_blocked_modal_shown',
+    no_device_detected = 'no_device_detected',
+    noise_cancellation_toggled = 'noise_cancellation_toggled',
+    background_effect_selected = 'background_effect_selected',
+    custom_background_uploaded = 'custom_background_uploaded',
+    custom_background_deleted = 'custom_background_deleted',
+    screen_share_toggled = 'screen_share_toggled',
+    screen_share_leave_warning_answered = 'screen_share_leave_warning_answered',
+    picture_in_picture_toggled = 'picture_in_picture_toggled',
+    layout_changed = 'layout_changed',
+    self_view_toggled = 'self_view_toggled',
+    incoming_video_toggled = 'incoming_video_toggled',
+    participant_list_toggled = 'participant_list_toggled',
+    participant_muted_by_host = 'participant_muted_by_host',
+    participant_removed = 'participant_removed',
+    host_assigned = 'host_assigned',
+    hand_lowered_by_host = 'hand_lowered_by_host',
+    waiting_room_admission_handled = 'waiting_room_admission_handled',
+    poor_connection_indicator_shown = 'poor_connection_indicator_shown',
+    chat_toggled = 'chat_toggled',
+    chat_reaction_sent = 'chat_reaction_sent',
+    chat_mention_used = 'chat_mention_used',
+    chat_scrolled_to_message = 'chat_scrolled_to_message',
+    emoji_reaction_sent = 'emoji_reaction_sent',
+    hand_raise_toggled = 'hand_raise_toggled',
+    captions_toggled = 'captions_toggled',
+    captions_failed = 'captions_failed',
+    recording_toggled = 'recording_toggled',
+    recording_upsell_shown = 'recording_upsell_shown',
+    recording_upsell_clicked = 'recording_upsell_clicked',
+    recording_download_prompt_answered = 'recording_download_prompt_answered',
+    settings_opened = 'settings_opened',
+    meeting_lock_toggled = 'meeting_lock_toggled',
+    meeting_details_opened = 'meeting_details_opened',
+    connection_lost_modal_shown = 'connection_lost_modal_shown',
+    connection_lost_modal_answered = 'connection_lost_modal_answered',
+}
+
+export enum TelemetryMeetDashboardEvents {
+    dashboard_viewed = 'dashboard_viewed',
+    meeting_started_instant = 'meeting_started_instant',
+    join_with_link_opened = 'join_with_link_opened',
+    join_with_link_submitted = 'join_with_link_submitted',
+    schedule_meeting_opened = 'schedule_meeting_opened',
+    meeting_scheduled = 'meeting_scheduled',
+    room_created = 'room_created',
+    room_edited = 'room_edited',
+    meeting_deleted = 'meeting_deleted',
+    meeting_link_copied = 'meeting_link_copied',
+    personal_link_rotated = 'personal_link_rotated',
+    upsell_banner_shown = 'upsell_banner_shown',
+    upsell_banner_clicked = 'upsell_banner_clicked',
+    recordings_page_viewed = 'recordings_page_viewed',
+    recording_downloaded = 'recording_downloaded',
+    recording_deleted = 'recording_deleted',
+    sign_in_clicked = 'sign_in_clicked',
+    sign_up_clicked = 'sign_up_clicked',
+}
+
+export enum TelemetryMeetPerformanceEvents {
+    app_loaded = 'app_loaded',
+    join_succeeded = 'join_succeeded',
 }
 
 export enum TelemetryMailNewsletterSubscriptions {
@@ -348,6 +466,7 @@ export enum TelemetryMailLumoEvents {
     tool_end = 'tool_end',
     confirm_answered = 'confirm_answered',
     debug_report_opened = 'debug_report_opened',
+    assistant_disabled = 'assistant_disabled',
 }
 
 export enum TelemetryCategoriesOnboardingEvents {
@@ -503,6 +622,23 @@ export enum TelemetryBringYourOwnEmailEvents {
     claim_proton_address = 'claim_proton_address',
 }
 
+export enum TelemetryMailBringYourOwnEmailEvents {
+    settingsView = 'settings_view',
+    settingsListOnlyShown = 'settings_list_only_shown',
+    connectStarted = 'connect_started',
+    connectSucceeded = 'connect_succeeded',
+    connectFailed = 'connect_failed',
+}
+
+export enum TelemetryBYOECreationFunnelEvents {
+    creationStarted = 'creation_started',
+    googleSignInClicked = 'google_sign_in_clicked',
+    authenticated = 'authenticated',
+    upsellModalViewed = 'upsell_modal_viewed',
+    importerCreated = 'importer_created',
+    creationError = 'creation_error',
+}
+
 // Offers telemetry events
 export enum TelemetryMailDrivePostSignupOneDollarEvents {
     automaticModalOpen = 'automatic_modal_open',
@@ -631,7 +767,7 @@ export type TelemetryEvents =
     | TelemetryMailSelectAllEvents
     | TelemetryMailComposerAssistantEvents
     | TelemetryMailLumoEvents
-    | TelemetryMailOnboardingEvents
+    | OldTelemetryMailOnboardingEvents
     | TelemetryMailPagingControlsEvents
     | TelemetryMailBlockquotes
     | TelemetryMailForegroundEvents
@@ -651,12 +787,15 @@ export type TelemetryEvents =
     | TelemetryDocsEvents
     | TelemetryDocsEditorEvents
     | TelemetryDocsHomepageEvents
+    | TelemetryCalendarClientEvents
     | TelemetryCalendarVideoConferencing
     | TelemetryEncryptedSearchEvents
     | TelemetryContentSearchEvents
     | TelemetryContentSearchIndexEvents
     | TelemetryB2BOnboardingEvents
     | TelemetryBringYourOwnEmailEvents
+    | TelemetryMailBringYourOwnEmailEvents
+    | TelemetryBYOECreationFunnelEvents
     | TelemetryPostSubscriptionTourEvents
     | TelemetryMailDrivePostSignupOneDollarEvents
     | TelemetryPaidUsersNudge
@@ -682,7 +821,13 @@ export type TelemetryEvents =
     | TelemetryVpnB2bUserActivityEvents
     | TelemetryPreventWasmLoading
     | TelemetryCategoriesOnboardingEvents
-    | TelemetryMeetFunnelTelemetry;
+    | TelemetryMeetFunnelTelemetry
+    | TelemetryMeetActionsEvents
+    | TelemetryMeetDashboardEvents
+    | TelemetryMeetPerformanceEvents
+    | TelemetryEasySwitchEvents
+    | TelemetryEasySwitchCreationFunnelEvents
+    | TelemetryMailOnboardingEvents;
 
 export interface TelemetryReport {
     measurementGroup: TelemetryMeasurementGroups;

@@ -2,7 +2,7 @@ import type { ElementType, ForwardedRef, HTMLAttributes, MouseEventHandler, Reac
 import { forwardRef, useEffect, useState } from 'react';
 
 import { usePopperAnchor } from '@proton/atoms/Popper/usePopperAnchor';
-import { useCombinedRefs } from '@proton/hooks';
+import useCombinedRefs from '@proton/hooks/useCombinedRefs';
 import generateUID from '@proton/utils/generateUID';
 
 import type { DropdownProps } from './Dropdown';
@@ -30,7 +30,7 @@ interface OwnProps<E extends ElementType> {
     forceOpen?: boolean;
 }
 
-export type Props<T extends ElementType> = DropdownButtonProps<T> & OwnProps<T>;
+type Props<T extends ElementType> = DropdownButtonProps<T> & OwnProps<T>;
 
 const SimpleDropdownBase = <E extends ElementType>(
     {

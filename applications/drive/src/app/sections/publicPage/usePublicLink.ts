@@ -3,7 +3,10 @@ import { useCallback, useRef, useState } from 'react';
 import { c } from 'ttag';
 
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { useAuthentication } from '@proton/components';
+import useAuthentication from '@proton/components/hooks/useAuthentication';
+import { is4xx, is5xx, sendErrorReport } from '@proton/drive/legacy/errorHandling';
+import { getNodeEntity } from '@proton/drive/legacy/sdkUtils/getNodeEntity';
+import { uploadManager } from '@proton/drive/modules/upload';
 import {
     DecryptionError,
     type NodeEntity,
@@ -12,11 +15,8 @@ import {
     ValidationError,
     getDrive,
     splitNodeUid,
-} from '@proton/drive';
-import { is4xx, is5xx, sendErrorReport } from '@proton/drive/legacy/errorHandling';
-import { getNodeEntity } from '@proton/drive/legacy/sdkUtils/getNodeEntity';
-import { uploadManager } from '@proton/drive/modules/upload';
-import metrics from '@proton/metrics';
+} from '@proton/drive/sdk';
+import metrics from '@proton/metrics/metricsInstance';
 import { API_CUSTOM_ERROR_CODES } from '@proton/shared/lib/errors';
 import { isNativeProtonDocsAppFile } from '@proton/shared/lib/helpers/mimetype';
 

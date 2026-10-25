@@ -122,8 +122,11 @@
       "Fit table to page width": [
         "Potrivire tabel la lățimea paginii"
       ],
-      "Go to label": [
-        "Accesare etichetă"
+      "Header column": [
+        "Antet coloană"
+      ],
+      "Header row": [
+        "Antet rând"
       ],
       "Indent": [
         "Indentare"
@@ -136,6 +139,9 @@
       ],
       "Insert comment": [
         "Inserare comentariu"
+      ],
+      "Insert emoji": [
+        "Inserare emoji"
       ],
       "Insert image": [
         "Inserare imagine"
@@ -197,9 +203,6 @@
       "Refresh the page": [
         "Împrospătare pagină"
       ],
-      "Remove": [
-        "Eliminare"
-      ],
       "Remove link": [
         "Eliminare legătură web"
       ],
@@ -227,9 +230,6 @@
       "Strike-through": [
         "Tăiat"
       ],
-      "Submit": [
-        "Trimitere"
-      ],
       "Subscript": [
         "Indice"
       ],
@@ -247,143 +247,23 @@
       ]
     },
     "color": {
-      "apple": [
-        "măr"
-      ],
-      "azureish white": [
-        "alb azuric"
-      ],
       "black": [
         "neagră"
-      ],
-      "blanched almond": [
-        "migdale decolorate"
-      ],
-      "blue-gray": [
-        "albastru-gri"
-      ],
-      "caramel": [
-        "caramel"
       ],
       "carrot": [
         "morcov"
       ],
-      "cerise": [
-        "cireșiu"
-      ],
-      "cinnabar": [
-        "cinabru"
-      ],
-      "cobalt": [
-        "cobalt"
-      ],
-      "copper": [
-        "cupru"
-      ],
-      "cyan-blue azure": [
-        "azur cian-albastru"
-      ],
-      "dandelion": [
-        "galben păpădie"
-      ],
-      "dark cerulean": [
-        "albastru cenușiu închis"
-      ],
-      "dark midnight blue": [
-        "albastru închis nocturn"
-      ],
-      "dim gray": [
-        "gri închis"
-      ],
-      "enzian": [
-        "gențiană"
-      ],
-      "fern": [
-        "ferigă"
-      ],
-      "field drab": [
-        "cafeniu închis"
-      ],
-      "forest": [
-        "pădure"
-      ],
-      "gainsboro": [
-        "gri deschis"
-      ],
       "gray": [
         "gri"
-      ],
-      "japanese laurel": [
-        "laur japonez"
-      ],
-      "kiwi": [
-        "verde kiwi"
-      ],
-      "lemon yellow": [
-        "galben lămâie"
-      ],
-      "light carmine pink": [
-        "roz carmin deschis"
-      ],
-      "light moss green": [
-        "verzui cenușiu deschis"
-      ],
-      "light red": [
-        "roșu deschis"
-      ],
-      "maize": [
-        "porumb"
-      ],
-      "mughal green": [
-        "verde închis"
-      ],
-      "ocean": [
-        "ocean"
       ],
       "olive": [
         "măsliniu"
       ],
-      "outer space": [
-        "spațiu cosmic"
-      ],
       "pacific": [
         "pacific"
       ],
-      "palatinate blue": [
-        "albastru palatinat"
-      ],
-      "pale cerulean": [
-        "albastru cenusiu"
-      ],
-      "pastel gray": [
-        "verzui deschis"
-      ],
-      "persian plum": [
-        "prune persane"
-      ],
-      "persian red": [
-        "roșu persan"
-      ],
-      "philippine gray": [
-        "gri filipinez"
-      ],
-      "philippine silver": [
-        "argintiu filipinez"
-      ],
-      "pickle": [
-        "murături"
-      ],
-      "pine": [
-        "pin"
-      ],
       "pink": [
         "roz"
-      ],
-      "pistachio": [
-        "verde fistic"
-      ],
-      "plum": [
-        "prună"
       ],
       "purple": [
         "violet"
@@ -394,29 +274,8 @@
       "reef": [
         "recif"
       ],
-      "ruddy pink": [
-        "roz ruddy"
-      ],
-      "sahara": [
-        "Sahara"
-      ],
-      "satin sheen gold": [
-        "maroniu deschis"
-      ],
       "slateblue": [
         "ardezie albastră"
-      ],
-      "soil": [
-        "pământiu"
-      ],
-      "strawberry": [
-        "căpșună"
-      ],
-      "vivid auburn": [
-        "castaniu viu"
-      ],
-      "white": [
-        "alb"
       ]
     },
     "Confirm": {
@@ -433,17 +292,46 @@
       ],
       "Read or print final document": [
         "Citire sau tipărire document final"
+      ]
+    },
+    "Emoji category": {
+      "Activities": [
+        "Activități"
       ],
-      "Use the dropdown above to switch and start making suggestions.": [
-        "Utilizați meniul derulant de mai sus pentru a comuta și pentru a începe să faceți sugestii."
+      "Animals and nature": [
+        "Animale și natură"
+      ],
+      "Flags": [
+        "Steaguri"
+      ],
+      "Food and drink": [
+        "Mâncare şi băutură"
+      ],
+      "Objects": [
+        "Obiecte"
+      ],
+      "Smileys and people": [
+        "Zâmbete și persoane"
+      ],
+      "Symbols": [
+        "Simboluri"
+      ],
+      "Travel and places": [
+        "Călătorii și locuri"
       ]
     },
     "Error": {
       "An error occurred while loading the document. To prevent document corruption, the editor has been locked. Please reload the page and try again. If the error persists, please open Version History from the menu options to attempt to restore your document to an earlier version.": [
         "A apărut o eroare la încărcarea documentului. Pentru a preveni coruperea documentelor, editorul a fost blocat. Reîncărcați pagina și reîncercați. Dacă eroarea persistă, deschideți istoricul versiunilor din opțiunile meniului pentru a încerca să restaurați documentul la o versiune anterioară."
       ],
+      "Could not load emoji. Close the picker and try again.": [
+        "Nu s-au putut încărca emoticoanele. Închideți selectorul și reîncercați."
+      ],
       "Failed to export document.": [
         "Exportarea documentului a eșuat."
+      ],
+      "Failed to import document due to unsupported file format.": [
+        "Importarea documentului a eșuat din cauza unui format de fișier neacceptat."
       ],
       "Failed to import HTML due to unknown error.": [
         "Importarea fișierului HTML a eșuat din cauza unei erori necunoscute."
@@ -468,9 +356,6 @@
       ],
       "This spreadsheet is incompatible with the current client version. Please try reloading the client. If the error persists, please contact support.": [
         "Acest registru de lucru nu este compatibil cu versiunea curentă a clientului. Încercați să reîncărcați clientul. Dacă eroarea persistă, contactați asistența."
-      ],
-      "Tried to import Sheet data into Lexical": [
-        "S-a încercat importarea datelor din foaia de calcul în Lexical."
       ],
       "Unable to convert Word document. Is it password protected? If so, please remove the password and try again.": [
         "Nu se poate converti documentul Word. Este protejat prin parolă? Dacă da, trebuie să eliminați parola și să reîncercați."
@@ -548,11 +433,11 @@
       "Just now": [
         "Chiar acum"
       ],
-      "Labels:": [
-        "Etichete:"
-      ],
       "Loading": [
         "Se încarcă"
+      ],
+      "Loading emoji…": [
+        "Se încarcă emoticoanele…"
       ],
       "Loading spreadsheet content...": [
         "Conținutul foii de calcul se încarcă..."
@@ -565,6 +450,9 @@
       ],
       "No comments": [
         "Nu sunt comentarii"
+      ],
+      "No emoji found": [
+        "Nu s-au găsit emoticoane."
       ],
       "No title": [
         "Fără titlu"
@@ -625,6 +513,9 @@
       "Clear formatting": [
         "Eliminare formatare"
       ],
+      "Comments": [
+        "Comentarii"
+      ],
       "Delete": [
         "Ștergere"
       ],
@@ -654,6 +545,12 @@
       ],
       "Duplicate table row": [
         "Duplicare rând tabel"
+      ],
+      "Emoji": [
+        "Emoticon"
+      ],
+      "Emoji suggestions": [
+        "Sugestii de emoticoane"
       ],
       "Format": [
         "Format"
@@ -694,11 +591,26 @@
       "Page break": [
         "Întrerupere pagină"
       ],
+      "Recent": [
+        "Recente"
+      ],
       "Replace": [
         "Înlocuire"
       ],
       "Replace link": [
         "Înlocuire legătură web"
+      ],
+      "Resize outline": [
+        "Redimensionare contur"
+      ],
+      "Search emoji": [
+        "Căutare emoticoane"
+      ],
+      "Search results": [
+        "Rezultate căutare"
+      ],
+      "Table": [
+        "Table"
       ],
       "Text and highlight color": [
         "Text și culoare evidențiere"
@@ -859,7 +771,377 @@
         "Notă"
       ]
     },
+    "sheets_2025:Spreadsheet cellFormatOptions": {
+      "Accounting": [
+        "Contabilitate"
+      ],
+      "Bottom": [
+        "Jos"
+      ],
+      "Center": [
+        "Centrare"
+      ],
+      "Clip": [
+        "Videoclip"
+      ],
+      "Currency": [
+        "Moneda"
+      ],
+      "Currency formats are used for general monetary values.": [
+        "Formatele valutare sunt utilizate pentru valori monetare generale."
+      ],
+      "Custom": [
+        "Personal"
+      ],
+      "Date": [
+        "Dată"
+      ],
+      "Date formats display date and time serial numbers as date values.": [
+        "Formatele de dată afișează numerele seriale pentru dată și oră sub formă de valori de dată."
+      ],
+      "Fraction": [
+        "Fracție"
+      ],
+      "General": [
+        "Generale"
+      ],
+      "General format cells have no specific number format.": [
+        "Celulele cu format general nu au un format numeric specific."
+      ],
+      "Left": [
+        "Stânga"
+      ],
+      "Number": [
+        "Număr"
+      ],
+      "Number is used for general display of numbers.": [
+        "„Număr” este utilizat pentru afișarea generală a numerelor."
+      ],
+      "Overflow": [
+        "Depășire"
+      ],
+      "Percentage": [
+        "Procentaj"
+      ],
+      "Right": [
+        "Dreapta"
+      ],
+      "Scientific": [
+        "Științific"
+      ],
+      "Text": [
+        "Text"
+      ],
+      "Time": [
+        "Timp"
+      ],
+      "Time formats display date and time serial numbers as date values.": [
+        "Formatele de timp afișează numerele de serie pentru dată și oră sub formă de valori de dată."
+      ],
+      "Top": [
+        "Sus"
+      ],
+      "Wrap": [
+        "Încapsulare"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartAggregates": {
+      "Average": [
+        "Medie"
+      ],
+      "Count": [
+        "Total"
+      ],
+      "Max": [
+        "Maxim"
+      ],
+      "Median": [
+        "Mediană"
+      ],
+      "Min": [
+        "Minim"
+      ],
+      "Sum": [
+        "Sumă"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartEditorDialog": {
+      "None": [
+        "Niciuna"
+      ]
+    },
+    "sheets_2025:Spreadsheet chartTypes": {
+      "2D Pie": [
+        "Plăcintă 2D"
+      ],
+      "Clustered Column": [
+        "Coloane grupate"
+      ],
+      "Column": [
+        "Coloana"
+      ],
+      "Doughnut": [
+        "Gogoașă"
+      ],
+      "Hierarchy": [
+        "Ierarhie"
+      ],
+      "Line": [
+        "Linia"
+      ],
+      "Pie": [
+        "Plăcintă"
+      ],
+      "Smooth line": [
+        "Linie fină"
+      ],
+      "Stacked column": [
+        "Coloane suprapuse"
+      ],
+      "Stacked line": [
+        "Linie suprapusă"
+      ],
+      "Sunburst": [
+        "Explozie solară"
+      ],
+      "Treemap": [
+        "Hartă arborescentă"
+      ]
+    },
+    "sheets_2025:Spreadsheet conditions": {
+      "Above average": [
+        "Peste medie"
+      ],
+      "April": [
+        "Aprilie"
+      ],
+      "August": [
+        "August"
+      ],
+      "Below average": [
+        "Sub medie"
+      ],
+      "Between": [
+        "Între"
+      ],
+      "Bottom N items": [
+        "Ultimele N articole"
+      ],
+      "Bottom N percent": [
+        "Ultimul procentaj de N"
+      ],
+      "Checkbox": [
+        "Caseta de selectare"
+      ],
+      "Custom formula": [
+        "Formulă personală"
+      ],
+      "Date is after": [
+        "Data este după"
+      ],
+      "Date is before": [
+        "Data este înainte"
+      ],
+      "Date is between": [
+        "Data este între"
+      ],
+      "Date is equal to": [
+        "Data este egală cu"
+      ],
+      "Date is not between": [
+        "Data nu este între"
+      ],
+      "Date is not equal to": [
+        "Data nu este egală cu"
+      ],
+      "Date is on or after": [
+        "Data este egală cu sau ulterioară"
+      ],
+      "Date is on or before": [
+        "Data este egală cu sau anterioară"
+      ],
+      "Date is valid": [
+        "Data este validă."
+      ],
+      "December": [
+        "Decembrie"
+      ],
+      "Dropdown": [
+        "Listă derulantă"
+      ],
+      "Dropdown (from a range)": [
+        "Listă derulantă (dintr-un interval)"
+      ],
+      "Equal to": [
+        "Egal cu"
+      ],
+      "Errors": [
+        "Erori"
+      ],
+      "February": [
+        "Februarie"
+      ],
+      "Greater than": [
+        "Mai mare decât"
+      ],
+      "Greater than or equal to": [
+        "Mai mare sau egal decât"
+      ],
+      "Greater than or equal to previous": [
+        "Mai mare sau egal cu precedentul"
+      ],
+      "Greater than previous": [
+        "Mai mare decât anteriorul"
+      ],
+      "Is empty": [
+        "Este gol"
+      ],
+      "Is not empty": [
+        "Nu este gol"
+      ],
+      "January": [
+        "Ianuarie"
+      ],
+      "July": [
+        "Iulie"
+      ],
+      "June": [
+        "Iunie"
+      ],
+      "Last 7 days": [
+        "Ultimele 7 zile"
+      ],
+      "Last month": [
+        "Ultima lună"
+      ],
+      "Last quarter": [
+        "Trimestrul trecut"
+      ],
+      "Last week": [
+        "Săptămâna trecută"
+      ],
+      "Last year": [
+        "Ultimul an"
+      ],
+      "Less than": [
+        "Mai puțin de"
+      ],
+      "Less than or equal to": [
+        "Mai mic sau egal cu"
+      ],
+      "Less than or equal to previous": [
+        "Mai mic sau egal cu precedentul"
+      ],
+      "Less than previous": [
+        "Mai mic decât anteriorul"
+      ],
+      "March": [
+        "Martie"
+      ],
+      "May": [
+        "Mai"
+      ],
+      "Next month": [
+        "Luna viitoare"
+      ],
+      "Next quarter": [
+        "Sfertul următor"
+      ],
+      "Next week": [
+        "Săptămâna viitoare"
+      ],
+      "Next year": [
+        "Anul următor"
+      ],
+      "No errors": [
+        "Nu sunt erori."
+      ],
+      "Not between": [
+        "Nu e între"
+      ],
+      "Not equal to": [
+        "Nu este egal cu"
+      ],
+      "November": [
+        "Noiembrie"
+      ],
+      "October": [
+        "Octombrie"
+      ],
+      "Quarter 1": [
+        "Sfertul 1"
+      ],
+      "Quarter 2": [
+        "Sfertul 2"
+      ],
+      "Quarter 3": [
+        "Sfertul 3"
+      ],
+      "Quarter 4": [
+        "Sfertul 4"
+      ],
+      "September": [
+        "Septembrie"
+      ],
+      "Text contains": [
+        "Textul conține"
+      ],
+      "Text does not contain": [
+        "Textul nu conține"
+      ],
+      "Text ends with": [
+        "Textul se termină cu"
+      ],
+      "Text is email": [
+        "Textul este e-mail"
+      ],
+      "Text is exactly": [
+        "Textul este exact"
+      ],
+      "Text is not equal": [
+        "Textul nu este egal"
+      ],
+      "Text is URL": [
+        "Textul este URL"
+      ],
+      "Text starts with": [
+        "Textul începe cu"
+      ],
+      "This month": [
+        "Luna curentă"
+      ],
+      "This quarter": [
+        "Acest sfert"
+      ],
+      "This week": [
+        "Săptămâna asta"
+      ],
+      "This year": [
+        "Acest an"
+      ],
+      "Today": [
+        "Astăzi"
+      ],
+      "Tomorrow": [
+        "Mâine"
+      ],
+      "Top N items": [
+        "Top N articole"
+      ],
+      "Top N percent": [
+        "Primele N procente"
+      ],
+      "Year to date": [
+        "Ultimul an"
+      ],
+      "Yesterday": [
+        "Ieri"
+      ]
+    },
     "sheets_2025:Spreadsheet context menu": {
+      "(Blanks)": [
+        "(Spații libere)"
+      ],
       "AI Quick Edit": [
         "Editare rapidă IA"
       ],
@@ -1207,6 +1489,14 @@
         "An"
       ]
     },
+    "sheets_2025:Spreadsheet customCurrencyFormatDialog": {
+      "Format": [
+        "Format"
+      ],
+      "Symbol": [
+        "Simbol"
+      ]
+    },
     "sheets_2025:Spreadsheet delete sheet dialog": {
       "Are you sure you want to delete ${ sheetName }?": [
         "Sigur doriți să ștergeți „${ sheetName }”?"
@@ -1233,6 +1523,11 @@
       ],
       "Your screen is too small to edit this spreadsheet. You’re in view-only mode. To make changes, please open this spreadsheet on a larger screen or expand your browser window.": [
         "Ecranul este prea mic pentru a edita această foaie de calcul. Sunteți în modul doar vizualizare. Pentru a face modificări, deschideți această foaie de calcul pe un ecran mai mare sau extindeți fereastra navigatorului web."
+      ]
+    },
+    "sheets_2025:Spreadsheet editingDisabledButton": {
+      "Edit": [
+        "Editare"
       ]
     },
     "sheets_2025:Spreadsheet editor": {
@@ -1671,6 +1966,9 @@
       ]
     },
     "sheets_2025:Spreadsheet editor search dialog": {
+      "${ current } of ${ total }": [
+        "${ current } din ${ total }"
+      ],
       "Close": [
         "Închidere"
       ],
@@ -1702,11 +2000,29 @@
       ]
     },
     "sheets_2025:Spreadsheet editor toolbar": {
+      "Apply border": [
+        "Aplicare bordură"
+      ],
+      "Apply fill color": [
+        "Aplicare culoare de umplere"
+      ],
+      "Apply text color": [
+        "Aplicare culoare text"
+      ],
       "Bold": [
         "Îngroșat"
       ],
       "Border": [
         "Bordură"
+      ],
+      "Choose border": [
+        "Alegere bordură"
+      ],
+      "Choose fill color": [
+        "Alegere culoare de umplere"
+      ],
+      "Choose text color": [
+        "Alegere culoare text"
       ],
       "Clear formatting": [
         "Eliminare formatare"
@@ -1855,6 +2171,35 @@
         "Sortare Z → A"
       ]
     },
+    "sheets_2025:Spreadsheet filterByCondition": {
+      "None": [
+        "Niciunul"
+      ]
+    },
+    "sheets_2025:Spreadsheet formatMenu": {
+      "Coming soon...": [
+        "În curând..."
+      ]
+    },
+    "sheets_2025:Spreadsheet formulaBar": {
+      "Edit": [
+        "Editare"
+      ],
+      "Remove": [
+        "Eliminare"
+      ],
+      "View": [
+        "Afișare"
+      ]
+    },
+    "sheets_2025:Spreadsheet gridFooter": {
+      "Add": [
+        "Adăugare"
+      ],
+      "more rows at the bottom": [
+        "mai multe rânduri jos"
+      ]
+    },
     "sheets_2025:Spreadsheet insert link dialog": {
       "Apply": [
         "Aplicare"
@@ -1890,23 +2235,23 @@
       "Cancel": [
         "Anulare"
       ],
-      "column": [
-        "coloana"
-      ],
-      "column width": [
-        "lățime coloană"
-      ],
-      "Default": [
-        "Implicit"
+      "Default ${ size }": [
+        "Implicit ${ size }"
       ],
       "OK": [
         "OK"
       ],
-      "row": [
-        "rând"
+      "Resize column ${ title }": [
+        "Redimensionare coloana ${ title }"
       ],
-      "row height": [
-        "Înălțime rând"
+      "Resize row ${ title }": [
+        "Redimensionare rândul ${ title }"
+      ],
+      "Specify column width (px)": [
+        "Specificați lățimea coloanei (px)"
+      ],
+      "Specify row height (px)": [
+        "Specificați înălțimea rândului (px)"
       ]
     },
     "sheets_2025:Spreadsheet sheet status bar": {
@@ -2081,6 +2426,18 @@
       ],
       "Series": [
         "Serie"
+      ],
+      "Series ${ seriesNumber }": [
+        "Seria ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Aggregate": [
+        "Agregat din seria ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Name": [
+        "Numele seriei ${ seriesNumber }"
+      ],
+      "Series ${ seriesNumber } Range": [
+        "Interval serie ${ seriesNumber }"
       ],
       "Show data in hidden rows and columns": [
         "Afișare date din rânduri și coloane ascunse"
@@ -2346,15 +2703,32 @@
         "Titlu tabel"
       ]
     },
+    "sheets_2025:Spreadsheet viewMenu": {
+      "1 column": [
+        "1 coloană"
+      ],
+      "1 row": [
+        "1 rând"
+      ],
+      "2 columns": [
+        "Două coloane"
+      ],
+      "2 rows": [
+        "Două rânduri"
+      ],
+      "No columns": [
+        "Fără coloane"
+      ],
+      "No rows": [
+        "Niciun rând"
+      ]
+    },
     "Title": {
       "Delete comment": [
         "Ștergere comentariu"
       ],
       "Delete thread": [
         "Ștergere conversație"
-      ],
-      "Explore the New Suggestion Mode": [
-        "Explorați noul mod de sugerare"
       ],
       "Language not supported": [
         "Limba nu este suportată"

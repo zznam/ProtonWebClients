@@ -2,14 +2,15 @@ import { c } from 'ttag';
 
 import { useApi } from '@proton/app-context/useApi';
 import { useNotifications } from '@proton/app-context/useNotifications';
-import { FeatureCode, useFeature } from '@proton/features';
-import { useLoading } from '@proton/hooks';
+import { FeatureCode } from '@proton/features/interface';
+import useFeature from '@proton/features/useFeature';
+import useLoading from '@proton/hooks/useLoading';
 import { mailSettingsActions } from '@proton/mail/store/mailSettings';
 import { useMailSettings } from '@proton/mail/store/mailSettings/hooks';
 import { useDispatch } from '@proton/redux-shared-store/sharedProvider';
 import { updateSpamAction, updateStickyLabels, updateViewMode } from '@proton/shared/lib/api/mailSettings';
 import { getKnowledgeBaseUrl } from '@proton/shared/lib/helpers/url';
-import type { MailSettings } from '@proton/shared/lib/interfaces';
+import type { MailSettings } from '@proton/shared/lib/interfaces/MailSettings';
 import type { SPAM_ACTION } from '@proton/shared/lib/mail/mailSettings';
 import { STICKY_LABELS, VIEW_MODE } from '@proton/shared/lib/mail/mailSettings';
 

@@ -4,15 +4,15 @@ import { useEffect } from 'react';
 import { c } from 'ttag';
 
 import { Banner, BannerVariants } from '@proton/atoms/Banner/Banner';
-import { useStableLoading } from '@proton/hooks';
+import useStableLoading from '@proton/hooks/useStableLoading';
 import { BilledUserInlineMessage } from '@proton/payments-ui/client-extensions/billed-user/BilledUserInlineMessage';
 import type { ThemeCode } from '@proton/payments-ui/client-extensions/helpers';
 import type { ViewPaymentMethod } from '@proton/payments-ui/client-extensions/useMethods';
 import type { useCurrencyOverride } from '@proton/payments-ui/payment-methods/useCurrencyOverride';
+import type { ChargebeePaypalProcessorHook } from '@proton/payments-ui/payment-processors/useChargebeePaypal';
 import type { BitcoinHook } from '@proton/payments-ui/react-extensions/useBitcoin';
 import type { ChargebeeCardProcessorHook } from '@proton/payments-ui/react-extensions/useChargebeeCard';
 import type { ChargebeeIdealProcessorHook } from '@proton/payments-ui/react-extensions/useChargebeeIdeal';
-import type { ChargebeePaypalProcessorHook } from '@proton/payments-ui/react-extensions/useChargebeePaypal';
 import type { ChargebeeDirectDebitProcessorHook } from '@proton/payments-ui/react-extensions/useSepaDirectDebit';
 import { TaxFields } from '@proton/payments-ui/ui/billing-address/components/TaxFields';
 import type { TaxCountryHook } from '@proton/payments-ui/ui/billing-address/hooks/useTaxCountry';
@@ -25,7 +25,6 @@ import {
     ChargebeeSavedCardWrapper,
 } from '@proton/payments-ui/ui/components/ChargebeeWrapper';
 import { IdealAccountHolderInput } from '@proton/payments-ui/ui/components/IdealAccountHolderInput';
-import { IdealAuthorizationText } from '@proton/payments-ui/ui/components/IdealAuthorizationText';
 import { type DirectDebitProps, SepaDirectDebit } from '@proton/payments-ui/ui/components/SepaDirectDebit';
 import { getMinCreditAmount, getMinDonationAmount } from '@proton/payments/core/amount-limits';
 import type { BillingAddressStatus } from '@proton/payments/core/billing-address/billing-address';
@@ -42,8 +41,8 @@ import type {
 } from '@proton/payments/core/interface';
 import type { PaymentProcessorHook } from '@proton/payments/core/payment-processors/interface';
 import type { Subscription, SubscriptionEstimation } from '@proton/payments/core/subscription/interface';
-import type { User } from '@proton/shared/lib/interfaces';
-import { isBilledUser } from '@proton/shared/lib/interfaces';
+import type { User } from '@proton/shared/lib/interfaces/User';
+import { isBilledUser } from '@proton/shared/lib/interfaces/User';
 import clsx from '@proton/utils/clsx';
 
 import Loader from '../../components/loader/Loader';
@@ -319,9 +318,6 @@ export const PaymentsNoApi = ({
                         {method === PAYMENT_METHOD_TYPES.CHARGEBEE_IDEAL && (
                             <>
                                 <IdealAccountHolderInput chargebeeIdeal={chargebeeIdeal} />
-                                <div className="my-2">
-                                    <IdealAuthorizationText />
-                                </div>
                                 {taxFields}
                                 <div className="p-4 border rounded bg-weak mb-4" data-testid="ideal-view">
                                     <IdealInfoMessage />

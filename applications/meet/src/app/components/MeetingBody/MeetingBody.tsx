@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { ConnectionState } from 'livekit-client';
 import { c } from 'ttag';
 
+import TopBanner from '@proton/components/containers/topBanners/TopBanner';
 import useActiveBreakpoint from '@proton/components/hooks/useActiveBreakpoint';
-import { TopBanner } from '@proton/components/index';
 import { IcMeetRotateCamera } from '@proton/icons/icons/IcMeetRotateCamera';
 import { useMeetSelector } from '@proton/meet/store/hooks';
+import { selectMeetingLink } from '@proton/meet/store/slices/currentMeeting';
 import { selectParticipantSideBarOpen } from '@proton/meet/store/slices/layoutSlice';
-import { selectMeetingLink } from '@proton/meet/store/slices/meetingInfo';
 import { selectIsSideBarOpen } from '@proton/meet/store/slices/uiStateSlice';
 import { selectIsGuest } from '@proton/meet/store/slices/userSlice';
 import { isMobile } from '@proton/shared/lib/helpers/browser';
@@ -36,6 +36,7 @@ import { ParticipantControls } from '../ParticipantControls/ParticipantControls'
 import { ParticipantList } from '../ParticipantList/ParticipantList';
 import { ParticipantsLayout } from '../ParticipantsLayout/ParticipantsLayout';
 import { PermissionRequest } from '../PermissionRequest/PermissionRequest';
+import { ReactionStream } from '../ReactionStream/ReactionStream';
 import { RecordingInProgressModal } from '../RecordingInProgressModal/RecordingInProgressModal';
 import { Settings } from '../Settings/Settings';
 import { AudioRenderer } from './AudioRenderer';
@@ -43,7 +44,6 @@ import { AudioRenderer } from './AudioRenderer';
 import './MeetingBody.scss';
 
 interface MeetingBodyProps {
-    isUsingTurnRelay: boolean;
     liveKitConnectionState: ConnectionState | null;
     showReconnectedMessage: boolean;
     setShowReconnectedMessage: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,7 +54,6 @@ interface MeetingBodyProps {
 }
 
 export const MeetingBody = ({
-    isUsingTurnRelay,
     liveKitConnectionState,
     showReconnectedMessage,
     setShowReconnectedMessage,
@@ -71,16 +70,15 @@ export const MeetingBody = ({
 
     const isNarrowHeight = useIsNarrowHeight();
 
-    const { activeBreakpoint } = useActiveBreakpoint();
+    const { activeBreakpoint, viewportWidth } = useActiveBreakpoint();
     const isXSmallScreen = activeBreakpoint === 'xsmall';
+    const isLargeDesktop = viewportWidth['>=xlarge'];
 
     const participantSideBarOpen = useMeetSelector(selectParticipantSideBarOpen);
 
     const meetingLink = useMeetSelector(selectMeetingLink);
 
     const { handleRotateCamera, isVideoEnabled } = useMediaManagementContext();
-
-    const [bannerIsClosed, setBannerIsClosed] = useState(!isUsingTurnRelay);
 
     const isEarlyAccess = useFlag('MeetEarlyAccess');
 
@@ -119,15 +117,6 @@ export const MeetingBody = ({
                     isElectronApp && 'pt-6'
                 )}
             >
-                {!bannerIsClosed && (
-                    <TopBanner
-                        className="bg-norm meet-radius turn-top-banner"
-                        onClose={() => setBannerIsClosed(true)}
-                        // Announced centrally by useTurnRelayAnnouncements to avoid a double read.
-                        announce={false}
-                    >{c('Banner')
-                        .t`Connected via TURN relay mode due to your network restrictions. This may increase latency and affect call quality.`}</TopBanner>
-                )}
                 {/* Visual-only: announced centrally by useConnectionAnnouncements. */}
                 {isReconnecting && (
                     <TopBanner className="bg-warning meet-radius" announce={false}>
@@ -156,8 +145,8 @@ export const MeetingBody = ({
                             {getConnectionStatusMessage(showReconnectedMessage, liveKitConnectionState)}
                         </TopBanner>
                     )}
-                {!isNarrowHeight && (
-                    <div className="flex lg:hidden flex-nowrap gap-2 justify-between items-center">
+                {!isNarrowHeight && !isLargeDesktop && (
+                    <div className="flex flex-nowrap gap-2 justify-between items-center">
                         <MeetingName classNames={{ name: 'flex-1 text-lg text-semibold' }} />
                         <div className="text-ellipsis overflow-hidden">
                             {isVideoEnabled && isMobile() && (
@@ -203,6 +192,7 @@ export const MeetingBody = ({
                 </div>
                 <Captions />
                 <ParticipantControls />
+                <ReactionStream />
                 <AudioRenderer isSpatialAudioEnabled={isSpatialAudioEnabled} />
                 <NoDeviceDetectedInfo />
                 <NoDeviceDetectedModal />

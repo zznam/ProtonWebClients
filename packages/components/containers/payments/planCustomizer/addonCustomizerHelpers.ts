@@ -21,6 +21,7 @@ import { Renew } from '@proton/payments/core/subscription/constants';
 import type { MaybeFreeSubscription } from '@proton/payments/core/subscription/helpers';
 import { SelectedPlan } from '@proton/payments/core/subscription/selected-plan';
 import { isFreeSubscription } from '@proton/payments/core/type-guards';
+import type { ProductParam } from '@proton/shared/lib/apps/product';
 
 import { showAddonCustomizer } from '../subscription/modal-components/helpers/showAddonCustomizer';
 import type { NumberCustomiserProps } from './NumberCustomiser';
@@ -312,6 +313,7 @@ export function computeAddonCustomizerItems({
     scribeToLumo = false,
     couponConfig,
     isSignup,
+    app,
 }: {
     normalizedSelectedPlan: SelectedPlan;
     plansMap: PlansMap;
@@ -325,12 +327,14 @@ export function computeAddonCustomizerItems({
     allowedAddonTypes?: ADDON_PREFIXES[];
     couponConfig?: CouponConfigMetadata;
     isSignup: boolean;
+    app?: ProductParam;
 }): AddonCustomizerItem[] {
     const visibilityContext = {
         subscription: latestSubscription ?? FREE_SUBSCRIPTION,
         couponConfig,
         planIDs: normalizedSelectedPlan.planIDs,
         isSignup,
+        app,
     };
 
     const resolvedAddonFlags: AddonFlags = { ...addonFlags };
@@ -363,7 +367,7 @@ export function computeAddonCustomizerItems({
             }
             // Some cycles don't support some addons. For example, if user buys vpn2024 6m then 1lumo-vpn2024 doesn't
             // support 6m. So we hide the lumo addon in this case.
-            const addonSupportsSelectedCycle = !!plansMap[addonName]?.Pricing[cycle];
+            const addonSupportsSelectedCycle = plansMap[addonName]?.Pricing[cycle] !== undefined;
             const canDisplayAddon = isAllowedAddon(addonName) && plansMap[addonName];
 
             return !!(addonSupportsSelectedCycle && canDisplayAddon);
